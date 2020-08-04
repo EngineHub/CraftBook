@@ -50,7 +50,7 @@ public class DocumentationPrinter {
 
         ConfigurationGenerator.generateDefaultConfiguration();
         MechanicTypesGenerator.generateMechanicTypes();
-        CommandDocumentationGenerator.generateCommandDocumentation();
+//        CommandDocumentationGenerator.generateCommandDocumentation();
 //        MechanicConfigurationGenerator.generateMechanicConfiguration();
     }
 }

@@ -42,7 +42,7 @@ public class BukkitConfiguration extends YamlConfiguration {
             e.printStackTrace();
         }
 
-        if(config.getNode("enabled-mechanics") != null) {
+        if(config.getList("enabled-mechanics") != null) {
             try {
                 Files.move(
                         CraftBook.getInstance().getPlatform().getConfigDir().resolve("config.yml"),
@@ -109,15 +109,6 @@ public class BukkitConfiguration extends YamlConfiguration {
         config.setComment("sign-click-timeout", "Make sure a player can only press signs so often.");
         signClickTimeout = config.getInt("sign-click-timeout", 10);
 
-        config.setComment("language", "The default language for CraftBook. Note: This language needs to be in the 'languages' field for this to work.");
-        language = config.getString("language", "en_US");
-
-        config.setComment("languages", "A list of languages supported by craftbook, if a user requests a language not listed... They will see default.");
-        languages = config.getStringList("languages", Collections.singletonList("en_US"));
-
-        config.setComment("scan-text-for-localization", "If enabled, CraftBook will scan messages sent to players for localizable text, instead of just checking if the entire message is localizable.");
-        languageScanText = config.getBoolean("scan-text-for-localization", false);
-
         config.setComment("debug-mode", "Enable a mode that will print extra debug information to the console.");
         debugMode = config.getBoolean("debug-mode", false);
 
@@ -132,9 +123,6 @@ public class BukkitConfiguration extends YamlConfiguration {
 
         config.setComment("persistent-storage-type", "PersistentStorage stores data that can be accessed across server restart. Method of PersistentStorage storage (Note: DUMMY is practically off, and may cause issues). Can currently be any of the following: YAML, DUMMY, SQLite");
         persistentStorageType = config.getString("persistent-storage-type", "YAML");
-
-        config.setComment("convert-names-to-cbids", "Causes mechanics to attempt to convert names to use CBIDs. This can and should be disabled after you believe your servers transition to UUIDs v Names is complete.");
-        convertNamesToCBID = config.getBoolean("convert-names-to-cbids", false);
 
         config.save();
     }

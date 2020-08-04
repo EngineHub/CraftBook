@@ -32,16 +32,10 @@
 
 package com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous;
 
-import java.util.UUID;
-
-import com.sk89q.craftbook.CraftBook;
 import com.sk89q.craftbook.CraftBookPlayer;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 
 import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
 import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import com.sk89q.craftbook.mechanics.ic.ChipState;
@@ -50,9 +44,6 @@ import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICFactory;
 import com.sk89q.craftbook.mechanics.ic.ICMechanic;
 import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
-import com.sk89q.craftbook.util.profile.Profile;
-import com.sk89q.craftbook.util.profile.resolver.HttpRepositoryService;
-import com.sk89q.craftbook.util.profile.resolver.ProfileService;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 public class WirelessReceiver extends AbstractSelfTriggeredIC {
@@ -69,23 +60,6 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
 
         band = getSign().getLine(2);
         if (!getLine(3).trim().isEmpty()) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().convertNamesToCBID && CraftBookPlugin.inst().getUUIDMappings().getUUID(getLine(3)) == null) {
-                String line3 = getLine(3);
-                OfflinePlayer player = Bukkit.getOfflinePlayer(getLine(3));
-                if(player.hasPlayedBefore()) {
-                    try {
-                        ProfileService resolver = HttpRepositoryService.forMinecraft();
-                        Profile profile = resolver.findByName(player.getName()); // May be null
-
-                        UUID uuid = profile.getUniqueId();
-                        band = CraftBookPlugin.inst().getUUIDMappings().getCBID(uuid);
-                        getSign().setLine(3, line3);
-                        getSign().update(false);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
             band = band + getSign().getLine(3);
         }
     }

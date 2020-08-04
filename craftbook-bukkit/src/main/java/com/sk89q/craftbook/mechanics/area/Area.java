@@ -30,16 +30,11 @@ import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
-import com.sk89q.craftbook.util.profile.Profile;
-import com.sk89q.craftbook.util.profile.resolver.HttpRepositoryService;
-import com.sk89q.craftbook.util.profile.resolver.ProfileService;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -178,25 +173,6 @@ public class Area extends AbstractCraftBookMechanic {
     private static boolean isValidArea(ChangedSign sign) {
 
         String namespace = sign.getLine(0).trim();
-
-        if(CraftBook.getInstance().getPlatform().getConfiguration().convertNamesToCBID
-                && namespace.startsWith("~") && CraftBookPlugin.inst().getUUIDMappings().getUUID(namespace.replace("~", "")) == null) {
-            OfflinePlayer player = Bukkit.getOfflinePlayer(namespace.replace("~", ""));
-            if(player.hasPlayedBefore()) {
-                String originalNamespace = namespace;
-
-                try {
-                    ProfileService resolver = HttpRepositoryService.forMinecraft();
-                    Profile profile = resolver.findByName("player.getName()"); // May be null
-
-                    namespace = '~' + CraftBookPlugin.inst().getUUIDMappings().getCBID(profile.getUniqueId());
-                    CopyManager.renameNamespace(CraftBookPlugin.inst().getDataFolder(), originalNamespace, namespace);
-                    sign.setLine(0, namespace);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
 
         return isValidArea(namespace, sign.getLine(2).trim().toLowerCase(Locale.ENGLISH), sign.getLine(3).trim().toLowerCase(Locale.ENGLISH));
     }

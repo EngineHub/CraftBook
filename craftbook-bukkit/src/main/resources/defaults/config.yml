@@ -120,16 +120,6 @@ pedantic-block-checks: false
 # Make sure a player can only press signs so often.
 sign-click-timeout: 10
 
-# The default language for CraftBook. Note: This language needs to be in the 'languages' field for this to work.
-language: en_US
-
-# A list of languages supported by craftbook, if a user requests a language not listed... They will see default.
-languages:
-- en_US
-
-# If enabled, CraftBook will scan messages sent to players for localizable text, instead of just checking if the entire message is localizable.
-scan-text-for-localization: false
-
 # Enable a mode that will print extra debug information to the console.
 debug-mode: false
 
@@ -144,6 +134,3 @@ show-permission-messages: true
 
 # PersistentStorage stores data that can be accessed across server restart. Method of PersistentStorage storage (Note: DUMMY is practically off, and may cause issues). Can currently be any of the following: YAML, DUMMY, SQLite
 persistent-storage-type: YAML
-
-# Causes mechanics to attempt to convert names to use CBIDs. This can and should be disabled after you believe your servers transition to UUIDs v Names is complete.
-convert-names-to-cbids: false

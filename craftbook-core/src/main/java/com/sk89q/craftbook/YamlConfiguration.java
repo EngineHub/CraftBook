@@ -38,11 +38,6 @@ public abstract class YamlConfiguration {
     public boolean pedanticBlockChecks;
     public boolean showPermissionMessages;
     public long signClickTimeout;
-    public boolean convertNamesToCBID;
-
-    public String language;
-    public List<String> languages;
-    public boolean languageScanText;
 
     public boolean debugMode;
     public boolean debugLogToFile;

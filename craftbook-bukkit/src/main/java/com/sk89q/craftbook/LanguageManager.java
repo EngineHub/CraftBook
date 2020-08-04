@@ -16,10 +16,10 @@
 
 package com.sk89q.craftbook;
 
+import com.google.common.collect.Lists;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -47,7 +47,7 @@ public class LanguageManager {
 
     private void checkForLanguages() {
 
-        for (String language : CraftBook.getInstance().getPlatform().getConfiguration().languages) {
+        for (String language : Lists.newArrayList("en_US")) {
             language = language.trim();
             File f = new File(CraftBookPlugin.inst().getDataFolder(), language + ".yml");
             if(!f.exists())
@@ -81,19 +81,11 @@ public class LanguageManager {
 
         //message = ChatColor.stripColor(message);
         if(language == null || !languageMap.containsKey(language.toLowerCase()))
-            language = CraftBook.getInstance().getPlatform().getConfiguration().language;
+            language = "en_US";
         YAMLProcessor languageData = languageMap.get(language.toLowerCase());
         String def = defaultMessages.get(message);
         if(languageData == null) {
-            if(!CraftBook.getInstance().getPlatform().getConfiguration().languageScanText || def != null) {
-                return def == null ? message : def;
-            } else {
-                String trans = message;
-                for(Entry<String, String> tran : defaultMessages.entrySet()) {
-                    trans = StringUtils.replace(trans, tran.getKey(), tran.getValue());
-                }
-                return trans;
-            }
+            return def == null ? message : def;
         } else {
             String translated;
             if(def == null || languageData.getString(message) != null)
@@ -102,20 +94,10 @@ public class LanguageManager {
                 translated = languageData.getString(message, def);
             }
 
-            if(!CraftBook.getInstance().getPlatform().getConfiguration().languageScanText || translated != null) {
-                if(translated != null)
-                    return translated;
-                else
-                    return def == null ? message : def;
-            } else {
-                String trans = message;
-                for(String tran : languageData.getMap().keySet()) {
-                    String trand = defaultMessages.get(tran) != null ? languageData.getString(tran, defaultMessages.get(tran)) : languageData.getString(tran);
-                    if(tran == null || trand == null) continue;
-                    trans = StringUtils.replace(trans, tran, trand);
-                }
-                return trans;
-            }
+            if(translated != null)
+                return translated;
+            else
+                return def == null ? message : def;
         }
     }
 
