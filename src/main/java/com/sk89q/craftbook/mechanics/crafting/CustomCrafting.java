@@ -80,22 +80,26 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
             if (r.getType() == RecipeManager.RecipeType.SHAPELESS) {
                 sh = new ShapelessRecipe(new NamespacedKey(CraftBookPlugin.inst(), r.getId()), r.getResult().getItemStack());
                 for (CraftingItemStack is : r.getIngredients())
-                    ((ShapelessRecipe) sh).addIngredient(is.getItemStack().getAmount(), is.getItemStack().getData());
+                    ((ShapelessRecipe) sh).addIngredient(is.getItemStack().getAmount(), is.getItemStack().getType());
             } else if (r.getType() == RecipeManager.RecipeType.SHAPED) {
                 sh = new ShapedRecipe(new NamespacedKey(CraftBookPlugin.inst(), r.getId()), r.getResult().getItemStack());
                 ((ShapedRecipe) sh).shape(r.getShape());
                 for (Entry<CraftingItemStack, Character> is : r.getShapedIngredients().entrySet())
-                    ((ShapedRecipe) sh).setIngredient(is.getValue(), is.getKey().getItemStack().getData());
+                    ((ShapedRecipe) sh).setIngredient(is.getValue(), is.getKey().getItemStack().getType());
             } else if (r.getType() == RecipeManager.RecipeType.FURNACE) {
+                if (r.getIngredients().isEmpty()) {
+                    CraftBookPlugin.inst().getLogger().warning("Recipe " + r.getId() + " is missing ingredients");
+                    return false;
+                }
                 sh = new FurnaceRecipe(
                         new NamespacedKey(CraftBookPlugin.inst(), r.getId()),
                         r.getResult().getItemStack(),
-                        r.getIngredients().toArray(new CraftingItemStack[r.getIngredients().size()])[0].getItemStack().getType(),
+                        r.getIngredients().get(0).getItemStack().getType(),
                         r.getExperience(),
                         r.getCookTime()
                 );
                 for (CraftingItemStack is : r.getIngredients())
-                    ((FurnaceRecipe) sh).setInput(is.getItemStack().getData());
+                    ((FurnaceRecipe) sh).setInput(is.getItemStack().getType());
             } else
                 return false;
 
@@ -150,9 +154,9 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                                 for(Entry<CraftingItemStack, Character> entry : recipe.getShapedIngredients().entrySet())
                                     if(entry.getValue() == c)
                                         stacks.add(entry.getKey());
-                        tests2 = stacks.toArray(new CraftingItemStack[stacks.size()]);
+                        tests2 = stacks.toArray(new CraftingItemStack[0]);
                     } else
-                        tests2 = recipe.getIngredients().toArray(new CraftingItemStack[recipe.getIngredients().size()]);
+                        tests2 = recipe.getIngredients().toArray(new CraftingItemStack[0]);
 
                     ArrayList<ItemStack> leftovers = new ArrayList<>(Arrays.asList(tests));
                     leftovers.removeAll(Collections.singleton(null));
