@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.mechanics.variables;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.collect.ImmutableList;
@@ -149,6 +150,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
     public void setVariable(VariableKey key, String value) {
         checkNotNull(key);
         checkNotNull(value);
+        checkArgument(value.length() <= maxVariableSize, "Variable value too large");
 
         Map<String, String> namespacedVariables = this.variableStore.computeIfAbsent(key.getNamespace(), s -> Maps.newHashMap());
         namespacedVariables.put(key.getVariable(), value);
@@ -258,6 +260,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
     private boolean consoleOverride;
     private boolean playerCommandOverride;
     private boolean playerChatOverride;
+    private int maxVariableSize;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
@@ -272,6 +275,9 @@ public class VariableManager extends AbstractCraftBookMechanic {
 
         config.setComment("enable-in-player-chat", "Allows variables to work when used in chat");
         playerChatOverride = config.getBoolean("enable-in-player-chat", false);
+
+        config.setComment("max-variable-length", "The maximum length of a value in a variable");
+        maxVariableSize = config.getInt("max-variable-length", 256);
     }
 
 }
