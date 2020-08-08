@@ -440,7 +440,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
             if (!SignUtil.isWallSign(block)) {
                 player.printError("Only wall signs are used for ICs.");
-                SignUtil.cancelSign(event);
+                SignUtil.cancelSignChange(event);
                 return;
             }
 
@@ -454,7 +454,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             final RegisteredICFactory registration = manager.get(id);
             if (registration == null) {
                 player.printError("Unknown IC detected: " + id);
-                SignUtil.cancelSign(event);
+                SignUtil.cancelSignChange(event);
                 return;
             }
 
@@ -464,7 +464,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
                 checkPermissions(player, factory, registration.getId().toLowerCase(Locale.ENGLISH));
             } catch (ICVerificationException e) {
                 player.printError(e.getMessage());
-                SignUtil.cancelSign(event);
+                SignUtil.cancelSignChange(event);
                 return;
             }
 
@@ -518,7 +518,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
             if (!SignUtil.isWallSign(block)) {
                 player.printError("Only wall signs are used for ICs.");
-                SignUtil.cancelSign(event);
+                SignUtil.cancelSignChange(event);
                 return;
             }
 

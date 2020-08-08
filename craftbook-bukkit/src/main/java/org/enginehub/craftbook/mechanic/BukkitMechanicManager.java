@@ -18,147 +18,82 @@ package org.enginehub.craftbook.mechanic;
 
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.load.LoadPriority;
-import org.enginehub.craftbook.mechanics.AIMechanic;
-import org.enginehub.craftbook.mechanics.BetterLeads;
-import org.enginehub.craftbook.mechanics.BetterPhysics;
-import org.enginehub.craftbook.mechanics.BetterPistons;
-import org.enginehub.craftbook.mechanics.BetterPlants;
-import org.enginehub.craftbook.mechanics.Bookcase;
-import org.enginehub.craftbook.mechanics.BounceBlocks;
-import org.enginehub.craftbook.mechanics.Chair;
-import org.enginehub.craftbook.mechanics.ChunkAnchor;
-import org.enginehub.craftbook.mechanics.CommandSigns;
-import org.enginehub.craftbook.mechanics.CookingPot;
-import org.enginehub.craftbook.mechanics.Elevator;
-import org.enginehub.craftbook.mechanics.GlowStone;
-import org.enginehub.craftbook.mechanics.HiddenSwitch;
-import org.enginehub.craftbook.mechanics.LightSwitch;
-import org.enginehub.craftbook.mechanics.MapChanger;
-import org.enginehub.craftbook.mechanics.Marquee;
-import org.enginehub.craftbook.mechanics.PaintingSwitch;
-import org.enginehub.craftbook.mechanics.Payment;
-import org.enginehub.craftbook.mechanics.Sponge;
-import org.enginehub.craftbook.mechanics.Teleporter;
-import org.enginehub.craftbook.mechanics.TreeLopper;
-import org.enginehub.craftbook.mechanics.XPStorer;
-import org.enginehub.craftbook.mechanics.area.Area;
-import org.enginehub.craftbook.mechanics.area.simple.Bridge;
-import org.enginehub.craftbook.mechanics.area.simple.Door;
-import org.enginehub.craftbook.mechanics.area.simple.Gate;
-import org.enginehub.craftbook.mechanics.boat.LandBoats;
-import org.enginehub.craftbook.mechanics.boat.Uncrashable;
-import org.enginehub.craftbook.mechanics.boat.WaterPlaceOnly;
-import org.enginehub.craftbook.mechanics.cauldron.ImprovedCauldron;
-import org.enginehub.craftbook.mechanics.crafting.CustomCrafting;
-import org.enginehub.craftbook.mechanics.dispenser.DispenserRecipes;
-import org.enginehub.craftbook.mechanics.drops.CustomDrops;
-import org.enginehub.craftbook.mechanics.headdrops.HeadDrops;
-import org.enginehub.craftbook.mechanics.ic.ICMechanic;
-import org.enginehub.craftbook.mechanics.items.CommandItems;
-import org.enginehub.craftbook.mechanics.minecart.CollisionEntry;
-import org.enginehub.craftbook.mechanics.minecart.ConstantSpeed;
-import org.enginehub.craftbook.mechanics.minecart.EmptyDecay;
-import org.enginehub.craftbook.mechanics.minecart.EmptySlowdown;
-import org.enginehub.craftbook.mechanics.minecart.FallModifier;
-import org.enginehub.craftbook.mechanics.minecart.ItemPickup;
-import org.enginehub.craftbook.mechanics.minecart.MobBlocker;
-import org.enginehub.craftbook.mechanics.minecart.MoreRails;
-import org.enginehub.craftbook.mechanics.minecart.NoCollide;
-import org.enginehub.craftbook.mechanics.minecart.PlaceAnywhere;
-import org.enginehub.craftbook.mechanics.minecart.RailPlacer;
-import org.enginehub.craftbook.mechanics.minecart.TemporaryCart;
-import org.enginehub.craftbook.mechanics.minecart.VisionSteering;
-import org.enginehub.craftbook.mechanics.minecart.blocks.CartBooster;
-import org.enginehub.craftbook.mechanics.minecart.blocks.CartDeposit;
-import org.enginehub.craftbook.mechanics.minecart.blocks.CartDispenser;
-import org.enginehub.craftbook.mechanics.minecart.blocks.CartEjector;
-import org.enginehub.craftbook.mechanics.minecart.blocks.CartLift;
-import org.enginehub.craftbook.mechanics.minecart.blocks.CartMaxSpeed;
-import org.enginehub.craftbook.mechanics.minecart.blocks.CartMessenger;
-import org.enginehub.craftbook.mechanics.minecart.blocks.CartReverser;
-import org.enginehub.craftbook.mechanics.minecart.blocks.CartSorter;
-import org.enginehub.craftbook.mechanics.minecart.blocks.CartStation;
-import org.enginehub.craftbook.mechanics.minecart.blocks.CartTeleporter;
-import org.enginehub.craftbook.mechanics.pipe.Pipes;
-import org.enginehub.craftbook.mechanics.signcopier.SignCopier;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.enginehub.craftbook.mechanic.load.MechanicDependency;
 
 public class BukkitMechanicManager extends MechanicManager {
 
     @Override
     public void setup() {
-        registerMechanic("CommandItems", CommandItems.class, MechanicCategory.CUSTOMISATION);
-        registerMechanic("CustomCrafting", CustomCrafting.class, MechanicCategory.CUSTOMISATION);
-        registerMechanic("DispenserRecipes", DispenserRecipes.class, MechanicCategory.GENERAL);
-        registerMechanic("CustomDrops", CustomDrops.class, MechanicCategory.CUSTOMISATION);
-        registerMechanic("BetterAi", AIMechanic.class, MechanicCategory.GENERAL);
-        registerMechanic("PaintingSwitcher", PaintingSwitch.class, MechanicCategory.GENERAL);
-        registerMechanic("BetterPhysics", BetterPhysics.class, MechanicCategory.GENERAL);
-        registerMechanic("HeadDrops", HeadDrops.class, MechanicCategory.GENERAL);
-        registerMechanic("BetterLeads", BetterLeads.class, MechanicCategory.GENERAL);
-        registerMechanic("Marquee", Marquee.class, MechanicCategory.GENERAL);
-        registerMechanic("TreeLopper", TreeLopper.class, MechanicCategory.GENERAL);
-        registerMechanic("MapChanger", MapChanger.class, MechanicCategory.GENERAL);
-        registerMechanic("XpStorer", XPStorer.class, MechanicCategory.GENERAL);
-        registerMechanic("CommandSigns", CommandSigns.class, MechanicCategory.GENERAL);
-        registerMechanic("LightSwitch", LightSwitch.class, MechanicCategory.GENERAL);
-        registerMechanic("ChunkAnchor", ChunkAnchor.class, MechanicCategory.GENERAL);
-        registerMechanic("HiddenSwitch", HiddenSwitch.class, MechanicCategory.GENERAL);
-        registerMechanic("Bookcase", Bookcase.class, MechanicCategory.GENERAL);
-        registerMechanic("SignCopier", SignCopier.class, MechanicCategory.TOOL);
-        registerMechanic("Bridge", Bridge.class, MechanicCategory.GENERAL);
-        registerMechanic("Door", Door.class, MechanicCategory.GENERAL);
-        registerMechanic("Elevator", Elevator.class, MechanicCategory.GENERAL);
-        registerMechanic("Teleporter", Teleporter.class, MechanicCategory.GENERAL);
-        registerMechanic("ToggleArea", Area.class, MechanicCategory.GENERAL);
-        registerMechanic("Cauldron", ImprovedCauldron.class, MechanicCategory.CUSTOMISATION);
-        registerMechanic("Gate", Gate.class, MechanicCategory.GENERAL);
-        registerMechanic("BetterPistons", BetterPistons.class, MechanicCategory.GENERAL);
-        registerMechanic("CookingPot", CookingPot.class, MechanicCategory.GENERAL);
-        registerMechanic("Sponge", Sponge.class, MechanicCategory.GENERAL);
-        registerMechanic("BetterPlants", BetterPlants.class, MechanicCategory.GENERAL);
-        registerMechanic("Chairs", Chair.class, MechanicCategory.GENERAL);
-        registerMechanic("Pay", Payment.class, MechanicCategory.CIRCUIT);
-        registerMechanic("Glowstone", GlowStone.class, MechanicCategory.CIRCUIT);
-        registerMechanic("Pipes", Pipes.class, MechanicCategory.CIRCUIT);
-        registerMechanic("BounceBlocks", BounceBlocks.class, MechanicCategory.GENERAL);
-        registerMechanic("IntegratedCircuits", ICMechanic.class, MechanicCategory.CIRCUIT);
-        registerMechanic("MinecartBooster", CartBooster.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartReverser", CartReverser.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartSorter", CartSorter.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartStation", CartStation.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartEjector", CartEjector.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartDeposit", CartDeposit.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartTeleporter", CartTeleporter.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartElevator", CartLift.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartDispenser", CartDispenser.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartMessenger", CartMessenger.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartMaxSpeed", CartMaxSpeed.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartMoreRails", MoreRails.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartRemoveEntities", org.enginehub.craftbook.mechanics.minecart.RemoveEntities.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartVisionSteering", VisionSteering.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartDecay", EmptyDecay.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartMobBlocker", MobBlocker.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartExitRemover", org.enginehub.craftbook.mechanics.minecart.ExitRemover.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartCollisionEntry", CollisionEntry.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartItemPickup", ItemPickup.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartFallModifier", FallModifier.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartConstantSpeed", ConstantSpeed.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartRailPlacer", RailPlacer.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartSpeedModifiers", org.enginehub.craftbook.mechanics.minecart.SpeedModifiers.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartEmptySlowdown", EmptySlowdown.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartNoCollide", NoCollide.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartPlaceAnywhere", PlaceAnywhere.class, MechanicCategory.MINECART);
-        registerMechanic("MinecartTemporaryCart", TemporaryCart.class, MechanicCategory.MINECART);
-        registerMechanic("BoatRemoveEntities", org.enginehub.craftbook.mechanics.boat.RemoveEntities.class, MechanicCategory.BOAT);
-        registerMechanic("BoatUncrashable", Uncrashable.class, MechanicCategory.BOAT);
-        registerMechanic("BoatDecay", org.enginehub.craftbook.mechanics.boat.EmptyDecay.class, MechanicCategory.BOAT);
-        registerMechanic("BoatSpeedModifiers", org.enginehub.craftbook.mechanics.boat.SpeedModifiers.class, MechanicCategory.BOAT);
-        registerMechanic("LandBoats", LandBoats.class, MechanicCategory.BOAT);
-        registerMechanic("BoatExitRemover", org.enginehub.craftbook.mechanics.boat.ExitRemover.class, MechanicCategory.BOAT);
-        registerMechanic("BoatWaterPlaceOnly", WaterPlaceOnly.class, MechanicCategory.BOAT);
+//        registerMechanic("CommandItems", org.enginehub.craftbook.mechanics.items.CommandItems.class, MechanicCategory.CUSTOMISATION);
+//        registerMechanic("CustomCrafting", org.enginehub.craftbook.mechanics.crafting.CustomCrafting.class, MechanicCategory.CUSTOMISATION);
+//        registerMechanic("DispenserRecipes", org.enginehub.craftbook.mechanics.dispenser.DispenserRecipes.class, MechanicCategory.GENERAL);
+//        registerMechanic("CustomDrops", org.enginehub.craftbook.mechanics.drops.CustomDrops.class, MechanicCategory.CUSTOMISATION);
+//        registerMechanic("BetterAi", org.enginehub.craftbook.mechanics.AIMechanic.class, MechanicCategory.GENERAL);
+//        registerMechanic("PaintingSwitcher", org.enginehub.craftbook.mechanics.PaintingSwitch.class, MechanicCategory.GENERAL);
+//        registerMechanic("BetterPhysics", org.enginehub.craftbook.mechanics.BetterPhysics.class, MechanicCategory.GENERAL);
+//        registerMechanic("HeadDrops", org.enginehub.craftbook.mechanics.headdrops.HeadDrops.class, MechanicCategory.GENERAL);
+//        registerMechanic("BetterLeads", org.enginehub.craftbook.mechanics.BetterLeads.class, MechanicCategory.GENERAL);
+//        registerMechanic("TreeLopper", org.enginehub.craftbook.mechanics.TreeLopper.class, MechanicCategory.GENERAL);
+//        registerMechanic("MapChanger", org.enginehub.craftbook.mechanics.MapChanger.class, MechanicCategory.GENERAL);
+//        registerMechanic("XpStorer", org.enginehub.craftbook.mechanics.XPStorer.class, MechanicCategory.GENERAL);
+//        registerMechanic("CommandSigns", org.enginehub.craftbook.mechanics.CommandSigns.class, MechanicCategory.GENERAL);
+//        registerMechanic("LightSwitch", org.enginehub.craftbook.mechanics.LightSwitch.class, MechanicCategory.GENERAL);
+//        registerMechanic("ChunkAnchor", org.enginehub.craftbook.mechanics.ChunkAnchor.class, MechanicCategory.GENERAL);
+//        registerMechanic("HiddenSwitch", org.enginehub.craftbook.mechanics.HiddenSwitch.class, MechanicCategory.GENERAL);
+//        registerMechanic("Bookcase", org.enginehub.craftbook.mechanics.Bookcase.class, MechanicCategory.GENERAL);
+//        registerMechanic("SignCopier", org.enginehub.craftbook.mechanics.signcopier.SignCopier.class, MechanicCategory.TOOL);
+//        registerMechanic("Bridge", org.enginehub.craftbook.mechanics.area.simple.Bridge.class, MechanicCategory.GENERAL);
+//        registerMechanic("Door", org.enginehub.craftbook.mechanics.area.simple.Door.class, MechanicCategory.GENERAL);
+//        registerMechanic("Elevator", org.enginehub.craftbook.mechanics.Elevator.class, MechanicCategory.GENERAL);
+//        registerMechanic("Teleporter", org.enginehub.craftbook.mechanics.Teleporter.class, MechanicCategory.GENERAL);
+//        registerMechanic("ToggleArea", org.enginehub.craftbook.mechanics.area.Area.class, MechanicCategory.GENERAL);
+//        registerMechanic("Cauldron", org.enginehub.craftbook.mechanics.cauldron.ImprovedCauldron.class, MechanicCategory.CUSTOMISATION);
+//        registerMechanic("Gate", org.enginehub.craftbook.mechanics.area.simple.Gate.class, MechanicCategory.GENERAL);
+//        registerMechanic("BetterPistons", org.enginehub.craftbook.mechanics.BetterPistons.class, MechanicCategory.GENERAL);
+//        registerMechanic("CookingPot", org.enginehub.craftbook.mechanics.CookingPot.class, MechanicCategory.GENERAL);
+//        registerMechanic("Sponge", org.enginehub.craftbook.mechanics.Sponge.class, MechanicCategory.GENERAL);
+//        registerMechanic("BetterPlants", org.enginehub.craftbook.mechanics.BetterPlants.class, MechanicCategory.GENERAL);
+//        registerMechanic("Chairs", org.enginehub.craftbook.mechanics.Chair.class, MechanicCategory.GENERAL);
+//        registerMechanic("Pay", org.enginehub.craftbook.mechanics.Payment.class, MechanicCategory.CIRCUIT);
+//        registerMechanic("Glowstone", org.enginehub.craftbook.mechanics.GlowStone.class, MechanicCategory.CIRCUIT);
+//        registerMechanic("Pipes", org.enginehub.craftbook.mechanics.pipe.Pipes.class, MechanicCategory.CIRCUIT);
+//        registerMechanic("BounceBlocks", org.enginehub.craftbook.mechanics.BounceBlocks.class, MechanicCategory.GENERAL);
+//        registerMechanic("IntegratedCircuits", org.enginehub.craftbook.mechanics.ic.ICMechanic.class, MechanicCategory.CIRCUIT);
+//        registerMechanic("MinecartBooster", org.enginehub.craftbook.mechanics.minecart.blocks.CartBooster.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartReverser", org.enginehub.craftbook.mechanics.minecart.blocks.CartReverser.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartSorter", org.enginehub.craftbook.mechanics.minecart.blocks.CartSorter.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartStation", org.enginehub.craftbook.mechanics.minecart.blocks.CartStation.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartEjector", org.enginehub.craftbook.mechanics.minecart.blocks.CartEjector.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartDeposit", org.enginehub.craftbook.mechanics.minecart.blocks.CartDeposit.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartTeleporter", org.enginehub.craftbook.mechanics.minecart.blocks.CartTeleporter.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartElevator", org.enginehub.craftbook.mechanics.minecart.blocks.CartLift.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartDispenser", org.enginehub.craftbook.mechanics.minecart.blocks.CartDispenser.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartMessenger", org.enginehub.craftbook.mechanics.minecart.blocks.CartMessenger.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartMaxSpeed", org.enginehub.craftbook.mechanics.minecart.blocks.CartMaxSpeed.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartMoreRails", org.enginehub.craftbook.mechanics.minecart.MoreRails.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartRemoveEntities", org.enginehub.craftbook.mechanics.minecart.RemoveEntities.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartVisionSteering", org.enginehub.craftbook.mechanics.minecart.VisionSteering.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartDecay", org.enginehub.craftbook.mechanics.minecart.EmptyDecay.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartMobBlocker", org.enginehub.craftbook.mechanics.minecart.MobBlocker.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartExitRemover", org.enginehub.craftbook.mechanics.minecart.ExitRemover.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartCollisionEntry", org.enginehub.craftbook.mechanics.minecart.CollisionEntry.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartItemPickup", org.enginehub.craftbook.mechanics.minecart.ItemPickup.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartFallModifier", org.enginehub.craftbook.mechanics.minecart.FallModifier.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartConstantSpeed", org.enginehub.craftbook.mechanics.minecart.ConstantSpeed.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartRailPlacer", org.enginehub.craftbook.mechanics.minecart.RailPlacer.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartSpeedModifiers", org.enginehub.craftbook.mechanics.minecart.SpeedModifiers.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartEmptySlowdown", org.enginehub.craftbook.mechanics.minecart.EmptySlowdown.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartNoCollide", org.enginehub.craftbook.mechanics.minecart.NoCollide.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartPlaceAnywhere", org.enginehub.craftbook.mechanics.minecart.PlaceAnywhere.class, MechanicCategory.MINECART);
+//        registerMechanic("MinecartTemporaryCart", org.enginehub.craftbook.mechanics.minecart.TemporaryCart.class, MechanicCategory.MINECART);
+//        registerMechanic("BoatRemoveEntities", org.enginehub.craftbook.mechanics.boat.RemoveEntities.class, MechanicCategory.BOAT);
+//        registerMechanic("BoatDecay", org.enginehub.craftbook.mechanics.boat.EmptyDecay.class, MechanicCategory.BOAT);
+//        registerMechanic("BoatSpeedModifiers", org.enginehub.craftbook.mechanics.boat.SpeedModifiers.class, MechanicCategory.BOAT);
+//        registerMechanic("LandBoats", org.enginehub.craftbook.mechanics.boat.LandBoats.class, MechanicCategory.BOAT);
+//        registerMechanic("BoatExitRemover", org.enginehub.craftbook.mechanics.boat.ExitRemover.class, MechanicCategory.BOAT);
 
         registerMechanic(MechanicType.Builder
                 .create()
@@ -224,7 +159,17 @@ public class BukkitMechanicManager extends MechanicManager {
                 .build()
         );
 
-        // TODO Variables & CommandItems need to load early (variables before CommandItems). Marquee *depends* on Variables
+        registerMechanic(MechanicType.Builder
+            .create()
+            .id("marquee")
+            .name("Marquee")
+            .className("org.enginehub.craftbook.mechanics.Marquee")
+            .category(MechanicCategory.GENERAL)
+            .dependsOn(new MechanicDependency(MechanicType.REGISTRY.get("variables")))
+            .build()
+        );
+
+        // TODO CommandItems needs to load early (after variables).
     }
 
     @Override

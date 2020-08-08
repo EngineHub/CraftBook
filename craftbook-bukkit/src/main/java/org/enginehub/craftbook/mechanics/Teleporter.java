@@ -65,14 +65,14 @@ public class Teleporter extends AbstractCraftBookMechanic {
         if(!localPlayer.hasPermission("craftbook.mech.teleporter")) {
             if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 localPlayer.printError("mech.create-permission");
-            SignUtil.cancelSign(event);
+            SignUtil.cancelSignChange(event);
             return;
         }
 
         String[] pos = RegexUtil.COLON_PATTERN.split(ParsingUtil.parseLine(event.getLine(2), event.getPlayer()));
         if (pos.length <= 2) {
             localPlayer.printError("mech.teleport.invalidcoords");
-            SignUtil.cancelSign(event);
+            SignUtil.cancelSignChange(event);
             return;
         }
 

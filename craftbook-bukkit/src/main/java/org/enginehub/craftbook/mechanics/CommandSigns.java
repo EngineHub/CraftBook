@@ -51,7 +51,7 @@ public class CommandSigns extends AbstractCraftBookMechanic {
         if(!lplayer.hasPermission("craftbook.mech.command")) {
             if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 lplayer.printError("mech.create-permission");
-            SignUtil.cancelSign(event);
+            SignUtil.cancelSignChange(event);
             return;
         }
 

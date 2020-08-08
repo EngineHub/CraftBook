@@ -47,7 +47,7 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
         if(!lplayer.hasPermission("craftbook.mech.chunk")) {
             if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 lplayer.printError("mech.create-permission");
-            SignUtil.cancelSign(event);
+            SignUtil.cancelSignChange(event);
             return;
         }
 
@@ -57,7 +57,7 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
                     Sign s = (Sign) state;
                     if(s.getLine(1).equalsIgnoreCase("[Chunk]")) {
                         lplayer.printError("mech.anchor.already-anchored");
-                        SignUtil.cancelSign(event);
+                        SignUtil.cancelSignChange(event);
                         return;
                     }
                 }

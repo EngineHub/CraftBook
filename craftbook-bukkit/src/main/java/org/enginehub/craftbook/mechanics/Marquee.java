@@ -16,6 +16,12 @@
 
 package org.enginehub.craftbook.mechanics;
 
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.SignChangeEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
@@ -28,38 +34,37 @@ import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.events.SignClickEvent;
-import com.sk89q.util.yaml.YAMLProcessor;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.SignChangeEvent;
 
+// TODO Use a global data injection system for player UUID
 public class Marquee extends AbstractCraftBookMechanic {
 
-    @Override
-    public boolean enable() {
-        return VariableManager.instance != null;
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onSignClick(SignClickEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
         ChangedSign sign = event.getSign();
-        if(!sign.getLine(1).equals("[Marquee]")) return;
-        CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if(!lplayer.hasPermission("craftbook.mech.marquee.use")) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!sign.getLine(1).equals("[Marquee]")) {
+            return;
+        }
+
+        CraftBookPlayer lplayer = event.getWrappedPlayer();
+        if (!lplayer.hasPermission("craftbook.marquee.use")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                 lplayer.printError("mech.use-permission");
+            }
             return;
         }
 
         if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                 lplayer.printError("area.use-permissions");
+            }
             return;
         }
 
@@ -68,58 +73,72 @@ public class Marquee extends AbstractCraftBookMechanic {
             variableKey = VariableKey.of(sign.getLine(3), sign.getLine(2), null);
         } catch (VariableException e) {
             lplayer.printError(e.getRichMessage());
-            e.printStackTrace();
-
             event.setCancelled(true);
             return;
         }
+
         String var = VariableManager.instance.getVariable(variableKey);
-        if(var == null || var.isEmpty()) var = "variable.missing";
-        lplayer.print(var);
+        if (var == null) {
+            lplayer.printError(TranslatableComponent.of(
+                "craftbook.variables.unknown-variable",
+                TextComponent.of(variableKey.toString())
+            ));
+        } else {
+            lplayer.printInfo(TextComponent.of(var));
+        }
 
         event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!event.getLine(1).equalsIgnoreCase("[marquee]")) {
+            return;
+        }
 
-        if(!event.getLine(1).equalsIgnoreCase("[marquee]")) return;
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if(!lplayer.hasPermission("craftbook.mech.marquee")) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!lplayer.hasPermission("craftbook.marquee.create")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                 lplayer.printError("mech.create-permission");
-            SignUtil.cancelSign(event);
+            }
+            SignUtil.cancelSignChange(event);
             return;
         }
 
         // Don't pass the actor as we want it to default to global.
-        VariableKey variableKey = null;
+        VariableKey variableKey;
         try {
             variableKey = VariableKey.of(event.getLine(3), event.getLine(2), null);
         } catch (VariableException e) {
             lplayer.printError(e.getRichMessage());
-            SignUtil.cancelSign(event);
+            SignUtil.cancelSignChange(event);
             return;
         }
 
-        if(!variableKey.hasPermission(lplayer, "get")) {
-            lplayer.printError("variable.use-permissions");
-            SignUtil.cancelSign(event);
+        if (!variableKey.hasPermission(lplayer, "get")) {
+            lplayer.printError(TranslatableComponent.of(
+                "craftbook.variables.no-permission",
+                TextComponent.of(variableKey.toString())
+            ));
+            SignUtil.cancelSignChange(event);
+            return;
         }
 
         String var = VariableManager.instance.getVariable(variableKey);
-        if(var == null || var.isEmpty()) {
-            lplayer.printError("variable.missing");
-            SignUtil.cancelSign(event);
+        if(var == null) {
+            lplayer.printError(TranslatableComponent.of(
+                "craftbook.variables.unknown-variable",
+                TextComponent.of(variableKey.toString())
+            ));
+            SignUtil.cancelSignChange(event);
+            return;
         }
 
         event.setLine(1, "[Marquee]");
     }
 
-    @Override
-    public void loadFromConfiguration(YAMLProcessor config) {
-
-    }
 }

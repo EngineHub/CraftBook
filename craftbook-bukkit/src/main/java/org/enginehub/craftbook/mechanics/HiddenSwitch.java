@@ -67,7 +67,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
         if(!lplayer.hasPermission("craftbook.mech.hiddenswitch")) {
             if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 lplayer.printError("mech.create-permission");
-            SignUtil.cancelSign(event);
+            SignUtil.cancelSignChange(event);
             return;
         }
 

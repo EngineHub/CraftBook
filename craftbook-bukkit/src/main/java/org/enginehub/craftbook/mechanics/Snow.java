@@ -132,11 +132,11 @@ public class Snow extends AbstractCraftBookMechanic {
 
             if (event.getEntity().getShooter() != null && event.getEntity().getShooter() instanceof Player) {
                 CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer((Player) event.getEntity().getShooter());
-                if (!player.hasPermission("craftbook.mech.snow.place")) {
+                if (!player.hasPermission("craftbook.snow.place")) {
                     return;
                 }
 
-                if (CraftBook.getInstance().getPlatform().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild((Player)event.getEntity().getShooter(), block.getLocation(), true)) {
+                if (!ProtectionUtil.canBuild((Player)event.getEntity().getShooter(), block.getLocation(), true)) {
                     return;
                 }
             }
@@ -187,12 +187,11 @@ public class Snow extends AbstractCraftBookMechanic {
                         return;
                     }
 
-                    if (!player.hasPermission("craftbook.mech.snow.trample")) {
+                    if (!player.hasPermission("craftbook.snow.trample")) {
                         return;
                     }
 
-                    if (CraftBook.getInstance().getPlatform().getConfiguration().pedanticBlockChecks
-                            && !ProtectionUtil.canBuild(event.getPlayer(), event.getPlayer().getLocation(), false)) {
+                    if (!ProtectionUtil.canBuild(event.getPlayer(), event.getPlayer().getLocation(), false)) {
                         return;
                     }
 

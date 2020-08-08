@@ -80,7 +80,7 @@ public class Ammeter extends AbstractCraftBookMechanic {
         }
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if (!player.hasPermission("craftbook.mech.ammeter.use")) {
+        if (!player.hasPermission("craftbook.ammeter.use")) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                 player.printError("mech.use-permission");
             }

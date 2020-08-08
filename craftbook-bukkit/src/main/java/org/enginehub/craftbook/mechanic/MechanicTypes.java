@@ -50,8 +50,6 @@ import org.enginehub.craftbook.mechanics.area.simple.Bridge;
 import org.enginehub.craftbook.mechanics.area.simple.Door;
 import org.enginehub.craftbook.mechanics.area.simple.Gate;
 import org.enginehub.craftbook.mechanics.boat.LandBoats;
-import org.enginehub.craftbook.mechanics.boat.Uncrashable;
-import org.enginehub.craftbook.mechanics.boat.WaterPlaceOnly;
 import org.enginehub.craftbook.mechanics.cauldron.ImprovedCauldron;
 import org.enginehub.craftbook.mechanics.crafting.CustomCrafting;
 import org.enginehub.craftbook.mechanics.dispenser.DispenserRecipes;
@@ -105,8 +103,6 @@ public class MechanicTypes {
     @Nullable public static final MechanicType<ExitRemover> BOAT_EXIT_REMOVER = get("boat_exit_remover");
     @Nullable public static final MechanicType<RemoveEntities> BOAT_REMOVE_ENTITIES = get("boat_remove_entities");
     @Nullable public static final MechanicType<SpeedModifiers> BOAT_SPEED_MODIFIERS = get("boat_speed_modifiers");
-    @Nullable public static final MechanicType<Uncrashable> BOAT_UNCRASHABLE = get("boat_uncrashable");
-    @Nullable public static final MechanicType<WaterPlaceOnly> BOAT_WATER_PLACE_ONLY = get("boat_water_place_only");
     @Nullable public static final MechanicType<Bookcase> BOOKCASE = get("bookcase");
     @Nullable public static final MechanicType<BounceBlocks> BOUNCE_BLOCKS = get("bounce_blocks");
     @Nullable public static final MechanicType<Bridge> BRIDGE = get("bridge");

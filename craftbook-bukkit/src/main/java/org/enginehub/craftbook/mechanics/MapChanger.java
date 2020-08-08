@@ -46,7 +46,7 @@ public class MapChanger extends AbstractCraftBookMechanic {
         if(!lplayer.hasPermission("craftbook.mech.map")) {
             if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 lplayer.printError("You don't have permission for this.");
-            SignUtil.cancelSign(event);
+            SignUtil.cancelSignChange(event);
             return;
         }
 

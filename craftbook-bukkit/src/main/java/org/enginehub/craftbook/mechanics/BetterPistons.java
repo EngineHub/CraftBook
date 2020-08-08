@@ -141,7 +141,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             if(!player.hasPermission("craftbook.mech.pistons." + type.name().toLowerCase(Locale.ENGLISH))) {
                 if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     player.printError("mech.create-permission");
-                SignUtil.cancelSign(event);
+                SignUtil.cancelSignChange(event);
                 return;
             }
 
@@ -152,7 +152,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                     if (!ProtectionUtil.canBuild(event.getPlayer(), off, false)) {
                         if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                             player.printError("area.use-permission");
-                        SignUtil.cancelSign(event);
+                        SignUtil.cancelSignChange(event);
                         return;
                     }
                 } else if (type == Types.SUPERPUSH || type == Types.SUPERSTICKY) {
@@ -171,7 +171,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                         if (!ProtectionUtil.canBuild(event.getPlayer(), off, false)) {
                             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                                 player.printError("area.use-permission");
-                            SignUtil.cancelSign(event);
+                            SignUtil.cancelSignChange(event);
                             return;
                         }
                     }

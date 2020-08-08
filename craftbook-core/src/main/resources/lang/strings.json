@@ -18,6 +18,7 @@
     "craftbook.variables.list.all-and-namespace": "You can't provide a namespace when using -a",
     "craftbook.variables.not-numeric": "Variable {0} not of type 'number'",
     "craftbook.variables.not-boolean": "Variable {0} not of type 'boolean'",
+    "craftbook.variables.no-permission": "You don't have permission to use the variable \"{0}\"",
 
     "craftbook.mechanisms.missing-dependency": "Dependency not satisfied: {0}",
     "craftbook.mechanisms.already-enabled": "Mechanic {0} is already enabled",

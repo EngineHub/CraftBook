@@ -18,10 +18,6 @@ package org.enginehub.craftbook;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import org.enginehub.craftbook.bukkit.commands.CraftBookCommands;
-import org.enginehub.craftbook.command.argument.RegistryConverter;
-import org.enginehub.craftbook.command.argument.WorldConverter;
-import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
 import com.sk89q.worldedit.command.argument.Arguments;
 import com.sk89q.worldedit.command.argument.VectorConverter;
 import com.sk89q.worldedit.command.util.PermissionCondition;
@@ -32,6 +28,10 @@ import com.sk89q.worldedit.internal.util.Substring;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
+import org.enginehub.craftbook.bukkit.commands.CraftBookCommands;
+import org.enginehub.craftbook.command.argument.RegistryConverter;
+import org.enginehub.craftbook.command.argument.WorldConverter;
+import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
 import org.enginehub.piston.Command;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.exception.CommandException;
@@ -52,12 +52,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PlatformCommandManager {
-    public static final Pattern COMMAND_CLEAN_PATTERN = Pattern.compile("^[/]+");
     private static final Logger log = LoggerFactory.getLogger(PlatformCommandManager.class);
 
     private final CommandManagerServiceImpl commandManagerService;

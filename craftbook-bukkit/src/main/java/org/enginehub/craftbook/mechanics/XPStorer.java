@@ -186,7 +186,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         if (!player.hasPermission("craftbook.mech.xpstore")) {
             if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
-            SignUtil.cancelSign(event);
+            SignUtil.cancelSignChange(event);
             return;
         }
 

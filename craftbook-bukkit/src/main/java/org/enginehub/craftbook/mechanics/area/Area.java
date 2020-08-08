@@ -100,7 +100,7 @@ public class Area extends AbstractCraftBookMechanic {
             if(!player.hasPermission("craftbook.mech.area.sign.area")) {
                 if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     player.print("mech.create-permission");
-                SignUtil.cancelSign(event);
+                SignUtil.cancelSignChange(event);
                 return;
             }
             event.setLine(1, "[Area]");
@@ -108,7 +108,7 @@ public class Area extends AbstractCraftBookMechanic {
             if(!player.hasPermission("craftbook.mech.area.sign.savearea")) {
                 if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     player.print("mech.create-permission");
-                SignUtil.cancelSign(event);
+                SignUtil.cancelSignChange(event);
                 return;
             }
             event.setLine(1, "[SaveArea]");
@@ -116,7 +116,7 @@ public class Area extends AbstractCraftBookMechanic {
         // check if the namespace and area exists
         if(!isValidArea(event.getLine(0), event.getLine(2), event.getLine(3))) {
             player.printError("mech.area.missing");
-            SignUtil.cancelSign(event);
+            SignUtil.cancelSignChange(event);
             return;
         }
 

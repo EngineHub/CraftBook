@@ -35,7 +35,6 @@ public abstract class YamlConfiguration {
     public int stThinkRate;
     public boolean obeyWorldguard;
     public boolean advancedBlockChecks;
-    public boolean pedanticBlockChecks;
     public boolean showPermissionMessages;
     public long signClickTimeout;
 

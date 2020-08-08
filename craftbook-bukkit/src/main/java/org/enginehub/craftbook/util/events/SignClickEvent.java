@@ -16,7 +16,6 @@
 
 package org.enginehub.craftbook.util.events;
 
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -29,32 +28,38 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
+import javax.annotation.Nonnull;
+
 public class SignClickEvent extends PlayerInteractEvent {
 
     private static final HandlerList handlers = new HandlerList();
 
     private final ChangedSign sign;
+    private final CraftBookPlayer player;
 
-    public SignClickEvent (Player who, Action action, ItemStack item, Block clickedBlock, BlockFace clickedFace) {
+    public SignClickEvent(Player who, Action action, ItemStack item, Block clickedBlock, BlockFace clickedFace) {
         super(who, action, item, clickedBlock, clickedFace);
 
-        sign = CraftBookBukkitUtil.toChangedSign(getClickedBlock());
+        this.player = CraftBookPlugin.inst().wrapPlayer(who);
+        this.sign = new ChangedSign(clickedBlock, null, this.player);
     }
 
+    @Nonnull
     @Override
     public HandlerList getHandlers() {
         return handlers;
     }
 
+    @Nonnull
     public static HandlerList getHandlerList() {
         return handlers;
     }
 
     public ChangedSign getSign() {
-        return sign;
+        return this.sign;
     }
 
     public CraftBookPlayer getWrappedPlayer() {
-        return CraftBookPlugin.inst().wrapPlayer(getPlayer());
+        return this.player;
     }
 }

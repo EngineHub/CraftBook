@@ -90,7 +90,7 @@ public class Bridge extends CuboidToggleMechanic {
         if(!player.hasPermission("craftbook.mech.bridge")) {
             if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
-            SignUtil.cancelSign(event);
+            SignUtil.cancelSignChange(event);
             return;
         }
 

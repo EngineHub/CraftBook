@@ -265,7 +265,7 @@ public final class SignUtil {
      * 
      * @param event The event that is to be cancelled.
      */
-    public static void cancelSign(SignChangeEvent event) {
+    public static void cancelSignChange(SignChangeEvent event) {
         event.setCancelled(true);
         event.getBlock().breakNaturally();
     }

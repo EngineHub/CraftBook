@@ -109,7 +109,7 @@ public class Payment extends AbstractCraftBookMechanic {
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if(!lplayer.hasPermission("craftbook.mech.pay")) {
             lplayer.printError("mech.create-permission");
-            SignUtil.cancelSign(event);
+            SignUtil.cancelSignChange(event);
             return;
         }
 

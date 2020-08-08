@@ -95,7 +95,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
         if (!player.hasPermission("craftbook.mech.cauldron")) {
             if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
-            SignUtil.cancelSign(event);
+            SignUtil.cancelSignChange(event);
             return;
         }
 

@@ -79,7 +79,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         if(!player.hasPermission("craftbook.circuits.pipes")) {
             if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
-            SignUtil.cancelSign(event);
+            SignUtil.cancelSignChange(event);
             return;
         }
 
@@ -102,13 +102,13 @@ public class Pipes extends AbstractCraftBookMechanic {
                     if (!ProtectionUtil.canAccessInventory(event.getPlayer(), off)) {
                         if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                             player.printError("area.use-permission");
-                        SignUtil.cancelSign(event);
+                        SignUtil.cancelSignChange(event);
                         return;
                     }
                 }
             } else {
                 player.printError("circuits.pipes.pipe-not-found");
-                SignUtil.cancelSign(event);
+                SignUtil.cancelSignChange(event);
                 return;
             }
         }

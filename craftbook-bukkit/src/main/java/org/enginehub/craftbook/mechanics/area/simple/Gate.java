@@ -369,7 +369,7 @@ public class Gate extends AbstractCraftBookMechanic {
             if(!player.hasPermission("craftbook.mech.gate")) {
                 if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     player.printError("mech.create-permission");
-                SignUtil.cancelSign(event);
+                SignUtil.cancelSignChange(event);
                 return;
             }
             // get the material that this gate should toggle and verify it
@@ -377,7 +377,7 @@ public class Gate extends AbstractCraftBookMechanic {
             if (!line0.isEmpty()) {
                 if (!isValidGateBlock(BlockSyntax.getBlock(line0, true))) {
                     player.printError("Line 1 needs to be a valid block id.");
-                    SignUtil.cancelSign(event);
+                    SignUtil.cancelSignChange(event);
                     return;
                 }
             }
@@ -391,7 +391,7 @@ public class Gate extends AbstractCraftBookMechanic {
             if (!player.hasPermission("craftbook.mech.gate") && !player.hasPermission("craftbook.mech.dgate")) {
                 if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     player.printError("mech.create-permission");
-                SignUtil.cancelSign(event);
+                SignUtil.cancelSignChange(event);
                 return;
             }
             // get the material that this gate should toggle and verify it
@@ -399,7 +399,7 @@ public class Gate extends AbstractCraftBookMechanic {
             if (!line0.isEmpty()) {
                 if (!isValidGateBlock(BlockSyntax.getBlock(line0, true))) {
                     player.printError("mech.gate.valid-item");
-                    SignUtil.cancelSign(event);
+                    SignUtil.cancelSignChange(event);
                     return;
                 }
             }

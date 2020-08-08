@@ -59,7 +59,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
         if (!player.hasPermission("craftbook.mech.cook")) {
             if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
-            SignUtil.cancelSign(event);
+            SignUtil.cancelSignChange(event);
             return;
         }
 

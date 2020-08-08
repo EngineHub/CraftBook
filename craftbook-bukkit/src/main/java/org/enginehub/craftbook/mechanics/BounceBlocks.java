@@ -185,7 +185,7 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
         if(!lplayer.hasPermission("craftbook.mech.bounceblocks")) {
             if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 lplayer.printError("mech.create-permission");
-            SignUtil.cancelSign(event);
+            SignUtil.cancelSignChange(event);
             return;
         }
 
@@ -200,7 +200,7 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
             }
         } catch(Exception e){
             lplayer.printError(TranslatableComponent.of("craftbook.bounceblocks.invalid-velocity"));
-            SignUtil.cancelSign(event);
+            SignUtil.cancelSignChange(event);
             return;
         }
 

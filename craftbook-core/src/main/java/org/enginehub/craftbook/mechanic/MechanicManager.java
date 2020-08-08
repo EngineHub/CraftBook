@@ -142,7 +142,7 @@ public abstract class MechanicManager {
         }
         try {
             for (LoadDependency dependency : mechanicType.getDependencies()) {
-                if (!dependency.isMet()) {
+                if (!dependency.isMet() && !dependency.isOptional()) {
                     throw new UnsatisfiedLoadDependencyException(mechanicType, dependency);
                 }
             }

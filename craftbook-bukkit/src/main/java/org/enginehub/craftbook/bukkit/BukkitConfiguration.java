@@ -24,7 +24,6 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 
 public class BukkitConfiguration extends YamlConfiguration {
@@ -103,11 +102,8 @@ public class BukkitConfiguration extends YamlConfiguration {
         config.setComment("advanced-block-checks", "Use advanced methods to detect if a player can build or not. Use this if you use region protections other than WorldGuard, or experience issues with WorldGuard protection. This can add extra entries to Block Logging plugins when a mechanic is broken/placed.");
         advancedBlockChecks = config.getBoolean("advanced-block-checks", true);
 
-        config.setComment("pedantic-block-checks", "In conjunction with advanced-block-checks, this option adds a few extra checks if you are experiencing compatibility issues with certain plugins that stop breaks/places/interacts.");
-        pedanticBlockChecks = config.getBoolean("pedantic-block-checks", false);
-
-        config.setComment("sign-click-timeout", "Make sure a player can only press signs so often.");
-        signClickTimeout = config.getInt("sign-click-timeout", 10);
+        config.setComment("sign-click-timeout", "How often in milliseconds players can interact with CraftBook signs.");
+        signClickTimeout = config.getInt("sign-click-timeout", 500);
 
         config.setComment("debug-mode", "Enable a mode that will print extra debug information to the console.");
         debugMode = config.getBoolean("debug-mode", false);
