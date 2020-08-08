@@ -55,7 +55,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("BetterPistons", org.enginehub.craftbook.mechanics.BetterPistons.class, MechanicCategory.GENERAL);
 //        registerMechanic("CookingPot", org.enginehub.craftbook.mechanics.CookingPot.class, MechanicCategory.GENERAL);
 //        registerMechanic("Sponge", org.enginehub.craftbook.mechanics.Sponge.class, MechanicCategory.GENERAL);
-//        registerMechanic("BetterPlants", org.enginehub.craftbook.mechanics.BetterPlants.class, MechanicCategory.GENERAL);
 //        registerMechanic("Chairs", org.enginehub.craftbook.mechanics.Chair.class, MechanicCategory.GENERAL);
 //        registerMechanic("Pay", org.enginehub.craftbook.mechanics.Payment.class, MechanicCategory.CIRCUIT);
 //        registerMechanic("Glowstone", org.enginehub.craftbook.mechanics.GlowStone.class, MechanicCategory.CIRCUIT);
@@ -166,6 +165,15 @@ public class BukkitMechanicManager extends MechanicManager {
             .className("org.enginehub.craftbook.mechanics.Marquee")
             .category(MechanicCategory.GENERAL)
             .dependsOn(new MechanicDependency(MechanicType.REGISTRY.get("variables")))
+            .build()
+        );
+
+        registerMechanic(MechanicType.Builder
+            .create()
+            .id("better_plants")
+            .name("BetterPlants")
+            .className("org.enginehub.craftbook.mechanics.BetterPlants")
+            .category(MechanicCategory.GENERAL)
             .build()
         );
 

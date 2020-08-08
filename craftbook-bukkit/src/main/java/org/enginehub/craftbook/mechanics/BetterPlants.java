@@ -16,27 +16,24 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.util.BlockUtil;
-import org.enginehub.craftbook.util.EventUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.world.WorldLoadEvent;
-import org.bukkit.event.world.WorldUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.BlockUtil;
+import org.enginehub.craftbook.util.EventUtil;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class BetterPlants extends AbstractCraftBookMechanic {
@@ -45,46 +42,63 @@ public class BetterPlants extends AbstractCraftBookMechanic {
 
     @Override
     public boolean enable() {
-        if(fernFarming) {
-            tickedWorlds.addAll(Bukkit.getWorlds());
-
+        if (fernFarming) {
             growthTask = Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new GrowthTicker(), 2L, 2L);
         }
 
-        return fernFarming; //Only enable if a mech is enabled
+        return true;
     }
 
     @Override
     public void disable() {
-        tickedWorlds.clear();
-
-        if(growthTask != null)
+        if (growthTask != null) {
             growthTask.cancel();
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(final BlockBreakEvent event) {
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
-        if (!EventUtil.passesFilter(event)) return;
-
-        if(fernFarming && event.getBlock().getType() == Material.LARGE_FERN
-                && ((Bisected) event.getBlock().getBlockData()).getHalf() == Bisected.Half.TOP
-                && event.getBlock().getRelative(0, -1, 0).getType() == Material.LARGE_FERN
-                && ((Bisected) event.getBlock().getRelative(0, -1, 0).getBlockData()).getHalf() == Bisected.Half.BOTTOM) {
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
-                event.getBlock().getWorld().dropItemNaturally(BlockUtil.getBlockCentre(event.getBlock()), new ItemStack(Material.FERN));
-                event.getBlock().getRelative(0, -1, 0).setType(Material.FERN);
-            }, 2L);
+        if (fernFarming) {
+            handleFernBreak(event.getBlock());
         }
     }
 
-    private class GrowthTicker implements Runnable {
+    private void handleFernBreak(Block block) {
+        Material type = block.getType();
+        if (type != Material.LARGE_FERN) {
+            return;
+        }
 
+        Bisected data = (Bisected) block.getBlockData();
+        if (data.getHalf() != Bisected.Half.TOP) {
+            return;
+        }
+
+        Block below = block.getRelative(BlockFace.DOWN);
+        Material belowType = below.getType();
+        if (belowType != Material.LARGE_FERN) {
+            return;
+        }
+
+        Bisected belowData = (Bisected) block.getBlockData();
+        if (belowData.getHalf() != Bisected.Half.BOTTOM) {
+            return;
+        }
+
+        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
+            block.getWorld().dropItemNaturally(BlockUtil.getBlockCentre(block), new ItemStack(Material.FERN));
+            below.setType(Material.FERN);
+        }, 2L);
+    }
+
+    private class GrowthTicker implements Runnable {
         @Override
         public void run () {
-
-            for(World world : tickedWorlds) {
-
+            for (World world : Bukkit.getWorlds()) {
                 int x = 0, y = 0, z = 0;
 
                 if(fastTickRandoms) {
@@ -93,12 +107,15 @@ public class BetterPlants extends AbstractCraftBookMechanic {
                     z = ThreadLocalRandom.current().nextInt(16);
                 }
 
-                for(Chunk chunk : world.getLoadedChunks()) {
+                for (Chunk chunk : world.getLoadedChunks()) {
                     Block block;
-                    if(fastTickRandoms)
-                        block = chunk.getBlock(x,y,z);
-                    else
-                        block = chunk.getBlock(ThreadLocalRandom.current().nextInt(16), ThreadLocalRandom.current().nextInt(world.getMaxHeight()), ThreadLocalRandom.current().nextInt(16));
+                    if (!fastTickRandoms) {
+                        x = ThreadLocalRandom.current().nextInt(16);
+                        y = ThreadLocalRandom.current().nextInt(world.getMaxHeight());
+                        z = ThreadLocalRandom.current().nextInt(16);
+                    }
+
+                    block = chunk.getBlock(x, y, z);
 
                     if(fernFarming && block.getType() == Material.FERN) {
                         block.setType(Material.LARGE_FERN, false);
@@ -111,26 +128,11 @@ public class BetterPlants extends AbstractCraftBookMechanic {
         }
     }
 
-    private Set<World> tickedWorlds = new HashSet<>();
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onWorldLoad(WorldLoadEvent event) {
-
-        tickedWorlds.add(event.getWorld());
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onWorldUnload(WorldUnloadEvent event) {
-
-        tickedWorlds.remove(event.getWorld());
-    }
-
     private boolean fernFarming;
     private boolean fastTickRandoms;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
         config.setComment("fern-farming", "Allows ferns to be farmed by breaking top half of a large fern. (And small ferns to grow)");
         fernFarming = config.getBoolean("fern-farming", true);
 
