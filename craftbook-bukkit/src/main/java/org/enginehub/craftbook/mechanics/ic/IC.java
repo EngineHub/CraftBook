@@ -30,12 +30,12 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic;
+package org.enginehub.craftbook.mechanics.ic;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 
-import com.sk89q.craftbook.ChangedSign;
+import org.enginehub.craftbook.ChangedSign;
 
 /**
  * Integrated circuits are represented by this interface. For self-triggered ICs, see {@link SelfTriggeredIC}.

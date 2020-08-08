@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util.persistent;
+package org.enginehub.craftbook.util.persistent;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -33,12 +33,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.sk89q.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBook;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 public class SQLitePersistentStorage extends PersistentStorage {
 

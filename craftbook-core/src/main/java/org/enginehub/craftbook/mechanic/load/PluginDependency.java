@@ -14,11 +14,11 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanic.load;
+package org.enginehub.craftbook.mechanic.load;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.sk89q.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBook;
 
 /**
  * A load dependency on another plugin.

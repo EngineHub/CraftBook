@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util.jinglenote;
+package org.enginehub.craftbook.util.jinglenote;
 
 public enum Instrument {
 

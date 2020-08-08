@@ -14,13 +14,13 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
+package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
-import com.sk89q.craftbook.mechanics.ic.ChipState;
-import com.sk89q.craftbook.mechanics.ic.ICFactory;
-import com.sk89q.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
+import org.enginehub.craftbook.mechanics.ic.ChipState;
+import org.enginehub.craftbook.mechanics.ic.ICFactory;
+import org.enginehub.craftbook.util.BlockSyntax;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.item.ItemType;

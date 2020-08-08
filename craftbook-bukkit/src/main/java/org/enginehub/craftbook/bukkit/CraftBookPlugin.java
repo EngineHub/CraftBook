@@ -14,25 +14,25 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.bukkit;
+package org.enginehub.craftbook.bukkit;
 
 import com.google.common.base.Joiner;
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.CraftBookManifest;
-import com.sk89q.craftbook.CraftBookPlatform;
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.PlatformCommandManager;
-import com.sk89q.craftbook.mechanic.CraftBookMechanic;
-import com.sk89q.craftbook.mechanics.variables.VariableManager;
-import com.sk89q.craftbook.st.MechanicClock;
-import com.sk89q.craftbook.st.SelfTriggeringManager;
-import com.sk89q.craftbook.util.ArrayUtil;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.UUIDMappings;
-import com.sk89q.craftbook.util.companion.CompanionPlugins;
-import com.sk89q.craftbook.util.persistent.PersistentStorage;
-import com.sk89q.craftbook.util.profile.Profile;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookManifest;
+import org.enginehub.craftbook.CraftBookPlatform;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.LanguageManager;
+import org.enginehub.craftbook.PlatformCommandManager;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanics.variables.VariableManager;
+import org.enginehub.craftbook.st.MechanicClock;
+import org.enginehub.craftbook.st.SelfTriggeringManager;
+import org.enginehub.craftbook.util.ArrayUtil;
+import org.enginehub.craftbook.util.RegexUtil;
+import org.enginehub.craftbook.util.UUIDMappings;
+import org.enginehub.craftbook.util.companion.CompanionPlugins;
+import org.enginehub.craftbook.util.persistent.PersistentStorage;
+import org.enginehub.craftbook.util.profile.Profile;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.wepif.PermissionsResolverManager;

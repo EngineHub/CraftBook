@@ -30,18 +30,18 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic.gates.logic;
+package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
-import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
-import com.sk89q.craftbook.mechanics.ic.ChipState;
-import com.sk89q.craftbook.mechanics.ic.ConfigurableIC;
-import com.sk89q.craftbook.mechanics.ic.IC;
-import com.sk89q.craftbook.mechanics.ic.ICFactory;
-import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
+import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
+import org.enginehub.craftbook.mechanics.ic.ChipState;
+import org.enginehub.craftbook.mechanics.ic.ConfigurableIC;
+import org.enginehub.craftbook.mechanics.ic.IC;
+import org.enginehub.craftbook.mechanics.ic.ICFactory;
+import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 public class Clock extends AbstractSelfTriggeredIC {

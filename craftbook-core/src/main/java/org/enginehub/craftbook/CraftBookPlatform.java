@@ -14,12 +14,12 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook;
+package org.enginehub.craftbook;
 
-import com.sk89q.craftbook.mechanic.MechanicManager;
+import org.enginehub.craftbook.mechanic.MechanicManager;
 import com.sk89q.worldedit.util.report.ReportList;
-import com.sk89q.craftbook.util.profile.cache.ProfileCache;
-import com.sk89q.craftbook.util.profile.resolver.ProfileService;
+import org.enginehub.craftbook.util.profile.cache.ProfileCache;
+import org.enginehub.craftbook.util.profile.resolver.ProfileService;
 import org.enginehub.piston.CommandManager;
 
 import java.nio.file.Path;

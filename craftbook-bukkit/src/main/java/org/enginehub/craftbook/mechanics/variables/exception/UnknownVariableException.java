@@ -14,9 +14,9 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.variables.exception;
+package org.enginehub.craftbook.mechanics.variables.exception;
 
-import com.sk89q.craftbook.mechanics.variables.VariableKey;
+import org.enginehub.craftbook.mechanics.variables.VariableKey;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 

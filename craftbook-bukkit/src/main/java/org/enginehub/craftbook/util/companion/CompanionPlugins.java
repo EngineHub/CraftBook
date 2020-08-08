@@ -14,14 +14,14 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util.companion;
+package org.enginehub.craftbook.util.companion;
 
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 

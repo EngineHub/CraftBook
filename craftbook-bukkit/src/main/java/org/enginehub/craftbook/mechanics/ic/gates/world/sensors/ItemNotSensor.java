@@ -14,17 +14,17 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic.gates.world.sensors;
+package org.enginehub.craftbook.mechanics.ic.gates.world.sensors;
 
 import org.bukkit.Server;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.mechanics.ic.ChipState;
-import com.sk89q.craftbook.mechanics.ic.IC;
-import com.sk89q.craftbook.mechanics.ic.ICFactory;
-import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
-import com.sk89q.craftbook.mechanics.ic.SelfTriggeredIC;
-import com.sk89q.craftbook.util.ICUtil;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.mechanics.ic.ChipState;
+import org.enginehub.craftbook.mechanics.ic.IC;
+import org.enginehub.craftbook.mechanics.ic.ICFactory;
+import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
+import org.enginehub.craftbook.mechanics.ic.SelfTriggeredIC;
+import org.enginehub.craftbook.util.ICUtil;
 
 /**
  * @author Silthus

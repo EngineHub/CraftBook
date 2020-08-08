@@ -14,15 +14,15 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util;
+package org.enginehub.craftbook.util;
 
-import com.sk89q.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBook;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 /**
  * Decorates bukkit's directional block power queries with a three-valued logic that differenciates between the

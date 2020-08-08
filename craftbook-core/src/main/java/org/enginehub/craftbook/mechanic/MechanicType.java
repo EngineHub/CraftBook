@@ -14,13 +14,13 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanic;
+package org.enginehub.craftbook.mechanic;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.collect.ImmutableList;
-import com.sk89q.craftbook.mechanic.load.LoadDependency;
-import com.sk89q.craftbook.mechanic.load.LoadPriority;
+import org.enginehub.craftbook.mechanic.load.LoadDependency;
+import org.enginehub.craftbook.mechanic.load.LoadPriority;
 import com.sk89q.worldedit.registry.Keyed;
 import com.sk89q.worldedit.registry.Registry;
 

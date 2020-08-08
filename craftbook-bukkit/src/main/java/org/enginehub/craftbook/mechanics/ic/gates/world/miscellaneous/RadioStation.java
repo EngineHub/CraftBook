@@ -14,20 +14,20 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous;
+package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Server;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
-import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
-import com.sk89q.craftbook.mechanics.ic.ChipState;
-import com.sk89q.craftbook.mechanics.ic.IC;
-import com.sk89q.craftbook.mechanics.ic.ICFactory;
-import com.sk89q.craftbook.util.jinglenote.Playlist;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
+import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
+import org.enginehub.craftbook.mechanics.ic.ChipState;
+import org.enginehub.craftbook.mechanics.ic.IC;
+import org.enginehub.craftbook.mechanics.ic.ICFactory;
+import org.enginehub.craftbook.util.jinglenote.Playlist;
 
 public class RadioStation extends AbstractSelfTriggeredIC {
 

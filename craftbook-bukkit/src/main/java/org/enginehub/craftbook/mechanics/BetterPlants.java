@@ -14,12 +14,12 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics;
+package org.enginehub.craftbook.mechanics;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.BlockUtil;
-import com.sk89q.craftbook.util.EventUtil;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.BlockUtil;
+import org.enginehub.craftbook.util.EventUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;

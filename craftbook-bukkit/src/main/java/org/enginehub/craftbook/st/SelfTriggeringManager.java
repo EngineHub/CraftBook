@@ -14,15 +14,15 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.st;
+package org.enginehub.craftbook.st;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
-import com.sk89q.craftbook.util.events.SelfTriggerThinkEvent;
-import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent;
-import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.events.SelfTriggerPingEvent;
+import org.enginehub.craftbook.util.events.SelfTriggerThinkEvent;
+import org.enginehub.craftbook.util.events.SelfTriggerUnregisterEvent;
+import org.enginehub.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;

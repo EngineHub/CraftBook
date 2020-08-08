@@ -14,37 +14,47 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util;
+package org.enginehub.craftbook.util;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.bukkit.entity.Minecart;
-import org.bukkit.util.Vector;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(CartUtil.class)
-public class CartUtilsTest {
+@PrepareForTest(VerifyUtil.class)
+public class VerifyUtilTest {
 
     @Test
-    public void testReverse() {
+    public void testVerifyRadius() {
 
-        Minecart cart = mock(Minecart.class);
-        when(cart.getVelocity()).thenReturn(new Vector(0,1,0));
-        CartUtil.reverse(cart);
-        verify(cart).setVelocity(new Vector(0,-1,0));
+        double rad = VerifyUtil.verifyRadius(7, 15);
+        assertTrue(rad == 7);
+        rad = VerifyUtil.verifyRadius(20, 15);
+        assertTrue(rad == 15);
     }
 
     @Test
-    public void testStop() {
+    public void testWithoutNulls() {
 
-        Minecart cart = mock(Minecart.class);
-        CartUtil.stop(cart);
-        verify(cart).setVelocity(new Vector(0,0,0));
+        List<Object> list = new ArrayList<>();
+        list.add(null);
+        list.add(mock(Object.class));
+        list.add(mock(Object.class));
+        list.add(mock(Object.class));
+        list.add(null);
+        list.add(mock(Object.class));
+        list.add(mock(Object.class));
+        list.add(null);
+
+        list = (List<Object>) VerifyUtil.withoutNulls(list);
+
+        assertTrue(!list.contains(null));
+        assertTrue(list.size() == 5);
     }
 }

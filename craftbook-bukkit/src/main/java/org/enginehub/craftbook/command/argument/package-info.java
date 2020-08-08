@@ -15,6 +15,6 @@
  */
 
 @NonnullByDefault
-package com.sk89q.craftbook.command.argument;
+package org.enginehub.craftbook.command.argument;
 
 import org.enginehub.piston.util.NonnullByDefault;

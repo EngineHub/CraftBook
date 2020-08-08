@@ -14,19 +14,19 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.drops;
+package org.enginehub.craftbook.mechanics.drops;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.mechanics.drops.rewards.DropReward;
-import com.sk89q.craftbook.mechanics.drops.rewards.MonetaryDropReward;
-import com.sk89q.craftbook.util.BlockSyntax;
-import com.sk89q.craftbook.util.BlockUtil;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemSyntax;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.TernaryState;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.mechanics.drops.rewards.DropReward;
+import org.enginehub.craftbook.mechanics.drops.rewards.MonetaryDropReward;
+import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockUtil;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.ItemSyntax;
+import org.enginehub.craftbook.util.ItemUtil;
+import org.enginehub.craftbook.util.TernaryState;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;

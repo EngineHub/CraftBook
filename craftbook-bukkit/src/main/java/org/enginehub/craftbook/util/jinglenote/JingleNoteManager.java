@@ -19,11 +19,11 @@
  * Tetsuuuu plugin for SK's Minecraft Server Copyright (C) 2010 sk89q <http://www.sk89q.com> All rights reserved.
  */
 
-package com.sk89q.craftbook.util.jinglenote;
+package org.enginehub.craftbook.util.jinglenote;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.SearchArea;
-import com.sk89q.craftbook.util.jinglenote.bukkit.BukkitJingleNotePlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.SearchArea;
+import org.enginehub.craftbook.util.jinglenote.bukkit.BukkitJingleNotePlayer;
 
 import java.util.HashMap;
 import java.util.Map;

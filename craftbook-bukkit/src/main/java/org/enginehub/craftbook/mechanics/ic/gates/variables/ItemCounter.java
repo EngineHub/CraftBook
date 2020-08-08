@@ -14,23 +14,23 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic.gates.variables;
+package org.enginehub.craftbook.mechanics.ic.gates.variables;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.mechanics.ic.AbstractIC;
-import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
-import com.sk89q.craftbook.mechanics.ic.ChipState;
-import com.sk89q.craftbook.mechanics.ic.IC;
-import com.sk89q.craftbook.mechanics.ic.ICFactory;
-import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
-import com.sk89q.craftbook.mechanics.variables.VariableKey;
-import com.sk89q.craftbook.mechanics.variables.VariableManager;
-import com.sk89q.craftbook.mechanics.variables.exception.VariableException;
-import com.sk89q.craftbook.util.InventoryUtil;
-import com.sk89q.craftbook.util.ItemSyntax;
-import com.sk89q.craftbook.util.ItemUtil;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.mechanics.ic.AbstractIC;
+import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
+import org.enginehub.craftbook.mechanics.ic.ChipState;
+import org.enginehub.craftbook.mechanics.ic.IC;
+import org.enginehub.craftbook.mechanics.ic.ICFactory;
+import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
+import org.enginehub.craftbook.mechanics.variables.VariableKey;
+import org.enginehub.craftbook.mechanics.variables.VariableManager;
+import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
+import org.enginehub.craftbook.util.InventoryUtil;
+import org.enginehub.craftbook.util.ItemSyntax;
+import org.enginehub.craftbook.util.ItemUtil;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Server;
 import org.bukkit.inventory.InventoryHolder;

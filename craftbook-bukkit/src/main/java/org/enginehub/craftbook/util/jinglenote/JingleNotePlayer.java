@@ -19,12 +19,12 @@
  * Tetsuuuu plugin for SK's Minecraft Server Copyright (C) 2010 sk89q <http://www.sk89q.com> All rights reserved.
  */
 
-package com.sk89q.craftbook.util.jinglenote;
+package org.enginehub.craftbook.util.jinglenote;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.craftbook.util.SearchArea;
-import com.sk89q.craftbook.util.jinglenote.JingleSequencer.Note;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.util.SearchArea;
+import org.enginehub.craftbook.util.jinglenote.JingleSequencer.Note;
 
 public abstract class JingleNotePlayer implements Runnable {
 

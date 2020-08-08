@@ -30,7 +30,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic;
+package org.enginehub.craftbook.mechanics.ic;
 
 /**
  * Symbolizes that an IC should not be given to normal users.

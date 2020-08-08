@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic.gates.world.entity;
+package org.enginehub.craftbook.mechanics.ic.gates.world.entity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,18 +23,18 @@ import java.util.List;
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
-import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
-import com.sk89q.craftbook.mechanics.ic.ChipState;
-import com.sk89q.craftbook.mechanics.ic.IC;
-import com.sk89q.craftbook.mechanics.ic.ICFactory;
-import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
-import com.sk89q.craftbook.util.EntityType;
-import com.sk89q.craftbook.util.EntityUtil;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SearchArea;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
+import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
+import org.enginehub.craftbook.mechanics.ic.ChipState;
+import org.enginehub.craftbook.mechanics.ic.IC;
+import org.enginehub.craftbook.mechanics.ic.ICFactory;
+import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
+import org.enginehub.craftbook.util.EntityType;
+import org.enginehub.craftbook.util.EntityUtil;
+import org.enginehub.craftbook.util.RegexUtil;
+import org.enginehub.craftbook.util.SearchArea;
 
 /**
  * @author Me4502

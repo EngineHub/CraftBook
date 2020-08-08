@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.pipe;
+package org.enginehub.craftbook.mechanics.pipe;
 
 import java.util.List;
 

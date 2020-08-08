@@ -14,35 +14,37 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.boat;
+package org.enginehub.craftbook.util;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mock;
 
-import org.bukkit.entity.Boat;
-import org.bukkit.event.vehicle.VehicleCreateEvent;
-import org.junit.Ignore;
+import org.bukkit.entity.Minecart;
+import org.bukkit.util.Vector;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-@Ignore
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Boat.class, VehicleCreateEvent.class, LandBoats.class})
-public class LandBoatsTest {
+@PrepareForTest(CartUtil.class)
+public class CartUtilsTest {
 
     @Test
-    public void testOnVehicleCreate() {
+    public void testReverse() {
 
-        VehicleCreateEvent event = mock(VehicleCreateEvent.class);
-        Boat boat = mock(Boat.class);
+        Minecart cart = mock(Minecart.class);
+        when(cart.getVelocity()).thenReturn(new Vector(0,1,0));
+        CartUtil.reverse(cart);
+        verify(cart).setVelocity(new Vector(0,-1,0));
+    }
 
-        when(event.getVehicle()).thenReturn(boat);
+    @Test
+    public void testStop() {
 
-        new LandBoats().onVehicleCreate(event);
-
-        verify(boat).setWorkOnLand(true);
+        Minecart cart = mock(Minecart.class);
+        CartUtil.stop(cart);
+        verify(cart).setVelocity(new Vector(0,0,0));
     }
 }

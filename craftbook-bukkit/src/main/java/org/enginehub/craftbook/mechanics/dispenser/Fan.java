@@ -14,9 +14,9 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.dispenser;
+package org.enginehub.craftbook.mechanics.dispenser;
 
-import com.sk89q.craftbook.util.EntityUtil;
+import org.enginehub.craftbook.util.EntityUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

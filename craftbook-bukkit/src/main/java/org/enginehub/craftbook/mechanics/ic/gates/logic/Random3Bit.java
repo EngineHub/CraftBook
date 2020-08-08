@@ -30,13 +30,13 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic.gates.logic;
+package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.mechanics.ic.IC;
-import com.sk89q.craftbook.mechanics.ic.ICFactory;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.mechanics.ic.IC;
+import org.enginehub.craftbook.mechanics.ic.ICFactory;
 
 public class Random3Bit extends RandomBit {
 

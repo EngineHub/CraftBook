@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.boat;
+package org.enginehub.craftbook.mechanics.boat;
 
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Entity;
@@ -24,9 +24,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.EventUtil;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.EventUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 public class EmptyDecay extends AbstractCraftBookMechanic {

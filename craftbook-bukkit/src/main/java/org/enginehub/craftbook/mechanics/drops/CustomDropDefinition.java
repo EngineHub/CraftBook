@@ -14,12 +14,12 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.drops;
+package org.enginehub.craftbook.mechanics.drops;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.mechanics.drops.rewards.DropReward;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.TernaryState;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanics.drops.rewards.DropReward;
+import org.enginehub.craftbook.util.ItemUtil;
+import org.enginehub.craftbook.util.TernaryState;
 import org.bukkit.block.Biome;
 import org.bukkit.inventory.ItemStack;
 

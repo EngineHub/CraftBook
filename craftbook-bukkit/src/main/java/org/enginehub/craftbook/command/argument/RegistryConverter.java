@@ -14,11 +14,11 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.command.argument;
+package org.enginehub.craftbook.command.argument;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.TypeToken;
-import com.sk89q.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import com.sk89q.worldedit.command.util.SuggestionHelper;
 import com.sk89q.worldedit.registry.Keyed;
 import com.sk89q.worldedit.registry.Registry;

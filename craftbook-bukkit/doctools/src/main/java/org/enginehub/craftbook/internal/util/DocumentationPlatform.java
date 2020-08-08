@@ -1,6 +1,6 @@
 package org.enginehub.craftbook.internal.util;
 
-import com.sk89q.craftbook.bukkit.BukkitCraftBookPlatform;
+import org.enginehub.craftbook.bukkit.BukkitCraftBookPlatform;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

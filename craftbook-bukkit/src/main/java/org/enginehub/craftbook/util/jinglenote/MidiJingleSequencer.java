@@ -14,12 +14,12 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util.jinglenote;
+package org.enginehub.craftbook.util.jinglenote;
 
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.craftbook.mechanics.ic.ICMechanic;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.mechanics.ic.ICMechanic;
 
 import java.io.File;
 import java.io.IOException;

@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanic.load;
+package org.enginehub.craftbook.mechanic.load;
 
 public interface LoadDependency {
 

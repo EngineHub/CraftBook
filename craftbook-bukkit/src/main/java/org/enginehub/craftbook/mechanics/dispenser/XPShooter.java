@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.dispenser;
+package org.enginehub.craftbook.mechanics.dispenser;
 
 import org.bukkit.Material;
 

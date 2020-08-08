@@ -14,11 +14,11 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.bukkit.util;
+package org.enginehub.craftbook.bukkit.util;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.util.SignUtil;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.util.SignUtil;
 import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;

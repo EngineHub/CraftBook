@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util;
+package org.enginehub.craftbook.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;

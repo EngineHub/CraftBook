@@ -14,12 +14,12 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util;
+package org.enginehub.craftbook.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.mechanics.variables.VariableManager;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanics.variables.VariableManager;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 

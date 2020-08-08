@@ -30,7 +30,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util.events;
+package org.enginehub.craftbook.util.events;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.HandlerList;

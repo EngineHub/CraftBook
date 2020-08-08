@@ -30,7 +30,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook;
+package org.enginehub.craftbook;
 
 import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.util.Location;

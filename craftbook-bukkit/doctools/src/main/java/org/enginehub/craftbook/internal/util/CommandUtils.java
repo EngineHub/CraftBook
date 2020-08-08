@@ -1,6 +1,6 @@
 package org.enginehub.craftbook.internal.util;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.command.util.PermissionCondition;
 import com.sk89q.worldedit.internal.command.CommandUtil;
 import com.sk89q.worldedit.util.formatting.text.Component;

@@ -14,9 +14,9 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util;
+package org.enginehub.craftbook.util;
 
-import com.sk89q.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBook;
 import com.sk89q.worldedit.util.formatting.WorldEditText;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import org.enginehub.piston.config.ConfigHolder;

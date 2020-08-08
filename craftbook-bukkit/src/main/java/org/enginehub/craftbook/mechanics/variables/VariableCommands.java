@@ -14,17 +14,17 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.variables;
+package org.enginehub.craftbook.mechanics.variables;
 
 import com.google.common.collect.ImmutableMap;
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.exception.CraftBookException;
-import com.sk89q.craftbook.mechanics.variables.exception.ExistingVariableException;
-import com.sk89q.craftbook.mechanics.variables.exception.InvalidVariableException;
-import com.sk89q.craftbook.mechanics.variables.exception.UnknownVariableException;
-import com.sk89q.craftbook.mechanics.variables.exception.VariableException;
-import com.sk89q.craftbook.util.profile.Profile;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.exception.CraftBookException;
+import org.enginehub.craftbook.mechanics.variables.exception.ExistingVariableException;
+import org.enginehub.craftbook.mechanics.variables.exception.InvalidVariableException;
+import org.enginehub.craftbook.mechanics.variables.exception.UnknownVariableException;
+import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
+import org.enginehub.craftbook.util.profile.Profile;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
 import com.sk89q.worldedit.extension.platform.Actor;

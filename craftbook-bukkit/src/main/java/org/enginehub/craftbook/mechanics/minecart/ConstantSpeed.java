@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.minecart;
+package org.enginehub.craftbook.mechanics.minecart;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Minecart;
@@ -23,9 +23,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.util.Vector;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.RailUtil;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.RailUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 public class ConstantSpeed extends AbstractCraftBookMechanic {

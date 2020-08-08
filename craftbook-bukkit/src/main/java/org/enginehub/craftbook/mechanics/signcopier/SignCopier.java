@@ -14,18 +14,18 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.signcopier;
+package org.enginehub.craftbook.mechanics.signcopier;
 
 import com.google.common.collect.Lists;
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.mechanic.MechanicCommandRegistrar;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemSyntax;
-import com.sk89q.craftbook.util.ProtectionUtil;
-import com.sk89q.craftbook.util.events.SignClickEvent;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.ItemSyntax;
+import org.enginehub.craftbook.util.ProtectionUtil;
+import org.enginehub.craftbook.util.events.SignClickEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.HandSide;

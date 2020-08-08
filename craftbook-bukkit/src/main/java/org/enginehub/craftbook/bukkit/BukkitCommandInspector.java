@@ -14,12 +14,12 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.bukkit;
+package org.enginehub.craftbook.bukkit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.sk89q.bukkit.util.CommandInspector;
-import com.sk89q.craftbook.util.TextUtil;
+import org.enginehub.craftbook.util.TextUtil;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.extension.platform.Actor;
 import org.bukkit.command.Command;

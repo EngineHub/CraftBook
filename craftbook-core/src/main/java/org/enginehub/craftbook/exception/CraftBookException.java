@@ -30,9 +30,9 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.exception;
+package org.enginehub.craftbook.exception;
 
-import com.sk89q.craftbook.util.TextUtil;
+import org.enginehub.craftbook.util.TextUtil;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 

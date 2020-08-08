@@ -14,31 +14,36 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic.gates.logic;
+package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
+import static org.junit.Assert.assertTrue;
 
-@RunWith(PowerMockRunner.class)
-public class LogicICTests {
+import org.enginehub.craftbook.mechanics.ic.gates.logic.LogicICTests.LogicICTest;
 
-    public static LogicICTests instance;
+public class AndGateTest implements LogicICTest {
 
-    LogicICTest[] tests = new LogicICTest[] {new AndGateTest()};
+    AndGate ic;
 
-    @Test
-    public void testLogicICs() {
+    public void testGetResult() {
 
-        instance = this;
-
-        for(LogicICTest test : tests)
-            if(!test.testIC())
-                throw new AssertionError();
+        assertTrue(ic.getResult(2, 2));
+        assertTrue(!ic.getResult(2, 1));
+        assertTrue(!ic.getResult(2, 3));
+        assertTrue(ic.getResult(3, 3));
+        assertTrue(!ic.getResult(3, 0));
     }
 
-    public interface LogicICTest {
+    @Override
+    public boolean testIC () {
 
-        boolean testIC();
+        ic = new AndGate(null, null, null);
+
+        try {
+            testGetResult();
+        } catch(Throwable e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }

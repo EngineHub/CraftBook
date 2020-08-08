@@ -14,13 +14,13 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic.gates.world.entity;
+package org.enginehub.craftbook.mechanics.ic.gates.world.entity;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.craftbook.mechanics.ic.*;
-import com.sk89q.craftbook.util.*;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.mechanics.ic.*;
+import org.enginehub.craftbook.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

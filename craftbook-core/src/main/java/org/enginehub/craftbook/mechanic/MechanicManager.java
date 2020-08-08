@@ -14,17 +14,17 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanic;
+package org.enginehub.craftbook.mechanic;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Converter;
 import com.google.common.collect.ImmutableList;
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.mechanic.exception.MechanicInitializationException;
-import com.sk89q.craftbook.mechanic.load.LoadComparator;
-import com.sk89q.craftbook.mechanic.load.LoadDependency;
-import com.sk89q.craftbook.mechanic.load.MechanicDependency;
-import com.sk89q.craftbook.mechanic.load.UnsatisfiedLoadDependencyException;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
+import org.enginehub.craftbook.mechanic.load.LoadComparator;
+import org.enginehub.craftbook.mechanic.load.LoadDependency;
+import org.enginehub.craftbook.mechanic.load.MechanicDependency;
+import org.enginehub.craftbook.mechanic.load.UnsatisfiedLoadDependencyException;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 

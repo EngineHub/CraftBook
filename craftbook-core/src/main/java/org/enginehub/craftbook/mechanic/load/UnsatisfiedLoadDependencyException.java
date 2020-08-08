@@ -14,10 +14,10 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanic.load;
+package org.enginehub.craftbook.mechanic.load;
 
-import com.sk89q.craftbook.mechanic.MechanicType;
-import com.sk89q.craftbook.mechanic.exception.MechanicInitializationException;
+import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 

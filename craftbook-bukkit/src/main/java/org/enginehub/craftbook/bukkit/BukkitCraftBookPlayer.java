@@ -30,11 +30,11 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.bukkit;
+package org.enginehub.craftbook.bukkit;
 
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.LanguageManager;
-import com.sk89q.craftbook.util.TextUtil;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.LanguageManager;
+import org.enginehub.craftbook.util.TextUtil;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.util.HandSide;

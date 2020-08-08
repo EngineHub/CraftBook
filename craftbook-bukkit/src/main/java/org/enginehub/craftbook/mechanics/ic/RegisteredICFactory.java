@@ -30,7 +30,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic;
+package org.enginehub.craftbook.mechanics.ic;
 
 /**
  * Stores a mapping for a registered IC factory with its native family. This is used in {@link ICManager}.

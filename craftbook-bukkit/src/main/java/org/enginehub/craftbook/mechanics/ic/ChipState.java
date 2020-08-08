@@ -30,7 +30,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic;
+package org.enginehub.craftbook.mechanics.ic;
 
 /**
  * Represents a chip state. Chip states provide information about pin inputs and outputs.

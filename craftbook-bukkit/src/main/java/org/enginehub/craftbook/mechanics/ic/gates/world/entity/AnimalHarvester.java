@@ -14,13 +14,13 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic.gates.world.entity;
+package org.enginehub.craftbook.mechanics.ic.gates.world.entity;
 
 import java.util.Collections;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.ItemUtil;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -32,11 +32,11 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Sheep;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.craftbook.mechanics.ic.*;
-import com.sk89q.craftbook.util.EntityType;
-import com.sk89q.craftbook.util.SearchArea;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.mechanics.ic.*;
+import org.enginehub.craftbook.util.EntityType;
+import org.enginehub.craftbook.util.SearchArea;
 
 public class AnimalHarvester extends AbstractSelfTriggeredIC {
 

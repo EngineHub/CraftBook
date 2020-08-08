@@ -14,9 +14,9 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.boat;
+package org.enginehub.craftbook.mechanics.boat;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

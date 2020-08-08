@@ -14,9 +14,9 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util.events;
+package org.enginehub.craftbook.util.events;
 
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -25,9 +25,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 public class SignClickEvent extends PlayerInteractEvent {
 

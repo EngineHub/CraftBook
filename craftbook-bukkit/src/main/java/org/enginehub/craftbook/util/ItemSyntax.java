@@ -14,14 +14,14 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util;
+package org.enginehub.craftbook.util;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.mechanics.items.CommandItemDefinition;
-import com.sk89q.craftbook.mechanics.items.CommandItems;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.mechanics.items.CommandItemDefinition;
+import org.enginehub.craftbook.mechanics.items.CommandItems;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.blocks.BaseItem;
 import com.sk89q.worldedit.blocks.BaseItemStack;

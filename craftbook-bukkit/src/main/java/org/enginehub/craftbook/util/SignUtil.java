@@ -30,9 +30,9 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util;
+package org.enginehub.craftbook.util;
 
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;

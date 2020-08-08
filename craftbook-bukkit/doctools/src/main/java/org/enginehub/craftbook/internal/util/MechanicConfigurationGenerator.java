@@ -1,7 +1,7 @@
 package org.enginehub.craftbook.internal.util;
 
-import com.sk89q.craftbook.mechanic.CraftBookMechanic;
-import com.sk89q.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 

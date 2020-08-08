@@ -14,9 +14,9 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanic;
+package org.enginehub.craftbook.mechanic;
 
-import com.sk89q.craftbook.mechanic.exception.MechanicInitializationException;
+import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 
 import com.sk89q.util.yaml.YAMLProcessor;
 

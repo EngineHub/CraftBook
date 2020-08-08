@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanic;
+package org.enginehub.craftbook.mechanic;
 
 public enum MechanicCategory {
     GENERAL,

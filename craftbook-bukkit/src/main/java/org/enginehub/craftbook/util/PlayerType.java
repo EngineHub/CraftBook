@@ -14,14 +14,14 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util;
+package org.enginehub.craftbook.util;
 
 import java.util.Locale;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 public enum PlayerType {
 

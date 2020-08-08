@@ -1,6 +1,6 @@
 package org.enginehub.craftbook.internal.util;
 
-import com.sk89q.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanic.MechanicType;
 
 import java.io.FileWriter;
 import java.io.IOException;

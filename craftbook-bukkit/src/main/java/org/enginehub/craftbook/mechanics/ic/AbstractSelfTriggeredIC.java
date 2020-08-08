@@ -14,11 +14,11 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic;
+package org.enginehub.craftbook.mechanics.ic;
 
 import org.bukkit.Server;
 
-import com.sk89q.craftbook.ChangedSign;
+import org.enginehub.craftbook.ChangedSign;
 
 public abstract class AbstractSelfTriggeredIC extends AbstractIC implements SelfTriggeredIC {
 

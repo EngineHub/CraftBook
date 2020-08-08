@@ -30,28 +30,28 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic;
+package org.enginehub.craftbook.mechanics.ic;
 
 import com.google.common.collect.Lists;
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.mechanic.MechanicCommandRegistrar;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.craftbook.mechanics.pipe.PipePutEvent;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ICUtil;
-import com.sk89q.craftbook.util.ICUtil.LocationCheckType;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.events.SelfTriggerPingEvent;
-import com.sk89q.craftbook.util.events.SelfTriggerThinkEvent;
-import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent;
-import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
-import com.sk89q.craftbook.util.events.SignClickEvent;
-import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.mechanics.pipe.PipePutEvent;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.ICUtil;
+import org.enginehub.craftbook.util.ICUtil.LocationCheckType;
+import org.enginehub.craftbook.util.RegexUtil;
+import org.enginehub.craftbook.util.SignUtil;
+import org.enginehub.craftbook.util.events.SelfTriggerPingEvent;
+import org.enginehub.craftbook.util.events.SelfTriggerThinkEvent;
+import org.enginehub.craftbook.util.events.SelfTriggerUnregisterEvent;
+import org.enginehub.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
+import org.enginehub.craftbook.util.events.SignClickEvent;
+import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extension.platform.Actor;

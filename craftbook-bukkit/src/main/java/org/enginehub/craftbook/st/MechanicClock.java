@@ -30,9 +30,9 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.st;
+package org.enginehub.craftbook.st;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 public class MechanicClock implements Runnable {
 

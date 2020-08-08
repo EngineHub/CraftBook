@@ -14,21 +14,21 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous;
+package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
-import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
-import com.sk89q.craftbook.mechanics.ic.ChipState;
-import com.sk89q.craftbook.mechanics.ic.IC;
-import com.sk89q.craftbook.mechanics.ic.ICFactory;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SearchArea;
-import com.sk89q.craftbook.util.jinglenote.JingleNoteManager;
-import com.sk89q.craftbook.util.jinglenote.StringJingleSequencer;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
+import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
+import org.enginehub.craftbook.mechanics.ic.ChipState;
+import org.enginehub.craftbook.mechanics.ic.IC;
+import org.enginehub.craftbook.mechanics.ic.ICFactory;
+import org.enginehub.craftbook.util.RegexUtil;
+import org.enginehub.craftbook.util.SearchArea;
+import org.enginehub.craftbook.util.jinglenote.JingleNoteManager;
+import org.enginehub.craftbook.util.jinglenote.StringJingleSequencer;
 
 public class Tune extends AbstractSelfTriggeredIC {
 

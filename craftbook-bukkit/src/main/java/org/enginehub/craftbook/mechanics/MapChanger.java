@@ -14,23 +14,23 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics;
+package org.enginehub.craftbook.mechanics;
 
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ProtectionUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.events.SignClickEvent;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.ProtectionUtil;
+import org.enginehub.craftbook.util.SignUtil;
+import org.enginehub.craftbook.util.events.SignClickEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.inventory.meta.MapMeta;
 

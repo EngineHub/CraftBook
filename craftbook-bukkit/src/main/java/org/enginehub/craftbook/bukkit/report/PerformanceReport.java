@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.bukkit.report;
+package org.enginehub.craftbook.bukkit.report;
 
 import com.google.common.collect.Maps;
 import com.sk89q.worldedit.util.report.DataReport;

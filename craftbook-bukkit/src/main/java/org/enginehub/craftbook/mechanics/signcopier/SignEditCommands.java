@@ -14,10 +14,10 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.signcopier;
+package org.enginehub.craftbook.mechanics.signcopier;
 
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.exception.CraftBookException;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.exception.CraftBookException;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
 import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;

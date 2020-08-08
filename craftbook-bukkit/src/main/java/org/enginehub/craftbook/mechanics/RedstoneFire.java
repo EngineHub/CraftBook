@@ -30,7 +30,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics;
+package org.enginehub.craftbook.mechanics;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -40,9 +40,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 /**

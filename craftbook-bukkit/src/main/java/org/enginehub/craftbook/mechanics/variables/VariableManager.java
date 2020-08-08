@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.variables;
+package org.enginehub.craftbook.mechanics.variables;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -23,11 +23,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.mechanic.MechanicCommandRegistrar;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.mechanics.ic.ICManager;
-import com.sk89q.craftbook.mechanics.variables.exception.VariableException;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanics.ic.ICManager;
+import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.extension.platform.Actor;

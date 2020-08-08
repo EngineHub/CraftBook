@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.minecart.events;
+package org.enginehub.craftbook.mechanics.minecart.events;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
@@ -22,7 +22,7 @@ import org.bukkit.entity.Vehicle;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 
-import com.sk89q.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
+import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 
 public class CartBlockEnterEvent extends VehicleEnterEvent {
 

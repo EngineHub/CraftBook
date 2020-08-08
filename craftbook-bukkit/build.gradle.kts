@@ -80,10 +80,10 @@ tasks.named<Jar>("jar") {
 
 tasks.named<ShadowJar>("shadowJar") {
     dependencies {
-        relocate("org.bstats", "com.sk89q.craftbook.bukkit.bstats") {
+        relocate("org.bstats", "org.enginehub.craftbook.bukkit.bstats") {
             include(dependency("org.bstats:bstats-bukkit:1.7"))
         }
-        relocate ("io.papermc.lib", "com.sk89q.craftbook.bukkit.paperlib") {
+        relocate ("io.papermc.lib", "org.enginehub.craftbook.bukkit.paperlib") {
             include(dependency("io.papermc:paperlib:1.0.4"))
         }
     }

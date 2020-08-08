@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook;
+package org.enginehub.craftbook;
 
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.report.Unreported;

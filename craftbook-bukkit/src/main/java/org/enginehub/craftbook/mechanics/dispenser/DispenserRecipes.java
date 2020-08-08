@@ -14,11 +14,11 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.dispenser;
+package org.enginehub.craftbook.mechanics.dispenser;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemUtil;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.ItemUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

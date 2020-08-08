@@ -14,34 +14,35 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.bukkit;
+package org.enginehub.craftbook.mechanics.boat;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mock;
 
-import com.sk89q.craftbook.ChangedSign;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
+import org.bukkit.entity.Boat;
+import org.bukkit.event.vehicle.VehicleCreateEvent;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+@Ignore
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(ChangedSign.class)
-public class BukkitChangedSignTest {
+@PrepareForTest({Boat.class, VehicleCreateEvent.class, LandBoats.class})
+public class LandBoatsTest {
 
-    @Test(expected=IllegalArgumentException.class)
-    public void testBukkitChangedSign() {
+    @Test
+    public void testOnVehicleCreate() {
 
-        new ChangedSign(null, null);
+        VehicleCreateEvent event = mock(VehicleCreateEvent.class);
+        Boat boat = mock(Boat.class);
 
-        Block mockBlock = mock(Block.class);
-        when(mockBlock.getState()).thenReturn(mock(Sign.class));
+        when(event.getVehicle()).thenReturn(boat);
 
-        ChangedSign sign = new ChangedSign(mockBlock, new String[]{"","","",""});
-        assertTrue(sign.getSign() != null);
-        assertTrue(sign.getLines().length == 4);
+        new LandBoats().onVehicleCreate(event);
+
+        verify(boat).setWorkOnLand(true);
     }
 }

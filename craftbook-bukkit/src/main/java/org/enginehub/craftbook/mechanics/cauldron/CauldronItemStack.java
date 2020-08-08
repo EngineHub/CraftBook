@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.cauldron;
+package org.enginehub.craftbook.mechanics.cauldron;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -25,8 +25,8 @@ import java.util.Set;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
-import com.sk89q.craftbook.util.ItemSyntax;
-import com.sk89q.craftbook.util.ItemUtil;
+import org.enginehub.craftbook.util.ItemSyntax;
+import org.enginehub.craftbook.util.ItemUtil;
 
 /**
  * @author Silthus

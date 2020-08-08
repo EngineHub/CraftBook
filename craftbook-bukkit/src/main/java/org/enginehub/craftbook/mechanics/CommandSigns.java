@@ -14,11 +14,11 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics;
+package org.enginehub.craftbook.mechanics;
 
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -26,17 +26,17 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.BlockUtil;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ParsingUtil;
-import com.sk89q.craftbook.util.ProtectionUtil;
-import com.sk89q.craftbook.util.SignUtil;
-import com.sk89q.craftbook.util.events.SignClickEvent;
-import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.BukkitCraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.BlockUtil;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.ParsingUtil;
+import org.enginehub.craftbook.util.ProtectionUtil;
+import org.enginehub.craftbook.util.SignUtil;
+import org.enginehub.craftbook.util.events.SignClickEvent;
+import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 public class CommandSigns extends AbstractCraftBookMechanic {

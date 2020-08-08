@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.minecart;
+package org.enginehub.craftbook.mechanics.minecart;
 
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
@@ -23,8 +23,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.util.EventUtil;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.util.EventUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 public class MobBlocker extends AbstractCraftBookMechanic {

@@ -19,7 +19,7 @@
  * Tetsuuuu plugin for SK's Minecraft Server Copyright (C) 2010 sk89q <http://www.sk89q.com> All rights reserved.
  */
 
-package com.sk89q.craftbook.util.jinglenote;
+package org.enginehub.craftbook.util.jinglenote;
 
 import java.util.Set;
 

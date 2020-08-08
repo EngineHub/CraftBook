@@ -33,8 +33,8 @@ fun Project.applyLibrariesConfiguration() {
             exclude(dependency("com.google.code.findbugs:jsr305:1.3.9"))
         }
 
-        relocate("org.enginehub.jinglenote", "com.sk89q.craftbook.util.jinglenote")
-        relocate("org.enginehub.squirrelid", "com.sk89q.craftbook.util.profile")
+        relocate("org.enginehub.jinglenote", "org.enginehub.craftbook.util.jinglenote")
+        relocate("org.enginehub.squirrelid", "org.enginehub.craftbook.util.profile")
     }
     val altConfigFiles = { artifactType: String ->
         val deps = configurations["shade"].incoming.dependencies

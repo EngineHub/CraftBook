@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.bukkit.report;
+package org.enginehub.craftbook.bukkit.report;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;

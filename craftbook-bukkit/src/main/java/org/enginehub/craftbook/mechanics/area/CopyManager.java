@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.area;
+package org.enginehub.craftbook.mechanics.area;
 
 // $Id$
 /*
@@ -32,8 +32,8 @@ package com.sk89q.craftbook.mechanics.area;
  * see <http://www.gnu.org/licenses/>.
  */
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.HistoryHashMap;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.HistoryHashMap;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;

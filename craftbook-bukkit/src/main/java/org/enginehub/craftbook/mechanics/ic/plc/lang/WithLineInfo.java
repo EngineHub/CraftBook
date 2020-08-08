@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic.plc.lang;
+package org.enginehub.craftbook.mechanics.ic.plc.lang;
 
 class WithLineInfo<CodeT> {
 

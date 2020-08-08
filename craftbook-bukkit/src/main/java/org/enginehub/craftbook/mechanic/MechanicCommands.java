@@ -14,14 +14,14 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanic;
+package org.enginehub.craftbook.mechanic;
 
 import com.google.common.collect.Lists;
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.bukkit.BukkitCraftBookPlatform;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.exception.CraftBookException;
-import com.sk89q.craftbook.mechanic.exception.MechanicInitializationException;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.bukkit.BukkitCraftBookPlatform;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.exception.CraftBookException;
+import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;

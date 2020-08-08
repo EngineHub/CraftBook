@@ -14,13 +14,13 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook;
+package org.enginehub.craftbook;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.mechanic.CraftBookMechanic;
-import com.sk89q.craftbook.mechanic.MechanicType;
-import com.sk89q.craftbook.mechanic.exception.InvalidMechanismException;
-import com.sk89q.craftbook.mechanic.exception.MechanicInitializationException;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
+import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.event.Listener;

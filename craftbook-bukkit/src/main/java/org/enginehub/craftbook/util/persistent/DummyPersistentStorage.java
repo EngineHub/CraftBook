@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util.persistent;
+package org.enginehub.craftbook.util.persistent;
 
 import java.util.HashMap;
 import java.util.Map;

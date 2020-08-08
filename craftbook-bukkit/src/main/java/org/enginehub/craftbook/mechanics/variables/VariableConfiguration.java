@@ -14,10 +14,10 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.variables;
+package org.enginehub.craftbook.mechanics.variables;
 
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.mechanics.variables.exception.VariableException;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 

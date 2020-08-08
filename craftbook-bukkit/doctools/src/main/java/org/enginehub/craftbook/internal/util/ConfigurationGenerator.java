@@ -1,7 +1,7 @@
 package org.enginehub.craftbook.internal.util;
 
-import com.sk89q.craftbook.YamlConfiguration;
-import com.sk89q.craftbook.bukkit.BukkitConfiguration;
+import org.enginehub.craftbook.YamlConfiguration;
+import org.enginehub.craftbook.bukkit.BukkitConfiguration;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 

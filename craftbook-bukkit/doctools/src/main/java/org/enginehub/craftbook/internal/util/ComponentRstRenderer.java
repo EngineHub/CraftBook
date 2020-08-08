@@ -1,6 +1,6 @@
 package org.enginehub.craftbook.internal.util;
 
-import com.sk89q.craftbook.util.TextUtil;
+import org.enginehub.craftbook.util.TextUtil;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;

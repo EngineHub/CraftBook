@@ -14,16 +14,16 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.items;
+package org.enginehub.craftbook.mechanics.items;
 
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.mechanics.items.CommandItemDefinition.CommandType;
-import com.sk89q.craftbook.util.EnumUtil;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.TernaryState;
-import com.sk89q.craftbook.exception.CraftBookException;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.BukkitCraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanics.items.CommandItemDefinition.CommandType;
+import org.enginehub.craftbook.util.EnumUtil;
+import org.enginehub.craftbook.util.ItemUtil;
+import org.enginehub.craftbook.util.TernaryState;
+import org.enginehub.craftbook.exception.CraftBookException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;

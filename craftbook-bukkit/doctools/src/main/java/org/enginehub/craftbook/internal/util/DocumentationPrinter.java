@@ -1,7 +1,7 @@
 package org.enginehub.craftbook.internal.util;
 
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.CraftBookPlatform;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlatform;
 
 import java.io.File;
 import java.io.IOException;

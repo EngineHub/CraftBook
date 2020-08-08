@@ -14,23 +14,23 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic.gates.logic;
+package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Server;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.mechanics.ic.AbstractIC;
-import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
-import com.sk89q.craftbook.mechanics.ic.ChipState;
-import com.sk89q.craftbook.mechanics.ic.IC;
-import com.sk89q.craftbook.mechanics.ic.ICFactory;
-import com.sk89q.craftbook.mechanics.ic.ICManager;
-import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.mechanics.ic.AbstractIC;
+import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
+import org.enginehub.craftbook.mechanics.ic.ChipState;
+import org.enginehub.craftbook.mechanics.ic.IC;
+import org.enginehub.craftbook.mechanics.ic.ICFactory;
+import org.enginehub.craftbook.mechanics.ic.ICManager;
+import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
 
 public class MemorySetter extends AbstractIC {
 

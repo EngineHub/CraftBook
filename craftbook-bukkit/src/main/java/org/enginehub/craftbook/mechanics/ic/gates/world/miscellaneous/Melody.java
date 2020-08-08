@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous;
+package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,21 +25,21 @@ import java.util.Set;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.mechanics.ic.*;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.mechanics.ic.*;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.SearchArea;
-import com.sk89q.craftbook.util.jinglenote.JingleNoteManager;
-import com.sk89q.craftbook.util.jinglenote.MidiJingleSequencer;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.RegexUtil;
+import org.enginehub.craftbook.util.SearchArea;
+import org.enginehub.craftbook.util.jinglenote.JingleNoteManager;
+import org.enginehub.craftbook.util.jinglenote.MidiJingleSequencer;
 
 /**
  * @author Me4502

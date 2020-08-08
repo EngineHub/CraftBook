@@ -14,41 +14,34 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.boat;
+package org.enginehub.craftbook.bukkit;
 
-import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mock;
 
-import org.bukkit.entity.Boat;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.vehicle.VehicleDestroyEvent;
-import org.bukkit.util.Vector;
-import org.junit.Ignore;
+import org.enginehub.craftbook.ChangedSign;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-@Ignore
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Boat.class, VehicleDestroyEvent.class, Uncrashable.class})
-public class BoatUncrashableTest {
+@PrepareForTest(ChangedSign.class)
+public class BukkitChangedSignTest {
 
-    @Test
-    public void testOnVehicleDestroy() {
+    @Test(expected=IllegalArgumentException.class)
+    public void testBukkitChangedSign() {
 
-        VehicleDestroyEvent event = mock(VehicleDestroyEvent.class);
-        Boat boat = mock(Boat.class);
+        new ChangedSign(null, null);
 
-        when(event.getVehicle()).thenReturn(boat);
+        Block mockBlock = mock(Block.class);
+        when(mockBlock.getState()).thenReturn(mock(Sign.class));
 
-        new Uncrashable().onVehicleDestroy(event);
-
-        when(event.getAttacker()).thenReturn(mock(LivingEntity.class));
-        new Uncrashable().onVehicleDestroy(event);
-
-        verify(event).setCancelled(true);
-        verify(boat).setVelocity(new Vector(0,0,0));
+        ChangedSign sign = new ChangedSign(mockBlock, new String[]{"","","",""});
+        assertTrue(sign.getSign() != null);
+        assertTrue(sign.getLines().length == 4);
     }
 }

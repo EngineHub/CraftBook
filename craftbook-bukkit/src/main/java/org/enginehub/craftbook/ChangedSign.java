@@ -14,11 +14,11 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook;
+package org.enginehub.craftbook;
 
-import com.sk89q.craftbook.mechanics.variables.VariableKey;
-import com.sk89q.craftbook.mechanics.variables.VariableManager;
-import com.sk89q.craftbook.util.ParsingUtil;
+import org.enginehub.craftbook.mechanics.variables.VariableKey;
+import org.enginehub.craftbook.mechanics.variables.VariableManager;
+import org.enginehub.craftbook.util.ParsingUtil;
 import io.papermc.lib.PaperLib;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;

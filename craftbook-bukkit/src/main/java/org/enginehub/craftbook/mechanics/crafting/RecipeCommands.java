@@ -14,13 +14,13 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.crafting;
+package org.enginehub.craftbook.mechanics.crafting;
 
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.mechanics.crafting.RecipeManager.RecipeType;
-import com.sk89q.craftbook.util.ItemUtil;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.BukkitCraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanics.crafting.RecipeManager.RecipeType;
+import org.enginehub.craftbook.util.ItemUtil;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
 import com.sk89q.worldedit.extension.platform.Actor;

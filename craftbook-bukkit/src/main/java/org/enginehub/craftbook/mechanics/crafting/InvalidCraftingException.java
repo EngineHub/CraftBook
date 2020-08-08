@@ -14,9 +14,9 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.crafting;
+package org.enginehub.craftbook.mechanics.crafting;
 
-import com.sk89q.craftbook.exception.CraftBookException;
+import org.enginehub.craftbook.exception.CraftBookException;
 
 public class InvalidCraftingException extends CraftBookException {
 

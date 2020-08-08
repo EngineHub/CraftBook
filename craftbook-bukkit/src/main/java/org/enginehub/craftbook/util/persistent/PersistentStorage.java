@@ -14,11 +14,11 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util.persistent;
+package org.enginehub.craftbook.util.persistent;
 
 import java.util.Map;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 /**
  * The base of the CraftBook persistant storage system. Used by mechanics to store data that is needed persistently.

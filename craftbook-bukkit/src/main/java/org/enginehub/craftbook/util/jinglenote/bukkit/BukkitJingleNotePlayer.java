@@ -14,18 +14,18 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util.jinglenote.bukkit;
+package org.enginehub.craftbook.util.jinglenote.bukkit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.util.SearchArea;
-import com.sk89q.craftbook.util.jinglenote.Instrument;
-import com.sk89q.craftbook.util.jinglenote.JingleNotePlayer;
-import com.sk89q.craftbook.util.jinglenote.JingleSequencer;
-import com.sk89q.craftbook.util.jinglenote.JingleSequencer.Note;
+import org.enginehub.craftbook.util.SearchArea;
+import org.enginehub.craftbook.util.jinglenote.Instrument;
+import org.enginehub.craftbook.util.jinglenote.JingleNotePlayer;
+import org.enginehub.craftbook.util.jinglenote.JingleSequencer;
+import org.enginehub.craftbook.util.jinglenote.JingleSequencer.Note;
 
 public class BukkitJingleNotePlayer extends JingleNotePlayer {
 

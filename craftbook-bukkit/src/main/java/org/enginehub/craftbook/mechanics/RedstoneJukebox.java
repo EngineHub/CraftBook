@@ -14,16 +14,16 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics;
+package org.enginehub.craftbook.mechanics;
 
-import com.sk89q.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.EventUtil;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Jukebox;
 import org.bukkit.event.EventHandler;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 /**
  * This mechanism allows a jukebox to be started and stopped via redstone.

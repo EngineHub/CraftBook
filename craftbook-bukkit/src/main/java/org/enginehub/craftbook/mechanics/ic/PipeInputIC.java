@@ -14,9 +14,9 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic;
+package org.enginehub.craftbook.mechanics.ic;
 
-import com.sk89q.craftbook.mechanics.pipe.PipePutEvent;
+import org.enginehub.craftbook.mechanics.pipe.PipePutEvent;
 
 public interface PipeInputIC {
 

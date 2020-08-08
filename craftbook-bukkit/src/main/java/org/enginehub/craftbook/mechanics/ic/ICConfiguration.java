@@ -14,9 +14,9 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic;
+package org.enginehub.craftbook.mechanics.ic;
 
-import com.sk89q.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBook;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 import java.io.IOException;

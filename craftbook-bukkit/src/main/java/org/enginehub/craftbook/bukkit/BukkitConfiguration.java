@@ -14,11 +14,11 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.bukkit;
+package org.enginehub.craftbook.bukkit;
 
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.YamlConfiguration;
-import com.sk89q.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.YamlConfiguration;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import com.sk89q.util.yaml.YAMLProcessor;
 
 import java.io.IOException;

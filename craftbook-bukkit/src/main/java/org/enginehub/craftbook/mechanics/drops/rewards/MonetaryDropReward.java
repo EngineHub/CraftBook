@@ -14,11 +14,11 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.drops.rewards;
+package org.enginehub.craftbook.mechanics.drops.rewards;
 
 import org.bukkit.entity.Player;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 public class MonetaryDropReward extends DropReward {
 

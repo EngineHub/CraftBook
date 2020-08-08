@@ -14,16 +14,16 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.items;
+package org.enginehub.craftbook.mechanics.items;
 
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.mechanics.ic.gates.variables.NumericModifier.MathFunction;
-import com.sk89q.craftbook.mechanics.variables.VariableKey;
-import com.sk89q.craftbook.mechanics.variables.VariableManager;
-import com.sk89q.craftbook.mechanics.variables.exception.VariableException;
-import com.sk89q.craftbook.util.RegexUtil;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanics.ic.gates.variables.NumericModifier.MathFunction;
+import org.enginehub.craftbook.mechanics.variables.VariableKey;
+import org.enginehub.craftbook.mechanics.variables.VariableManager;
+import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
+import org.enginehub.craftbook.util.RegexUtil;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;

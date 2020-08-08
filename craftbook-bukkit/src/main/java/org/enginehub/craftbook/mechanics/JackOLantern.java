@@ -30,7 +30,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics;
+package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Material;
@@ -41,9 +41,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 /**
  * This mechanism allow players to toggle Jack-o-Lanterns.

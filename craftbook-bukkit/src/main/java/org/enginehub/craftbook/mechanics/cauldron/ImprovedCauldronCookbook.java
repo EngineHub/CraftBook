@@ -14,12 +14,12 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.cauldron;
+package org.enginehub.craftbook.mechanics.cauldron;
 
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.mechanics.cauldron.ImprovedCauldron.UnknownRecipeException;
-import com.sk89q.craftbook.util.ItemSyntax;
-import com.sk89q.craftbook.util.ItemUtil;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.mechanics.cauldron.ImprovedCauldron.UnknownRecipeException;
+import org.enginehub.craftbook.util.ItemSyntax;
+import org.enginehub.craftbook.util.ItemUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.inventory.ItemStack;
 

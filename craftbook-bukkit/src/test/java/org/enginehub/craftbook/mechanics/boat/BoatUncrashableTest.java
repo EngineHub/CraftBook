@@ -14,47 +14,41 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.util;
+package org.enginehub.craftbook.mechanics.boat;
 
-import java.util.ArrayList;
-import java.util.List;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mock;
 
+import org.bukkit.entity.Boat;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.vehicle.VehicleDestroyEvent;
+import org.bukkit.util.Vector;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 
+@Ignore
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(VerifyUtil.class)
-public class VerifyUtilTest {
+@PrepareForTest({Boat.class, VehicleDestroyEvent.class, Uncrashable.class})
+public class BoatUncrashableTest {
 
     @Test
-    public void testVerifyRadius() {
+    public void testOnVehicleDestroy() {
 
-        double rad = VerifyUtil.verifyRadius(7, 15);
-        assertTrue(rad == 7);
-        rad = VerifyUtil.verifyRadius(20, 15);
-        assertTrue(rad == 15);
-    }
+        VehicleDestroyEvent event = mock(VehicleDestroyEvent.class);
+        Boat boat = mock(Boat.class);
 
-    @Test
-    public void testWithoutNulls() {
+        when(event.getVehicle()).thenReturn(boat);
 
-        List<Object> list = new ArrayList<>();
-        list.add(null);
-        list.add(mock(Object.class));
-        list.add(mock(Object.class));
-        list.add(mock(Object.class));
-        list.add(null);
-        list.add(mock(Object.class));
-        list.add(mock(Object.class));
-        list.add(null);
+        new Uncrashable().onVehicleDestroy(event);
 
-        list = (List<Object>) VerifyUtil.withoutNulls(list);
+        when(event.getAttacker()).thenReturn(mock(LivingEntity.class));
+        new Uncrashable().onVehicleDestroy(event);
 
-        assertTrue(!list.contains(null));
-        assertTrue(list.size() == 5);
+        verify(event).setCancelled(true);
+        verify(boat).setVelocity(new Vector(0,0,0));
     }
 }

@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.ic;
+package org.enginehub.craftbook.mechanics.ic;
 
 import java.util.Locale;
 
@@ -22,7 +22,7 @@ import com.sk89q.worldedit.extension.platform.Actor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 public class ICDocsParser {
 

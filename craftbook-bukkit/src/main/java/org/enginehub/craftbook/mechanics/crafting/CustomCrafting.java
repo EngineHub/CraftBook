@@ -14,19 +14,19 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.crafting;
+package org.enginehub.craftbook.mechanics.crafting;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
-import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.CraftBook;
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.mechanic.MechanicCommandRegistrar;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.mechanics.crafting.RecipeManager.RecipeType;
-import com.sk89q.craftbook.util.EventUtil;
-import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.ParsingUtil;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanics.crafting.RecipeManager.RecipeType;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.ItemUtil;
+import org.enginehub.craftbook.util.ParsingUtil;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;

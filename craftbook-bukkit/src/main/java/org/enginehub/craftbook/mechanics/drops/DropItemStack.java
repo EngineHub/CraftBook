@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package com.sk89q.craftbook.mechanics.drops;
+package org.enginehub.craftbook.mechanics.drops;
 
 import org.bukkit.inventory.ItemStack;
 
