@@ -16,9 +16,9 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
-import static org.junit.Assert.assertTrue;
-
 import org.enginehub.craftbook.mechanics.ic.gates.logic.LogicICTests.LogicICTest;
+
+import static org.junit.Assert.assertTrue;
 
 public class AndGateTest implements LogicICTest {
 
@@ -34,13 +34,13 @@ public class AndGateTest implements LogicICTest {
     }
 
     @Override
-    public boolean testIC () {
+    public boolean testIC() {
 
         ic = new AndGate(null, null, null);
 
         try {
             testGetResult();
-        } catch(Throwable e){
+        } catch (Throwable e) {
             e.printStackTrace();
             return false;
         }

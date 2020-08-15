@@ -118,7 +118,7 @@ fun Project.applyShadowConfiguration() {
 fun Project.addJarManifest() {
     tasks.named<Jar>("jar") {
         manifest.attributes(mutableMapOf(
-                "CraftBook-Version" to project(":craftbook-core").version
+            "CraftBook-Version" to project(":craftbook-core").version
         ))
     }
 }

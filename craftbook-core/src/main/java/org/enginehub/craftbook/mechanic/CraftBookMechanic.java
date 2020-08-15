@@ -16,9 +16,8 @@
 
 package org.enginehub.craftbook.mechanic;
 
-import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
-
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 
 import java.io.File;
 
@@ -28,8 +27,9 @@ import java.io.File;
 public interface CraftBookMechanic {
 
     /**
-     * Called when a mechanic should be initialized. This includes creating of any maps, lists or singleton instances.
-     * 
+     * Called when a mechanic should be initialized. This includes creating of any maps, lists or
+     * singleton instances.
+     *
      * @return if it enabled properly. Note: returning false will cause the mechanic to be disabled.
      * @throws MechanicInitializationException if the mechanic failed to initialise
      */

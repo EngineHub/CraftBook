@@ -16,6 +16,10 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.variables;
 
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Server;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
@@ -31,24 +35,20 @@ import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 import org.enginehub.craftbook.util.InventoryUtil;
 import org.enginehub.craftbook.util.ItemSyntax;
 import org.enginehub.craftbook.util.ItemUtil;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Server;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 
 public class ItemCounter extends AbstractIC {
 
-    public ItemCounter (Server server, ChangedSign sign, ICFactory factory) {
+    public ItemCounter(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
         return "Item Counter";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
         return "ITEM COUNTER";
     }
 
@@ -63,17 +63,17 @@ public class ItemCounter extends AbstractIC {
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
-        if(chip.getInput(0)) {
+        if (chip.getInput(0)) {
 
             int amount = 0;
 
-            if(InventoryUtil.doesBlockHaveInventory(getBackBlock().getRelative(0, 1, 0))) {
+            if (InventoryUtil.doesBlockHaveInventory(getBackBlock().getRelative(0, 1, 0))) {
                 InventoryHolder chest = (InventoryHolder) getBackBlock().getRelative(0, 1, 0).getState();
-                for(ItemStack stack : chest.getInventory().getContents()) {
-                    if(!ItemUtil.isStackValid(stack)) continue;
-                    if(item == null || ItemUtil.areItemsIdentical(stack, item)) {
+                for (ItemStack stack : chest.getInventory().getContents()) {
+                    if (!ItemUtil.isStackValid(stack)) continue;
+                    if (item == null || ItemUtil.areItemsIdentical(stack, item)) {
                         amount += stack.getAmount();
                     }
                 }
@@ -113,9 +113,9 @@ public class ItemCounter extends AbstractIC {
         @Override
         public String[] getLongDescription() {
 
-            return new String[]{
-                    "The '''VAR200''' IC searches a chest and counts the amounts of all items that match the last line of the sign. ",
-                    "The counted amount is then added to the variable listed on the 3rd line.",
+            return new String[] {
+                "The '''VAR200''' IC searches a chest and counts the amounts of all items that match the last line of the sign. ",
+                "The counted amount is then added to the variable listed on the 3rd line.",
             };
         }
 
@@ -129,15 +129,15 @@ public class ItemCounter extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Trigger IC",//Inputs
-                    "High if found item"//Outputs
+                "Trigger IC",//Inputs
+                "High if found item"//Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Variable Name", "ItemSyntax"};
+            return new String[] { "Variable Name", "ItemSyntax" };
         }
 
         @Override

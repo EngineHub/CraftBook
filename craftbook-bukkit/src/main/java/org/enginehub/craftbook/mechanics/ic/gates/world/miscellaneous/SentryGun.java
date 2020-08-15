@@ -16,6 +16,16 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
+import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.math.Vector3;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -29,16 +39,6 @@ import org.enginehub.craftbook.util.EntityType;
 import org.enginehub.craftbook.util.EntityUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.SearchArea;
-import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.math.Vector3;
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -60,10 +60,10 @@ public class SentryGun extends AbstractSelfTriggeredIC {
 
         speed = 0.8f;
         types = EntityType.getDetected(getSign().getLine(2).split(":")[0]);
-        if(types == null || types.isEmpty()) {
+        if (types == null || types.isEmpty()) {
             types = EnumSet.of(EntityType.MOB_HOSTILE);
         }
-        if(getSign().getLine(2).split(":").length > 1)
+        if (getSign().getLine(2).split(":").length > 1)
             speed = Float.parseFloat(getSign().getLine(2).split(":")[1]);
         area = SearchArea.createArea(getLocation().getBlock(), getLine(3));
         manned = getSign().getLine(2).split(":").length > 2 && getSign().getLine(2).split(":")[2].equalsIgnoreCase("MAN");
@@ -98,16 +98,16 @@ public class SentryGun extends AbstractSelfTriggeredIC {
     public void shoot() {
 
         Player shooter = manned ? getShootingPlayer() : null;
-        if(shooter != null) {
+        if (shooter != null) {
             Arrow ar = area.getWorld().spawnArrow(BlockUtil.getBlockCentre(area.getCenter() == null ? area.getCenter().getBlock() : getBackBlock()).add(0, 1, 0), shooter.getLocation().getDirection().normalize(), speed, 0);
             ar.setShooter(shooter);
             ar.setTicksLived(2500);
         } else {
             for (Entity ent : area.getEntitiesInArea()) {
-                if(!(ent instanceof LivingEntity)) continue;
+                if (!(ent instanceof LivingEntity)) continue;
                 boolean hasFound = false;
-                for(EntityType type : types) {
-                    if(type.is(ent)) {
+                for (EntityType type : types) {
+                    if (type.is(ent)) {
                         hasFound = true;
                         break;
                     }
@@ -116,8 +116,8 @@ public class SentryGun extends AbstractSelfTriggeredIC {
                 if (hasFound) {
                     double yOff = ((LivingEntity) ent).getEyeHeight();
                     Location k = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(getBackBlock(), BlockFace.UP));
-                    Arrow ar = area.getWorld().spawnArrow(k, ent.getLocation().add(0, yOff, 0).subtract(k.clone().add(0.5,0.5,0.5)).toVector().normalize(), speed, 0);
-                    if(!((LivingEntity)ent).hasLineOfSight(ar)) {
+                    Arrow ar = area.getWorld().spawnArrow(k, ent.getLocation().add(0, yOff, 0).subtract(k.clone().add(0.5, 0.5, 0.5)).toVector().normalize(), speed, 0);
+                    if (!((LivingEntity) ent).hasLineOfSight(ar)) {
                         ar.remove();
                         continue;
                     }
@@ -130,8 +130,8 @@ public class SentryGun extends AbstractSelfTriggeredIC {
     public Player getShootingPlayer() {
 
         Block b = getBackBlock().getRelative(0, 1, 0);
-        for(Entity ent : LocationUtil.getNearbyEntities(BlockUtil.getBlockCentre(b), Vector3.at(2, 2, 2))) {
-            if(EntityUtil.isEntityInBlock(ent, b) && ent instanceof Player)
+        for (Entity ent : LocationUtil.getNearbyEntities(BlockUtil.getBlockCentre(b), Vector3.at(2, 2, 2))) {
+            if (EntityUtil.isEntityInBlock(ent, b) && ent instanceof Player)
                 return (Player) ent;
         }
 
@@ -162,7 +162,7 @@ public class SentryGun extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Mob Type{:power:MAN}", "SearchArea"};
+            return new String[] { "Mob Type{:power:MAN}", "SearchArea" };
         }
 
         @Override

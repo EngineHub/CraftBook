@@ -29,7 +29,7 @@ public final class VerifyUtil {
 
     /**
      * Verify that a radius is within the maximum.
-     * 
+     *
      * @param radius The radius to check
      * @param maxradius The maximum possible radius
      * @return The new fixed radius.

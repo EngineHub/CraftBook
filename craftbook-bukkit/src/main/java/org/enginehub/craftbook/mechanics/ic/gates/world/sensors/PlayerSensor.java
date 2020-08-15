@@ -19,7 +19,6 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.sensors;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -132,7 +131,7 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if(!SearchArea.createArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)).isValid())
+            if (!SearchArea.createArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)).isValid())
                 throw new ICVerificationException("Invalid SearchArea on line 3!");
         }
 
@@ -146,8 +145,8 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
         public String[] getLineHelp() {
 
             return new String[] {
-                    "SearchArea",
-                    "PlayerType"
+                "SearchArea",
+                "PlayerType"
             };
         }
     }

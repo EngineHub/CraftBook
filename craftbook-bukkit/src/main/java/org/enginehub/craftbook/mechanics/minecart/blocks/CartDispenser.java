@@ -16,14 +16,6 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
-import org.enginehub.craftbook.util.BlockSyntax;
-import org.enginehub.craftbook.util.EntityUtil;
-import org.enginehub.craftbook.util.LocationUtil;
-import org.enginehub.craftbook.util.RailUtil;
-import org.enginehub.craftbook.util.RedstoneUtil.Power;
-import org.enginehub.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Location;
@@ -40,14 +32,24 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
+import org.enginehub.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
+import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.EntityUtil;
+import org.enginehub.craftbook.util.LocationUtil;
+import org.enginehub.craftbook.util.RailUtil;
+import org.enginehub.craftbook.util.RedstoneUtil.Power;
+import org.enginehub.craftbook.util.SignUtil;
 
 import java.util.Locale;
 
 /**
  * <p>
- * Collects carts when carts pass over an unpowered chest marked as a dispenser; dispenses carts when power flips on
+ * Collects carts when carts pass over an unpowered chest marked as a dispenser; dispenses carts
+ * when power flips on
  * if no cart is already above the
- * dispenser. The dispenser does not impart velocity to dispensed carts, so it is typical to simply place the track
+ * dispenser. The dispenser does not impart velocity to dispensed carts, so it is typical to simply
+ * place the track
  * above the dispenser so as to be at
  * an angle.
  * </p>
@@ -57,12 +59,14 @@ import java.util.Locale;
  * changed in a future version.
  * </p>
  * <p>
- * Dispenser signs which contain "inf" on the third line will collect carts without storing them and create carts
+ * Dispenser signs which contain "inf" on the third line will collect carts without storing them and
+ * create carts
  * without requiring them from
  * inventory.
  * </p>
  * <p>
- * Note that this is not an exact reimplementation of the mechanics from hmod; this is something new and more
+ * Note that this is not an exact reimplementation of the mechanics from hmod; this is something new
+ * and more
  * consistent with other modern cart
  * mechanisms.
  * </p>
@@ -93,7 +97,7 @@ public class CartDispenser extends CartBlockMechanism {
         Power pow = isActive(blocks);
         boolean inf = "inf".equalsIgnoreCase(blocks.getSign().getLine(2));
 
-        if(inf) {
+        if (inf) {
 
             CartType type = CartType.fromString(blocks.getSign().getLine(0));
 
@@ -101,7 +105,7 @@ public class CartDispenser extends CartBlockMechanism {
             if (cart == null) {
                 switch (pow) {
                     case ON:
-                        if(!blocks.getSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("collect"))
+                        if (!blocks.getSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("collect"))
                             dispense(blocks, null, type);
                         return;
                     case OFF: // power going off doesn't eat a cart unless the cart moves.
@@ -113,7 +117,7 @@ public class CartDispenser extends CartBlockMechanism {
                         return;
                     case OFF:
                     case NA:
-                        if(!blocks.getSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense"))
+                        if (!blocks.getSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense"))
                             collect(cart, null);
                 }
             }
@@ -127,7 +131,7 @@ public class CartDispenser extends CartBlockMechanism {
                 if (cart == null) {
                     switch (pow) {
                         case ON:
-                            if(!blocks.getSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("collect"))
+                            if (!blocks.getSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("collect"))
                                 dispense(blocks, inv, type);
                             return;
                         case OFF: // power going off doesn't eat a cart unless the cart moves.
@@ -139,7 +143,7 @@ public class CartDispenser extends CartBlockMechanism {
                             return;
                         case OFF:
                         case NA:
-                            if(!blocks.getSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense"))
+                            if (!blocks.getSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense"))
                                 collect(cart, inv);
                             return;
                     }
@@ -150,7 +154,7 @@ public class CartDispenser extends CartBlockMechanism {
 
     /**
      * @param cart the cart to be destroyed/collected
-     * @param inv  the inventory to place a cart item in, or null if we don't care.
+     * @param inv the inventory to place a cart item in, or null if we don't care.
      */
     private static void collect(Minecart cart, Inventory inv) {
 
@@ -174,18 +178,18 @@ public class CartDispenser extends CartBlockMechanism {
 
     /**
      * @param blocks nuff said
-     * @param inv    the inventory to remove a cart item from, or null if we don't care.
+     * @param inv the inventory to remove a cart item from, or null if we don't care.
      */
     private void dispense(CartMechanismBlocks blocks, Inventory inv, CartType type) {
 
         Location location = LocationUtil.center(blocks.rail.getLocation());
 
-        if(minecartDispenserLegacy) {
-            BlockFace direction =  SignUtil.getFront(blocks.sign).getOppositeFace();
+        if (minecartDispenserLegacy) {
+            BlockFace direction = SignUtil.getFront(blocks.sign).getOppositeFace();
             location = blocks.rail.getRelative(direction).getLocation();
         }
 
-        if(minecartDispenserAntiSpam && EntityUtil.isEntityOfTypeInBlock(location.getBlock(), EntityType.MINECART))
+        if (minecartDispenserAntiSpam && EntityUtil.isEntityOfTypeInBlock(location.getBlock(), EntityType.MINECART))
             return;
 
         if (inv != null) {
@@ -207,7 +211,7 @@ public class CartDispenser extends CartBlockMechanism {
             }
         }
         Minecart cart = blocks.rail.getWorld().spawn(location, type.toClass());
-        if(minecartDispenserPropel) {
+        if (minecartDispenserPropel) {
             BlockFace dir = SignUtil.getBack(blocks.sign);
             Vector vel = new Vector(dir.getModX(), dir.getModY(), dir.getModZ());
             cart.setVelocity(vel.normalize());
@@ -253,7 +257,7 @@ public class CartDispenser extends CartBlockMechanism {
     @Override
     public String[] getApplicableSigns() {
 
-        return new String[] {"Dispenser"};
+        return new String[] { "Dispenser" };
     }
 
     private boolean minecartDispenserLegacy;

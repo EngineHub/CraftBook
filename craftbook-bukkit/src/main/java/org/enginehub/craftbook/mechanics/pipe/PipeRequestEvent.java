@@ -16,17 +16,17 @@
 
 package org.enginehub.craftbook.mechanics.pipe;
 
-import java.util.List;
-
 import org.bukkit.block.Block;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public class PipeRequestEvent extends PipeSuckEvent {
 
     private static final HandlerList handlers = new HandlerList();
 
-    public PipeRequestEvent (Block theBlock, List<ItemStack> items, Block sucked) {
+    public PipeRequestEvent(Block theBlock, List<ItemStack> items, Block sucked) {
         super(theBlock, items, sucked);
     }
 

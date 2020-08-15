@@ -16,6 +16,10 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.entity;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -24,10 +28,6 @@ import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.util.Tuple2;
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 
 public class TeleportReciever extends AbstractSelfTriggeredIC {
 
@@ -70,7 +70,7 @@ public class TeleportReciever extends AbstractSelfTriggeredIC {
     @Override
     public void think(ChipState chip) {
 
-        if(!chip.getInput(0))
+        if (!chip.getInput(0))
             chip.setOutput(0, check());
     }
 
@@ -86,8 +86,8 @@ public class TeleportReciever extends AbstractSelfTriggeredIC {
         }
 
         Block block = getBackBlock();
-        while(block.getType().isSolid())
-            block = block.getRelative(0,1,0);
+        while (block.getType().isSolid())
+            block = block.getRelative(0, 1, 0);
 
         p.teleport(block.getLocation().add(0.5, 0.5, 0.5));
         CraftBookPlugin.inst().wrapPlayer(p).print(welcome);
@@ -112,7 +112,7 @@ public class TeleportReciever extends AbstractSelfTriggeredIC {
         public String[] getLongDescription() {
 
             return new String[] {
-                    "The '''MC1113''' will teleport a player from a corresponding [[../MC1112/]] IC on a redstone signal."
+                "The '''MC1113''' will teleport a player from a corresponding [[../MC1112/]] IC on a redstone signal."
             };
         }
 
@@ -126,15 +126,15 @@ public class TeleportReciever extends AbstractSelfTriggeredIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Trigger IC (When ST, disables IC when high)",//Inputs
-                    "High on successful teleport",//Outputs
+                "Trigger IC (When ST, disables IC when high)",//Inputs
+                "High on successful teleport",//Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Frequency", "+oWelcome Text"};
+            return new String[] { "Frequency", "+oWelcome Text" };
         }
     }
 }

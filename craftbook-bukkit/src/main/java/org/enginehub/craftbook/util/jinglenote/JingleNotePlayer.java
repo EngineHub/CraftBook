@@ -14,15 +14,9 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-// $Id$
-/*
- * Tetsuuuu plugin for SK's Minecraft Server Copyright (C) 2010 sk89q <http://www.sk89q.com> All rights reserved.
- */
-
 package org.enginehub.craftbook.util.jinglenote;
 
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.util.SearchArea;
 import org.enginehub.craftbook.util.jinglenote.JingleSequencer.Note;
 
@@ -34,7 +28,7 @@ public abstract class JingleNotePlayer implements Runnable {
 
     /**
      * Constructs a new JingleNotePlayer
-     * 
+     *
      * @param player The player who is hearing this's name.
      * @param seq The JingleSequencer to play.
      * @param area The SearchArea for this player. (optional)
@@ -49,7 +43,7 @@ public abstract class JingleNotePlayer implements Runnable {
     @Override
     public void run() {
 
-        if(sequencer == null)
+        if (sequencer == null)
             return;
         try {
             try {
@@ -58,7 +52,7 @@ public abstract class JingleNotePlayer implements Runnable {
                 t.printStackTrace();
             }
 
-            while(isPlaying()){
+            while (isPlaying()) {
                 Thread.sleep(10L);
             }
         } catch (InterruptedException e) {

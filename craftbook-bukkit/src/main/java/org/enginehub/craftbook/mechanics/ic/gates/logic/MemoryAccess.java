@@ -16,15 +16,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -33,6 +25,12 @@ import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.ICManager;
 import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class MemoryAccess extends AbstractIC {
 
@@ -67,7 +65,7 @@ public class MemoryAccess extends AbstractIC {
     public void load() {
 
         f = new File(ICManager.inst().getRomFolder(), getSign().getLine(2) + ".dat");
-        if (!f.exists())  {
+        if (!f.exists()) {
             try {
                 f.createNewFile();
             } catch (IOException e) {
@@ -82,7 +80,7 @@ public class MemoryAccess extends AbstractIC {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8"));
             String line = br.readLine();
             for (int i = 0; i < chip.getOutputCount(); i++) {
-                if(line == null || line.length() < i+1)
+                if (line == null || line.length() < i + 1)
                     chip.setOutput(i, false);
                 else
                     chip.setOutput(i, line.charAt(i) == '1');
@@ -106,10 +104,10 @@ public class MemoryAccess extends AbstractIC {
         public String[] getLongDescription() {
 
             return new String[] {
-                    "The '''MC3301''' gets memory that can be set by the ([[../MC3301/]]) set to access the same file.",
-                    "",
-                    "This IC reads from a file in the filesystem stored in /plugins/CraftBook/rom/fileName.dat.",
-                    "This file can be accessed by other services to allow for external programs to interact with redstone."
+                "The '''MC3301''' gets memory that can be set by the ([[../MC3301/]]) set to access the same file.",
+                "",
+                "This IC reads from a file in the filesystem stored in /plugins/CraftBook/rom/fileName.dat.",
+                "This file can be accessed by other services to allow for external programs to interact with redstone."
             };
         }
 
@@ -117,10 +115,10 @@ public class MemoryAccess extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Trigger IC",//Inputs
-                    "Bit 1 State",//Outputs
-                    "Bit 2 State",
-                    "Bit 3 State"
+                "Trigger IC",//Inputs
+                "Bit 1 State",//Outputs
+                "Bit 2 State",
+                "Bit 3 State"
             };
         }
 

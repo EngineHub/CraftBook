@@ -14,32 +14,8 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-// $Id$
-/*
- * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with this program. If not,
- * see <http://www.gnu.org/licenses/>.
- */
-
 package org.enginehub.craftbook.util;
 
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.mechanics.ic.AbstractIC;
-import org.enginehub.craftbook.mechanics.ic.ICMechanic;
-import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
-import org.enginehub.craftbook.mechanics.pipe.PipeRequestEvent;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -60,6 +36,14 @@ import org.bukkit.block.data.type.Switch;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.mechanics.ic.AbstractIC;
+import org.enginehub.craftbook.mechanics.ic.ICMechanic;
+import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
+import org.enginehub.craftbook.mechanics.pipe.PipeRequestEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,7 +64,6 @@ public final class ICUtil {
      *
      * @param block
      * @param state
-     *
      * @return whether something was changed
      */
     public static boolean setState(Block block, boolean state, Block source) {
@@ -118,18 +101,18 @@ public final class ICUtil {
 
     public static void parseSignFlags(CraftBookPlayer player, ChangedSign sign) {
 
-        for(int i = 2; i < 4; i++) {
+        for (int i = 2; i < 4; i++) {
 
-            if(sign.getLine(i).contains("[off]")) {
+            if (sign.getLine(i).contains("[off]")) {
 
-                if(CraftBookPlugin.plugins.getWorldEdit() == null) {
+                if (CraftBookPlugin.plugins.getWorldEdit() == null) {
                     sign.setLine(i, StringUtils.replace(sign.getLine(i), "[off]", ""));
                     player.printError("worldedit.ic.notfound");
                 } else {
                     RegionSelector selector = WorldEdit.getInstance().getSessionManager().get(player).getRegionSelector(player.getWorld());
 
                     try {
-                        if(selector instanceof CuboidRegionSelector) {
+                        if (selector instanceof CuboidRegionSelector) {
 
                             BlockVector3 centre = selector.getRegion().getMaximumPoint().add(selector.getRegion().getMinimumPoint());
 
@@ -137,7 +120,7 @@ public final class ICUtil {
 
                             BlockVector3 offset = centre.subtract(BukkitAdapter.adapt(sign.getBlock().getLocation()).toVector().toBlockPoint());
 
-                            String x,y,z;
+                            String x, y, z;
 
                             x = Double.toString(offset.getX());
                             if (x.endsWith(".0"))
@@ -156,7 +139,7 @@ public final class ICUtil {
                             Vector3 centre = selector.getRegion().getCenter();
                             Vector3 offset = centre.subtract(BukkitAdapter.adapt(sign.getBlock().getLocation()).toVector());
 
-                            String x,y,z;
+                            String x, y, z;
 
                             x = Double.toString(offset.getX());
                             if (x.endsWith(".0"))
@@ -175,35 +158,34 @@ public final class ICUtil {
                             sign.setLine(i, StringUtils.replace(sign.getLine(i), "[off]", ""));
                             player.printError("worldedit.ic.unsupported");
                         }
-                    }
-                    catch(IncompleteRegionException e) {
+                    } catch (IncompleteRegionException e) {
                         player.printError("worldedit.ic.noselection");
                     }
                 }
             }
 
-            if(sign.getLine(i).contains("[rad]")) {
+            if (sign.getLine(i).contains("[rad]")) {
 
-                if(CraftBookPlugin.plugins.getWorldEdit() == null) {
+                if (CraftBookPlugin.plugins.getWorldEdit() == null) {
                     sign.setLine(i, StringUtils.replace(sign.getLine(i), "[rad]", ""));
                     player.printError("worldedit.ic.notfound");
                 } else {
                     RegionSelector selector = WorldEdit.getInstance().getSessionManager().get(player).getRegionSelector(player.getWorld());
 
                     try {
-                        if(selector instanceof CuboidRegionSelector) {
+                        if (selector instanceof CuboidRegionSelector) {
 
-                            String x,y,z;
+                            String x, y, z;
 
-                            x = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getX() - selector.getRegion().getMinimumPoint().getX())/2);
+                            x = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getX() - selector.getRegion().getMinimumPoint().getX()) / 2);
                             if (x.endsWith(".0"))
                                 x = StringUtils.replace(x, ".0", "");
 
-                            y = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getY() - selector.getRegion().getMinimumPoint().getY())/2);
+                            y = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getY() - selector.getRegion().getMinimumPoint().getY()) / 2);
                             if (y.endsWith(".0"))
                                 y = StringUtils.replace(y, ".0", "");
 
-                            z = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getZ() - selector.getRegion().getMinimumPoint().getZ())/2);
+                            z = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getZ() - selector.getRegion().getMinimumPoint().getZ()) / 2);
                             if (z.endsWith(".0"))
                                 z = StringUtils.replace(z, ".0", "");
 
@@ -223,8 +205,7 @@ public final class ICUtil {
                             sign.setLine(i, StringUtils.replace(sign.getLine(i), "[rad]", ""));
                             player.printError("worldedit.ic.unsupported");
                         }
-                    }
-                    catch(IncompleteRegionException e) {
+                    } catch (IncompleteRegionException e) {
                         player.printError("worldedit.ic.noselection");
                     }
                 }
@@ -270,7 +251,7 @@ public final class ICUtil {
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException ignored) {
         }
 
-        if(offsets.getBlockX() == 0 && offsets.getBlockY() == 0 && offsets.getBlockZ() == 0)
+        if (offsets.getBlockX() == 0 && offsets.getBlockY() == 0 && offsets.getBlockZ() == 0)
             return target;
 
         if (relative == LocationCheckType.RELATIVE)
@@ -310,7 +291,7 @@ public final class ICUtil {
             line = StringUtils.replace(StringUtils.replace(StringUtils.replace(line, "!", ""), "^", ""), "&", "");
             if (line.contains("=")) {
                 String[] split = RegexUtil.EQUALS_PATTERN.split(line, 2);
-                if(RegexUtil.COMMA_PATTERN.split(split[0]).length > 1) {
+                if (RegexUtil.COMMA_PATTERN.split(split[0]).length > 1) {
 
                     String[] rads = RegexUtil.COMMA_PATTERN.split(split[0]);
                     Double.parseDouble(rads[0]);
@@ -341,7 +322,7 @@ public final class ICUtil {
 
     public static Vector3 parseRadius(String line) {
 
-        Vector3 radius = Vector3.at(10,10,10);
+        Vector3 radius = Vector3.at(10, 10, 10);
         try {
             radius = parseUnsafeRadius(line);
         } catch (NumberFormatException ignored) {
@@ -351,16 +332,15 @@ public final class ICUtil {
 
     public static Vector3 parseUnsafeRadius(String line) throws NumberFormatException {
         String[] radians = RegexUtil.COMMA_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(line, 2)[0]);
-        if(radians.length > 1) {
+        if (radians.length > 1) {
             double x = VerifyUtil.verifyRadius(Double.parseDouble(radians[0]), ICMechanic.instance.maxRange);
             double y = VerifyUtil.verifyRadius(Double.parseDouble(radians[1]), ICMechanic.instance.maxRange);
             double z = VerifyUtil.verifyRadius(Double.parseDouble(radians[2]), ICMechanic.instance.maxRange);
-            return Vector3.at(x,y,z);
-        }
-        else {
+            return Vector3.at(x, y, z);
+        } else {
             double r = Double.parseDouble(radians[0]);
             r = VerifyUtil.verifyRadius(r, ICMechanic.instance.maxRange);
-            return Vector3.at(r,r,r);
+            return Vector3.at(r, r, r);
         }
     }
 
@@ -405,8 +385,8 @@ public final class ICUtil {
 
         public static LocationCheckType getTypeFromChar(char c) {
 
-            for(LocationCheckType t : values())
-                if(t.c == c)
+            for (LocationCheckType t : values())
+                if (t.c == c)
                     return t;
 
             return RELATIVE;
@@ -414,10 +394,10 @@ public final class ICUtil {
 
         public static LocationCheckType getTypeFromName(String name) {
 
-            if(name.length() == 1)
+            if (name.length() == 1)
                 return getTypeFromChar(name.charAt(0));
-            for(LocationCheckType t : values())
-                if(t.name().equalsIgnoreCase(name))
+            for (LocationCheckType t : values())
+                if (t.name().equalsIgnoreCase(name))
                     return t;
 
             return RELATIVE;

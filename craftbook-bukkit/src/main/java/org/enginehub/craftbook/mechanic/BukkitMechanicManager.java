@@ -16,11 +16,11 @@
 
 package org.enginehub.craftbook.mechanic;
 
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.mechanic.load.LoadPriority;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.load.LoadPriority;
 import org.enginehub.craftbook.mechanic.load.MechanicDependency;
 
 public class BukkitMechanicManager extends MechanicManager {
@@ -95,67 +95,67 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("BoatExitRemover", org.enginehub.craftbook.mechanics.boat.ExitRemover.class, MechanicCategory.BOAT);
 
         registerMechanic(MechanicType.Builder
-                .create()
-                .id("variables")
-                .name("Variables")
-                .className("org.enginehub.craftbook.mechanics.variables.VariableManager")
-                .category(MechanicCategory.GENERAL)
-                .loadPriority(LoadPriority.EARLY)
-                .build()
+            .create()
+            .id("variables")
+            .name("Variables")
+            .className("org.enginehub.craftbook.mechanics.variables.VariableManager")
+            .category(MechanicCategory.GENERAL)
+            .loadPriority(LoadPriority.EARLY)
+            .build()
         );
 
         registerMechanic(MechanicType.Builder
-                .create()
-                .id("snow")
-                .name("Snow")
-                .className("org.enginehub.craftbook.mechanics.Snow")
-                .category(MechanicCategory.GENERAL)
-                .build()
+            .create()
+            .id("snow")
+            .name("Snow")
+            .className("org.enginehub.craftbook.mechanics.Snow")
+            .category(MechanicCategory.GENERAL)
+            .build()
         );
 
         registerMechanic(MechanicType.Builder
-                .create()
-                .id("ammeter")
-                .name("Ammeter")
-                .className("org.enginehub.craftbook.mechanics.Ammeter")
-                .category(MechanicCategory.TOOL)
-                .build()
+            .create()
+            .id("ammeter")
+            .name("Ammeter")
+            .className("org.enginehub.craftbook.mechanics.Ammeter")
+            .category(MechanicCategory.TOOL)
+            .build()
         );
 
         registerMechanic(MechanicType.Builder
-                .create()
-                .id("lightstone")
-                .name("LightStone")
-                .className("org.enginehub.craftbook.mechanics.LightStone")
-                .category(MechanicCategory.TOOL)
-                .build()
+            .create()
+            .id("lightstone")
+            .name("LightStone")
+            .className("org.enginehub.craftbook.mechanics.LightStone")
+            .category(MechanicCategory.TOOL)
+            .build()
         );
 
         registerMechanic(MechanicType.Builder
-                .create()
-                .id("redstone_fire")
-                .name("RedstoneFire")
-                .className("org.enginehub.craftbook.mechanics.RedstoneFire")
-                .category(MechanicCategory.CIRCUIT)
-                .build()
+            .create()
+            .id("redstone_fire")
+            .name("RedstoneFire")
+            .className("org.enginehub.craftbook.mechanics.RedstoneFire")
+            .category(MechanicCategory.CIRCUIT)
+            .build()
         );
 
         registerMechanic(MechanicType.Builder
-                .create()
-                .id("jukebox")
-                .name("Jukebox")
-                .className("org.enginehub.craftbook.mechanics.RedstoneJukebox")
-                .category(MechanicCategory.CIRCUIT)
-                .build()
+            .create()
+            .id("jukebox")
+            .name("Jukebox")
+            .className("org.enginehub.craftbook.mechanics.RedstoneJukebox")
+            .category(MechanicCategory.CIRCUIT)
+            .build()
         );
 
         registerMechanic(MechanicType.Builder
-                .create()
-                .id("jack_o_lantern")
-                .name("JackOLantern")
-                .className("org.enginehub.craftbook.mechanics.JackOLantern")
-                .category(MechanicCategory.CIRCUIT)
-                .build()
+            .create()
+            .id("jack_o_lantern")
+            .name("JackOLantern")
+            .className("org.enginehub.craftbook.mechanics.JackOLantern")
+            .category(MechanicCategory.CIRCUIT)
+            .build()
         );
 
         registerMechanic(MechanicType.Builder

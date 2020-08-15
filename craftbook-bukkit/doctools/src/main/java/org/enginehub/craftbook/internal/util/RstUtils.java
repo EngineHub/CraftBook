@@ -13,7 +13,7 @@ public class RstUtils {
         builder.append("  :header: Node, Comment, Default\n");
         builder.append("  :widths: 15, 30, 10\n\n");
 
-        for(String key : config.getKeys(null)) {
+        for (String key : config.getKeys(null)) {
             String comment = config.getComment(key);
             if (comment == null) {
                 System.out.println("[WARNING] Key " + key + " is missing a comment!");

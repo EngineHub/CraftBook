@@ -17,22 +17,6 @@
 package org.enginehub.craftbook.bukkit;
 
 import com.google.common.base.Joiner;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookManifest;
-import org.enginehub.craftbook.CraftBookPlatform;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.LanguageManager;
-import org.enginehub.craftbook.PlatformCommandManager;
-import org.enginehub.craftbook.mechanic.CraftBookMechanic;
-import org.enginehub.craftbook.mechanics.variables.VariableManager;
-import org.enginehub.craftbook.st.MechanicClock;
-import org.enginehub.craftbook.st.SelfTriggeringManager;
-import org.enginehub.craftbook.util.ArrayUtil;
-import org.enginehub.craftbook.util.RegexUtil;
-import org.enginehub.craftbook.util.UUIDMappings;
-import org.enginehub.craftbook.util.companion.CompanionPlugins;
-import org.enginehub.craftbook.util.persistent.PersistentStorage;
-import org.enginehub.craftbook.util.profile.Profile;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.wepif.PermissionsResolverManager;
@@ -56,6 +40,22 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookManifest;
+import org.enginehub.craftbook.CraftBookPlatform;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.LanguageManager;
+import org.enginehub.craftbook.PlatformCommandManager;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanics.variables.VariableManager;
+import org.enginehub.craftbook.st.MechanicClock;
+import org.enginehub.craftbook.st.SelfTriggeringManager;
+import org.enginehub.craftbook.util.ArrayUtil;
+import org.enginehub.craftbook.util.RegexUtil;
+import org.enginehub.craftbook.util.UUIDMappings;
+import org.enginehub.craftbook.util.companion.CompanionPlugins;
+import org.enginehub.craftbook.util.persistent.PersistentStorage;
+import org.enginehub.craftbook.util.profile.Profile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -141,7 +141,8 @@ public class CraftBookPlugin extends JavaPlugin {
      * @param name the filename
      */
     public void createDefaultConfiguration(String name) {
-        Path actual = CraftBook.getInstance().getPlatform().getConfigDir().resolve(name);;
+        Path actual = CraftBook.getInstance().getPlatform().getConfigDir().resolve(name);
+        ;
         if (Files.notExists(actual)) {
             try (InputStream stream = getResource("defaults/" + name)) {
                 if (stream == null) throw new FileNotFoundException();
@@ -246,7 +247,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         if (!foundAMech) {
             Bukkit.getScheduler().runTaskTimer(this,
-                    () -> getLogger().warning(ChatColor.RED + "Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!"), 20L, 20*60*5);
+                () -> getLogger().warning(ChatColor.RED + "Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!"), 20L, 20 * 60 * 5);
         }
 
         PaperLib.suggestPaper(this);
@@ -272,7 +273,8 @@ public class CraftBookPlugin extends JavaPlugin {
         logDebugMessage("Initializing Mechanisms!", "startup");
         try {
             new File(CraftBookPlugin.inst().getDataFolder(), "mechanics").mkdirs();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         platform.getMechanicManager().enableMechanics();
         setupSelfTriggered();
@@ -290,9 +292,9 @@ public class CraftBookPlugin extends JavaPlugin {
             org.bstats.bukkit.Metrics metrics = new org.bstats.bukkit.Metrics(this, BSTATS_ID);
 
             metrics.addCustomChart(new org.bstats.bukkit.Metrics.AdvancedPie("language",
-                    () -> languageManager.getLanguages().stream().collect(Collectors.toMap(Function.identity(), o -> 1))));
+                () -> languageManager.getLanguages().stream().collect(Collectors.toMap(Function.identity(), o -> 1))));
             metrics.addCustomChart(new org.bstats.bukkit.Metrics.SimpleBarChart("enabled_mechanics",
-                    () -> platform.getMechanicManager().getLoadedMechanics().stream().collect(Collectors.toMap(mech -> mech.getClass().getSimpleName(), o -> 1))));
+                () -> platform.getMechanicManager().getLoadedMechanics().stream().collect(Collectors.toMap(mech -> mech.getClass().getSimpleName(), o -> 1))));
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -415,8 +417,7 @@ public class CraftBookPlugin extends JavaPlugin {
      * This calls the corresponding method in PermissionsResolverManager
      *
      * @param player The player to check
-     * @param group  The group
-     *
+     * @param group The group
      * @return whether {@code player} is in {@code group}
      */
     public boolean inGroup(Player player, String group) {
@@ -433,7 +434,6 @@ public class CraftBookPlugin extends JavaPlugin {
      * This calls the corresponding method in PermissionsResolverManager.
      *
      * @param player The player to check
-     *
      * @return The names of each group the playe is in.
      */
     public String[] getGroups(Player player) {
@@ -450,7 +450,6 @@ public class CraftBookPlugin extends JavaPlugin {
      * method should never return a "display name".
      *
      * @param sender The sender to get the name of
-     *
      * @return The unique name of the sender.
      */
     public String toUniqueName(CommandSender sender) {
@@ -465,7 +464,6 @@ public class CraftBookPlugin extends JavaPlugin {
      * Gets the name of a command sender. This play be a display name.
      *
      * @param sender The CommandSender to get the name of.
-     *
      * @return The name of the given sender
      */
     public String toName(CommandSender sender) {
@@ -482,8 +480,7 @@ public class CraftBookPlugin extends JavaPlugin {
      * Checks permissions.
      *
      * @param sender The sender to check the permission on.
-     * @param perm   The permission to check the permission on.
-     *
+     * @param perm The permission to check the permission on.
      * @return whether {@code sender} has {@code perm}
      */
     public boolean hasPermission(CommandSender sender, String perm) {
@@ -510,12 +507,11 @@ public class CraftBookPlugin extends JavaPlugin {
      * Checks permissions and throws an exception if permission is not met.
      *
      * @param sender The sender to check the permission on.
-     * @param perm   The permission to check the permission on.
-     *
+     * @param perm The permission to check the permission on.
      * @throws CommandPermissionsException if {@code sender} doesn't have {@code perm}
      */
     public void checkPermission(CommandSender sender, String perm)
-            throws AuthorizationException {
+        throws AuthorizationException {
         if (!hasPermission(sender, perm)) {
             throw new AuthorizationException();
         }
@@ -525,13 +521,11 @@ public class CraftBookPlugin extends JavaPlugin {
      * Checks to see if the sender is a player, otherwise throw an exception.
      *
      * @param sender The {@link CommandSender} to check
-     *
      * @return {@code sender} casted to a player
-     *
      * @throws CommandException if {@code sender} isn't a {@link Player}
      */
     public static Player checkPlayer(CommandSender sender)
-            throws CommandException {
+        throws CommandException {
         if (sender instanceof Player) {
             return (Player) sender;
         } else {
@@ -551,7 +545,6 @@ public class CraftBookPlugin extends JavaPlugin {
      * Wrap a player as a CraftBookPlayer.
      *
      * @param player The player to wrap
-     *
      * @return The wrapped player
      */
     public CraftBookPlayer wrapPlayer(Player player) {
@@ -574,7 +567,7 @@ public class CraftBookPlugin extends JavaPlugin {
         getServer().getScheduler().cancelTasks(inst());
         HandlerList.unregisterAll(inst());
 
-        if(platform.getConfiguration().debugLogToFile) {
+        if (platform.getConfiguration().debugLogToFile) {
             debugLogger.close();
             debugLogger = null;
         }
@@ -606,8 +599,8 @@ public class CraftBookPlugin extends JavaPlugin {
         }
 
         if (!CraftBook.getInstance().getPlatform().getConfiguration().debugMode
-                || CraftBook.getInstance().getPlatform().getConfiguration().debugFlags == null
-                || CraftBook.getInstance().getPlatform().getConfiguration().debugFlags.isEmpty()) {
+            || CraftBook.getInstance().getPlatform().getConfiguration().debugFlags == null
+            || CraftBook.getInstance().getPlatform().getConfiguration().debugFlags.isEmpty()) {
             return false;
         }
 

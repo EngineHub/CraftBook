@@ -17,9 +17,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -63,7 +61,7 @@ public class RangedOutput extends AbstractSelfTriggeredIC {
         chip.setOutput(0, shouldOutput(chip));
     }
 
-    int min,max;
+    int min, max;
 
     int ticks = 0;
     int maxTicks = 0;

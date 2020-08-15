@@ -17,7 +17,6 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -65,10 +64,10 @@ public class Multiplexer extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Value to Carry if Input 3 High",//Inputs
-                    "Value to Carry if Input 3 Low",
-                    "Swaps between Input 1 and 2",
-                    "Carried Value"//Outputs
+                "Value to Carry if Input 3 High",//Inputs
+                "Value to Carry if Input 3 Low",
+                "Swaps between Input 1 and 2",
+                "Carried Value"//Outputs
             };
         }
 

@@ -16,10 +16,9 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.weather;
 
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -76,8 +75,8 @@ public class TStormSensor extends AbstractSelfTriggeredIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Trigger IC",//Inputs
-                    "High if storming"//Outputs
+                "Trigger IC",//Inputs
+                "High if storming"//Outputs
             };
         }
 

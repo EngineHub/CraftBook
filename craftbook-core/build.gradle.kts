@@ -47,10 +47,10 @@ if (project.hasProperty(crowdinApiKey) && !gradle.startParameter.isOffline) {
         apiKey = "${project.property(crowdinApiKey)}"
         projectId = "craftbook"
         files = arrayOf(
-                object {
-                    var name = "strings.json"
-                    var source = "${file("src/main/resources/lang/strings.json")}"
-                }
+            object {
+                var name = "strings.json"
+                var source = "${file("src/main/resources/lang/strings.json")}"
+            }
         )
     }
 

@@ -16,6 +16,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.variables;
 
+import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
@@ -28,21 +29,20 @@ import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
 import org.enginehub.craftbook.mechanics.variables.VariableKey;
 import org.enginehub.craftbook.mechanics.variables.VariableManager;
 import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
-import org.bukkit.Server;
 
 public class IsAtLeast extends AbstractSelfTriggeredIC {
 
-    public IsAtLeast (Server server, ChangedSign sign, ICFactory factory) {
+    public IsAtLeast(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
         return "Is At Least";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
         return "IS AT LEAST";
     }
 
@@ -55,13 +55,14 @@ public class IsAtLeast extends AbstractSelfTriggeredIC {
         try {
             variable = getLine(2);
             amount = Double.parseDouble(getLine(3));
-        } catch(Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
-        if(chip.getInput(0)) {
+        if (chip.getInput(0)) {
             chip.setOutput(0, isAtLeast());
         }
     }
@@ -100,9 +101,9 @@ public class IsAtLeast extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLongDescription() {
 
-            return new String[]{
-                    "The '''VAR170''' IC checks a numerical variable against an amount listed on the sign.",
-                    "If the variable on the sign has a value greater than that listed on the sign, the IC will output high."
+            return new String[] {
+                "The '''VAR170''' IC checks a numerical variable against an amount listed on the sign.",
+                "If the variable on the sign has a value greater than that listed on the sign, the IC will output high."
 
             };
         }
@@ -117,15 +118,15 @@ public class IsAtLeast extends AbstractSelfTriggeredIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Trigger IC",//Inputs
-                    "High if variable is at least"//Outputs
+                "Trigger IC",//Inputs
+                "High if variable is at least"//Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Variable Name", "Amount"};
+            return new String[] { "Variable Name", "Amount" };
         }
 
         @Override
@@ -148,7 +149,7 @@ public class IsAtLeast extends AbstractSelfTriggeredIC {
                     throw new ICVerificationException("Unknown Variable!");
                 }
                 Double.parseDouble(sign.getLine(3));
-            } catch(NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 throw new ICVerificationException("Amount must be a number!");
             } catch (VariableException e) {
                 throw new ICVerificationException("Can't use this variable", e);

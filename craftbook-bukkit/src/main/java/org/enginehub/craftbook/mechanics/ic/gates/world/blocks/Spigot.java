@@ -16,6 +16,13 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
+import com.sk89q.worldedit.math.Vector3;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -26,13 +33,6 @@ import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
 import org.enginehub.craftbook.util.ICUtil;
 import org.enginehub.craftbook.util.InventoryUtil;
 import org.enginehub.craftbook.util.LocationUtil;
-import com.sk89q.worldedit.math.Vector3;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -104,11 +104,11 @@ public class Spigot extends AbstractIC {
                 return true;
             } else { // Still
                 return searchAt(chest, searched, off.getRelative(1, 0, 0))
-                        || searchAt(chest, searched, off.getRelative(-1, 0, 0))
-                        || searchAt(chest, searched, off.getRelative(0, 0, 1))
-                        || searchAt(chest, searched, off.getRelative(0, 0, -1))
-                        || searchAt(chest, searched, off.getRelative(0, 1, 0))
-                        || searchAt(chest, searched, off.getRelative(0, -1, 0));
+                    || searchAt(chest, searched, off.getRelative(-1, 0, 0))
+                    || searchAt(chest, searched, off.getRelative(0, 0, 1))
+                    || searchAt(chest, searched, off.getRelative(0, 0, -1))
+                    || searchAt(chest, searched, off.getRelative(0, 1, 0))
+                    || searchAt(chest, searched, off.getRelative(0, -1, 0));
             }
         }
 
@@ -176,7 +176,7 @@ public class Spigot extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+oradius=x:y:z offset", null};
+            return new String[] { "+oradius=x:y:z offset", null };
         }
     }
 }

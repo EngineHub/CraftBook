@@ -19,7 +19,6 @@ package org.enginehub.craftbook.mechanics.ic.gates.logic;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.scheduler.BukkitTask;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
@@ -65,7 +64,7 @@ public class NotDelayer extends AbstractIC {
                 }
             }, delay * 20);
         } else {
-            if(taskId != null)
+            if (taskId != null)
                 taskId.cancel();
             chip.setOutput(0, true);
         }
@@ -88,8 +87,8 @@ public class NotDelayer extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Trigger IC",//Inputs
-                    "Delayed Output",//Outputs
+                "Trigger IC",//Inputs
+                "Delayed Output",//Outputs
             };
         }
 

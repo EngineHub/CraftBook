@@ -18,7 +18,6 @@ package org.enginehub.craftbook.util.jinglenote;
 
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.ICMechanic;
 
 import java.io.File;
@@ -27,7 +26,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiSystem;
@@ -46,33 +44,33 @@ import javax.sound.midi.ShortMessage;
 public final class MidiJingleSequencer implements JingleSequencer {
 
     private static final byte[] instruments = {
-            0, 0, 0, 0, 0, 0, 0,11, // 0-7
-            6, 6, 6, 6, 9, 9,15,11, // 8-15
-            10,5, 5,10,10,10,10,10, // 16-23
-            5, 5, 5, 5, 5, 5, 5, 5, // 24-31
-            1, 1, 1, 1, 1, 1, 1, 1, // 32-39
-            0,10,10, 1, 0, 0, 0, 4, // 40-47
-            0, 0, 0, 0, 8, 8, 8,12, // 48-55
-            8,14,14,14,14,14, 8, 8, // 56-63
-            8, 8, 8,14,14, 8, 8, 8, // 64-71
-            8, 8, 8, 8,14, 8, 8, 8, // 72-79
-            8,14, 8, 8, 5, 8,12, 1, // 80-87
-            1, 0, 0, 8, 0, 0, 0, 0, // 88-95
-            0, 0, 7, 0, 0, 0, 0,12, // 96-103
-            11,11,3, 3, 3,14,10, 6, // 104-111
-            6, 3, 3, 2, 2, 2, 6, 5, // 112-119
-            1, 1, 1,13,13, 2, 4, 7, // 120-127
+        0, 0, 0, 0, 0, 0, 0, 11, // 0-7
+        6, 6, 6, 6, 9, 9, 15, 11, // 8-15
+        10, 5, 5, 10, 10, 10, 10, 10, // 16-23
+        5, 5, 5, 5, 5, 5, 5, 5, // 24-31
+        1, 1, 1, 1, 1, 1, 1, 1, // 32-39
+        0, 10, 10, 1, 0, 0, 0, 4, // 40-47
+        0, 0, 0, 0, 8, 8, 8, 12, // 48-55
+        8, 14, 14, 14, 14, 14, 8, 8, // 56-63
+        8, 8, 8, 14, 14, 8, 8, 8, // 64-71
+        8, 8, 8, 8, 14, 8, 8, 8, // 72-79
+        8, 14, 8, 8, 5, 8, 12, 1, // 80-87
+        1, 0, 0, 8, 0, 0, 0, 0, // 88-95
+        0, 0, 7, 0, 0, 0, 0, 12, // 96-103
+        11, 11, 3, 3, 3, 14, 10, 6, // 104-111
+        6, 3, 3, 2, 2, 2, 6, 5, // 112-119
+        1, 1, 1, 13, 13, 2, 4, 7, // 120-127
     };
 
 
     private static final byte[] percussion = {
-            9, 6, 4, 4, 3, 2, 3, 2, //40 - Electric Snare
-            2, 2, 2, 2, 2, 2, 2, 2, //48 - Hi Mid Tom
-            7, 2, 7, 7, 6, 3, 7, 6, //56 - Cowbell
-            7, 3, 7, 2, 2, 3, 3, 3, //64 - Low Conga
-            2, 2, 6, 6, 2, 2, 0, 0, //72 - Long Whistle
-            3, 3, 3, 3, 3, 3, 5, 5, //80 - Open Cuica
-            15, 15,                 //82 - Open Triangle
+        9, 6, 4, 4, 3, 2, 3, 2, //40 - Electric Snare
+        2, 2, 2, 2, 2, 2, 2, 2, //48 - Hi Mid Tom
+        7, 2, 7, 7, 6, 3, 7, 6, //56 - Cowbell
+        7, 3, 7, 2, 2, 3, 3, 3, //64 - Low Conga
+        2, 2, 6, 6, 2, 2, 0, 0, //72 - Long Whistle
+        3, 3, 3, 3, 3, 3, 5, 5, //80 - Open Cuica
+        15, 15,                 //82 - Open Triangle
     };
 
     private Sequencer sequencer;
@@ -89,7 +87,7 @@ public final class MidiJingleSequencer implements JingleSequencer {
             sequencer.open();
             Sequence seq = MidiSystem.getSequence(midiFile);
             sequencer.setSequence(seq);
-            if(loop)
+            if (loop)
                 sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
         } catch (MidiUnavailableException | IOException | InvalidMidiDataException e) {
             stop();
@@ -103,7 +101,7 @@ public final class MidiJingleSequencer implements JingleSequencer {
         final Map<Integer, Integer> patches = new HashMap<>();
 
         try {
-            if(sequencer == null || sequencer.getSequence() == null)
+            if (sequencer == null || sequencer.getSequence() == null)
                 return;
 
             if (!sequencer.isOpen())
@@ -129,14 +127,14 @@ public final class MidiJingleSequencer implements JingleSequencer {
                         ShortMessage msg = (ShortMessage) message;
                         int chan = msg.getChannel();
                         int n = msg.getData1();
-                        synchronized(PLAYER_LOCK) {
+                        synchronized (PLAYER_LOCK) {
                             if (chan == 9) { // Percussion
                                 // Sounds like utter crap
-                                if(ICMechanic.instance.usePercussionMidi)
-                                    for(JingleNotePlayer player : players)
-                                        player.play(new Note(Instrument.toMCSound(toMCPercussion(patches.get(chan))), toMCNote(n),  10 * (msg.getData2() / 127f)));
+                                if (ICMechanic.instance.usePercussionMidi)
+                                    for (JingleNotePlayer player : players)
+                                        player.play(new Note(Instrument.toMCSound(toMCPercussion(patches.get(chan))), toMCNote(n), 10 * (msg.getData2() / 127f)));
                             } else {
-                                for(JingleNotePlayer player : players)
+                                for (JingleNotePlayer player : players)
                                     player.play(new Note(Instrument.toMCSound(toMCInstrument(patches.get(chan))), toMCNote(n), 10 * (msg.getData2() / 127f)));
                             }
                         }
@@ -169,7 +167,7 @@ public final class MidiJingleSequencer implements JingleSequencer {
                     }
                 } else
                     throw new IllegalArgumentException("Sequencer is not open!");
-            } catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } catch (MidiUnavailableException e) {
@@ -180,19 +178,20 @@ public final class MidiJingleSequencer implements JingleSequencer {
     @Override
     public void stop() {
 
-        if(!running) return;
-        synchronized(PLAYER_LOCK) {
+        if (!running) return;
+        synchronized (PLAYER_LOCK) {
             players.clear();
         }
         CraftBookPlugin.logDebugMessage("Stopping MIDI sequencer. (Stop called)", "midi");
         if (sequencer != null) {
             try {
-                if(sequencer.isRunning())
+                if (sequencer.isRunning())
                     sequencer.stop();
-                if(sequencer.isOpen())
+                if (sequencer.isOpen())
                     sequencer.close();
                 sequencer = null;
-            } catch(Exception ignored){}
+            } catch (Exception ignored) {
+            }
         }
         running = false;
     }
@@ -215,7 +214,7 @@ public final class MidiJingleSequencer implements JingleSequencer {
 
     private static byte toMCPercussion(Integer patch) {
 
-        if(patch == null)
+        if (patch == null)
             return 0;
 
         int i = patch - 33;
@@ -231,18 +230,18 @@ public final class MidiJingleSequencer implements JingleSequencer {
     }
 
     @Override
-    public boolean isPlaying () {
+    public boolean isPlaying() {
         return running && sequencer != null;
     }
 
     @Override
-    public boolean hasPlayedBefore () {
+    public boolean hasPlayedBefore() {
         return playedBefore;
     }
 
     @Override
-    public void stop (JingleNotePlayer player) {
-        synchronized(PLAYER_LOCK) {
+    public void stop(JingleNotePlayer player) {
+        synchronized (PLAYER_LOCK) {
             players.remove(player);
         }
 
@@ -252,11 +251,11 @@ public final class MidiJingleSequencer implements JingleSequencer {
     }
 
     @Override
-    public void play (JingleNotePlayer player) {
-        synchronized(PLAYER_LOCK) {
+    public void play(JingleNotePlayer player) {
+        synchronized (PLAYER_LOCK) {
             players.add(player);
         }
-        if(!playedBefore) {
+        if (!playedBefore) {
             run();
         }
     }
@@ -267,9 +266,9 @@ public final class MidiJingleSequencer implements JingleSequencer {
     }
 
     @Override
-    public Set<JingleNotePlayer> getPlayers () {
+    public Set<JingleNotePlayer> getPlayers() {
         Set<JingleNotePlayer> copy;
-        synchronized(PLAYER_LOCK) {
+        synchronized (PLAYER_LOCK) {
             copy = new HashSet<>(players);
         }
         return copy;

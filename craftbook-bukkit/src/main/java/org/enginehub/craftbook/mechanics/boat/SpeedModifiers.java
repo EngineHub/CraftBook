@@ -16,29 +16,28 @@
 
 package org.enginehub.craftbook.mechanics.boat;
 
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.entity.Boat;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
-
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.util.EventUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
 
 public class SpeedModifiers extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleCreate(VehicleCreateEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         if (!(event.getVehicle() instanceof Boat)) return;
 
-        if(maxSpeed > 0)
+        if (maxSpeed > 0)
             ((Boat) event.getVehicle()).setMaxSpeed(((Boat) event.getVehicle()).getMaxSpeed() * maxSpeed);
-        if(unnoccupiedDeceleration > 0)
+        if (unnoccupiedDeceleration > 0)
             ((Boat) event.getVehicle()).setUnoccupiedDeceleration(((Boat) event.getVehicle()).getUnoccupiedDeceleration() * unnoccupiedDeceleration);
-        if(occupiedDeceleration > 0)
+        if (occupiedDeceleration > 0)
             ((Boat) event.getVehicle()).setOccupiedDeceleration(((Boat) event.getVehicle()).getOccupiedDeceleration() * occupiedDeceleration);
     }
 

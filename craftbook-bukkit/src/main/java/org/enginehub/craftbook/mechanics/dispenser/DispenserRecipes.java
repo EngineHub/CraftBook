@@ -16,9 +16,6 @@
 
 package org.enginehub.craftbook.mechanics.dispenser;
 
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.ItemUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -28,6 +25,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.ItemUtil;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -42,15 +42,15 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
     private static DispenserRecipes instance;
 
     @Override
-    public boolean enable () {
+    public boolean enable() {
 
         instance = this;
         recipes = new HashSet<>();
-        if(xpShooterEnable) addRecipe(new XPShooter());
-        if(snowShooterEnable) addRecipe(new SnowShooter());
-        if(fireArrowsEnable) addRecipe(new FireArrows());
-        if(fanEnable) addRecipe(new Fan());
-        if(cannonEnable) addRecipe(new Cannon());
+        if (xpShooterEnable) addRecipe(new XPShooter());
+        if (snowShooterEnable) addRecipe(new SnowShooter());
+        if (fireArrowsEnable) addRecipe(new FireArrows());
+        if (fanEnable) addRecipe(new Fan());
+        if (cannonEnable) addRecipe(new Cannon());
 
         return recipes.size() > 0;
     }
@@ -67,7 +67,7 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
 
     /**
      * Gets the instance of this DispenserRecipe manager.
-     * 
+     *
      * @return The instance
      */
     public static DispenserRecipes inst() {
@@ -78,7 +78,7 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockDispense(BlockDispenseEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         if (event.getBlock().getType() != Material.DISPENSER) return;
         if (dispenseNew(event.getBlock(), event.getItem(), event.getVelocity(), event)) {
@@ -89,7 +89,8 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
     private boolean dispenseNew(Block block, ItemStack item, Vector velocity, BlockDispenseEvent event) {
 
         Dispenser dis = (Dispenser) block.getState();
-        if (dis == null || dis.getInventory() == null || dis.getInventory().getContents() == null) return false;
+        if (dis == null || dis.getInventory() == null || dis.getInventory().getContents() == null)
+            return false;
         ItemStack[] stacks = dis.getInventory().getContents();
         for (Recipe r : recipes) {
             Material[] recipe = r.getRecipe();

@@ -19,20 +19,19 @@ package org.enginehub.craftbook.mechanic;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Converter;
 import com.google.common.collect.ImmutableList;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.mechanic.load.LoadComparator;
 import org.enginehub.craftbook.mechanic.load.LoadDependency;
 import org.enginehub.craftbook.mechanic.load.MechanicDependency;
 import org.enginehub.craftbook.mechanic.load.UnsatisfiedLoadDependencyException;
-import com.sk89q.worldedit.util.formatting.text.TextComponent;
-import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import javax.annotation.Nullable;
 
 public abstract class MechanicManager {
@@ -51,12 +50,12 @@ public abstract class MechanicManager {
         Converter<String, String> camelToSnake = CaseFormat.UPPER_CAMEL.converterTo(CaseFormat.LOWER_UNDERSCORE);
 
         MechanicType<?> mechanicType = MechanicType.Builder
-                .create()
-                .id(camelToSnake.convert(name))
-                .name(name)
-                .className(mechanicClass.getName())
-                .category(category)
-                .build();
+            .create()
+            .id(camelToSnake.convert(name))
+            .name(name)
+            .className(mechanicClass.getName())
+            .category(category)
+            .build();
 
         MechanicType.REGISTRY.register(mechanicType.getId(), mechanicType);
     }
@@ -76,7 +75,7 @@ public abstract class MechanicManager {
      * Gets a list of loaded mechanics.
      *
      * <p>
-     *     This list is immutable
+     * This list is immutable
      * </p>
      *
      * @return A list of loaded mechanics
@@ -136,8 +135,8 @@ public abstract class MechanicManager {
     public void enableMechanic(MechanicType<?> mechanicType) throws MechanicInitializationException {
         if (isMechanicEnabled(mechanicType)) {
             throw new MechanicInitializationException(mechanicType, TranslatableComponent.of(
-                    "craftbook.mechanisms.already-enabled",
-                    TextComponent.of(mechanicType.getId())
+                "craftbook.mechanisms.already-enabled",
+                TextComponent.of(mechanicType.getId())
             ));
         }
         try {
@@ -152,8 +151,8 @@ public abstract class MechanicManager {
             if (!mech.enable()) {
                 mech.disable();
                 throw new MechanicInitializationException(mechanicType, TranslatableComponent.of(
-                        "craftbook.mechanisms.enable-failed",
-                        TextComponent.of(mechanicType.getId())
+                    "craftbook.mechanisms.enable-failed",
+                    TextComponent.of(mechanicType.getId())
                 ));
             }
             loadedMechanics.add(mech);
@@ -163,8 +162,8 @@ public abstract class MechanicManager {
             throw e;
         } catch (Throwable t) {
             throw new MechanicInitializationException(mechanicType, TranslatableComponent.of(
-                    "craftbook.mechanisms.enable-failed",
-                    TextComponent.of(mechanicType.getId())
+                "craftbook.mechanisms.enable-failed",
+                TextComponent.of(mechanicType.getId())
             ), t);
         }
     }

@@ -21,7 +21,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
-import org.bukkit.block.data.type.Dispenser;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.block.BlockDispenseEvent;
@@ -37,9 +36,9 @@ public class Cannon extends Recipe {
 
     public Cannon() {
         super(new Material[] {
-                Material.FIRE_CHARGE,     Material.GUNPOWDER, Material.FIRE_CHARGE,
-                Material.GUNPOWDER,         Material.TNT,    Material.GUNPOWDER,
-                Material.FIRE_CHARGE,     Material.GUNPOWDER, Material.FIRE_CHARGE
+            Material.FIRE_CHARGE, Material.GUNPOWDER, Material.FIRE_CHARGE,
+            Material.GUNPOWDER, Material.TNT, Material.GUNPOWDER,
+            Material.FIRE_CHARGE, Material.GUNPOWDER, Material.FIRE_CHARGE
         });
     }
 

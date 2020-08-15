@@ -16,9 +16,9 @@
 
 package org.enginehub.craftbook.util;
 
-import org.enginehub.craftbook.CraftBook;
 import com.sk89q.worldedit.util.formatting.WorldEditText;
 import com.sk89q.worldedit.util.formatting.text.Component;
+import org.enginehub.craftbook.CraftBook;
 import org.enginehub.piston.config.ConfigHolder;
 import org.enginehub.piston.config.ConfigRenderer;
 import org.enginehub.piston.config.TextConfig;
@@ -36,8 +36,8 @@ public class TextUtil {
 
     public static Component format(Component component, Locale locale) {
         return WorldEditText.format(CraftBook.getInstance().getTranslationManager().convertText(
-                ConfigRenderer.getInstance().render(component, CONFIG_HOLDER),
-                locale
+            ConfigRenderer.getInstance().render(component, CONFIG_HOLDER),
+            locale
         ), locale);
     }
 

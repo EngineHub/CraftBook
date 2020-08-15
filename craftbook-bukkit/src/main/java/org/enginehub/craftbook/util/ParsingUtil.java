@@ -16,14 +16,14 @@
 
 package org.enginehub.craftbook.util;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.mechanics.variables.VariableManager;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanics.variables.VariableManager;
 
 import javax.annotation.Nullable;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class ParsingUtil {
 
@@ -32,7 +32,7 @@ public final class ParsingUtil {
 
     /**
      * Parses a line with all tags possible with given arguments.
-     * 
+     *
      * @param line The base line to start with.
      * @param player The player associated with the line
      * @return The same line, with parsing completed

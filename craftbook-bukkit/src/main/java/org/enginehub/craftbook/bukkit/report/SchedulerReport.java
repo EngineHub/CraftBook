@@ -28,24 +28,23 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 import javax.annotation.Nullable;
 
 public class SchedulerReport extends DataReport {
 
     private LoadingCache<Class<?>, Optional<Field>> taskFieldCache = CacheBuilder.newBuilder()
-            .build(new CacheLoader<Class<?>, Optional<Field>>() {
-                @Override
-                public Optional<Field> load(Class<?> clazz) throws Exception {
-                    try {
-                        Field field = clazz.getDeclaredField("task");
-                        field.setAccessible(true);
-                        return Optional.ofNullable(field);
-                    } catch (NoSuchFieldException ignored) {
-                        return Optional.empty();
-                    }
+        .build(new CacheLoader<Class<?>, Optional<Field>>() {
+            @Override
+            public Optional<Field> load(Class<?> clazz) throws Exception {
+                try {
+                    Field field = clazz.getDeclaredField("task");
+                    field.setAccessible(true);
+                    return Optional.ofNullable(field);
+                } catch (NoSuchFieldException ignored) {
+                    return Optional.empty();
                 }
-            });
+            }
+        });
 
     public SchedulerReport() {
         super("Scheduler");

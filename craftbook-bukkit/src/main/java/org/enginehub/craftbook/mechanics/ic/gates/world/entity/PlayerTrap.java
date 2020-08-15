@@ -16,12 +16,11 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.entity;
 
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-
 import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -34,17 +33,17 @@ import org.enginehub.craftbook.util.SearchArea;
 
 public class PlayerTrap extends AbstractSelfTriggeredIC {
 
-    public PlayerTrap (Server server, ChangedSign sign, ICFactory factory) {
+    public PlayerTrap(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
         return "Player Trap";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
         return "PLAYER TRAP";
     }
 
@@ -57,7 +56,7 @@ public class PlayerTrap extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        if(getSign().getLine(2).contains("&")) {
+        if (getSign().getLine(2).contains("&")) {
             getSign().setLine(2, StringUtils.replace(getSign().getLine(2), "&", "="));
             getSign().update(false);
         }
@@ -79,8 +78,8 @@ public class PlayerTrap extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public void trigger (ChipState chip) {
-        if(chip.getInput(0))
+    public void trigger(ChipState chip) {
+        if (chip.getInput(0))
             chip.setOutput(0, hurt());
     }
 
@@ -88,8 +87,8 @@ public class PlayerTrap extends AbstractSelfTriggeredIC {
 
         boolean hasHurt = false;
 
-        for(Player p : area.getPlayersInArea()) {
-            if(!type.doesPlayerPass(p, nameLine)) continue;
+        for (Player p : area.getPlayersInArea()) {
+            if (!type.doesPlayerPass(p, nameLine)) continue;
             p.damage(damage);
             hasHurt = true;
         }
@@ -119,7 +118,7 @@ public class PlayerTrap extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"SearchArea=damage", "PlayerType"};
+            return new String[] { "SearchArea=damage", "PlayerType" };
         }
     }
 }

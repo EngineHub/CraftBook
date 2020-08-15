@@ -16,9 +16,9 @@
 
 package org.enginehub.craftbook.mechanics.drops;
 
+import com.sk89q.worldedit.world.block.BlockStateHolder;
 import org.enginehub.craftbook.mechanics.drops.rewards.DropReward;
 import org.enginehub.craftbook.util.TernaryState;
-import com.sk89q.worldedit.world.block.BlockStateHolder;
 
 import java.util.List;
 

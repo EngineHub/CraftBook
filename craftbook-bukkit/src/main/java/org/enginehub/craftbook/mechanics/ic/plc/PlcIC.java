@@ -14,32 +14,8 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-// $Id$
-/*
- * Copyright (C) 2012 Lymia Aluysia <lymiahugs@gmail.com>
- * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with this program. If not,
- * see <http://www.gnu.org/licenses/>.
- */
-
 package org.enginehub.craftbook.mechanics.ic.plc;
 
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.mechanics.ic.ChipState;
-import org.enginehub.craftbook.mechanics.ic.IC;
-import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
-import org.enginehub.craftbook.mechanics.ic.SelfTriggeredIC;
-import org.enginehub.craftbook.util.SignUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -53,6 +29,14 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.util.Vector;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.mechanics.ic.ChipState;
+import org.enginehub.craftbook.mechanics.ic.IC;
+import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
+import org.enginehub.craftbook.mechanics.ic.SelfTriggeredIC;
+import org.enginehub.craftbook.util.SignUtil;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -137,12 +121,12 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         World w = sign.getBlock().getWorld();
         File worldDir = w.getWorldFolder();
         File targetDir = new File(new File(worldDir, "craftbook"), "plcs");
-        if(new File(worldDir, "craftbook-plcs").exists()) {
+        if (new File(worldDir, "craftbook-plcs").exists()) {
 
             File oldFolder = new File(worldDir, "craftbook-plcs");
-            if(!targetDir.exists())
+            if (!targetDir.exists())
                 targetDir.mkdirs();
-            if(!oldFolder.renameTo(targetDir))
+            if (!oldFolder.renameTo(targetDir))
                 logger.warning("Failed to copy PLC States over to new directory!");
             oldFolder.delete();
         }
@@ -152,7 +136,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
     private String hashCode(String code) {
 
-        if(code == null)
+        if (code == null)
             return "";
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -196,7 +180,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
                     String id = in.readUTF();
                     String code = hashCode(in.readUTF());
                     if ((lang.getName().equals(langName) || lang.supports(langName))
-                            && (isShared() || id.equals(getID()) && hashCode(codeString).equals(code))) {
+                        && (isShared() || id.equals(getID()) && hashCode(codeString).equals(code))) {
                         lang.loadState(state, in);
                     } else {
                         // Prevent errors from different ICs from affecting this one.
@@ -240,7 +224,8 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         ItemStack book = null;
         for (ItemStack s : i.getContents()) {
             if (s != null && s.getAmount() > 0 && (s.getType() == Material.WRITABLE_BOOK || s.getType() == Material.WRITTEN_BOOK)) {
-                if (book != null) throw new CodeNotFoundException("More than one written book found in chest!!");
+                if (book != null)
+                    throw new CodeNotFoundException("More than one written book found in chest!!");
                 book = s;
             }
         }
@@ -346,7 +331,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
             p.sendMessage(ChatColor.GREEN + "Programmable Logic Controller debug information");
             p.sendMessage(ChatColor.RED + "Status:" + ChatColor.RESET + " " + (error ? "Error Encountered" : "OK"));
             p.sendMessage(ChatColor.RED + "Location:" + ChatColor.RESET + " (" + sign.getX() + ", " +
-                    "" + sign.getY() + ", " + sign.getZ() + ")");
+                "" + sign.getY() + ", " + sign.getZ() + ")");
             p.sendMessage(ChatColor.RED + "Language:" + ChatColor.RESET + " " + lang.getName());
             p.sendMessage(ChatColor.RED + "Full Storage Name:" + ChatColor.RESET + " " + getFileName());
             if (error) {
@@ -370,13 +355,13 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     }
 
     @Override
-    public ChangedSign getSign () {
+    public ChangedSign getSign() {
 
         return sign;
     }
 
     @Override
-    public void onICBreak (BlockBreakEvent event) {
+    public void onICBreak(BlockBreakEvent event) {
     }
 
     private static class SelfTriggeredPlcIC implements SelfTriggeredIC {
@@ -427,17 +412,17 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         }
 
         @Override
-        public boolean isAlwaysST () {
+        public boolean isAlwaysST() {
             return false;
         }
 
         @Override
-        public ChangedSign getSign () {
+        public ChangedSign getSign() {
             return self.getSign();
         }
 
         @Override
-        public void onICBreak (BlockBreakEvent event) {
+        public void onICBreak(BlockBreakEvent event) {
         }
     }
 }

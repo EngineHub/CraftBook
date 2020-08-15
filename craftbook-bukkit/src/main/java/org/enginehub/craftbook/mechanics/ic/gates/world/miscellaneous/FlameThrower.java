@@ -16,11 +16,11 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
@@ -33,7 +33,6 @@ import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
 import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
 import org.enginehub.craftbook.util.SignUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
 
 public class FlameThrower extends AbstractIC {
 
@@ -49,7 +48,7 @@ public class FlameThrower extends AbstractIC {
     public void load() {
 
         try {
-            distance = Math.min(((Factory)getFactory()).maxRange, Integer.parseInt(getLine(2)));
+            distance = Math.min(((Factory) getFactory()).maxRange, Integer.parseInt(getLine(2)));
         } catch (Exception ignored) {
             distance = 10;
         }
@@ -84,7 +83,7 @@ public class FlameThrower extends AbstractIC {
         final Block block = CraftBookBukkitUtil.toSign(getSign()).getBlock();
         final BlockFace direction = SignUtil.getBack(block);
 
-        if(delay <= 0) {
+        if (delay <= 0) {
 
             Block fire = block.getRelative(direction, 2);
             for (int i = 0; i < distance; i++) {
@@ -104,7 +103,7 @@ public class FlameThrower extends AbstractIC {
                 final int fi = i;
                 CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
 
-                    Block fire = block.getRelative(direction, 2+fi);
+                    Block fire = block.getRelative(direction, 2 + fi);
                     if (make) {
                         if (fire.getType() == Material.AIR || fire.getType() == Material.GRASS) {
                             fire.setType(Material.FIRE);
@@ -112,7 +111,7 @@ public class FlameThrower extends AbstractIC {
                     } else if (fire.getType() == Material.FIRE) {
                         fire.setType(Material.AIR);
                     }
-                }, delay*fi);
+                }, delay * fi);
             }
         }
     }
@@ -138,9 +137,10 @@ public class FlameThrower extends AbstractIC {
             return "Makes a line of fire.";
         }
 
-        @Override public String[] getLongDescription() {
+        @Override
+        public String[] getLongDescription() {
             return new String[] {
-                    "The '''MC1252''' sets a certain length of blocks in fron of the IC block on fire (putting fire Block on top of them)."
+                "The '''MC1252''' sets a certain length of blocks in fron of the IC block on fire (putting fire Block on top of them)."
             };
         }
 
@@ -159,7 +159,7 @@ public class FlameThrower extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"distance", "delay"};
+            return new String[] { "distance", "delay" };
         }
 
         @Override

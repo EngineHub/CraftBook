@@ -14,37 +14,8 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-// $Id$
-/*
- * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
- * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with this program. If not,
- * see <http://www.gnu.org/licenses/>.
- */
-
 package org.enginehub.craftbook.mechanics.area.simple;
 
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.util.BlockSyntax;
-import org.enginehub.craftbook.util.BlockUtil;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.ProtectionUtil;
-import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.SignClickEvent;
-import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -66,6 +37,19 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockUtil;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.ProtectionUtil;
+import org.enginehub.craftbook.util.SignUtil;
+import org.enginehub.craftbook.util.events.SignClickEvent;
+import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -73,9 +57,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Handler for gates. Gates are merely fence blocks. When they are closed or open, a nearby fence will be found,
+ * Handler for gates. Gates are merely fence blocks. When they are closed or open, a nearby fence
+ * will be found,
  * the algorithm will traverse to the
- * top-most connected fence block, and then proceed to recurse to the sides up to a certain number of fences. To the
+ * top-most connected fence block, and then proceed to recurse to the sides up to a certain number
+ * of fences. To the
  * fences that it gets to, it will
  * iterate over the blocks below to open or close the gate.
  *
@@ -83,14 +69,14 @@ import java.util.Set;
  */
 public class Gate extends AbstractCraftBookMechanic {
 
-    /**get
+    /**
+     * get
      * Toggles the gate closest to a location.
      *
      * @param player The player
      * @param block The base block
      * @param smallSearchSize Small or large search radius
      * @param close null to toggle, true to close, false to open
-     *
      * @return true if a gate was found and blocks were changed; false otherwise.
      */
     public boolean toggleGates(CraftBookPlayer player, Block block, boolean smallSearchSize, Boolean close) {
@@ -119,7 +105,7 @@ public class Gate extends AbstractCraftBookMechanic {
         } else {
             // Toggle nearby gates
             for (int x1 = x - searchRadius; x1 <= x + searchRadius; x1++) {
-                for (int y1 = y - searchRadius; y1 <= y + searchRadius*2; y1++) {
+                for (int y1 = y - searchRadius; y1 <= y + searchRadius * 2; y1++) {
                     for (int z1 = z - searchRadius; z1 <= z + searchRadius; z1++) {
                         if (recurseColumn(player, sign, block.getWorld().getBlockAt(x1, y1, z1), visitedColumns, close, false)) {
                             foundGate = true;
@@ -142,7 +128,6 @@ public class Gate extends AbstractCraftBookMechanic {
      * @param block A part of the column.
      * @param visitedColumns Previously visited columns.
      * @param close Should close or open.
-     *
      * @return true if a gate column was found and blocks were changed; false otherwise.
      */
     private boolean recurseColumn(CraftBookPlayer player, ChangedSign sign, Block block, Set<GateColumn> visitedColumns, Boolean close, boolean smallSearchSize) {
@@ -150,7 +135,8 @@ public class Gate extends AbstractCraftBookMechanic {
         if (limitColumns && visitedColumns.size() > columnLimit)
             return false;
 
-        if (!isValidGateBlock(sign, smallSearchSize, BukkitAdapter.adapt(block.getBlockData()), true)) return false;
+        if (!isValidGateBlock(sign, smallSearchSize, BukkitAdapter.adapt(block.getBlockData()), true))
+            return false;
 
         CraftBookPlugin.logDebugMessage("Found a possible gate column at " + block.getX() + ':' + block.getY() + ':' + block.getZ(), "gates.search");
 
@@ -161,7 +147,8 @@ public class Gate extends AbstractCraftBookMechanic {
 
         // The block above the gate cannot be air -- it has to be some
         // non-fence block
-        if (block.getWorld().getBlockAt(x, column.getStartingY() + 1, z).getType().isAir()) return false;
+        if (block.getWorld().getBlockAt(x, column.getStartingY() + 1, z).getType().isAir())
+            return false;
 
         if (visitedColumns.contains(column)) return false;
 
@@ -199,7 +186,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
         CraftBookPlugin.logDebugMessage("Setting column at " + block.getX() + ':' + block.getY() + ':' + block.getZ() + " to " + item.toString(), "gates.search");
 
-        if(sign == null) {
+        if (sign == null) {
             CraftBookPlugin.logDebugMessage("Invalid Sign!", "gates.search");
             return false;
         }
@@ -207,7 +194,7 @@ public class Gate extends AbstractCraftBookMechanic {
         ChangedSign otherSign = null;
 
         Block ot = SignUtil.getNextSign(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(1), 4);
-        if(ot != null) {
+        if (ot != null) {
             otherSign = CraftBookBukkitUtil.toChangedSign(ot);
         }
 
@@ -229,7 +216,7 @@ public class Gate extends AbstractCraftBookMechanic {
                     if (!close && isValidGateBlock(sign, smallSearchSize, BukkitAdapter.adapt(blo.getBlockData()), true)) {
                         addBlocks(sign, 1);
                     } else if (close && canPassThrough(sign, smallSearchSize, BukkitAdapter.adapt(blo.getBlockData())) && isValidGateBlock(sign,
-                            smallSearchSize, BukkitAdapter.adapt(item), true) && item.getMaterial() != blo.getType()) {
+                        smallSearchSize, BukkitAdapter.adapt(item), true) && item.getMaterial() != blo.getType()) {
                         removeBlocks(sign, 1);
                     }
                     blo.setBlockData(item, true);
@@ -271,7 +258,7 @@ public class Gate extends AbstractCraftBookMechanic {
         if (!EventUtil.passesFilter(event))
             return;
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
@@ -287,9 +274,9 @@ public class Gate extends AbstractCraftBookMechanic {
             if (player.getItemInHand(HandSide.MAIN_HAND).getType().hasBlockType()) {
                 BlockType heldType = player.getItemInHand(HandSide.MAIN_HAND).getType().getBlockType();
                 if ((gateBlock == null || gateBlock.getBlockType().getMaterial().isAir() || gateBlock.getBlockType() == heldType)
-                        && isValidGateBlock(sign, smallSearchSize, heldType.getDefaultState(), false)) {
+                    && isValidGateBlock(sign, smallSearchSize, heldType.getDefaultState(), false)) {
                     if (!player.hasPermission("craftbook.mech.gate.restock")) {
-                        if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+                        if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                             player.printError("mech.restock-permission");
                         return;
                     }
@@ -319,13 +306,13 @@ public class Gate extends AbstractCraftBookMechanic {
         }
 
         if (!player.hasPermission("craftbook.mech.gate.use")) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
         }
 
-        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
         }
@@ -341,7 +328,7 @@ public class Gate extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         if (!allowRedstone) return;
 
@@ -353,21 +340,22 @@ public class Gate extends AbstractCraftBookMechanic {
         if (!sign.getLine(1).equals("[Gate]") && !sign.getLine(1).equals("[DGate]")) return;
 
         CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(),
-                () -> toggleGates(null, event.getBlock(), sign.getLine(1).equals("[DGate]"), event.getNewCurrent() > 0), 2);
+            () -> toggleGates(null, event.getBlock(), sign.getLine(1).equals("[DGate]"), event.getNewCurrent() > 0), 2);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(!event.getLine(1).equalsIgnoreCase("[Gate]") && !event.getLine(1).equalsIgnoreCase("[DGate]")) return;
+        if (!event.getLine(1).equalsIgnoreCase("[Gate]") && !event.getLine(1).equalsIgnoreCase("[DGate]"))
+            return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (event.getLine(1).equalsIgnoreCase("[Gate]")) {
-            if(!player.hasPermission("craftbook.mech.gate")) {
-                if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+            if (!player.hasPermission("craftbook.mech.gate")) {
+                if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     player.printError("mech.create-permission");
                 SignUtil.cancelSignChange(event);
                 return;
@@ -389,7 +377,7 @@ public class Gate extends AbstractCraftBookMechanic {
             player.print("mech.gate.create");
         } else if (event.getLine(1).equalsIgnoreCase("[DGate]")) {
             if (!player.hasPermission("craftbook.mech.gate") && !player.hasPermission("craftbook.mech.dgate")) {
-                if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+                if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     player.printError("mech.create-permission");
                 SignUtil.cancelSignChange(event);
                 return;
@@ -418,7 +406,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
     /**
      * Checks if a block can be used in gate.
-     * 
+     *
      * @param sign The sign block.
      * @param smallSearchSize Search small or large.
      * @param block The block to check.
@@ -435,12 +423,12 @@ public class Gate extends AbstractCraftBookMechanic {
             } catch (Exception e) {
                 if (check) {
                     type = getGateBlock(sign, smallSearchSize);
-                    if(type == null || type.getBlockType().getMaterial().isAir())
+                    if (type == null || type.getBlockType().getMaterial().isAir())
                         return block.getBlockType().getMaterial().isAir();
                 }
                 return isValidGateBlock(block);
             }
-        } else if(check && (type = getGateBlock(sign, smallSearchSize)) != null)
+        } else if (check && (type = getGateBlock(sign, smallSearchSize)) != null)
             return block.equalsFuzzy(type);
         else
             return isValidGateBlock(block);
@@ -449,7 +437,7 @@ public class Gate extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         if (!SignUtil.isSign(event.getBlock())) return;
 
@@ -458,8 +446,8 @@ public class Gate extends AbstractCraftBookMechanic {
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if(!ProtectionUtil.canBuild(event.getPlayer(), event.getBlock().getLocation(), false)) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canBuild(event.getPlayer(), event.getBlock().getLocation(), false)) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("area.break-permissions");
             return;
         }
@@ -467,7 +455,7 @@ public class Gate extends AbstractCraftBookMechanic {
         int amount = getBlocks(sign);
         if (amount > 0) {
             BlockState type = getGateBlock(sign, sign.getLine(1).equals("[DGate]"));
-            if(type == null || type.getBlockType().getMaterial().isAir())
+            if (type == null || type.getBlockType().getMaterial().isAir())
                 type = BlockTypes.OAK_FENCE.getFuzzyMatcher();
             ItemStack toDrop = new ItemStack(BukkitAdapter.adapt(type.getBlockType()), amount);
             event.getBlock().getWorld().dropItemNaturally(BlockUtil.getBlockCentre(event.getBlock()), toDrop);
@@ -487,7 +475,7 @@ public class Gate extends AbstractCraftBookMechanic {
         BlockState gateBlock = null;
 
         if (sign != null) {
-            if(!sign.getLine(0).isEmpty()) {
+            if (!sign.getLine(0).isEmpty()) {
                 try {
                     return BlockSyntax.getBlock(sign.getLine(0), true).toImmutableState();
                 } catch (Exception ignored) {
@@ -511,7 +499,7 @@ public class Gate extends AbstractCraftBookMechanic {
                 }
             } else {
                 for (int x1 = x - searchRadius; x1 <= x + searchRadius; x1++) {
-                    for (int y1 = y - searchRadius; y1 <= y + searchRadius*2; y1++) {
+                    for (int y1 = y - searchRadius; y1 <= y + searchRadius * 2; y1++) {
                         for (int z1 = z - searchRadius; z1 <= z + searchRadius; z1++) {
                             if (getFirstBlock(sign, sign.getBlock().getWorld().getBlockAt(x1, y1, z1), false) != null) {
                                 gateBlock = BukkitAdapter.adapt(getFirstBlock(sign, sign.getBlock().getWorld().getBlockAt(x1, y1, z1), false).getBlockData());
@@ -522,7 +510,7 @@ public class Gate extends AbstractCraftBookMechanic {
                 }
             }
 
-            if(enforceType && gateBlock != null && !gateBlock.getBlockType().getMaterial().isAir()) {
+            if (enforceType && gateBlock != null && !gateBlock.getBlockType().getMaterial().isAir()) {
                 sign.setLine(0, BlockSyntax.toMinifiedId(gateBlock.getBlockType()));
                 sign.update(false);
             }
@@ -533,7 +521,8 @@ public class Gate extends AbstractCraftBookMechanic {
 
     public Block getFirstBlock(ChangedSign sign, Block block, boolean smallSearchSize) {
 
-        if (!isValidGateBlock(sign, smallSearchSize, BukkitAdapter.adapt(block.getBlockData()), false)) return null;
+        if (!isValidGateBlock(sign, smallSearchSize, BukkitAdapter.adapt(block.getBlockData()), false))
+            return null;
 
         return block;
     }
@@ -570,7 +559,7 @@ public class Gate extends AbstractCraftBookMechanic {
         int curBlocks;
         try {
             curBlocks = Integer.parseInt(s.getLine(3));
-            if(other != null && other.getLine(0).equals(s.getLine(0))) {
+            if (other != null && other.getLine(0).equals(s.getLine(0))) {
                 try {
                     curBlocks += Integer.parseInt(other.getLine(3));
                     setBlocks(s, curBlocks);
@@ -591,7 +580,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
     public boolean hasEnoughBlocks(ChangedSign s, ChangedSign other) {
 
-        if(other == null)
+        if (other == null)
             return hasEnoughBlocks(s);
         else
             return s.getLine(3).equalsIgnoreCase("infinite") || other.getLine(3).equalsIgnoreCase("infinite") || getBlocks(s, other) > 0;
@@ -627,18 +616,18 @@ public class Gate extends AbstractCraftBookMechanic {
 
         public int getStartingY() {
 
-            if(maxY == -1) {
-                int max = Math.min(block.getWorld().getMaxHeight()-1, block.getY() + remainingColumnHeight);
+            if (maxY == -1) {
+                int max = Math.min(block.getWorld().getMaxHeight() - 1, block.getY() + remainingColumnHeight);
                 for (int y1 = block.getY() + 1; y1 <= max; y1++) {
-                    if(remainingColumnHeight <= 0) break;
+                    if (remainingColumnHeight <= 0) break;
                     if (isValidGateBlock(sign, smallSearchSize, BukkitAdapter.adapt(block.getWorld().getBlockAt(block.getX(), y1, block.getZ()).getBlockData()), true)) {
                         maxY = y1;
-                        remainingColumnHeight --;
+                        remainingColumnHeight--;
                     } else
                         break;
                 }
 
-                if(maxY == -1) maxY = block.getY();
+                if (maxY == -1) maxY = block.getY();
             }
 
             return maxY;
@@ -646,19 +635,19 @@ public class Gate extends AbstractCraftBookMechanic {
 
         public int getEndingY() {
 
-            if(minY == -1) {
+            if (minY == -1) {
                 int min = Math.max(0, block.getY() - remainingColumnHeight);
                 for (int y = block.getY(); y >= min; y--) {
-                    if(remainingColumnHeight <= 0) break;
+                    if (remainingColumnHeight <= 0) break;
                     BlockState currentBlock = BukkitAdapter.adapt(block.getWorld().getBlockAt(block.getX(), y, block.getZ()).getBlockData());
                     if (canPassThrough(sign, smallSearchSize, currentBlock)
-                            || isValidGateBlock(sign, smallSearchSize, currentBlock, true)) {
+                        || isValidGateBlock(sign, smallSearchSize, currentBlock, true)) {
                         minY = y;
-                        remainingColumnHeight --;
+                        remainingColumnHeight--;
                     } else
                         break;
                 }
-                if(minY == -1) minY = block.getY();
+                if (minY == -1) minY = block.getY();
             }
 
             return minY;
@@ -676,8 +665,8 @@ public class Gate extends AbstractCraftBookMechanic {
 
         public CuboidRegion getRegion() {
             return new CuboidRegion(
-                    BukkitAdapter.adapt(getStartingPoint().getRelative(0, -1, 0).getLocation()).toVector().toBlockPoint(),
-                    BukkitAdapter.adapt(getEndingPoint().getLocation()).toVector().toBlockPoint()
+                BukkitAdapter.adapt(getStartingPoint().getRelative(0, -1, 0).getLocation()).toVector().toBlockPoint(),
+                BukkitAdapter.adapt(getEndingPoint().getLocation()).toVector().toBlockPoint()
             );
         }
 

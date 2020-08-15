@@ -1,9 +1,9 @@
 package org.enginehub.craftbook.internal.util;
 
-import org.enginehub.craftbook.YamlConfiguration;
-import org.enginehub.craftbook.bukkit.BukkitConfiguration;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.enginehub.craftbook.YamlConfiguration;
+import org.enginehub.craftbook.bukkit.BukkitConfiguration;
 
 import java.io.IOException;
 import java.io.PrintWriter;

@@ -16,8 +16,14 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
+import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.math.BlockVector3;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -29,36 +35,29 @@ import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.ICUtil;
 import org.enginehub.craftbook.util.InventoryUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.math.BlockVector3;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Driller extends AbstractSelfTriggeredIC {
 
-    public Driller (Server server, ChangedSign sign, ICFactory factory) {
+    public Driller(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
     @Override
-    public void think (ChipState chip) {
+    public void think(ChipState chip) {
 
         if (!chip.getInput(0)) chip.setOutput(0, drill());
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Driller";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "DRILLER";
     }
@@ -97,11 +96,11 @@ public class Driller extends AbstractSelfTriggeredIC {
             }
         }
 
-        int random = ThreadLocalRandom.current().nextInt(signDrillSize*signDrillSize);
+        int random = ThreadLocalRandom.current().nextInt(signDrillSize * signDrillSize);
         int x = random / signDrillSize;
         int y = random % signDrillSize;
 
-        return drillLine(tool, center.getRelative(signDrillSize/2 - x, 0, signDrillSize/2 - y));
+        return drillLine(tool, center.getRelative(signDrillSize / 2 - x, 0, signDrillSize / 2 - y));
     }
 
     public boolean drillLine(ItemStack tool, Block blockToBreak) {
@@ -127,7 +126,7 @@ public class Driller extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) chip.setOutput(0, drill());
     }
@@ -157,7 +156,7 @@ public class Driller extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+odrill size", "+omax depth"};
+            return new String[] { "+odrill size", "+omax depth" };
         }
 
         @Override

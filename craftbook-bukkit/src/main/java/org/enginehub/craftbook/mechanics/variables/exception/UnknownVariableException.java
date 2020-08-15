@@ -16,17 +16,17 @@
 
 package org.enginehub.craftbook.mechanics.variables.exception;
 
-import org.enginehub.craftbook.mechanics.variables.VariableKey;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import org.enginehub.craftbook.mechanics.variables.VariableKey;
 
 public class UnknownVariableException extends VariableException {
 
     public UnknownVariableException(VariableKey variableKey) {
         super(TranslatableComponent.of(
-                "craftbook.variables.unknown-variable",
-                TextComponent.of(variableKey.getOriginalForm())),
-                variableKey
+            "craftbook.variables.unknown-variable",
+            TextComponent.of(variableKey.getOriginalForm())),
+            variableKey
         );
     }
 }

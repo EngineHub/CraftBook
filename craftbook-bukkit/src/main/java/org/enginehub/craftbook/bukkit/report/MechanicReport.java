@@ -16,13 +16,13 @@
 
 package org.enginehub.craftbook.bukkit.report;
 
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.mechanic.CraftBookMechanic;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.util.report.DataReport;
 import com.sk89q.worldedit.util.report.HierarchyObjectReport;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 
-public class MechanicReport extends DataReport  {
+public class MechanicReport extends DataReport {
 
     public MechanicReport() {
         super("Mechanics");

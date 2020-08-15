@@ -17,7 +17,6 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.IC;
@@ -69,7 +68,7 @@ public class LowPulser extends Pulser {
         public String getShortDescription() {
 
             return "Fires a (choosable) pulse of high-signals with a choosable length of the signal "
-                    + "and the pause between the pulses when the input goes from high to low.";
+                + "and the pause between the pulses when the input goes from high to low.";
         }
     }
 }

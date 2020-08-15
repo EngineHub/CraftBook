@@ -18,12 +18,12 @@ package org.enginehub.craftbook.command.argument;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.TypeToken;
-import org.enginehub.craftbook.mechanic.MechanicType;
 import com.sk89q.worldedit.command.util.SuggestionHelper;
 import com.sk89q.worldedit.registry.Keyed;
 import com.sk89q.worldedit.registry.Registry;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.converter.ArgumentConverter;
 import org.enginehub.piston.converter.ConversionResult;
@@ -41,10 +41,10 @@ public final class RegistryConverter<V extends Keyed> implements ArgumentConvert
     @SuppressWarnings("unchecked")
     public static void register(CommandManager commandManager) {
         ImmutableMap.of(
-                new TypeToken<MechanicType<?>>() {
-                }, MechanicType.class
+            new TypeToken<MechanicType<?>>() {
+            }, MechanicType.class
         )
-                .forEach((key, value) -> commandManager.registerConverter(Key.of(key), from((Class<Keyed>) (Object) value)));
+            .forEach((key, value) -> commandManager.registerConverter(Key.of(key), from((Class<Keyed>) (Object) value)));
     }
 
     @SuppressWarnings("unchecked")
@@ -77,9 +77,9 @@ public final class RegistryConverter<V extends Keyed> implements ArgumentConvert
     public ConversionResult<V> convert(String argument, InjectedValueAccess injectedValueAccess) {
         V result = registry.get(argument);
         return result == null
-                ? FailedConversion.from(new IllegalArgumentException(
-                "Not a valid " + registry.getName() + ": " + argument))
-                : SuccessfulConversion.fromSingle(result);
+            ? FailedConversion.from(new IllegalArgumentException(
+            "Not a valid " + registry.getName() + ": " + argument))
+            : SuccessfulConversion.fromSingle(result);
     }
 
     @Override

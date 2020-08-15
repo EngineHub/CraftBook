@@ -16,6 +16,13 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.items;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -29,13 +36,6 @@ import org.enginehub.craftbook.util.ICUtil;
 import org.enginehub.craftbook.util.InventoryUtil;
 import org.enginehub.craftbook.util.ItemSyntax;
 import org.enginehub.craftbook.util.SignUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,7 +53,7 @@ public class ContainerStocker extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        if(getLine(3).isEmpty())
+        if (getLine(3).isEmpty())
             offset = getBackBlock().getRelative(0, 1, 0).getLocation();
         else
             offset = ICUtil.parseBlockLocation(getSign(), 3).getLocation();
@@ -94,11 +94,11 @@ public class ContainerStocker extends AbstractSelfTriggeredIC {
             PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<>(Collections.singletonList(item.clone())), getBackBlock());
             Bukkit.getPluginManager().callEvent(event);
 
-            if(!event.isValid())
+            if (!event.isValid())
                 return false;
 
             InventoryHolder c = (InventoryHolder) offset.getBlock().getState();
-            for(ItemStack stack : event.getItems())
+            for (ItemStack stack : event.getItems())
                 if (c.getInventory().addItem(stack).isEmpty()) {
                     //((BlockState) c).update();
                     return true;
@@ -129,7 +129,7 @@ public class ContainerStocker extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"item id:data", "x:y:z offset"};
+            return new String[] { "item id:data", "x:y:z offset" };
         }
     }
 }

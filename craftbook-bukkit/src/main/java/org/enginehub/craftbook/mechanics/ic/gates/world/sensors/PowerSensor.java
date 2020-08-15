@@ -18,7 +18,6 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.sensors;
 
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -105,7 +104,7 @@ public class PowerSensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"x:y:z offset", null};
+            return new String[] { "x:y:z offset", null };
         }
     }
 }

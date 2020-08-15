@@ -17,7 +17,6 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -27,13 +26,15 @@ import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.util.RegexUtil;
 
 /**
- * Counter counts down each time clock input toggles from low to high, it starts from a predefined value to 0. Output
+ * Counter counts down each time clock input toggles from low to high, it starts from a predefined
+ * value to 0. Output
  * is high when counter reaches 0.
  * If in 'infinite' mode, it will automatically reset the next time clock is toggled. Otherwise,
  * it only resets when the 'reset' input toggles from
  * low to high. Configuration: Line 3: ##:ONCE or ##:INF -- where ## is the counter reset value,
  * and ONCE or INF specifies if the counter should
- * repeat or not. Inputs: 1 - Clock 2 - Reset 3 - (unused) Output: HIGH when counter reaches 0, LOW otherwise
+ * repeat or not. Inputs: 1 - Clock 2 - Reset 3 - (unused) Output: HIGH when counter reaches 0, LOW
+ * otherwise
  *
  * @author davr
  */
@@ -146,17 +147,17 @@ public class DownCounter extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Trigger IC",//Inputs
-                    "Reset Counter",
-                    "Nothing",
-                    "High on Counter Complete"//Outputs
+                "Trigger IC",//Inputs
+                "Reset Counter",
+                "Nothing",
+                "High on Counter Complete"//Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"start ticks:(Optional)INF", "current ticks"};
+            return new String[] { "start ticks:(Optional)INF", "current ticks" };
         }
     }
 }

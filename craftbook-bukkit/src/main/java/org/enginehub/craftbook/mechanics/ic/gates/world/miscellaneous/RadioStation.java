@@ -16,11 +16,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -29,13 +25,16 @@ import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.util.jinglenote.Playlist;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RadioStation extends AbstractSelfTriggeredIC {
 
     String band;
 
     public static final Map<String, Playlist> stations = new HashMap<>();
 
-    public RadioStation (Server server, ChangedSign sign, ICFactory factory) {
+    public RadioStation(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -58,17 +57,17 @@ public class RadioStation extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
         return "Radio Station";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
         return "RADIO STATION";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         Playlist playlist = null;
 
@@ -80,7 +79,7 @@ public class RadioStation extends AbstractSelfTriggeredIC {
 
         if (chip.getInput(0) && !playlist.isPlaying())
             playlist.startPlaylist();
-        else if(!chip.getInput(0) && playlist.isPlaying())
+        else if (!chip.getInput(0) && playlist.isPlaying())
             playlist.stopPlaylist();
 
         chip.setOutput(0, playlist.isPlaying());
@@ -108,7 +107,7 @@ public class RadioStation extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Playlist Name", "Radio Band"};
+            return new String[] { "Playlist Name", "Radio Band" };
         }
     }
 }

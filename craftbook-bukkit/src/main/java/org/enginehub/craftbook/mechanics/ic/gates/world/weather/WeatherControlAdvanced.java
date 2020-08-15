@@ -16,11 +16,10 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.weather;
 
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Server;
 import org.bukkit.World;
-
 import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -108,17 +107,17 @@ public class WeatherControlAdvanced extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Trigger IC",//Inputs
-                    "High to rain",
-                    "High to thunder",
-                    "High on success"//Outputs
+                "Trigger IC",//Inputs
+                "High to rain",
+                "High to thunder",
+                "High on success"//Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"rain duration", "thunder duration"};
+            return new String[] { "rain duration", "thunder duration" };
         }
     }
 }

@@ -17,7 +17,6 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -70,10 +69,10 @@ public class LevelTriggeredDFlipFlop extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Sets Output to Input 2",//Inputs
-                    "Carries over to Output 1",
-                    "Sets Output 1 to Low.",
-                    "Carried Value"//Outputs
+                "Sets Output to Input 2",//Inputs
+                "Carries over to Output 1",
+                "Sets Output 1 to Low.",
+                "Carried Value"//Outputs
             };
         }
 

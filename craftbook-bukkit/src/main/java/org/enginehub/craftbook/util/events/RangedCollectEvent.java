@@ -16,10 +16,10 @@
 
 package org.enginehub.craftbook.util.events;
 
-import org.enginehub.craftbook.mechanics.pipe.PipeRequestEvent;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
+import org.enginehub.craftbook.mechanics.pipe.PipeRequestEvent;
 
 import java.util.List;
 

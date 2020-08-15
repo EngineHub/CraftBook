@@ -60,7 +60,7 @@ public final class EntityUtil {
 
     /**
      * Checks if an entity is standing in a specific block.
-     * 
+     *
      * @param entity The entity to check.
      * @param block The block to check.
      * @return Whether the entity is in the block or not.
@@ -70,15 +70,15 @@ public final class EntityUtil {
         Location entLoc = entity.getLocation().getBlock().getLocation();
         int heightOffset = 0;
 
-        if(entity instanceof LivingEntity) {
+        if (entity instanceof LivingEntity) {
             heightOffset = (int) Math.floor(((LivingEntity) entity).getEyeHeight());
         }
-        while(heightOffset >= 0) {
-            if(entLoc.getBlockX() == block.getLocation().getBlockX())
-                if(entLoc.getBlockY()+heightOffset == block.getLocation().getBlockY())
-                    if(entLoc.getBlockZ() == block.getLocation().getBlockZ())
+        while (heightOffset >= 0) {
+            if (entLoc.getBlockX() == block.getLocation().getBlockX())
+                if (entLoc.getBlockY() + heightOffset == block.getLocation().getBlockY())
+                    if (entLoc.getBlockZ() == block.getLocation().getBlockZ())
                         return true;
-            heightOffset --;
+            heightOffset--;
         }
 
         return false;
@@ -86,10 +86,10 @@ public final class EntityUtil {
 
     public static boolean isEntityOfTypeInBlock(Block block, org.bukkit.entity.EntityType type) {
 
-        for(Entity ent : block.getChunk().getEntities()) {
+        for (Entity ent : block.getChunk().getEntities()) {
 
-            if(ent.getType() != type) continue;
-            if(isEntityInBlock(ent, block))
+            if (ent.getType() != type) continue;
+            if (isEntityInBlock(ent, block))
                 return true;
         }
 
@@ -98,12 +98,12 @@ public final class EntityUtil {
 
     /**
      * Kills an entity using the proper way for it's entity type.
-     * 
+     *
      * @param ent The entity to kill.
      */
     public static void killEntity(Entity ent) {
 
-        if(ent instanceof Damageable)
+        if (ent instanceof Damageable)
             ((Damageable) ent).damage(((Damageable) ent).getHealth());
         else
             ent.remove();
@@ -111,13 +111,13 @@ public final class EntityUtil {
 
     /**
      * Damages an entity using the proper way for it's entity type.
-     * 
+     *
      * @param ent The entity to damage.
      * @param damage The amount to damage it by.
      */
     public static void damageEntity(Entity ent, double damage) {
 
-        if(ent instanceof Damageable)
+        if (ent instanceof Damageable)
             ((Damageable) ent).damage(damage);
         else if (ent instanceof Minecart)
             ((Minecart) ent).setDamage(((Minecart) ent).getDamage() + damage);
@@ -128,7 +128,7 @@ public final class EntityUtil {
     public static org.bukkit.entity.EntityType[] parseEntityList(List<String> list) {
 
         List<org.bukkit.entity.EntityType> ents = new ArrayList<>();
-        for(String s : list)
+        for (String s : list)
             ents.add(org.bukkit.entity.EntityType.fromName(s));
 
         return ents.toArray(new org.bukkit.entity.EntityType[ents.size()]);
@@ -175,7 +175,7 @@ public final class EntityUtil {
         if (ent instanceof LivingEntity && data[0].equalsIgnoreCase("health")) {
             try {
                 double health = Double.parseDouble(data[1]);
-                if(((LivingEntity) ent).getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() < health)
+                if (((LivingEntity) ent).getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() < health)
                     ((LivingEntity) ent).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(health);
                 ((LivingEntity) ent).setHealth(health);
             } catch (Exception ignored) {
@@ -348,41 +348,43 @@ public final class EntityUtil {
                 break;
             case HORSE:
                 if (ent instanceof ChestedHorse && data[0].equalsIgnoreCase("chest"))
-                    ((ChestedHorse)ent).setCarryingChest(true);
+                    ((ChestedHorse) ent).setCarryingChest(true);
                 else if (data[0].equalsIgnoreCase("domestic"))
                     try {
-                        ((Horse)ent).setDomestication(Integer.parseInt(data[1]));
-                    } catch(Exception e){}
+                        ((Horse) ent).setDomestication(Integer.parseInt(data[1]));
+                    } catch (Exception e) {
+                    }
                 else if (data[0].equalsIgnoreCase("c")) {
-                    if(data[1].equalsIgnoreCase("white"))
-                        ((Horse)ent).setColor(Color.WHITE);
-                    else if(data[1].equalsIgnoreCase("cream"))
-                        ((Horse)ent).setColor(Color.CREAMY);
-                    else if(data[1].equalsIgnoreCase("chestnut"))
-                        ((Horse)ent).setColor(Color.CHESTNUT);
-                    else if(data[1].equalsIgnoreCase("brown"))
-                        ((Horse)ent).setColor(Color.BROWN);
-                    else if(data[1].equalsIgnoreCase("dbrown"))
-                        ((Horse)ent).setColor(Color.DARK_BROWN);
-                    else if(data[1].equalsIgnoreCase("gray"))
-                        ((Horse)ent).setColor(Color.GRAY);
-                    else if(data[1].equalsIgnoreCase("black"))
-                        ((Horse)ent).setColor(Color.BLACK);
+                    if (data[1].equalsIgnoreCase("white"))
+                        ((Horse) ent).setColor(Color.WHITE);
+                    else if (data[1].equalsIgnoreCase("cream"))
+                        ((Horse) ent).setColor(Color.CREAMY);
+                    else if (data[1].equalsIgnoreCase("chestnut"))
+                        ((Horse) ent).setColor(Color.CHESTNUT);
+                    else if (data[1].equalsIgnoreCase("brown"))
+                        ((Horse) ent).setColor(Color.BROWN);
+                    else if (data[1].equalsIgnoreCase("dbrown"))
+                        ((Horse) ent).setColor(Color.DARK_BROWN);
+                    else if (data[1].equalsIgnoreCase("gray"))
+                        ((Horse) ent).setColor(Color.GRAY);
+                    else if (data[1].equalsIgnoreCase("black"))
+                        ((Horse) ent).setColor(Color.BLACK);
                 } else if (data[0].equalsIgnoreCase("m")) {
-                    if(data[1].equalsIgnoreCase("none"))
-                        ((Horse)ent).setStyle(Style.NONE);
-                    else if(data[1].equalsIgnoreCase("white"))
-                        ((Horse)ent).setStyle(Style.NONE);
-                    else if(data[1].equalsIgnoreCase("milky"))
-                        ((Horse)ent).setStyle(Style.WHITEFIELD);
-                    else if(data[1].equalsIgnoreCase("wdots"))
-                        ((Horse)ent).setStyle(Style.WHITE_DOTS);
-                    else if(data[1].equalsIgnoreCase("bdots"))
-                        ((Horse)ent).setStyle(Style.BLACK_DOTS);
+                    if (data[1].equalsIgnoreCase("none"))
+                        ((Horse) ent).setStyle(Style.NONE);
+                    else if (data[1].equalsIgnoreCase("white"))
+                        ((Horse) ent).setStyle(Style.NONE);
+                    else if (data[1].equalsIgnoreCase("milky"))
+                        ((Horse) ent).setStyle(Style.WHITEFIELD);
+                    else if (data[1].equalsIgnoreCase("wdots"))
+                        ((Horse) ent).setStyle(Style.WHITE_DOTS);
+                    else if (data[1].equalsIgnoreCase("bdots"))
+                        ((Horse) ent).setStyle(Style.BLACK_DOTS);
                 } else if (data[0].equalsIgnoreCase("strength"))
                     try {
-                        ((Horse)ent).setJumpStrength(Double.parseDouble(data[1]));
-                    } catch(Exception e){}
+                        ((Horse) ent).setJumpStrength(Double.parseDouble(data[1]));
+                    } catch (Exception e) {
+                    }
             default:
                 break;
         }

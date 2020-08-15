@@ -16,9 +16,9 @@
 
 package org.enginehub.craftbook.mechanics.variables.exception;
 
-import org.enginehub.craftbook.mechanics.variables.VariableKey;
-import org.enginehub.craftbook.exception.CraftBookException;
 import com.sk89q.worldedit.util.formatting.text.Component;
+import org.enginehub.craftbook.exception.CraftBookException;
+import org.enginehub.craftbook.mechanics.variables.VariableKey;
 
 /**
  * Refers to an error relating to variables or variable usage.

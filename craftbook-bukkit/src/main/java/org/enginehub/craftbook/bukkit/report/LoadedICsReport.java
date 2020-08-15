@@ -16,10 +16,10 @@
 
 package org.enginehub.craftbook.bukkit.report;
 
-import org.enginehub.craftbook.mechanics.ic.IC;
-import org.enginehub.craftbook.mechanics.ic.ICManager;
 import com.sk89q.worldedit.util.report.DataReport;
 import org.bukkit.Location;
+import org.enginehub.craftbook.mechanics.ic.IC;
+import org.enginehub.craftbook.mechanics.ic.ICManager;
 
 import java.util.Map;
 
@@ -28,7 +28,7 @@ public class LoadedICsReport extends DataReport {
     public LoadedICsReport() {
         super("Loaded ICs");
 
-        for(Map.Entry<Location, IC> mech : ICManager.getCachedICs().entrySet()) {
+        for (Map.Entry<Location, IC> mech : ICManager.getCachedICs().entrySet()) {
             append(mech.getKey().toString(), "%s", mech.getValue().getSign().toString());
         }
     }

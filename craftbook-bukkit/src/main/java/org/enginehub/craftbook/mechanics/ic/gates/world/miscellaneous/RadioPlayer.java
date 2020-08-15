@@ -16,13 +16,8 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -33,6 +28,10 @@ import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.util.SearchArea;
 import org.enginehub.craftbook.util.jinglenote.Playlist;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 public class RadioPlayer extends AbstractSelfTriggeredIC {
 
     String band;
@@ -40,7 +39,7 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
 
     Map<String, SearchArea> listening;
 
-    public RadioPlayer (Server server, ChangedSign sign, ICFactory factory) {
+    public RadioPlayer(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -57,12 +56,12 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
         return "Radio Player";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
         return "RADIO PLAYER";
     }
 
@@ -72,22 +71,22 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         Playlist playlist = RadioStation.getPlaylist(band);
 
-        if(playlist == null)
+        if (playlist == null)
             return;
 
-        if(chip.getInput(0)) {
-            if(area.getPlayersInArea().size() != listening.size()) {
+        if (chip.getInput(0)) {
+            if (area.getPlayersInArea().size() != listening.size()) {
 
                 Map<String, SearchArea> removals = new HashMap<>();
 
-                for(Entry<String, SearchArea> key : listening.entrySet()) {
+                for (Entry<String, SearchArea> key : listening.entrySet()) {
                     boolean found = false;
-                    for(Player p : area.getPlayersInArea()) {
-                        if(p.getName().equals(key.getKey())) {
+                    for (Player p : area.getPlayersInArea()) {
+                        if (p.getName().equals(key.getKey())) {
                             found = true;
                             break;
                         }
@@ -95,26 +94,26 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
                     if (!found) removals.put(key.getKey(), key.getValue());
                 }
 
-                if(removals.size() > 0) {
+                if (removals.size() > 0) {
                     playlist.getPlaylistInterpreter().removePlayers(removals);
-                    for(String key : removals.keySet())
+                    for (String key : removals.keySet())
                         listening.remove(key);
                 }
 
                 boolean changed = false;
 
-                for(Player player : area.getPlayersInArea())
-                    if(!listening.containsKey(player.getName())) {
+                for (Player player : area.getPlayersInArea())
+                    if (!listening.containsKey(player.getName())) {
                         listening.put(player.getName(), area);
                         changed = true;
                     }
 
-                if(changed)
+                if (changed)
                     playlist.getPlaylistInterpreter().addPlayers(listening);
 
                 CraftBookPlugin.logDebugMessage("Reset listener list! Size of: " + listening.size(), "ic-mc1277");
             }
-        } else if(listening.size() > 0) {
+        } else if (listening.size() > 0) {
             playlist.getPlaylistInterpreter().removePlayers(listening);
             listening.clear();
 
@@ -146,7 +145,7 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Radio Band", "Radius"};
+            return new String[] { "Radio Band", "Radius" };
         }
     }
 }

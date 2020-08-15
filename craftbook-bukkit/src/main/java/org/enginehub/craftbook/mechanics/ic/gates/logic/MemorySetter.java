@@ -16,13 +16,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -31,6 +25,10 @@ import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.ICManager;
 import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class MemorySetter extends AbstractIC {
 
@@ -63,7 +61,7 @@ public class MemorySetter extends AbstractIC {
     public void load() {
 
         f = new File(ICManager.inst().getRomFolder(), getSign().getLine(2) + ".dat");
-        if (!f.exists())  {
+        if (!f.exists()) {
             try {
                 f.createNewFile();
             } catch (IOException e) {
@@ -97,10 +95,10 @@ public class MemorySetter extends AbstractIC {
         public String[] getLongDescription() {
 
             return new String[] {
-                    "The '''MC3300''' sets memory that can be read by the ([[../MC3301/]]) set to access the same file.",
-                    "",
-                    "This IC writes to a file in the filesystem stored in /plugins/CraftBook/rom/fileName.dat.",
-                    "This file can be accessed by other services to allow for external programs to interact with redstone."
+                "The '''MC3300''' sets memory that can be read by the ([[../MC3301/]]) set to access the same file.",
+                "",
+                "This IC writes to a file in the filesystem stored in /plugins/CraftBook/rom/fileName.dat.",
+                "This file can be accessed by other services to allow for external programs to interact with redstone."
             };
         }
 
@@ -108,10 +106,10 @@ public class MemorySetter extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Bit to set 1",//Inputs
-                    "Bit to set 2",
-                    "Bit to set 3",
-                    "Nothing"//Outputs
+                "Bit to set 1",//Inputs
+                "Bit to set 2",
+                "Bit to set 3",
+                "Nothing"//Outputs
             };
         }
 

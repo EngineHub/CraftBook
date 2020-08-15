@@ -16,34 +16,33 @@
 
 package org.enginehub.craftbook.mechanics.minecart;
 
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
-
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.RailUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
 
 public class VisionSteering extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerMove(PlayerMoveEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(!event.getPlayer().isInsideVehicle())
+        if (!event.getPlayer().isInsideVehicle())
             return;
 
-        if(!(event.getPlayer().getVehicle() instanceof Minecart))
+        if (!(event.getPlayer().getVehicle() instanceof Minecart))
             return;
 
-        if(Math.abs((double)event.getFrom().getYaw() - (double)event.getTo().getYaw()) < minimumSensitivity)
+        if (Math.abs((double) event.getFrom().getYaw() - (double) event.getTo().getYaw()) < minimumSensitivity)
             return;
 
-        if(RailUtil.isTrack(event.getPlayer().getVehicle().getLocation().getBlock().getType()))
+        if (RailUtil.isTrack(event.getPlayer().getVehicle().getLocation().getBlock().getType()))
             return;
 
         Vector direction = event.getPlayer().getLocation().getDirection();

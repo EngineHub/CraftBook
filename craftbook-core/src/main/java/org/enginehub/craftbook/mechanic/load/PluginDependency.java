@@ -16,15 +16,15 @@
 
 package org.enginehub.craftbook.mechanic.load;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import org.enginehub.craftbook.CraftBook;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A load dependency on another plugin.
  *
  * <p>
- *     This may vary based on the implementing platform.
+ * This may vary based on the implementing platform.
  * </p>
  */
 public class PluginDependency implements LoadDependency {

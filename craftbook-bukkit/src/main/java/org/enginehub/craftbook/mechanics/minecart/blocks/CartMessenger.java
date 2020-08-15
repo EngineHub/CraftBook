@@ -16,15 +16,15 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import org.enginehub.craftbook.util.BlockSyntax;
-import org.enginehub.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
+import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.RedstoneUtil.Power;
 
 import java.util.ArrayList;
 
@@ -48,7 +48,8 @@ public class CartMessenger extends CartBlockMechanism {
         if (event.getMinecart().getPassenger() instanceof Player) {
             Player p = (Player) event.getMinecart().getPassenger();
             ChangedSign s = event.getBlocks().getSign();
-            if (!s.getLine(0).equalsIgnoreCase("[print]") && !s.getLine(1).equalsIgnoreCase("[print]")) return;
+            if (!s.getLine(0).equalsIgnoreCase("[print]") && !s.getLine(1).equalsIgnoreCase("[print]"))
+                return;
 
             ArrayList<String> messages = new ArrayList<>();
 
@@ -91,7 +92,7 @@ public class CartMessenger extends CartBlockMechanism {
     @Override
     public String[] getApplicableSigns() {
 
-        return new String[] {"Print"};
+        return new String[] { "Print" };
     }
 
     @Override

@@ -16,9 +16,9 @@
 
 package org.enginehub.craftbook.mechanic.exception;
 
+import com.sk89q.worldedit.util.formatting.text.Component;
 import org.enginehub.craftbook.exception.CraftBookException;
 import org.enginehub.craftbook.mechanic.MechanicType;
-import com.sk89q.worldedit.util.formatting.text.Component;
 
 /**
  * This exception is thrown when a CraftBook mechanism fails to initialize.

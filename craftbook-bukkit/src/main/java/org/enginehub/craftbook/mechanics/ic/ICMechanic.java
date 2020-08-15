@@ -14,32 +14,27 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-// $Id$
-/*
- * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with this program. If not,
- * see <http://www.gnu.org/licenses/>.
- */
-
 package org.enginehub.craftbook.mechanics.ic;
 
 import com.google.common.collect.Lists;
+import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extension.platform.Actor;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
 import org.enginehub.craftbook.mechanics.pipe.PipePutEvent;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ICUtil;
@@ -52,17 +47,6 @@ import org.enginehub.craftbook.util.events.SelfTriggerUnregisterEvent;
 import org.enginehub.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
 import org.enginehub.craftbook.util.events.SignClickEvent;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
-import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.extension.platform.Actor;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.SignChangeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,10 +85,10 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
         registrar.registerTopLevelWithSubCommands(
-                "ic",
-                Lists.newArrayList("ics"),
-                "CraftBook Integrated Circuit Commands",
-                ICCommands::register
+            "ic",
+            Lists.newArrayList("ics"),
+            "CraftBook Integrated Circuit Commands",
+            ICCommands::register
         );
 
         return true;
@@ -140,9 +124,9 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             return setupIC(block, create);
         }
         if (sign.getLine(1).toLowerCase(Locale.ENGLISH).startsWith("[mc0")) {
-            if(sign.getLine(1).equalsIgnoreCase("[mc0420]"))
+            if (sign.getLine(1).equalsIgnoreCase("[mc0420]"))
                 sign.setLine(1, "[MC1421]S");
-            else if(sign.getLine(1).equalsIgnoreCase("[mc0421]"))
+            else if (sign.getLine(1).equalsIgnoreCase("[mc0421]"))
                 sign.setLine(1, "[MC1422]S");
             else
                 sign.setLine(1, (StringUtils.replace(sign.getLine(1).toLowerCase(Locale.ENGLISH), "mc0", "mc1") + "s").toUpperCase(Locale.ENGLISH));
@@ -162,7 +146,8 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
         String id = matcher.group(1);
 
-        if(disabledICs.contains(id.toLowerCase()) || disabledICs.contains(id)) return null; //This IC is disabled.
+        if (disabledICs.contains(id.toLowerCase()) || disabledICs.contains(id))
+            return null; //This IC is disabled.
         // after this point, we don't return null if we can't make an IC: we throw shit,
         // because it SHOULD be an IC and can't possibly be any other kind of mechanic.
 
@@ -178,11 +163,11 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         // check if the ic is cached and get that single instance instead of creating a new one
         if (ICManager.isCachedIC(block.getLocation())) {
             ic = ICManager.getCachedIC(block.getLocation());
-            if(ic.getSign().updateSign(sign)) {
+            if (ic.getSign().updateSign(sign)) {
 
                 ICManager.removeCachedIC(block.getLocation());
                 ic = registration.getFactory().create(sign);
-                if(!sign.getLine(0).equals(ic.getSignTitle()) && !sign.getLine(0).startsWith("=")) {
+                if (!sign.getLine(0).equals(ic.getSignTitle()) && !sign.getLine(0).startsWith("=")) {
                     sign.setLine(0, ic.getSignTitle());
                     sign.update(false);
                 }
@@ -192,7 +177,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             }
         } else if (create) {
             ic = registration.getFactory().create(sign);
-            if(!sign.getLine(0).equals(ic.getSignTitle()) && !sign.getLine(0).startsWith("=")) {
+            if (!sign.getLine(0).equals(ic.getSignTitle()) && !sign.getLine(0).startsWith("=")) {
                 sign.setLine(0, ic.getSignTitle());
                 sign.update(false);
             }
@@ -236,11 +221,11 @@ public class ICMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         final Object[] icData = setupIC(event.getBlock(), true);
 
-        if(icData == null) return;
+        if (icData == null) return;
 
         final Block block = event.getBlock();
         // abort if the current did not change
@@ -280,18 +265,18 @@ public class ICMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(ICManager.isCachedIC(event.getClickedBlock().getLocation()) && event.getPlayer().isSneaking()) {
+        if (ICManager.isCachedIC(event.getClickedBlock().getLocation()) && event.getPlayer().isSneaking()) {
             ICManager.getCachedIC(event.getClickedBlock().getLocation()).unload();
             ICManager.removeCachedIC(event.getClickedBlock().getLocation());
         }
 
         final Object[] icData = setupIC(event.getClickedBlock(), true);
 
-        if(icData == null) return;
+        if (icData == null) return;
 
         ((IC) icData[2]).onRightClick(event.getPlayer());
     }
@@ -299,7 +284,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onThinkPing(SelfTriggerPingEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         setupIC(event.getBlock(), true);
     }
@@ -307,19 +292,19 @@ public class ICMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onThinkUnregister(SelfTriggerUnregisterEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         final Object[] icData = setupIC(event.getBlock(), false);
 
-        if(icData != null) {
-            if(event.getReason() == UnregisterReason.ERROR) {
-                if(breakOnError) {
+        if (icData != null) {
+            if (event.getReason() == UnregisterReason.ERROR) {
+                if (breakOnError) {
                     ((IC) icData[2]).unload();
                     event.getBlock().breakNaturally();
                     return;
                 }
             }
-            if(keepLoaded) {
+            if (keepLoaded) {
                 event.setCancelled(true);
                 return;
             }
@@ -330,11 +315,11 @@ public class ICMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onThink(SelfTriggerThinkEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         final Object[] icData = setupIC(event.getBlock(), true);
 
-        if(icData != null && icData[2] instanceof SelfTriggeredIC) {
+        if (icData != null && icData[2] instanceof SelfTriggeredIC) {
             event.setHandled(true);
             ChipState chipState = ((ICFamily) icData[1]).detectSelfTriggered(BukkitAdapter.adapt(event.getBlock().getLocation()), ((IC) icData[2]).getSign());
             ((SelfTriggeredIC) icData[2]).think(chipState);
@@ -344,37 +329,37 @@ public class ICMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         final Object[] icData = setupIC(event.getBlock(), false);
 
-        if(icData == null) return;
+        if (icData == null) return;
 
         // remove the ic from cache
         CraftBookPlugin.inst().getSelfTriggerManager().unregisterSelfTrigger(event.getBlock().getLocation(), UnregisterReason.BREAK);
         ICManager.removeCachedIC(event.getBlock().getLocation());
         ((IC) icData[2]).onICBreak(event);
-        if(!event.isCancelled())
+        if (!event.isCancelled())
             ((IC) icData[2]).unload();
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPipePut(PipePutEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         final Object[] icData = setupIC(event.getPuttingBlock(), true);
 
-        if(icData == null) return;
+        if (icData == null) return;
 
-        if(icData[2] instanceof PipeInputIC)
+        if (icData[2] instanceof PipeInputIC)
             ((PipeInputIC) icData[2]).onPipeTransfer(event);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         initializeIC(event.getBlock(), CraftBookPlugin.inst().wrapPlayer(event.getPlayer()), event, false);
     }
@@ -410,9 +395,9 @@ public class ICMechanic extends AbstractCraftBookMechanic {
                     return;
                 }
                 if (event.getLine(1).toLowerCase(Locale.ENGLISH).startsWith("[mc0")) {
-                    if(event.getLine(1).equalsIgnoreCase("[mc0420]"))
+                    if (event.getLine(1).equalsIgnoreCase("[mc0420]"))
                         event.setLine(1, "[MC1421]S");
-                    else if(event.getLine(1).equalsIgnoreCase("[mc0421]"))
+                    else if (event.getLine(1).equalsIgnoreCase("[mc0421]"))
                         event.setLine(1, "[MC1422]S");
                     else
                         event.setLine(1, (event.getLine(1).toLowerCase(Locale.ENGLISH).replace("mc0", "mc1") + "s").toUpperCase(Locale.ENGLISH));
@@ -427,8 +412,8 @@ public class ICMechanic extends AbstractCraftBookMechanic {
                     initializeIC(block, player, event, shortHand);
                     return;
                 }
+            } catch (Exception ignored) {
             }
-            catch(Exception ignored){}
 
             String id = matcher.group(1);
             final String suffix;
@@ -606,7 +591,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
         config.setComment("break-on-error", "Break the IC sign when an error occurs from that specific IC.");
         breakOnError = config.getBoolean("break-on-error", false);
-        
+
         config.setComment("disable-self-triggered", "Disable creation and checking of self-triggered ICs.");
         disableSelfTriggered = config.getBoolean("disable-self-triggered", false);
     }

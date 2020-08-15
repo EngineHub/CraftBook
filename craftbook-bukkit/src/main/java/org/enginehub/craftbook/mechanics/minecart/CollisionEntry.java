@@ -16,22 +16,21 @@
 
 package org.enginehub.craftbook.mechanics.minecart;
 
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
-
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.util.EventUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
 
 public class CollisionEntry extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         if (event.getVehicle() instanceof RideableMinecart) {
             if (!event.getVehicle().isEmpty()) return;

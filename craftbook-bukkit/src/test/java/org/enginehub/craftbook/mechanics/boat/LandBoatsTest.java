@@ -16,10 +16,6 @@
 
 package org.enginehub.craftbook.mechanics.boat;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mock;
-
 import org.bukkit.entity.Boat;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.junit.Ignore;
@@ -28,9 +24,13 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mock;
+
 @Ignore
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Boat.class, VehicleCreateEvent.class, LandBoats.class})
+@PrepareForTest({ Boat.class, VehicleCreateEvent.class, LandBoats.class })
 public class LandBoatsTest {
 
     @Test

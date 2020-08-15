@@ -16,24 +16,24 @@
 
 package org.enginehub.craftbook;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.sk89q.worldedit.util.io.ResourceLoader;
+import com.sk89q.worldedit.util.task.SimpleSupervisor;
+import com.sk89q.worldedit.util.task.Supervisor;
+import com.sk89q.worldedit.util.translation.TranslationManager;
 import org.enginehub.craftbook.util.concurrent.EvenMoreExecutors;
 import org.enginehub.craftbook.util.profile.cache.HashMapCache;
 import org.enginehub.craftbook.util.profile.cache.ProfileCache;
 import org.enginehub.craftbook.util.profile.cache.SQLiteCache;
 import org.enginehub.craftbook.util.profile.resolver.ProfileService;
-import com.sk89q.worldedit.util.io.ResourceLoader;
-import com.sk89q.worldedit.util.task.SimpleSupervisor;
-import com.sk89q.worldedit.util.task.Supervisor;
-import com.sk89q.worldedit.util.translation.TranslationManager;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CraftBook {
 
@@ -56,7 +56,7 @@ public class CraftBook {
 
     public void setup() {
         executorService = MoreExecutors.listeningDecorator(EvenMoreExecutors.newBoundedCachedThreadPool(0, 1, 20,
-                "CraftBook Task Executor - %s"));
+            "CraftBook Task Executor - %s"));
 
         Path cacheDir = getPlatform().getConfigDir().resolve("cache");
         if (!Files.exists(cacheDir)) {

@@ -16,14 +16,11 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.items;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -35,38 +32,40 @@ import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.util.InventoryUtil;
 import org.enginehub.craftbook.util.ItemInfo;
 import org.enginehub.craftbook.util.ItemUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContainerStacker extends AbstractSelfTriggeredIC {
 
-    public ContainerStacker (Server server, ChangedSign sign, ICFactory factory) {
+    public ContainerStacker(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
         return "Container Stacker";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
         return "CONTAINER STACKER";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
-        if(chip.getInput(0))
+        if (chip.getInput(0))
             stack();
     }
 
     @Override
-    public boolean isActive () {
+    public boolean isActive() {
         return true;
     }
 
     @Override
-    public void think (ChipState chip) {
+    public void think(ChipState chip) {
 
         stack();
     }
@@ -85,7 +84,7 @@ public class ContainerStacker extends AbstractSelfTriggeredIC {
                 ItemStack it = c.getInventory().getItem(i);
                 if (ItemUtil.isStackValid(it)) {
 
-                    if(((Factory)getFactory()).blacklist.contains(new ItemInfo(it)))
+                    if (((Factory) getFactory()).blacklist.contains(new ItemInfo(it)))
                         continue;
                     int amount = it.getAmount();
                     if (it.getAmount() < 64) {
@@ -114,7 +113,7 @@ public class ContainerStacker extends AbstractSelfTriggeredIC {
                             c.getInventory().setItem(i, it);
                             break;
                         }
-                        if(missing > 0) {
+                        if (missing > 0) {
 
                             ItemStack miss = new ItemStack(it);
                             miss.setAmount(missing);

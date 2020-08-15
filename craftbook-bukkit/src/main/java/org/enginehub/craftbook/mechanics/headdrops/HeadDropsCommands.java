@@ -16,10 +16,6 @@
 
 package org.enginehub.craftbook.mechanics.headdrops;
 
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.BukkitCraftBookPlayer;
-import org.enginehub.craftbook.exception.CraftBookException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
@@ -33,6 +29,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.BukkitCraftBookPlayer;
+import org.enginehub.craftbook.exception.CraftBookException;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.annotation.Command;
 import org.enginehub.piston.annotation.CommandContainer;
@@ -45,9 +45,9 @@ public class HeadDropsCommands {
 
     public static void register(CommandManager commandManager, CommandRegistrationHandler registration) {
         registration.register(
-                commandManager,
-                HeadDropsCommandsRegistration.builder(),
-                new HeadDropsCommands()
+            commandManager,
+            HeadDropsCommandsRegistration.builder(),
+            new HeadDropsCommands()
         );
     }
 
@@ -57,39 +57,39 @@ public class HeadDropsCommands {
     @Command(name = "give", desc = "Gives the player the headdrops item.")
     @CommandPermissions({ "craftbook.mech.headdrops.give" })
     public void giveItem(Actor actor,
-            @Arg(desc = "The entity type") com.sk89q.worldedit.world.entity.EntityType entityType,
-            @ArgFlag(name = 'p', desc = "The player to target") String otherPlayer,
-            @ArgFlag(name = 'a', desc = "Amount to give", def = "1") int amount,
-            @Switch(name = 's', desc = "Silence output") boolean silent
+                         @Arg(desc = "The entity type") com.sk89q.worldedit.world.entity.EntityType entityType,
+                         @ArgFlag(name = 'p', desc = "The player to target") String otherPlayer,
+                         @ArgFlag(name = 'a', desc = "Amount to give", def = "1") int amount,
+                         @Switch(name = 's', desc = "Silence output") boolean silent
     ) throws AuthorizationException,
-            CraftBookException {
+        CraftBookException {
         Player player;
 
-        if(otherPlayer != null)
+        if (otherPlayer != null)
             player = Bukkit.getPlayer(otherPlayer);
-        else if(!(actor instanceof CraftBookPlayer))
+        else if (!(actor instanceof CraftBookPlayer))
             throw new CraftBookException("Please provide a player! (-p flag)");
         else
             player = ((BukkitCraftBookPlayer) actor).getPlayer();
 
-        if(player == null)
+        if (player == null)
             throw new CraftBookException("Unknown Player!");
 
-        if(HeadDrops.instance == null)
+        if (HeadDrops.instance == null)
             throw new CraftBookException("HeadDrops are not enabled!");
 
-        if(!actor.hasPermission("craftbook.mech.headdrops.give" + (otherPlayer != null ? ".others" : "") + '.' + entityType.getId()))
+        if (!actor.hasPermission("craftbook.mech.headdrops.give" + (otherPlayer != null ? ".others" : "") + '.' + entityType.getId()))
             throw new AuthorizationException();
 
         HeadDrops.MobSkullType skullType = HeadDrops.MobSkullType.getFromEntityType(BukkitAdapter.adapt(entityType));
-        if(skullType == null)
+        if (skullType == null)
             throw new CraftBookException("Invalid Skull Type!");
 
         String mobName = skullType.getPlayerName();
 
         ItemStack stack = new ItemStack(Material.PLAYER_HEAD, amount);
         ItemMeta metaD = stack.getItemMeta();
-        if(metaD instanceof SkullMeta) {
+        if (metaD instanceof SkullMeta) {
             SkullMeta itemMeta = (SkullMeta) metaD;
             itemMeta.setDisplayName(ChatColor.RESET + entityType.getName().toUpperCase() + " Head");
             itemMeta.setOwner(mobName);
@@ -98,11 +98,11 @@ public class HeadDropsCommands {
             CraftBook.logger.warn("Bukkit has failed to set a HeadDrop item to a head!");
         }
 
-        if(!player.getInventory().addItem(stack).isEmpty()) {
+        if (!player.getInventory().addItem(stack).isEmpty()) {
             throw new CraftBookException("Failed to add item to inventory!");
         }
 
-        if(!silent)
+        if (!silent)
             actor.print("Gave HeadDrop for " + ChatColor.BLUE + entityType.getName() + ChatColor.YELLOW + " to " + player.getName());
     }
 }

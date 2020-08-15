@@ -16,13 +16,8 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.entity;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -35,6 +30,10 @@ import org.enginehub.craftbook.util.EntityType;
 import org.enginehub.craftbook.util.EntityUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SearchArea;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Me4502
@@ -94,7 +93,7 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
         } else
             types = Collections.singletonList(EntityType.MOB_HOSTILE);
 
-        if(types.isEmpty())
+        if (types.isEmpty())
             types.add(EntityType.ANY);
         erase = getLine(3).startsWith("!");
     }
@@ -110,7 +109,7 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
 
         for (Entity e : area.getEntitiesInArea(types)) {
 
-            if(erase)
+            if (erase)
                 e.remove();
             else
                 EntityUtil.damageEntity(e, damage);
@@ -142,7 +141,7 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"radius=x:y:z=damage", "mob type"};
+            return new String[] { "radius=x:y:z=damage", "mob type" };
         }
     }
 }

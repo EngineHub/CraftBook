@@ -14,37 +14,8 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-// $Id$
-/*
- * CraftBook Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with this program. If not,
- * see <http://www.gnu.org/licenses/>.
- */
-
 package org.enginehub.craftbook.bukkit;
 
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.mechanics.minecart.blocks.CartBlockMechanism;
-import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.HistoryHashMap;
-import org.enginehub.craftbook.util.LocationUtil;
-import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.SignClickEvent;
-import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
-import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -70,6 +41,19 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
+import org.enginehub.craftbook.mechanics.minecart.blocks.CartBlockMechanism;
+import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
+import org.enginehub.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
+import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
+import org.enginehub.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.HistoryHashMap;
+import org.enginehub.craftbook.util.LocationUtil;
+import org.enginehub.craftbook.util.SignUtil;
+import org.enginehub.craftbook.util.events.SignClickEvent;
+import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 import java.util.Map;
 import java.util.UUID;
@@ -125,7 +109,7 @@ final class MechanicListenerAdapter implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
         if (SourcedBlockRedstoneEvent.getHandlerList().getRegisteredListeners().length == 0
-                && CartBlockRedstoneEvent.getHandlerList().getRegisteredListeners().length == 0) {
+            && CartBlockRedstoneEvent.getHandlerList().getRegisteredListeners().length == 0) {
             // Don't run this code when we have no listeners.
             return;
         }
@@ -140,7 +124,7 @@ final class MechanicListenerAdapter implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
         if (SourcedBlockRedstoneEvent.getHandlerList().getRegisteredListeners().length == 0
-                && CartBlockRedstoneEvent.getHandlerList().getRegisteredListeners().length == 0) {
+            && CartBlockRedstoneEvent.getHandlerList().getRegisteredListeners().length == 0) {
             // Don't run this code when we have no listeners.
             return;
         }
@@ -167,7 +151,7 @@ final class MechanicListenerAdapter implements Listener {
             BlockData blockData = block.getBlockData();
 
             if (blockData instanceof Powerable) {
-                if(((Powerable) blockData).isPowered()) {
+                if (((Powerable) blockData).isPowered()) {
                     power = 15;
                 }
             } else if (blockData instanceof AnaloguePowerable) {
@@ -183,7 +167,7 @@ final class MechanicListenerAdapter implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(BlockRedstoneEvent event) {
         if (SourcedBlockRedstoneEvent.getHandlerList().getRegisteredListeners().length == 0
-                && CartBlockRedstoneEvent.getHandlerList().getRegisteredListeners().length == 0) {
+            && CartBlockRedstoneEvent.getHandlerList().getRegisteredListeners().length == 0) {
             // Don't run this code when we have no listeners.
             return;
         }
@@ -210,7 +194,7 @@ final class MechanicListenerAdapter implements Listener {
         // yet been updated, so we're going to do this very ugly thing of
         // faking the value with the new one whenever the data value of this
         // block is requested -- it is quite ugly
-        switch(block.getType()) {
+        switch (block.getType()) {
             case REDSTONE_WIRE:
                 if (CraftBook.getInstance().getPlatform().getConfiguration().indirectRedstone) {
                     // power all blocks around the redstone wire on the same y level
@@ -227,7 +211,7 @@ final class MechanicListenerAdapter implements Listener {
                     int connectedFaces = 0;
                     for (BlockFace face : redstoneWire.getAllowedFaces()) {
                         if (redstoneWire.getFace(face) != RedstoneWire.Connection.NONE) {
-                            connectedFaces ++;
+                            connectedFaces++;
                         }
                     }
 
@@ -235,8 +219,8 @@ final class MechanicListenerAdapter implements Listener {
                         RedstoneWire.Connection connection = redstoneWire.getFace(face);
                         // TODO Re-test in 1.16
                         if (connection != RedstoneWire.Connection.NONE
-                                || connectedFaces == 0
-                                || connectedFaces == 1 && redstoneWire.getFace(face.getOppositeFace()) != RedstoneWire.Connection.NONE) {
+                            || connectedFaces == 0
+                            || connectedFaces == 1 && redstoneWire.getFace(face.getOppositeFace()) != RedstoneWire.Connection.NONE) {
                             handleDirectWireInput(block.getRelative(face), block, oldLevel, newLevel);
                         }
                     }
@@ -317,8 +301,8 @@ final class MechanicListenerAdapter implements Listener {
                 try {
                     CartMechanismBlocks cmb = CartMechanismBlocks.find(event.getBlock());
                     CartBlockRedstoneEvent ev =
-                            new CartBlockRedstoneEvent(event.getBlock(), event.getSource(), event.getOldCurrent(), event.getNewCurrent(), cmb,
-                                    CartBlockMechanism.getCart(cmb.rail));
+                        new CartBlockRedstoneEvent(event.getBlock(), event.getSource(), event.getOldCurrent(), event.getNewCurrent(), cmb,
+                            CartBlockMechanism.getCart(cmb.rail));
                     CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
                 } catch (InvalidMechanismException ignored) {
                 }
@@ -367,7 +351,7 @@ final class MechanicListenerAdapter implements Listener {
         }
 
         // TODO Determine if necessary
-        if(!event.getVehicle().getWorld().isChunkLoaded(event.getVehicle().getLocation().getBlockX() >> 4, event.getVehicle().getLocation().getBlockZ() >> 4)) {
+        if (!event.getVehicle().getWorld().isChunkLoaded(event.getVehicle().getLocation().getBlockX() >> 4, event.getVehicle().getLocation().getBlockZ() >> 4)) {
             return;
         }
 

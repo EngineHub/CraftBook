@@ -16,6 +16,9 @@
 
 package org.enginehub.craftbook.mechanics.items;
 
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
@@ -24,9 +27,6 @@ import org.enginehub.craftbook.mechanics.variables.VariableKey;
 import org.enginehub.craftbook.mechanics.variables.VariableManager;
 import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 import org.enginehub.craftbook.util.RegexUtil;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 
 /**
  * An action that can be performed by a {@link CommandItemDefinition}
@@ -68,33 +68,33 @@ public class CommandItemAction {
 
     /**
      * Runs the action defined by this {@link CommandItemAction}
-     * 
+     *
      * @param definition The {@link CommandItemDefinition} that is calling this action.
      * @param event The {@link Event} that the {@link CommandItemDefinition} was triggered by.
      * @param player The {@link Player} that the {@link CommandItemDefinition} was triggered by.
-     * 
-     * @return If this is a 'BEFORE' {@link ActionRunStage}, returning false causes the {@link CommandItemDefinition} to not run.
+     * @return If this is a 'BEFORE' {@link ActionRunStage}, returning false causes the {@link
+     *     CommandItemDefinition} to not run.
      */
     public boolean runAction(CommandItemDefinition definition, Event event, Player player) throws VariableException {
 
         String newVal = CommandItems.parseLine(value, event, player);
         CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(player);
 
-        switch(type) {
+        switch (type) {
             case SETVAR:
-                String[] svarParts = RegexUtil.EQUALS_PATTERN.split(newVal,2);
+                String[] svarParts = RegexUtil.EQUALS_PATTERN.split(newVal, 2);
                 VariableKey sVariableKey = VariableKey.fromString(svarParts[0], localPlayer);
                 VariableManager.instance.setVariable(sVariableKey, svarParts[1]);
                 return true;
             case MATHVAR:
-                String[] mvarParts = RegexUtil.EQUALS_PATTERN.split(newVal,2);
+                String[] mvarParts = RegexUtil.EQUALS_PATTERN.split(newVal, 2);
                 VariableKey mVariableKey = VariableKey.fromString(mvarParts[0], localPlayer);
 
                 String[] mathFunctionParts = RegexUtil.COLON_PATTERN.split(mvarParts[1], 2);
                 MathFunction func = MathFunction.parseFunction(mathFunctionParts[0]);
 
                 String cur = VariableManager.instance.getVariable(mVariableKey);
-                if(cur == null || cur.isEmpty()) cur = "0";
+                if (cur == null || cur.isEmpty()) cur = "0";
 
                 double currentValue = Double.parseDouble(cur);
                 double amount = Double.parseDouble(mathFunctionParts[1]);
@@ -120,7 +120,7 @@ public class CommandItemAction {
                 try {
                     variable = Double.parseDouble(VariableManager.instance.getVariable(isVariableKey));
                     test = Double.parseDouble(isparts[1]);
-                } catch(NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     CraftBook.logger.warn("Variable " + isparts[0] + " is not a number!");
                 }
                 return variable > test;
@@ -133,7 +133,7 @@ public class CommandItemAction {
                 try {
                     variable = Double.parseDouble(VariableManager.instance.getVariable(isVariableKey));
                     test = Double.parseDouble(isparts[1]);
-                } catch(NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     CraftBook.logger.warn("Variable " + isparts[0] + " is not a number!");
                 }
                 return variable < test;

@@ -16,10 +16,10 @@
 
 package org.enginehub.craftbook.mechanics.pipe;
 
-import java.util.List;
-
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public class PipeFinishEvent extends PipeEvent {
 
@@ -27,7 +27,7 @@ public class PipeFinishEvent extends PipeEvent {
 
     private boolean request;
 
-    public PipeFinishEvent (Block theBlock, List<ItemStack> items, Block origin, boolean request) {
+    public PipeFinishEvent(Block theBlock, List<ItemStack> items, Block origin, boolean request) {
         super(theBlock, items);
         this.origin = origin;
         this.request = request;

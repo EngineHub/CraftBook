@@ -1,10 +1,10 @@
 package org.enginehub.craftbook.internal.util;
 
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.command.util.PermissionCondition;
 import com.sk89q.worldedit.internal.command.CommandUtil;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.piston.Command;
 import org.enginehub.piston.config.TextConfig;
 import org.enginehub.piston.part.SubCommandPart;
@@ -15,7 +15,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +30,7 @@ public class CommandUtils {
 
     private static final Pattern nameRegex = Pattern.compile("name = \"(.+?)\"");
     private static final Map<String, Command> commands = CraftBookPlugin.inst().getCommandManager().getCommandManager().getAllCommands()
-            .collect(Collectors.toMap(Command::getName, command -> command));
+        .collect(Collectors.toMap(Command::getName, command -> command));
 
     public static List<String> getAllCommandsIn(Class<?> commandClass) {
         Path sourceFile = Paths.get("craftbook-bukkit/src/main/java/" + commandClass.getName().replace('.', '/') + ".java");
@@ -53,7 +52,7 @@ public class CommandUtils {
                             inCommand.set(false);
                         }
                     }
-                } else if (line.contains("@Command(")){
+                } else if (line.contains("@Command(")) {
                     inCommand.set(true);
                 }
             });
@@ -77,8 +76,8 @@ public class CommandUtils {
         for (Command command : commands) {
             cmdOutput.append(writeCommandBlock(command, prefix, Stream.empty()));
             command.getParts().stream().filter(p -> p instanceof SubCommandPart)
-                    .flatMap(p -> ((SubCommandPart) p).getCommands().stream())
-                    .forEach(sc -> cmdOutput.append(writeCommandBlock(sc, prefix + command.getName() + " ", Stream.of(command))));
+                .flatMap(p -> ((SubCommandPart) p).getCommands().stream())
+                .forEach(sc -> cmdOutput.append(writeCommandBlock(sc, prefix + command.getName() + " ", Stream.of(command))));
         }
 
         return cmdOutput.toString();
@@ -89,14 +88,14 @@ public class CommandUtils {
         cmds.forEach(c -> {
             permsOutput.append("    ").append(cmdToPerm(prefix, c)).append("\n");
             c.getParts().stream()
-                    .filter(part -> part instanceof SubCommandPart)
-                    .forEach(scp -> cmdsToPerms(
-                            ((SubCommandPart) scp).getCommands()
-                                    .stream()
-                                    .sorted(Comparator.comparing(Command::getName))
-                                    .collect(Collectors.toList()),
-                            prefix + c.getName() + " ")
-                    );
+                .filter(part -> part instanceof SubCommandPart)
+                .forEach(scp -> cmdsToPerms(
+                    ((SubCommandPart) scp).getCommands()
+                        .stream()
+                        .sorted(Comparator.comparing(Command::getName))
+                        .collect(Collectors.toList()),
+                    prefix + c.getName() + " ")
+                );
         });
         return permsOutput.toString();
     }
@@ -106,9 +105,9 @@ public class CommandUtils {
         String permissions = "";
         if (cond instanceof PermissionCondition && !((PermissionCondition) cond).getPermissions().isEmpty()) {
             permissions = ((PermissionCondition) cond).getPermissions()
-                    .stream()
-                    .map(con -> "``" + con + "``")
-                    .collect(Collectors.joining(", "));
+                .stream()
+                .map(con -> "``" + con + "``")
+                .collect(Collectors.joining(", "));
         }
         return "``" + prefix + c.getName() + "``,\"" + permissions + "\"";
     }
@@ -126,31 +125,31 @@ public class CommandUtils {
         cmdOutput.append(".. topic:: ``").append(name).append("``");
         if (!command.getAliases().isEmpty()) {
             cmdOutput.append("(or ").append(command.getAliases()
-                    .stream()
-                    .map(alias -> "``" + prefix + alias + "``")
-                    .collect(Collectors.joining(", "))).append(")\n");
+                .stream()
+                .map(alias -> "``" + prefix + alias + "``")
+                .collect(Collectors.joining(", "))).append(")\n");
         }
         cmdOutput.append("\n");
         cmdOutput.append("    :class: command-topic\n\n");
         CommandUtil.deprecationWarning(command).ifPresent(warning ->
-                cmdOutput.append("    .. WARNING::\n" + "        ")
-                        .append(makeRstSafe(ComponentRstRenderer.reduceToRst(warning), "\n\n"))
-                        .append("\n")
+            cmdOutput.append("    .. WARNING::\n" + "        ")
+                .append(makeRstSafe(ComponentRstRenderer.reduceToRst(warning), "\n\n"))
+                .append("\n")
         );
         cmdOutput.append(
             ".. csv-table::\n" +
-            "  :widths: 8, 15\n"
+                "  :widths: 8, 15\n"
         );
         cmdOutput.append("\n");
         for (Map.Entry<String, String> entry : entries.entrySet()) {
             String rstSafe = makeRstSafe(entry.getValue(), "\n");
             cmdOutput.append(repeatString("    ", 2))
-                    .append(entry.getKey())
-                    .append(",")
-                    .append('"')
-                    .append(rstSafe)
-                    .append('"')
-                    .append("\n");
+                .append(entry.getKey())
+                .append(",")
+                .append('"')
+                .append(rstSafe)
+                .append('"')
+                .append("\n");
         }
         cmdOutput.append("\n");
         return cmdOutput.toString();
@@ -158,9 +157,9 @@ public class CommandUtils {
 
     private static String makeRstSafe(String input, String lineJoiner) {
         return String.join(lineJoiner, input.trim()
-                .replace("\"", "\\\"")
-                .replace("\n", "\n" + repeatString("    ", 2))
-                .split(","));
+            .replace("\"", "\\\"")
+            .replace("\n", "\n" + repeatString("    ", 2))
+            .split(","));
     }
 
     private static String linkSafe(String text) {
@@ -188,10 +187,10 @@ public class CommandUtils {
 
         // Part descriptions
         command.getParts().stream().filter(part -> !(part instanceof SubCommandPart))
-                .forEach(it -> {
-                    String title = "\u2001\u2001``" + ComponentRstRenderer.reduceToRst(it.getTextRepresentation()) + "``";
-                    entries.put(title, ComponentRstRenderer.reduceToRst(it.getDescription()));
-                });
+            .forEach(it -> {
+                String title = "\u2001\u2001``" + ComponentRstRenderer.reduceToRst(it.getTextRepresentation()) + "``";
+                entries.put(title, ComponentRstRenderer.reduceToRst(it.getDescription()));
+            });
         return entries;
     }
 

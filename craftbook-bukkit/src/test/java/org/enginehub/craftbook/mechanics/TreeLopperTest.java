@@ -16,10 +16,6 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
-
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.sk89q.worldedit.world.item.ItemTypes;
 import org.bukkit.ChatColor;
@@ -33,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,16 +40,19 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
+
 @Ignore
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({TreeLopper.class,BlockBreakEvent.class})
+@PrepareForTest({ TreeLopper.class, BlockBreakEvent.class })
 public class TreeLopperTest {
 
     private TreeLopper lopper;
 
     @Test
     public void testOnBlockBreak() {
-        if(lopper == null)
+        if (lopper == null)
             lopper = new TreeLopper();
 
         World world = mock(World.class);
@@ -72,7 +72,7 @@ public class TreeLopperTest {
 
         final Block block = mock(Block.class);
         when(block.getType()).thenReturn(Material.OAK_LOG);
-        when(block.getLocation()).thenReturn(new Location(world, 64,64,64));
+        when(block.getLocation()).thenReturn(new Location(world, 64, 64, 64));
 
         lopper.enabledBlocks = new ArrayList<>();
         lopper.enabledBlocks.add(BlockTypes.OAK_LOG.getDefaultState().toBaseBlock());

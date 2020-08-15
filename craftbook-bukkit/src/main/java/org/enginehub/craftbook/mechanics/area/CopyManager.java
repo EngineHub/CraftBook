@@ -16,24 +16,6 @@
 
 package org.enginehub.craftbook.mechanics.area;
 
-// $Id$
-/*
- * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
- * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with this program. If not,
- * see <http://www.gnu.org/licenses/>.
- */
-
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.util.HistoryHashMap;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
@@ -51,6 +33,8 @@ import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.apache.commons.lang.StringUtils;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.HistoryHashMap;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -93,7 +77,6 @@ public class CopyManager {
      * Checks to see whether a name is a valid copy name.
      *
      * @param name Checks if it's a valid schematic name
-     *
      * @return If it's valid
      */
     public static boolean isValidName(String name) {
@@ -106,7 +89,6 @@ public class CopyManager {
      * Checks to see whether a name is a valid namespace.
      *
      * @param name Checks if it's a valid namespace
-     *
      * @return If it's valid
      */
     public static boolean isValidNamespace(String name) {
@@ -116,7 +98,7 @@ public class CopyManager {
 
     /**
      * Renames a namespace.
-     * 
+     *
      * @param originalName The old name.
      * @param newName The new name. (Post rename)
      */
@@ -136,7 +118,7 @@ public class CopyManager {
      * Checks if the area and namespace exists.
      *
      * @param namespace to check
-     * @param area      to check
+     * @param area to check
      */
     public static boolean isExistingArea(File dataFolder, String namespace, String area) {
         area = StringUtils.replace(area, "-", "");
@@ -151,14 +133,13 @@ public class CopyManager {
     /**
      * Load a copy from disk. This may return a cached copy. If the copy is not cached,
      * the file will be loaded from disk if possible. If the copy
-     * does not exist, an exception will be raised. An exception may be raised if the file exists but cannot be read
+     * does not exist, an exception will be raised. An exception may be raised if the file exists
+     * but cannot be read
      * for whatever reason.
      *
      * @param namespace The clipboard namespace
      * @param id The clipboard ID
-     *
      * @return The loaded clipboard
-     *
      * @throws IOException If it fails to load
      */
     public BlockArrayClipboard load(String namespace, String id) throws IOException {
@@ -177,7 +158,7 @@ public class CopyManager {
             File file = new File(new File(new File(plugin.getDataFolder(), "areas"), namespace), id + getFileSuffix());
             if (!file.exists()) {
                 file = new File(new File(new File(plugin.getDataFolder(), "areas"), namespace),
-                        id + '.' + BuiltInClipboardFormat.MCEDIT_SCHEMATIC.getPrimaryFileExtension());
+                    id + '.' + BuiltInClipboardFormat.MCEDIT_SCHEMATIC.getPrimaryFileExtension());
             }
             if (file.exists()) {
                 ClipboardFormat format = ClipboardFormats.findByFile(file);
@@ -206,7 +187,6 @@ public class CopyManager {
      * @param namespace The save namespace
      * @param id The save id
      * @param clipboard The clipboard containing the save
-     *
      * @throws IOException If the file failed to save
      */
     public void save(String namespace, String id, BlockArrayClipboard clipboard) throws IOException {
@@ -270,12 +250,12 @@ public class CopyManager {
         try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(clipboard.getRegion().getWorld(), -1)) {
 
             Operation operation = new ClipboardHolder(clipboard)
-                    .createPaste(editSession)
-                    .to(clipboard.getOrigin())
-                    .copyBiomes(true)
-                    .copyEntities(true)
-                    .ignoreAirBlocks(false)
-                    .build();
+                .createPaste(editSession)
+                .to(clipboard.getOrigin())
+                .copyBiomes(true)
+                .copyEntities(true)
+                .ignoreAirBlocks(false)
+                .build();
 
             Operations.complete(operation);
         }
@@ -300,7 +280,6 @@ public class CopyManager {
      * @param namespace The clipboard namespace
      * @param ignore File name to ignore
      * @param quota The limit of tiels
-     *
      * @return -1 if the copy can be made, some other number for the count
      */
     public static int meetsQuota(String namespace, String ignore, int quota) {

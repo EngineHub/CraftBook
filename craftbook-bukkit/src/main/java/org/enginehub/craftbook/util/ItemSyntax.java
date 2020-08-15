@@ -19,9 +19,6 @@ package org.enginehub.craftbook.util;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.mechanics.items.CommandItemDefinition;
-import org.enginehub.craftbook.mechanics.items.CommandItems;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.blocks.BaseItem;
 import com.sk89q.worldedit.blocks.BaseItemStack;
@@ -46,6 +43,9 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.mechanics.items.CommandItemDefinition;
+import org.enginehub.craftbook.mechanics.items.CommandItems;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,10 +54,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 /**
- * The Standard Item Syntax. This class is built to be able to survive on its own, without CraftBook.
- * 
- * @author Me4502
+ * The Standard Item Syntax. This class is built to be able to survive on its own, without
+ * CraftBook.
  *
+ * @author Me4502
  */
 public final class ItemSyntax {
 
@@ -72,34 +72,34 @@ public final class ItemSyntax {
     private static final Pattern FSLASH_PATTERN = Pattern.compile("(?<=[^\\\\])([/])");
 
     /**
-     * The opposite of {@link ItemSyntax#getItem(String)}. Returns the String made by an {@link ItemStack}. This can be used in getItem() to return the same {@link ItemStack}.
-     * 
-     * @author me4502
-     * 
+     * The opposite of {@link ItemSyntax#getItem(String)}. Returns the String made by an {@link
+     * ItemStack}. This can be used in getItem() to return the same {@link ItemStack}.
+     *
      * @param item The {@link ItemStack} to convert into a {@link String}.
      * @return The {@link String} that represents the {@link ItemStack}.
+     * @author me4502
      */
     public static String getStringFromItem(ItemStack item) {
 
         StringBuilder builder = new StringBuilder();
         builder.append(item.getType().getKey().toString());
 
-        if(item.hasItemMeta()) {
+        if (item.hasItemMeta()) {
             ItemMeta meta = item.getItemMeta();
-            if(meta.hasEnchants()) {
+            if (meta.hasEnchants()) {
                 for (Entry<Enchantment, Integer> enchants : meta.getEnchants().entrySet()) {
                     builder.append(';').append(enchants.getKey().getName()).append(':').append(enchants.getValue());
                 }
             }
-            if(meta.hasDisplayName()) {
+            if (meta.hasDisplayName()) {
                 builder.append('|').append(meta.getDisplayName());
             }
-            if(meta.hasLore()) {
-                if(!meta.hasDisplayName()) {
+            if (meta.hasLore()) {
+                if (!meta.hasDisplayName()) {
                     builder.append("|$IGNORE");
                 }
                 List<String> list = meta.getLore();
-                for(String s : list) {
+                for (String s : list) {
                     builder.append('|').append(s);
                 }
             }
@@ -118,26 +118,26 @@ public final class ItemSyntax {
             }
 
             if (meta instanceof SkullMeta) {
-                if(((SkullMeta) meta).hasOwner())
+                if (((SkullMeta) meta).hasOwner())
                     builder.append("/player:").append(((SkullMeta) meta).getOwner());
             } else if (meta instanceof BookMeta) {
-                if(((BookMeta) meta).hasTitle())
+                if (((BookMeta) meta).hasTitle())
                     builder.append("/title:").append(((BookMeta) meta).getTitle());
-                if(((BookMeta) meta).hasAuthor())
+                if (((BookMeta) meta).hasAuthor())
                     builder.append("/author:").append(((BookMeta) meta).getAuthor());
-                if(((BookMeta) meta).hasPages())
-                    for(String page : ((BookMeta) meta).getPages())
+                if (((BookMeta) meta).hasPages())
+                    for (String page : ((BookMeta) meta).getPages())
                         builder.append("/page:").append(page);
             } else if (meta instanceof LeatherArmorMeta) {
-                if(!((LeatherArmorMeta) meta).getColor().equals(Bukkit.getItemFactory().getDefaultLeatherColor()))
+                if (!((LeatherArmorMeta) meta).getColor().equals(Bukkit.getItemFactory().getDefaultLeatherColor()))
                     builder.append("/color:").append(((LeatherArmorMeta) meta).getColor().getRed()).append(',').append(((LeatherArmorMeta) meta).getColor().getGreen()).append(',').append(((LeatherArmorMeta) meta).getColor().getBlue());
             } else if (meta instanceof PotionMeta) {
-                if(!((PotionMeta) meta).hasCustomEffects())
-                    for(PotionEffect eff : ((PotionMeta) meta).getCustomEffects())
+                if (!((PotionMeta) meta).hasCustomEffects())
+                    for (PotionEffect eff : ((PotionMeta) meta).getCustomEffects())
                         builder.append("/potion:").append(eff.getType().getName()).append(';').append(eff.getDuration()).append(';').append(eff.getAmplifier());
             } else if (meta instanceof EnchantmentStorageMeta) {
-                if(!((EnchantmentStorageMeta) meta).hasStoredEnchants())
-                    for(Entry<Enchantment, Integer> eff : ((EnchantmentStorageMeta) meta).getStoredEnchants().entrySet())
+                if (!((EnchantmentStorageMeta) meta).hasStoredEnchants())
+                    for (Entry<Enchantment, Integer> eff : ((EnchantmentStorageMeta) meta).getStoredEnchants().entrySet())
                         builder.append("/enchant:").append(eff.getKey().getKey().toString()).append(';').append(eff.getValue());
             } else if (meta instanceof Damageable && ((Damageable) meta).getDamage() > 0) {
                 builder.append("/damage:").append(((Damageable) meta).getDamage());
@@ -189,9 +189,10 @@ public final class ItemSyntax {
                 }
             }
             try {
-                if(amountSplit.length > 1)
+                if (amountSplit.length > 1)
                     amount = Integer.parseInt(amountSplit[1]);
-            } catch(Exception ignored){}
+            } catch (Exception ignored) {
+            }
 
             ItemStack rVal;
 
@@ -201,15 +202,15 @@ public final class ItemSyntax {
                 rVal = BukkitAdapter.adapt(new BaseItemStack(item.getType(), item.getNbtData(), amount));
             }
 
-            if(nameLoreSplit.length > 1) {
+            if (nameLoreSplit.length > 1) {
 
                 ItemMeta meta = rVal.getItemMeta();
                 //if(!nameLoreSplit[1].equalsIgnoreCase("$IGNORE"))
                 meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', nameLoreSplit[1]));
-                if(nameLoreSplit.length > 2) {
+                if (nameLoreSplit.length > 2) {
 
                     List<String> lore = new ArrayList<>();
-                    for(int i = 2; i < nameLoreSplit.length; i++)
+                    for (int i = 2; i < nameLoreSplit.length; i++)
                         lore.add(ChatColor.translateAlternateColorCodes('&', nameLoreSplit[i]));
 
                     meta.setLore(lore);
@@ -217,56 +218,58 @@ public final class ItemSyntax {
 
                 rVal.setItemMeta(meta);
             }
-            if(enchantSplit.length > 1) {
+            if (enchantSplit.length > 1) {
 
-                for(int i = 1; i < enchantSplit.length; i++) {
+                for (int i = 1; i < enchantSplit.length; i++) {
 
                     try {
                         String[] sp = COLON_PATTERN.split(enchantSplit[i]);
                         Enchantment ench = Enchantment.getByName(sp[0]);
-                        if(ench == null)
+                        if (ench == null)
                             ench = Enchantment.getByKey(NamespacedKey.minecraft(sp[0]));
                         rVal.addUnsafeEnchantment(ench, Integer.parseInt(sp[1]));
+                    } catch (NumberFormatException | ArrayIndexOutOfBoundsException | NullPointerException ignored) {
                     }
-                    catch(NumberFormatException | ArrayIndexOutOfBoundsException | NullPointerException ignored){}
                 }
             }
-            if(advMetadataSplit.length > 1) {
+            if (advMetadataSplit.length > 1) {
 
                 ItemMeta meta = rVal.getItemMeta();
-                for(int i = 1; i < advMetadataSplit.length; i++) {
+                for (int i = 1; i < advMetadataSplit.length; i++) {
                     String section = advMetadataSplit[i];
                     String[] bits = COLON_PATTERN.split(section, 2);
 
                     //Invalid Bit check
                     if (bits.length < 2) continue;
 
-                    if(bits[0].equalsIgnoreCase("player") && meta instanceof SkullMeta)
+                    if (bits[0].equalsIgnoreCase("player") && meta instanceof SkullMeta)
                         ((SkullMeta) meta).setOwner(bits[1]);
-                    else if(bits[0].equalsIgnoreCase("author") && meta instanceof BookMeta)
+                    else if (bits[0].equalsIgnoreCase("author") && meta instanceof BookMeta)
                         ((BookMeta) meta).setAuthor(bits[1]);
-                    else if(bits[0].equalsIgnoreCase("title") && meta instanceof BookMeta)
+                    else if (bits[0].equalsIgnoreCase("title") && meta instanceof BookMeta)
                         ((BookMeta) meta).setTitle(bits[1]);
-                    else if(bits[0].equalsIgnoreCase("page") && meta instanceof BookMeta)
+                    else if (bits[0].equalsIgnoreCase("page") && meta instanceof BookMeta)
                         ((BookMeta) meta).addPage(bits[1]);
-                    else if(bits[0].equalsIgnoreCase("color") && meta instanceof LeatherArmorMeta) {
+                    else if (bits[0].equalsIgnoreCase("color") && meta instanceof LeatherArmorMeta) {
                         String[] cols = COMMA_PATTERN.split(bits[1]);
-                        ((LeatherArmorMeta) meta).setColor(org.bukkit.Color.fromRGB(Integer.parseInt(cols[0]),Integer.parseInt(cols[1]),Integer.parseInt(cols[2])));
-                    } else if(bits[0].equalsIgnoreCase("potion") && meta instanceof PotionMeta) {
+                        ((LeatherArmorMeta) meta).setColor(org.bukkit.Color.fromRGB(Integer.parseInt(cols[0]), Integer.parseInt(cols[1]), Integer.parseInt(cols[2])));
+                    } else if (bits[0].equalsIgnoreCase("potion") && meta instanceof PotionMeta) {
                         String[] effects = SEMICOLON_PATTERN.split(bits[1]);
                         try {
                             PotionEffect effect = new PotionEffect(PotionEffectType.getByName(effects[0]), Integer.parseInt(effects[1]), Integer.parseInt(effects[2]));
                             ((PotionMeta) meta).addCustomEffect(effect, true);
-                        } catch(Exception ignored){}
-                    } else if(bits[0].equalsIgnoreCase("enchant") && meta instanceof EnchantmentStorageMeta) {
+                        } catch (Exception ignored) {
+                        }
+                    } else if (bits[0].equalsIgnoreCase("enchant") && meta instanceof EnchantmentStorageMeta) {
                         try {
                             String[] sp = SEMICOLON_PATTERN.split(bits[1]);
                             Enchantment ench = Enchantment.getByName(sp[0]);
-                            if(ench == null) {
+                            if (ench == null) {
                                 ench = Enchantment.getByKey(NamespacedKey.minecraft(sp[0]));
                             }
                             ((EnchantmentStorageMeta) meta).addStoredEnchant(ench, Integer.parseInt(sp[1]), true);
-                        } catch(Exception ignored){}
+                        } catch (Exception ignored) {
+                        }
                     } else if (bits[0].equalsIgnoreCase("unbreakable")) {
                         boolean unbreakable = Boolean.parseBoolean(bits[1]);
                         meta.setUnbreakable(unbreakable);
@@ -279,7 +282,8 @@ public final class ItemSyntax {
                         try {
                             int damage = Integer.parseInt(bits[1]);
                             ((Damageable) meta).setDamage(damage);
-                        } catch(Exception ignored){}
+                        } catch (Exception ignored) {
+                        }
                     }
                 }
                 rVal.setItemMeta(meta);
@@ -291,20 +295,19 @@ public final class ItemSyntax {
 
     /**
      * Parse an item from a line of text.
-     * 
-     * @author me4502
-     * 
+     *
      * @param line The line to parse it from.
      * @return The item to create.
+     * @author me4502
      */
     public static ItemStack getItem(String line) {
 
         if (line == null || line.isEmpty())
             return null;
 
-        if(CommandItems.INSTANCE != null)  {
+        if (CommandItems.INSTANCE != null) {
             CommandItemDefinition def = CommandItems.INSTANCE.getDefinitionByName(line);
-            if(def != null) {
+            if (def != null) {
                 line = ItemSyntax.getStringFromItem(def.getItem());
             }
         }

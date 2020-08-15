@@ -19,7 +19,6 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.items;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -107,7 +106,7 @@ public class ItemFan extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"force (default 1)", null};
+            return new String[] { "force (default 1)", null };
         }
     }
 }

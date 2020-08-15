@@ -16,6 +16,9 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.variables;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
+import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
@@ -27,23 +30,20 @@ import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
 import org.enginehub.craftbook.mechanics.variables.VariableKey;
 import org.enginehub.craftbook.mechanics.variables.VariableManager;
 import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
-import org.bukkit.Server;
 
 public class NumericModifier extends AbstractIC {
 
-    public NumericModifier (Server server, ChangedSign sign, ICFactory factory) {
+    public NumericModifier(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
         return "Variable Modifier";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
         return "VAR MODIFIER";
     }
 
@@ -58,14 +58,15 @@ public class NumericModifier extends AbstractIC {
             variable = getLine(2);
             function = MathFunction.parseFunction(getLine(3).split(":")[0]);
             amount = Double.parseDouble(getLine(3).split(":")[1]);
-        } catch(Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
-        if(chip.getInput(0)) {
-            if(function == null) {
+        if (chip.getInput(0)) {
+            if (function == null) {
                 chip.setOutput(0, false);
                 return;
             }
@@ -84,7 +85,8 @@ public class NumericModifier extends AbstractIC {
                 VariableManager.instance.setVariable(variableKey, val);
                 chip.setOutput(0, true);
                 return;
-            } catch(NumberFormatException | VariableException ignored) {}
+            } catch (NumberFormatException | VariableException ignored) {
+            }
         }
 
         chip.setOutput(0, false);
@@ -92,21 +94,21 @@ public class NumericModifier extends AbstractIC {
 
     public enum MathFunction {
 
-        ADD("+"),SUBTRACT("-"),MULTIPLY("*","x"),DIVIDE("/"),MOD("%");
+        ADD("+"), SUBTRACT("-"), MULTIPLY("*", "x"), DIVIDE("/"), MOD("%");
 
         String[] mini;
 
-        MathFunction(String ... mini) {
+        MathFunction(String... mini) {
             this.mini = mini;
         }
 
         public static MathFunction parseFunction(String text) {
 
-            for(MathFunction func : values()) {
-                if(func.name().equalsIgnoreCase(text))
+            for (MathFunction func : values()) {
+                if (func.name().equalsIgnoreCase(text))
                     return func;
-                for(String min : func.mini)
-                    if(min.equalsIgnoreCase(text))
+                for (String min : func.mini)
+                    if (min.equalsIgnoreCase(text))
                         return func;
             }
 
@@ -114,12 +116,12 @@ public class NumericModifier extends AbstractIC {
         }
 
         public double parseNumber(double initial, double amount) {
-            switch(this) {
+            switch (this) {
                 case ADD:
                     initial += amount;
                     break;
                 case DIVIDE:
-                    if(amount == 0) {
+                    if (amount == 0) {
                         return initial;
                     }
                     initial /= amount;
@@ -163,25 +165,25 @@ public class NumericModifier extends AbstractIC {
         @Override
         public String[] getLongDescription() {
 
-            return new String[]{
-                    "The '''VAR100''' IC allows for the modification of numerical variables using common binary operations (Known an Functions).",
-                    "",
-                    "== Functions ==" ,
-                    "{| class=\"wiki-table sortable\"",
-                    "! Name",
-                    "! Symbol",
-                    "! Function",
-                    "|-",
-                    "| Add || + || Adds the inputted value to the variable.",
-                    "|-",
-                    "| Subtract || - || Subtracts the inputted value from the variable.",
-                    "|-",
-                    "| Multiply || * OR x || Multiplies the inputted value by the variable.",
-                    "|-",
-                    "| Divide || / || Divides the inputted value by the variable.",
-                    "|-",
-                    "| Mod || % || Performs modulo by the inputted value on the variable.",
-                    "|}"
+            return new String[] {
+                "The '''VAR100''' IC allows for the modification of numerical variables using common binary operations (Known an Functions).",
+                "",
+                "== Functions ==",
+                "{| class=\"wiki-table sortable\"",
+                "! Name",
+                "! Symbol",
+                "! Function",
+                "|-",
+                "| Add || + || Adds the inputted value to the variable.",
+                "|-",
+                "| Subtract || - || Subtracts the inputted value from the variable.",
+                "|-",
+                "| Multiply || * OR x || Multiplies the inputted value by the variable.",
+                "|-",
+                "| Divide || / || Divides the inputted value by the variable.",
+                "|-",
+                "| Mod || % || Performs modulo by the inputted value on the variable.",
+                "|}"
             };
         }
 
@@ -189,15 +191,15 @@ public class NumericModifier extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Trigger IC",//Inputs
-                    "High on success"//Outputs
+                "Trigger IC",//Inputs
+                "High on success"//Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Variable Name", "Function:Amount"};
+            return new String[] { "Variable Name", "Function:Amount" };
         }
 
         @Override
@@ -222,11 +224,11 @@ public class NumericModifier extends AbstractIC {
                 }
                 Validate.notNull(MathFunction.parseFunction(sign.getLine(3).split(":")[0]));
                 Double.parseDouble(sign.getLine(3).split(":")[1]);
-            } catch(NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 throw new ICVerificationException("Amount must be a number!");
-            } catch(IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 throw new ICVerificationException("Invalid Function!");
-            } catch(ArrayIndexOutOfBoundsException e) {
+            } catch (ArrayIndexOutOfBoundsException e) {
                 throw new ICVerificationException("Both Function and Amount must be entered, seperated by a colon (:)!");
             } catch (VariableException e) {
                 throw new ICVerificationException(e.getMessage(), e);

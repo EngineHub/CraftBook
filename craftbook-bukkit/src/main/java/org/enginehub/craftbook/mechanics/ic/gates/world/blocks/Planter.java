@@ -16,18 +16,6 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
-import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
-import org.enginehub.craftbook.mechanics.ic.ChipState;
-import org.enginehub.craftbook.mechanics.ic.IC;
-import org.enginehub.craftbook.mechanics.ic.ICFactory;
-import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
-import org.enginehub.craftbook.util.ItemSyntax;
-import org.enginehub.craftbook.util.ItemUtil;
-import org.enginehub.craftbook.util.SearchArea;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.Tag;
@@ -38,6 +26,17 @@ import org.bukkit.block.data.type.Cocoa;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
+import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
+import org.enginehub.craftbook.mechanics.ic.ChipState;
+import org.enginehub.craftbook.mechanics.ic.IC;
+import org.enginehub.craftbook.mechanics.ic.ICFactory;
+import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
+import org.enginehub.craftbook.util.ItemSyntax;
+import org.enginehub.craftbook.util.ItemUtil;
+import org.enginehub.craftbook.util.SearchArea;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,7 +45,8 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Sapling planter Hybrid variant of MCX206 and MCX203 chest collector When there is a sapling or seed item drop in
+ * Sapling planter Hybrid variant of MCX206 and MCX203 chest collector When there is a sapling or
+ * seed item drop in
  * range it will auto plant it above
  * the IC.
  *
@@ -66,7 +66,7 @@ public class Planter extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        if(getLine(2).isEmpty())
+        if (getLine(2).isEmpty())
             item = null;
         else
             item = ItemSyntax.getItem(getLine(2));
@@ -95,9 +95,9 @@ public class Planter extends AbstractSelfTriggeredIC {
     @Override
     public void think(ChipState state) {
 
-        if(state.getInput(0)) return;
+        if (state.getInput(0)) return;
 
-        for(int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
             plant();
     }
 
@@ -205,9 +205,9 @@ public class Planter extends AbstractSelfTriggeredIC {
             case LILY_PAD:
                 return block.getRelative(0, -1, 0).getType() == Material.WATER;
             case COCOA_BEANS:
-                BlockFace[] faces = new BlockFace[]{BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
-                for(BlockFace face : faces) {
-                    if(block.getRelative(face).getType() == Material.JUNGLE_LOG)
+                BlockFace[] faces = new BlockFace[] { BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH };
+                for (BlockFace face : faces) {
+                    if (block.getRelative(face).getType() == Material.JUNGLE_LOG)
                         return true;
                 }
                 return false;
@@ -253,10 +253,10 @@ public class Planter extends AbstractSelfTriggeredIC {
                 return true;
             case COCOA_BEANS:
                 List<BlockFace> faces =
-                        new ArrayList<>(Arrays.asList(BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH));
+                    new ArrayList<>(Arrays.asList(BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH));
                 Collections.shuffle(faces, ThreadLocalRandom.current());
-                for(BlockFace face : faces) {
-                    if(block.getRelative(face).getType() == Material.JUNGLE_LOG) {
+                for (BlockFace face : faces) {
+                    if (block.getRelative(face).getType() == Material.JUNGLE_LOG) {
                         block.setType(Material.COCOA);
                         ((Cocoa) block.getBlockData()).setFacing(face);
                         return true;
@@ -294,12 +294,12 @@ public class Planter extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+oItem to plant id{:data}", "SearchArea"};
+            return new String[] { "+oItem to plant id{:data}", "SearchArea" };
         }
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
-            if(!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(3)))
+            if (!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(3)))
                 throw new ICVerificationException("Invalid SearchArea on 4th line!");
         }
     }

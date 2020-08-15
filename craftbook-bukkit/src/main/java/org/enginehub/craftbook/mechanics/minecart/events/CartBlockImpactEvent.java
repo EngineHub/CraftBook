@@ -20,7 +20,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
-
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 
 public class CartBlockImpactEvent extends VehicleMoveEvent {

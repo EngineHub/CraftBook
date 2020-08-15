@@ -14,29 +14,12 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-// $Id$
-/*
- * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with this program. If not,
- * see <http://www.gnu.org/licenses/>.
- */
-
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
@@ -82,7 +65,7 @@ public class MessageSender extends AbstractIC {
 
         String[] bits = RegexUtil.AMPERSAND_PATTERN.split(getLine(2));
 
-        for(String bit : bits) {
+        for (String bit : bits) {
             if (bit.contains(":"))
                 type = PlayerType.getFromChar(bit.trim().toCharArray()[0]);
             else if (type == null)
@@ -90,7 +73,7 @@ public class MessageSender extends AbstractIC {
 
             bit = bit.replace("g:", "").replace("p:", "").replace("n:", "").replace("t:", "").replace("a:", "").trim();
 
-            if(SearchArea.isValidArea(getLocation().getBlock(), bit))
+            if (SearchArea.isValidArea(getLocation().getBlock(), bit))
                 area = SearchArea.createArea(getLocation().getBlock(), bit);
             else
                 name = bit;
@@ -112,23 +95,23 @@ public class MessageSender extends AbstractIC {
 
         boolean sent = false;
 
-        if(area != null) {
-            for(Player p : area.getPlayersInArea()) {
-                if(!type.doesPlayerPass(p, name)) continue;
+        if (area != null) {
+            for (Player p : area.getPlayersInArea()) {
+                if (!type.doesPlayerPass(p, name)) continue;
                 p.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
                 sent = true;
             }
         } else {
 
-            if(type == PlayerType.NAME) {
+            if (type == PlayerType.NAME) {
                 Player player = Bukkit.getPlayer(name);
-                if(player != null) {
+                if (player != null) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
                     sent = true;
                 }
             }
 
-            for(Player player : Bukkit.getOnlinePlayers()) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
                 if (type.doesPlayerPass(player, name)) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
                     sent = true;
@@ -171,7 +154,7 @@ public class MessageSender extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"PlayerType, SearchArea, or BROADCAST for whole server", "Message to send."};
+            return new String[] { "PlayerType, SearchArea, or BROADCAST for whole server", "Message to send." };
         }
     }
 }

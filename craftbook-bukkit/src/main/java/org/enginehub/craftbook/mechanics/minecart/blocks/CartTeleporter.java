@@ -16,6 +16,11 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
+import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.world.block.BlockTypes;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.event.EventHandler;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
@@ -23,11 +28,6 @@ import org.enginehub.craftbook.util.BlockSyntax;
 import org.enginehub.craftbook.util.CartUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.RegexUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.world.block.BlockTypes;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.event.EventHandler;
 
 public class CartTeleporter extends CartBlockMechanism {
 
@@ -68,7 +68,7 @@ public class CartTeleporter extends CartBlockMechanism {
         }
 
         Location loc = LocationUtil
-                .center(new Location(world, x, y, z, event.getMinecart().getLocation().getYaw(), event.getMinecart().getLocation().getPitch()));
+            .center(new Location(world, x, y, z, event.getMinecart().getLocation().getYaw(), event.getMinecart().getLocation().getPitch()));
         loc.getChunk().load(true);
         CartUtil.teleport(event.getMinecart(), loc);
     }
@@ -97,7 +97,7 @@ public class CartTeleporter extends CartBlockMechanism {
     @Override
     public String[] getApplicableSigns() {
 
-        return new String[] {"Teleport"};
+        return new String[] { "Teleport" };
     }
 
     @Override

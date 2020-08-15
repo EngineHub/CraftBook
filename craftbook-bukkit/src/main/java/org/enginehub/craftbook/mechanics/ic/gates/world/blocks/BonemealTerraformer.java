@@ -16,17 +16,6 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
-import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
-import org.enginehub.craftbook.mechanics.ic.ChipState;
-import org.enginehub.craftbook.mechanics.ic.IC;
-import org.enginehub.craftbook.mechanics.ic.ICFactory;
-import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
-import org.enginehub.craftbook.util.InventoryUtil;
-import org.enginehub.craftbook.util.SearchArea;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.Tag;
@@ -36,6 +25,16 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
+import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
+import org.enginehub.craftbook.mechanics.ic.ChipState;
+import org.enginehub.craftbook.mechanics.ic.IC;
+import org.enginehub.craftbook.mechanics.ic.ICFactory;
+import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
+import org.enginehub.craftbook.util.InventoryUtil;
+import org.enginehub.craftbook.util.SearchArea;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -78,9 +77,9 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
     @Override
     public void think(ChipState state) {
 
-        if(state.getInput(0)) return;
+        if (state.getInput(0)) return;
 
-        for(int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
             terraform();
     }
 
@@ -88,21 +87,21 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
 
         Block b = area.getRandomBlockInArea();
 
-        if(b == null) return;
+        if (b == null) return;
 
         if ((b.getType() == Material.WHEAT
-                || b.getType() == Material.CARROTS
-                || b.getType() == Material.POTATOES
-                || b.getType() == Material.MELON_STEM
-                || b.getType() == Material.BEETROOTS
-                || b.getType() == Material.NETHER_WART
-                || b.getType() == Material.COCOA
-                || b.getType() == Material.PUMPKIN_STEM)
-                && ((Ageable) b.getBlockData()).getAge() < ((Ageable) b.getBlockData()).getMaximumAge()) {
+            || b.getType() == Material.CARROTS
+            || b.getType() == Material.POTATOES
+            || b.getType() == Material.MELON_STEM
+            || b.getType() == Material.BEETROOTS
+            || b.getType() == Material.NETHER_WART
+            || b.getType() == Material.COCOA
+            || b.getType() == Material.PUMPKIN_STEM)
+            && ((Ageable) b.getBlockData()).getAge() < ((Ageable) b.getBlockData()).getMaximumAge()) {
             if (consumeBonemeal()) {
                 Ageable ageable = (Ageable) b.getBlockData();
                 int add = ThreadLocalRandom.current().nextInt(3);
-                if(ageable.getAge() + add > ageable.getMaximumAge())
+                if (ageable.getAge() + add > ageable.getMaximumAge())
                     ageable.setAge(ageable.getMaximumAge());
                 else
                     ageable.setAge(ageable.getAge() + add);
@@ -143,7 +142,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
         if (b.getType() == Material.DIRT && b.getRelative(0, 1, 0).getType() == Material.AIR) {
             if (consumeBonemeal()) {
                 b.setType(b.getBiome() == Biome.MUSHROOM_FIELDS || b.getBiome() == Biome.MUSHROOM_FIELD_SHORE ? Material.MYCELIUM :
-                        Material.GRASS_BLOCK);
+                    Material.GRASS_BLOCK);
             }
             return;
         }
@@ -183,7 +182,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
             return;
         }
         if (b.getType() == Material.MYCELIUM && b.getRelative(0, 1, 0).getType() == Material.AIR
-                && ThreadLocalRandom.current().nextInt(15) == 0) {
+            && ThreadLocalRandom.current().nextInt(15) == 0) {
             if (consumeBonemeal()) {
                 int t = ThreadLocalRandom.current().nextInt(2);
                 if (t == 0) {
@@ -200,7 +199,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
 
         Block chest = getBackBlock().getRelative(0, 1, 0);
         return InventoryUtil.doesBlockHaveInventory(chest) && InventoryUtil.removeItemsFromInventory((InventoryHolder) chest.getState(),
-                new ItemStack(Material.BONE_MEAL, 1));
+            new ItemStack(Material.BONE_MEAL, 1));
 
     }
 
@@ -233,9 +232,9 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
             for (i1 = 0; i1 >= -1; --i1) {
                 for (j1 = 0; j1 >= -1; --j1) {
                     if (isSameSapling(sapling, sapling.getRelative(i1, 0, j1)) && isSameSapling(sapling,
-                            sapling.getRelative(i1 + 1, 0, j1))
-                            && isSameSapling(sapling, sapling.getRelative(i1, 0, j1 + 1))
-                            && isSameSapling(sapling, sapling.getRelative(i1 + 1, 0, j1 + 1))) {
+                        sapling.getRelative(i1 + 1, 0, j1))
+                        && isSameSapling(sapling, sapling.getRelative(i1, 0, j1 + 1))
+                        && isSameSapling(sapling, sapling.getRelative(i1 + 1, 0, j1 + 1))) {
                         treeType = TreeType.JUNGLE;
                         flag = true;
                         break;
@@ -310,12 +309,12 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+oradius=x:y:z", null};
+            return new String[] { "+oradius=x:y:z", null };
         }
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
-            if(!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
+            if (!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
                 throw new ICVerificationException("Invalid SearchArea on 3rd line!");
         }
     }

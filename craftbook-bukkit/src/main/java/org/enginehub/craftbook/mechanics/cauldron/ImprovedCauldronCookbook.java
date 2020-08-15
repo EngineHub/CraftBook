@@ -16,12 +16,12 @@
 
 package org.enginehub.craftbook.mechanics.cauldron;
 
+import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.mechanics.cauldron.ImprovedCauldron.UnknownRecipeException;
 import org.enginehub.craftbook.util.ItemSyntax;
 import org.enginehub.craftbook.util.ItemUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -153,7 +153,6 @@ public class ImprovedCauldronCookbook {
          * Checks if the recipe
          *
          * @param items
-         *
          * @return
          */
         public boolean checkIngredients(Collection<CauldronItemStack> items) {

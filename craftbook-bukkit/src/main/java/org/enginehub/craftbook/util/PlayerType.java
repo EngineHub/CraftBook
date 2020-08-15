@@ -16,12 +16,11 @@
 
 package org.enginehub.craftbook.util;
 
-import java.util.Locale;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+
+import java.util.Locale;
 
 public enum PlayerType {
 
@@ -47,7 +46,7 @@ public enum PlayerType {
 
     public boolean doesPlayerPass(Player player, String line) {
 
-        switch(this) {
+        switch (this) {
             case GROUP:
                 return CraftBookPlugin.inst().inGroup(player, line);
             case CBID:
@@ -61,7 +60,8 @@ public enum PlayerType {
             case TEAM:
                 try {
                     return Bukkit.getScoreboardManager().getMainScoreboard().getTeam(line).hasEntry(player.getName());
-                } catch(Exception e) {}
+                } catch (Exception e) {
+                }
                 break;
             case ALL:
                 return true;

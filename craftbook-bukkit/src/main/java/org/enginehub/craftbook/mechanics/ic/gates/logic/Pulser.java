@@ -18,7 +18,6 @@ package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
@@ -104,7 +103,7 @@ public class Pulser extends AbstractIC {
         // save the given task id
         taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(CraftBookPlugin.inst(), new PulseTask(chip,
                 pulseLength, pulseCount, pauseLength),
-                startDelay, 1L);
+            startDelay, 1L);
         running = true;
     }
 
@@ -122,7 +121,7 @@ public class Pulser extends AbstractIC {
 
     protected void setOutput(ChipState chip, boolean on) {
 
-        if(chip == null) return; //Concurrency issue? idk.
+        if (chip == null) return; //Concurrency issue? idk.
         chip.setOutput(0, on);
     }
 
@@ -244,22 +243,22 @@ public class Pulser extends AbstractIC {
         public String getShortDescription() {
 
             return "Fires a (choosable) pulse of high-signals with a choosable length of the signal "
-                    + "and the pause between the pulses when the input goes from low to high.";
+                + "and the pause between the pulses when the input goes from low to high.";
         }
 
         @Override
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Trigger IC",//Inputs
-                    "Pulse Output",//Outputs
+                "Trigger IC",//Inputs
+                "Pulse Output",//Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"[pulselength[:startdelay]]", "[pulsecount[:pauselength in serverticks]]"};
+            return new String[] { "[pulselength[:startdelay]]", "[pulsecount[:pauselength in serverticks]]" };
         }
     }
 }

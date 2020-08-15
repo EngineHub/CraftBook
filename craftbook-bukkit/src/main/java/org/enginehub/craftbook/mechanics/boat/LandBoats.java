@@ -16,21 +16,20 @@
 
 package org.enginehub.craftbook.mechanics.boat;
 
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.entity.Boat;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
-
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.util.EventUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
 
 public class LandBoats extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleCreate(VehicleCreateEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         if (!(event.getVehicle() instanceof Boat)) return;
 

@@ -16,11 +16,8 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.sensors;
 
-import java.util.Set;
-
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -31,6 +28,8 @@ import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
 import org.enginehub.craftbook.util.EntityType;
 import org.enginehub.craftbook.util.SearchArea;
+
+import java.util.Set;
 
 /**
  * @author Silthus
@@ -56,7 +55,7 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
         // lets get the types to detect first
         types = EntityType.getDetected(getLine(3).split("<")[0].trim().split("<=")[0].trim().split(">=")[0].trim().split("==")[0].trim().split(">")[0].trim());
 
-        if(getLine(3).contains(">="))
+        if (getLine(3).contains(">="))
             minMode = 0;
         else if (getLine(3).contains("=="))
             minMode = 1;
@@ -70,13 +69,13 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
             minMode = 0;
 
         try {
-            if(minMode == 0)
+            if (minMode == 0)
                 minimum = Short.parseShort(getLine(3).split(">=")[1].trim());
-            else if(minMode == 1)
+            else if (minMode == 1)
                 minimum = Short.parseShort(getLine(3).split("==")[1].trim());
-            else if(minMode == 2)
+            else if (minMode == 2)
                 minimum = Short.parseShort(getLine(3).split(">")[1].trim());
-            else if(minMode == 3)
+            else if (minMode == 3)
                 minimum = Short.parseShort(getLine(3).split("<=")[1].trim());
             else
                 minimum = Short.parseShort(getLine(3).split("<")[1].trim());
@@ -123,7 +122,7 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
                     if (type.is(entity)) // Check Radius
                         cur++;
 
-        if(minMode == 0 && cur >= minimum)
+        if (minMode == 0 && cur >= minimum)
             return true;
         else if (minMode == 1 && cur == minimum)
             return true;
@@ -153,7 +152,7 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if(!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
+            if (!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
                 throw new ICVerificationException("Invalid SearchArea on 3rd line!");
         }
 
@@ -166,7 +165,7 @@ public class EntitySensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"SearchArea", "Entity Types{(>=|==|>)minimum}"};
+            return new String[] { "SearchArea", "Entity Types{(>=|==|>)minimum}" };
         }
     }
 }

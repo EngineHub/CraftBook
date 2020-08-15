@@ -16,8 +16,6 @@
 
 package org.enginehub.craftbook.util;
 
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -33,6 +31,8 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 public final class ProtectionUtil {
 
@@ -44,14 +44,13 @@ public final class ProtectionUtil {
      * true if region protection is disabled.
      *
      * @param player The player to check.
-     * @param loc    The location to check at.
+     * @param loc The location to check at.
      * @param build True for build, false for break
-     *
      * @return whether {@code player} can build at {@code loc}
      */
     public static boolean canBuild(Player player, Location loc, boolean build) {
 
-        return canBuild(player,loc.getBlock(), build);
+        return canBuild(player, loc.getBlock(), build);
     }
 
     /**
@@ -59,9 +58,8 @@ public final class ProtectionUtil {
      * true if region protection is disabled or WorldGuard is not found.
      *
      * @param player The player to check
-     * @param block  The block to check at.
+     * @param block The block to check at.
      * @param build True for build, false for break
-     *
      * @return whether {@code player} can build at {@code block}'s location
      */
     public static boolean canBuild(Player player, Block block, boolean build) {
@@ -95,8 +93,7 @@ public final class ProtectionUtil {
      * true if region protection is disabled or WorldGuard is not found.
      *
      * @param player The player to check.
-     * @param loc    The location to check at.
-     *
+     * @param loc The location to check at.
      * @return whether {@code player} can build at {@code loc}
      */
     public static boolean canUse(Player player, Location loc, BlockFace face, Action action) {
@@ -118,8 +115,7 @@ public final class ProtectionUtil {
      * true if region protection is disabled or WorldGuard is not found.
      *
      * @param player The player to check.
-     * @param block    The location to check at.
-     *
+     * @param block The location to check at.
      * @return whether {@code player} can build at {@code loc}
      */
     public static boolean canAccessInventory(Player player, Block block) {
@@ -136,10 +132,9 @@ public final class ProtectionUtil {
     /**
      * Checks to see if a block can form at a specific location. This will
      * return true if region protection is disabled or WorldGuard is not found.
-     * 
+     *
      * @param block The block that is changing.
      * @param newState The new state of the block.
-     * 
      * @return Whether the block can form.
      */
     public static boolean canBlockForm(Block block, BlockState newState) {
@@ -157,7 +152,7 @@ public final class ProtectionUtil {
 
     /**
      * Checks whether or not protection related code should even be tested.
-     * 
+     *
      * @return should check or not.
      */
     public static boolean shouldUseProtection() {

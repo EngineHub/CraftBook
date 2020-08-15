@@ -58,7 +58,7 @@ public class MechanicCommandRegistrar {
     }
 
     public void registerAsSubCommand(String command, Collection<String> aliases, String description,
-            CommandManager parentManager, BiConsumer<CommandManager, CommandRegistrationHandler> op) {
+                                     CommandManager parentManager, BiConsumer<CommandManager, CommandRegistrationHandler> op) {
         markDirty();
         parentManager.register(command, builder -> {
             builder.description(TextComponent.of(description));
@@ -68,19 +68,19 @@ public class MechanicCommandRegistrar {
             op.accept(manager, registration);
 
             builder.addPart(SubCommandPart.builder(TranslatableComponent.of("worldedit.argument.action"), TextComponent.of("Sub-command to run."))
-                    .withCommands(manager.getAllCommands().collect(Collectors.toList()))
-                    .required()
-                    .build());
+                .withCommands(manager.getAllCommands().collect(Collectors.toList()))
+                .required()
+                .build());
         });
     }
 
     public void registerAsSubCommand(String command, String description, CommandManager parentManager,
-            BiConsumer<CommandManager, CommandRegistrationHandler> op) {
+                                     BiConsumer<CommandManager, CommandRegistrationHandler> op) {
         registerAsSubCommand(command, new ArrayList<>(), description, parentManager, op);
     }
 
     public void registerTopLevelWithSubCommands(String command, Collection<String> aliases, String description,
-            BiConsumer<CommandManager, CommandRegistrationHandler> op) {
+                                                BiConsumer<CommandManager, CommandRegistrationHandler> op) {
         registerAsSubCommand(command, aliases, description, topLevelCommandManager, op);
     }
 
@@ -91,7 +91,7 @@ public class MechanicCommandRegistrar {
         topLevelCommandManager.registerManager(componentManager);
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     public void unregisterTopLevel(String command) {
         markDirty();
         try {

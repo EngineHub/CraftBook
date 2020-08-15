@@ -19,7 +19,6 @@ package org.enginehub.craftbook.mechanics.ic.gates.logic;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.scheduler.BukkitTask;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
@@ -48,7 +47,7 @@ public class Delayer extends AbstractIC {
     public void load() {
         delay = Long.parseLong(getSign().getLine(2));
         tickDelay = Boolean.parseBoolean(getSign().getLine(3).split(":")[0]);
-        if(getLine(3).contains(":"))
+        if (getLine(3).contains(":"))
             stayOnLow = Boolean.parseBoolean(getSign().getLine(3).split(":")[1]);
     }
 
@@ -72,7 +71,7 @@ public class Delayer extends AbstractIC {
         if (chip.getInput(0)) {
             taskId = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> chip.setOutput(0, true), tdelay);
         } else {
-            if(taskId != null && !stayOnLow)
+            if (taskId != null && !stayOnLow)
                 taskId.cancel();
             chip.setOutput(0, false);
         }
@@ -111,15 +110,15 @@ public class Delayer extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Trigger IC",//Inputs
-                    "Delayed Output",//Outputs
+                "Trigger IC",//Inputs
+                "Delayed Output",//Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"seconds", "true to use ticks:true to continue on low"};
+            return new String[] { "seconds", "true to use ticks:true to continue on low" };
         }
     }
 }

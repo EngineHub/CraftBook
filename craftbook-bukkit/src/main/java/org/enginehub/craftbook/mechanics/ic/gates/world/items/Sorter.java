@@ -16,11 +16,6 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.items;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -28,8 +23,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-
 import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -42,6 +37,10 @@ import org.enginehub.craftbook.util.InventoryUtil;
 import org.enginehub.craftbook.util.ItemUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SignUtil;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
 
@@ -101,7 +100,7 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
         boolean returnValue = false;
 
         for (Item item : ItemUtil.getItemsAtBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock())) {
-            if(sortItemStack(item.getItemStack())) {
+            if (sortItemStack(item.getItemStack())) {
                 item.remove();
                 returnValue = true;
             }
@@ -122,7 +121,7 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
         PipeRequestEvent event = new PipeRequestEvent(b, new ArrayList<>(Collections.singletonList(item)), getBackBlock());
         Bukkit.getPluginManager().callEvent(event);
 
-        for(ItemStack it : event.getItems())
+        for (ItemStack it : event.getItems())
             b.getWorld().dropItemNaturally(b.getLocation().add(0.5, 0.5, 0.5), it);
 
         return true;
@@ -156,7 +155,7 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"invert - to invert output sides", null};
+            return new String[] { "invert - to invert output sides", null };
         }
     }
 
@@ -167,7 +166,7 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
 
         for (ItemStack item : event.getItems())
             if (ItemUtil.isStackValid(item))
-                if(!sortItemStack(item))
+                if (!sortItemStack(item))
                     leftovers.add(item);
 
         event.setItems(leftovers);

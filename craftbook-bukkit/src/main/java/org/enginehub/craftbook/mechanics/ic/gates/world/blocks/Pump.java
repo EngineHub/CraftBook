@@ -16,19 +16,18 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
-import org.enginehub.craftbook.util.InventoryUtil;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
+import org.enginehub.craftbook.util.InventoryUtil;
 
 /**
  * @author Me4502
@@ -140,7 +139,7 @@ public class Pump extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {null, null}; //TODO allow offsets.
+            return new String[] { null, null }; //TODO allow offsets.
         }
     }
 }

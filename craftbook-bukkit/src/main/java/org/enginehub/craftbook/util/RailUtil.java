@@ -16,11 +16,11 @@
 
 package org.enginehub.craftbook.util;
 
-import org.enginehub.craftbook.mechanics.minecart.MoreRails;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.enginehub.craftbook.mechanics.minecart.MoreRails;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,7 @@ public final class RailUtil {
                 containers.add((Chest) body.getWorld().getBlockAt(x, y, z - 2).getState());
             }
         }
-        if (body.getWorld().getBlockAt(x, y, z + 1).getType() == Material.CHEST  || body.getWorld().getBlockAt(x, y, z + 1).getType() == Material.TRAPPED_CHEST) {
+        if (body.getWorld().getBlockAt(x, y, z + 1).getType() == Material.CHEST || body.getWorld().getBlockAt(x, y, z + 1).getType() == Material.TRAPPED_CHEST) {
             containers.add((Chest) body.getWorld().getBlockAt(x, y, z + 1).getState());
             if (body.getWorld().getBlockAt(x, y, z + 2).getType() == Material.CHEST || body.getWorld().getBlockAt(x, y, z + 2).getType() == Material.TRAPPED_CHEST) {
                 containers.add((Chest) body.getWorld().getBlockAt(x, y, z + 2).getState());

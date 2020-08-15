@@ -54,7 +54,7 @@ public final class ItemInfo {
 
     public ItemInfo(ItemStack item) {
 
-        if(item == null)
+        if (item == null)
             data = Material.AIR.getNewData((byte) 0);
         else
             data = item.getData();
@@ -80,16 +80,16 @@ public final class ItemInfo {
 
     public boolean isSame(Block block) {
 
-        if(block.getType() == data.getItemType())
-            if(data.getData() == -1 || block.getData() == data.getData())
+        if (block.getType() == data.getItemType())
+            if (data.getData() == -1 || block.getData() == data.getData())
                 return true;
         return false;
     }
 
     public boolean isSame(ItemStack stack) {
 
-        if(stack.getType() == data.getItemType())
-            if(data.getData() == -1 || stack.getData().getData() == data.getData())
+        if (stack.getType() == data.getItemType())
+            if (data.getData() == -1 || stack.getData().getData() == data.getData())
                 return true;
         return false;
     }
@@ -98,7 +98,7 @@ public final class ItemInfo {
 
         List<ItemInfo> infos = new ArrayList<>();
 
-        for(String string: strings)
+        for (String string : strings)
             infos.add(new ItemInfo(string));
 
         return infos;
@@ -108,7 +108,7 @@ public final class ItemInfo {
 
         List<String> infos = new ArrayList<>();
 
-        for(ItemInfo string: items)
+        for (ItemInfo string : items)
             infos.add(string.toString());
 
         return infos;

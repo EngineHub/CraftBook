@@ -16,20 +16,6 @@
 
 package org.enginehub.craftbook.mechanics.area.simple;
 
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.mechanics.pipe.PipeFinishEvent;
-import org.enginehub.craftbook.mechanics.pipe.PipePutEvent;
-import org.enginehub.craftbook.mechanics.pipe.PipeSuckEvent;
-import org.enginehub.craftbook.util.BlockSyntax;
-import org.enginehub.craftbook.util.BlockUtil;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -41,6 +27,20 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
+import org.enginehub.craftbook.mechanics.pipe.PipeFinishEvent;
+import org.enginehub.craftbook.mechanics.pipe.PipePutEvent;
+import org.enginehub.craftbook.mechanics.pipe.PipeSuckEvent;
+import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockUtil;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.SignUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,18 +104,18 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPipeFinish(PipeFinishEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(!SignUtil.isSign(event.getOrigin())) return;
+        if (!SignUtil.isSign(event.getOrigin())) return;
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getOrigin());
 
-        if(!isApplicableSign(sign.getLine(1))) return;
+        if (!isApplicableSign(sign.getLine(1))) return;
 
         List<ItemStack> leftovers = new ArrayList<>();
         try {
             Block base = getBlockBase(event.getOrigin());
-            for(ItemStack stack : event.getItems()) {
-                if(stack.getType() != base.getType() || stack.getData().getData() != base.getData()) {
+            for (ItemStack stack : event.getItems()) {
+                if (stack.getType() != base.getType() || stack.getData().getData() != base.getData()) {
                     leftovers.add(stack);
                     continue;
                 }
@@ -131,18 +131,18 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPipePut(PipePutEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(!SignUtil.isSign(event.getPuttingBlock())) return;
+        if (!SignUtil.isSign(event.getPuttingBlock())) return;
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getPuttingBlock());
 
-        if(!isApplicableSign(sign.getLine(1))) return;
+        if (!isApplicableSign(sign.getLine(1))) return;
 
         List<ItemStack> leftovers = new ArrayList<>();
         try {
             Block base = getBlockBase(event.getPuttingBlock());
-            for(ItemStack stack : event.getItems()) {
-                if(stack.getType() != base.getType() || stack.getData().getData() != base.getData()) {
+            for (ItemStack stack : event.getItems()) {
+                if (stack.getType() != base.getType() || stack.getData().getData() != base.getData()) {
                     leftovers.add(stack);
                     continue;
                 }
@@ -158,18 +158,18 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPipeSuck(PipeSuckEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(!SignUtil.isSign(event.getSuckedBlock())) return;
+        if (!SignUtil.isSign(event.getSuckedBlock())) return;
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getSuckedBlock());
 
-        if(!isApplicableSign(sign.getLine(1))) return;
+        if (!isApplicableSign(sign.getLine(1))) return;
 
         List<ItemStack> items = event.getItems();
         try {
             Block base = getBlockBase(event.getSuckedBlock());
             int blocks = getBlocks(sign, null);
-            if(blocks > 0) {
+            if (blocks > 0) {
                 items.add(new ItemStack(base.getType(), blocks, base.getData()));
                 setBlocks(sign, 0);
             }
@@ -181,10 +181,11 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         if (!SignUtil.isSign(event.getBlock())) return;
-        if (!isApplicableSign(CraftBookBukkitUtil.toChangedSign(event.getBlock()).getLine(1))) return;
+        if (!isApplicableSign(CraftBookBukkitUtil.toChangedSign(event.getBlock()).getLine(1)))
+            return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
@@ -203,13 +204,13 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
             BlockData base;
             try {
                 base = getBlockType(event.getBlock());
-                while(amount > 0) {
+                while (amount > 0) {
                     ItemStack toDrop = new ItemStack(base.getMaterial(), Math.min(amount, 64));
                     event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), toDrop);
                     amount -= 64;
                 }
             } catch (InvalidMechanismException e) {
-                if(e.getMessage() != null)
+                if (e.getMessage() != null)
                     player.printError(e.getMessage());
             }
         }
@@ -259,7 +260,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         int curBlocks = 0;
         try {
             curBlocks = Integer.parseInt(s.getLine(0).split(",")[0]);
-            if(other != null && Objects.equals(getStoredType(other), getStoredType(s))) {
+            if (other != null && Objects.equals(getStoredType(other), getStoredType(s))) {
                 try {
                     curBlocks += Integer.parseInt(other.getLine(0).split(",")[0]);
                     setBlocks(s, curBlocks);
@@ -286,7 +287,8 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
     }
 
     /**
-     * Gets the block type of this mechanic. Usually passes through, but can be used by enforce type.
+     * Gets the block type of this mechanic. Usually passes through, but can be used by enforce
+     * type.
      *
      * @param block The block location
      * @return The type

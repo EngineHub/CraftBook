@@ -16,14 +16,6 @@
 
 package org.enginehub.craftbook.mechanics.minecart;
 
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.util.BlockUtil;
-import org.enginehub.craftbook.util.CartUtil;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.RailUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.HandSide;
@@ -36,6 +28,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.BlockUtil;
+import org.enginehub.craftbook.util.CartUtil;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.RailUtil;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -52,7 +52,7 @@ public class TemporaryCart extends AbstractCraftBookMechanic {
     @Override
     public void disable() {
 
-        for(RideableMinecart minecart : minecarts) {
+        for (RideableMinecart minecart : minecarts) {
             minecart.remove();
         }
     }
@@ -60,23 +60,24 @@ public class TemporaryCart extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND)
+            return;
 
-        if(!RailUtil.isTrack(event.getClickedBlock().getType()))
+        if (!RailUtil.isTrack(event.getClickedBlock().getType()))
             return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if(player.isHoldingBlock() || player.isInsideVehicle() || player.isSneaking()) return;
-        if(CartUtil.isMinecart(BukkitAdapter.adapt(player.getItemInHand(HandSide.MAIN_HAND).getType()))) {
+        if (player.isHoldingBlock() || player.isInsideVehicle() || player.isSneaking()) return;
+        if (CartUtil.isMinecart(BukkitAdapter.adapt(player.getItemInHand(HandSide.MAIN_HAND).getType()))) {
             return;
         }
 
-        if(!EventUtil.passesFilter(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
-        if(!player.hasPermission("craftbook.vehicles.temporary-cart.use")) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!player.hasPermission("craftbook.vehicles.temporary-cart.use")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
             return;
         }
@@ -89,21 +90,21 @@ public class TemporaryCart extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDismount(final VehicleExitEvent event) {
 
-        if(!(event.getVehicle() instanceof RideableMinecart)) return;
+        if (!(event.getVehicle() instanceof RideableMinecart)) return;
 
-        if(!EventUtil.passesFilter(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
-        if(!minecarts.contains(event.getVehicle())) return;
+        if (!minecarts.contains(event.getVehicle())) return;
 
         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), event.getVehicle()::remove, 2L);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleDestroy(final VehicleDestroyEvent event) {
-        if(!(event.getVehicle() instanceof RideableMinecart)) return;
+        if (!(event.getVehicle() instanceof RideableMinecart)) return;
 
-        if(!EventUtil.passesFilter(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if (minecarts.contains(event.getVehicle())) {

@@ -17,7 +17,6 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -69,12 +68,12 @@ public class HalfSubtractor extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Nothing",//Inputs
-                    "Bit to subtract from (minuend)",
-                    "Bit to subtract (subtrahend)",
-                    "Difference",//Outputs
-                    "Borrow",
-                    "Borrow (Same as Output 2)"
+                "Nothing",//Inputs
+                "Bit to subtract from (minuend)",
+                "Bit to subtract (subtrahend)",
+                "Difference",//Outputs
+                "Borrow",
+                "Borrow (Same as Output 2)"
             };
         }
 

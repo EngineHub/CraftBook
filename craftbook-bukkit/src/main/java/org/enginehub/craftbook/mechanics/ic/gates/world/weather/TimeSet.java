@@ -17,7 +17,6 @@
 package org.enginehub.craftbook.mechanics.ic.gates.world.weather;
 
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -102,7 +101,7 @@ public class TimeSet extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"time to set", null};
+            return new String[] { "time to set", null };
         }
     }
 

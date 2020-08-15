@@ -16,19 +16,14 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.items;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
-
 import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -41,6 +36,10 @@ import org.enginehub.craftbook.mechanics.pipe.PipeRequestEvent;
 import org.enginehub.craftbook.util.ItemUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SignUtil;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC {
 
@@ -59,8 +58,7 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
         try {
 
             currentIndex = Integer.parseInt(getLine(3));
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             currentIndex = -1;
         }
         left = Integer.parseInt(RegexUtil.COLON_PATTERN.split(getLine(2))[0]);
@@ -97,7 +95,7 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
         boolean returnValue = false;
 
         for (Item item : ItemUtil.getItemsAtBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock())) {
-            if(distributeItemStack(item.getItemStack())) {
+            if (distributeItemStack(item.getItemStack())) {
                 item.remove();
                 returnValue = true;
             }
@@ -118,7 +116,7 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
         PipeRequestEvent event = new PipeRequestEvent(b, new ArrayList<>(Collections.singletonList(item)), getBackBlock());
         Bukkit.getPluginManager().callEvent(event);
 
-        for(ItemStack it : event.getItems())
+        for (ItemStack it : event.getItems())
             b.getWorld().dropItemNaturally(b.getLocation().add(0.5, 0.5, 0.5), it);
 
         return true;
@@ -128,7 +126,7 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
 
         currentIndex++;
         getSign().setLine(3, String.valueOf(currentIndex));
-        if (currentIndex >= left && currentIndex < left+right)
+        if (currentIndex >= left && currentIndex < left + right)
             return true;
         else if (currentIndex < left)
             return false;
@@ -161,7 +159,7 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"left quantity:right quantity", "Current distribution status"};
+            return new String[] { "left quantity:right quantity", "Current distribution status" };
         }
 
         @Override
@@ -169,9 +167,9 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
             try {
                 Integer.parseInt(RegexUtil.COLON_PATTERN.split(sign.getLine(2))[0]);
                 Integer.parseInt(RegexUtil.COLON_PATTERN.split(sign.getLine(2))[1]);
-            } catch(ArrayIndexOutOfBoundsException e) {
+            } catch (ArrayIndexOutOfBoundsException e) {
                 throw new ICVerificationException("You need to specify both left and right quantities!");
-            } catch(NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 throw new ICVerificationException("Invalid quantities!");
             }
         }
@@ -184,7 +182,7 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
 
         for (ItemStack item : event.getItems())
             if (ItemUtil.isStackValid(item))
-                if(!distributeItemStack(item))
+                if (!distributeItemStack(item))
                     leftovers.add(item);
 
         event.setItems(leftovers);

@@ -16,12 +16,11 @@
 
 package org.enginehub.craftbook.mechanics.drops;
 
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.bukkit.block.Biome;
+import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.mechanics.drops.rewards.DropReward;
 import org.enginehub.craftbook.util.ItemUtil;
 import org.enginehub.craftbook.util.TernaryState;
-import org.bukkit.block.Biome;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +47,7 @@ public abstract class CustomDropDefinition {
 
     public CustomDropDefinition(String name, List<DropItemStack> drops, List<DropReward> extraRewards, TernaryState silkTouch) {
         this.drops = drops.toArray(new DropItemStack[drops.size()]);
-        if(extraRewards != null)
+        if (extraRewards != null)
             this.extraRewards = extraRewards.toArray(new DropReward[extraRewards.size()]);
         this.name = name;
         this.silkTouch = silkTouch;
@@ -101,7 +100,7 @@ public abstract class CustomDropDefinition {
     }
 
     public DropReward[] getRewards() {
-        if(extraRewards == null)
+        if (extraRewards == null)
             extraRewards = EMPTY_DROP_REWARDS;
         return extraRewards;
     }
@@ -114,16 +113,16 @@ public abstract class CustomDropDefinition {
 
         List<ItemStack> ndrops = new ArrayList<>();
 
-        for(DropItemStack drop : drops) {
-            if(drop.getChance() < ThreadLocalRandom.current().nextDouble()*100d) continue;
+        for (DropItemStack drop : drops) {
+            if (drop.getChance() < ThreadLocalRandom.current().nextDouble() * 100d) continue;
             ItemStack stack = drop.getStack().clone();
-            if(drop.getMaximum() >= 0 && drop.getMinimum() >= 0) {
+            if (drop.getMaximum() >= 0 && drop.getMinimum() >= 0) {
                 int amount = drop.getMinimum() + ThreadLocalRandom.current().nextInt(drop.getMaximum() - drop.getMinimum() + 1);
-                if(amount <= 0) continue; //Invalid stack.
+                if (amount <= 0) continue; //Invalid stack.
                 stack.setAmount(amount);
             }
 
-            if(ItemUtil.isStackValid(stack))
+            if (ItemUtil.isStackValid(stack))
                 ndrops.add(stack);
         }
 

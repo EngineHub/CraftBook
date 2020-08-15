@@ -16,13 +16,12 @@
 
 package org.enginehub.craftbook.mechanics.ic;
 
-import java.util.Locale;
-
 import com.sk89q.worldedit.extension.platform.Actor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
-
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+
+import java.util.Locale;
 
 public class ICDocsParser {
 
@@ -69,7 +68,7 @@ public class ICDocsParser {
 
     private static String parseLine(String line) {
 
-        if(line.contains("+o"))
+        if (line.contains("+o"))
             line = ChatColor.GRAY + line + " (Optional)";
 
         line = StringUtils.replace(line, "{", ChatColor.GRAY + "");

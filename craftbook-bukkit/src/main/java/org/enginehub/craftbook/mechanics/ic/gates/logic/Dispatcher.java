@@ -17,7 +17,6 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -77,12 +76,12 @@ public class Dispatcher extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Output Value",//Inputs
-                    "Output Left",
-                    "Output Right",
-                    "Nothing",//Outputs
-                    "Value if should output Left",
-                    "Value if should output Right"
+                "Output Value",//Inputs
+                "Output Left",
+                "Output Right",
+                "Nothing",//Outputs
+                "Value if should output Left",
+                "Value if should output Right"
             };
         }
 

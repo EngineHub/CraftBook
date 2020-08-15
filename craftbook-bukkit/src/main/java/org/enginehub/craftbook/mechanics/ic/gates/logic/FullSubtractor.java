@@ -17,7 +17,6 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -70,12 +69,12 @@ public class FullSubtractor extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Bit to be subtracted from (minuend)",//Inputs
-                    "First bit to subract (subtrahend)",
-                    "Second bit to subtract (subtrahend)",
-                    "Difference",//Outputs
-                    "Borrow",
-                    "Borrow (Same as Output 2)"
+                "Bit to be subtracted from (minuend)",//Inputs
+                "First bit to subract (subtrahend)",
+                "Second bit to subtract (subtrahend)",
+                "Difference",//Outputs
+                "Borrow",
+                "Borrow (Same as Output 2)"
             };
         }
 

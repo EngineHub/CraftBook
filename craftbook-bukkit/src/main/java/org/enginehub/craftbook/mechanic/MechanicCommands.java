@@ -17,11 +17,6 @@
 package org.enginehub.craftbook.mechanic;
 
 import com.google.common.collect.Lists;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.bukkit.BukkitCraftBookPlatform;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.exception.CraftBookException;
-import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
@@ -31,6 +26,11 @@ import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.bukkit.BukkitCraftBookPlatform;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.exception.CraftBookException;
+import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.CommandManagerService;
 import org.enginehub.piston.annotation.Command;
@@ -51,15 +51,15 @@ public class MechanicCommands {
 
             CommandManager innerManager = service.newCommandManager();
             registration.register(
-                    innerManager,
-                    MechanicCommandsRegistration.builder(),
-                    new MechanicCommands()
+                innerManager,
+                MechanicCommandsRegistration.builder(),
+                new MechanicCommands()
             );
 
             builder.addPart(SubCommandPart.builder(TranslatableComponent.of("worldedit.argument.action"), TextComponent.of("Sub-command to run."))
-                    .withCommands(innerManager.getAllCommands().collect(Collectors.toList()))
-                    .required()
-                    .build());
+                .withCommands(innerManager.getAllCommands().collect(Collectors.toList()))
+                .required()
+                .build());
         });
     }
 
@@ -67,7 +67,7 @@ public class MechanicCommands {
     }
 
     @Command(name = "enable", desc = "Enable a mechanic")
-    @CommandPermissions({"craftbook.enable-mechanic"})
+    @CommandPermissions({ "craftbook.enable-mechanic" })
     public void enable(Actor actor, @Arg(desc = "The mechanic to enable") MechanicType<?> mechanicType) throws CraftBookException {
         CraftBookPlugin plugin = CraftBookPlugin.inst();
         try {
@@ -87,7 +87,7 @@ public class MechanicCommands {
     }
 
     @Command(name = "disable", desc = "Disable a mechanic")
-    @CommandPermissions({"craftbook.disable-mechanic"})
+    @CommandPermissions({ "craftbook.disable-mechanic" })
     public void disable(Actor actor, @Arg(desc = "The mechanic to enable") MechanicType<?> mechanicType) throws CommandPermissionsException {
         CraftBookPlugin plugin = CraftBookPlugin.inst();
         Optional<?> mech = CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(mechanicType);

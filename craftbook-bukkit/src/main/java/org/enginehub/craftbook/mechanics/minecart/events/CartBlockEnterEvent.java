@@ -21,7 +21,6 @@ import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
-
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 
 public class CartBlockEnterEvent extends VehicleEnterEvent {
@@ -30,7 +29,7 @@ public class CartBlockEnterEvent extends VehicleEnterEvent {
 
     protected final CartMechanismBlocks blocks;
 
-    public CartBlockEnterEvent (Vehicle vehicle, Entity entered, CartMechanismBlocks blocks) {
+    public CartBlockEnterEvent(Vehicle vehicle, Entity entered, CartMechanismBlocks blocks) {
         super(vehicle, entered);
 
         this.blocks = blocks;

@@ -16,10 +16,10 @@
 
 package org.enginehub.craftbook.mechanic.load;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.mechanic.MechanicType;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A load dependency on another CraftBook mechanic.

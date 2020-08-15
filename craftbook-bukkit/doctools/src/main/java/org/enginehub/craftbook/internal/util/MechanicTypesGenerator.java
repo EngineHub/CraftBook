@@ -11,7 +11,7 @@ public class MechanicTypesGenerator {
     public static void generateMechanicTypes() {
         Path mechanicTypesFile = DocumentationPrinter.getGenerationFolder().resolve("MechanicTypes.java");
 
-        try(FileWriter writer = new FileWriter(mechanicTypesFile.toFile())) {
+        try (FileWriter writer = new FileWriter(mechanicTypesFile.toFile())) {
             MechanicType.REGISTRY.keySet().stream().sorted().forEach(mech -> {
                 MechanicType<?> type = MechanicType.REGISTRY.get(mech);
                 try {

@@ -18,15 +18,6 @@ package org.enginehub.craftbook.mechanics.crafting;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.mechanics.crafting.RecipeManager.RecipeType;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.ItemUtil;
-import org.enginehub.craftbook.util.ParsingUtil;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
@@ -48,6 +39,15 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.permissions.PermissionAttachment;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.mechanics.crafting.RecipeManager.RecipeType;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.ItemUtil;
+import org.enginehub.craftbook.util.ParsingUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -82,10 +82,10 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
 
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
         registrar.registerTopLevelWithSubCommands(
-                "recp",
-                Lists.newArrayList("recps"),
-                "CraftBook Custom Crafting Commands",
-                RecipeCommands::register
+            "recp",
+            Lists.newArrayList("recps"),
+            "CraftBook Custom Crafting Commands",
+            RecipeCommands::register
         );
 
         CraftBookPlugin.inst().createDefaultConfiguration("crafting-recipes.yml");
@@ -103,7 +103,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
     }
 
     @Override
-    public void disable () {
+    public void disable() {
         advancedRecipes.clear();
         manager.disable();
         manager = null;
@@ -121,7 +121,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
     public boolean addRecipe(RecipeManager.Recipe r) {
         if (registeredNames.contains(r.getId())) {
             CraftBook.logger.warn("A recipe with name " + r.getId() + " has already been registered by CraftBook. Due to a "
-                    + "limitation in Bukkit-derivitive servers, this can't be registered again without a restart.");
+                + "limitation in Bukkit-derivitive servers, this can't be registered again without a restart.");
             return false;
         }
 
@@ -143,11 +143,11 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                     return false;
                 }
                 sh = new FurnaceRecipe(
-                        new NamespacedKey(CraftBookPlugin.inst(), r.getId()),
-                        r.getResult().getItemStack(),
-                        r.getIngredients().get(0).getItemStack().getType(),
-                        r.getExperience(),
-                        r.getCookTime()
+                    new NamespacedKey(CraftBookPlugin.inst(), r.getId()),
+                    r.getResult().getItemStack(),
+                    r.getIngredients().get(0).getItemStack().getType(),
+                    r.getExperience(),
+                    r.getCookTime()
                 );
                 for (CraftingItemStack is : r.getIngredients())
                     ((FurnaceRecipe) sh).setInput(is.getItemStack().getType());
@@ -156,7 +156,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
 
             CraftBookPlugin.inst().getServer().addRecipe(sh);
             registeredNames.add(r.getId());
-            if(r.hasAdvancedData()) {
+            if (r.hasAdvancedData()) {
                 advancedRecipes.put(sh, r);
                 CraftBookPlugin.logDebugMessage("Adding a new recipe with advanced data!", "advanced-data.init");
             }
@@ -175,7 +175,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.LOW)
     public void prepareCraft(PrepareItemCraftEvent event) {
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         ItemStack bits = null;
         Player p = null;
@@ -183,115 +183,118 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
         try {
             p = (Player) event.getViewers().get(0);
             lp = CraftBookPlugin.inst().wrapPlayer(p);
-        } catch(Exception e){}
+        } catch (Exception e) {
+        }
         CraftBookPlugin.logDebugMessage("Pre-Crafting has been initiated!", "advanced-data");
         try {
             boolean hasFailed = false;
-            for(Entry<Recipe, RecipeManager.Recipe> recipeRecipeEntry : advancedRecipes.entrySet()) {
+            for (Entry<Recipe, RecipeManager.Recipe> recipeRecipeEntry : advancedRecipes.entrySet()) {
 
-                if(ItemUtil.areRecipesIdentical(recipeRecipeEntry.getKey(), event.getRecipe())) {
+                if (ItemUtil.areRecipesIdentical(recipeRecipeEntry.getKey(), event.getRecipe())) {
 
-                    thisrecipe: {
-                    RecipeManager.Recipe recipe = recipeRecipeEntry.getValue();
+                    thisrecipe:
+                    {
+                        RecipeManager.Recipe recipe = recipeRecipeEntry.getValue();
 
-                    ItemStack[] tests = ((CraftingInventory)event.getView().getTopInventory()).getMatrix();
-                    CraftingItemStack[] tests2;
-                    if(recipe.getType() == RecipeType.SHAPED) {
-                        List<CraftingItemStack> stacks = new ArrayList<>();
+                        ItemStack[] tests = ((CraftingInventory) event.getView().getTopInventory()).getMatrix();
+                        CraftingItemStack[] tests2;
+                        if (recipe.getType() == RecipeType.SHAPED) {
+                            List<CraftingItemStack> stacks = new ArrayList<>();
 
-                        for(String s : recipe.getShape())
-                            for(char c : s.toCharArray())
-                                for(Entry<CraftingItemStack, Character> entry : recipe.getShapedIngredients().entrySet())
-                                    if(entry.getValue() == c)
-                                        stacks.add(entry.getKey());
-                        tests2 = stacks.toArray(new CraftingItemStack[0]);
-                    } else
-                        tests2 = recipe.getIngredients().toArray(new CraftingItemStack[0]);
+                            for (String s : recipe.getShape())
+                                for (char c : s.toCharArray())
+                                    for (Entry<CraftingItemStack, Character> entry : recipe.getShapedIngredients().entrySet())
+                                        if (entry.getValue() == c)
+                                            stacks.add(entry.getKey());
+                            tests2 = stacks.toArray(new CraftingItemStack[0]);
+                        } else
+                            tests2 = recipe.getIngredients().toArray(new CraftingItemStack[0]);
 
-                    ArrayList<ItemStack> leftovers = new ArrayList<>(Arrays.asList(tests));
-                    leftovers.removeAll(Collections.singleton(null));
+                        ArrayList<ItemStack> leftovers = new ArrayList<>(Arrays.asList(tests));
+                        leftovers.removeAll(Collections.singleton(null));
 
-                    for(ItemStack it : tests) {
+                        for (ItemStack it : tests) {
 
-                        if(!ItemUtil.isStackValid(it)) {
-                            if (it != null) {
-                                CraftBookPlugin.logDebugMessage("Invalid item in recipe: " +
-                                                MoreObjects.toStringHelper(it).toString(), "advanced-data");
+                            if (!ItemUtil.isStackValid(it)) {
+                                if (it != null) {
+                                    CraftBookPlugin.logDebugMessage("Invalid item in recipe: " +
+                                        MoreObjects.toStringHelper(it).toString(), "advanced-data");
+                                }
+                                continue;
                             }
-                            continue;
-                        }
-                        for(CraftingItemStack cit : tests2) {
+                            for (CraftingItemStack cit : tests2) {
 
-                            if(ItemUtil.areBaseItemsIdentical(cit.getItemStack(), it)) {
-                                CraftBookPlugin.logDebugMessage("Recipe base item is correct!", "advanced-data");
-                                if(ItemUtil.areItemsIdentical(cit.getItemStack(), it)) {
-                                    leftovers.remove(it);
-                                    CraftBookPlugin.logDebugMessage("MetaData is correct!", "advanced-data");
-                                } else {
-                                    CraftBookPlugin.logDebugMessage("MetaData is incorrect!", "advanced-data");
-                                    hasFailed = true;
-                                    break thisrecipe;
+                                if (ItemUtil.areBaseItemsIdentical(cit.getItemStack(), it)) {
+                                    CraftBookPlugin.logDebugMessage("Recipe base item is correct!", "advanced-data");
+                                    if (ItemUtil.areItemsIdentical(cit.getItemStack(), it)) {
+                                        leftovers.remove(it);
+                                        CraftBookPlugin.logDebugMessage("MetaData is correct!", "advanced-data");
+                                    } else {
+                                        CraftBookPlugin.logDebugMessage("MetaData is incorrect!", "advanced-data");
+                                        hasFailed = true;
+                                        break thisrecipe;
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    if(!leftovers.isEmpty())
-                        continue;
+                        if (!leftovers.isEmpty())
+                            continue;
 
-                    hasFailed = false;
+                        hasFailed = false;
 
-                    if(p != null && recipe.hasAdvancedData("permission-node")) {
-                        CraftBookPlugin.logDebugMessage("A recipe with permission nodes detected!", "advanced-data");
-                        if(!p.hasPermission((String) recipe.getAdvancedData("permission-node"))) {
-                            if(recipe.hasAdvancedData("permission-error"))
-                                lp.printError((String) recipe.getAdvancedData("permission-error"));
-                            else
-                                lp.printError("mech.custom-crafting.recipe-permission");
-                            ((CraftingInventory)event.getView().getTopInventory()).setResult(null);
-                            return;
+                        if (p != null && recipe.hasAdvancedData("permission-node")) {
+                            CraftBookPlugin.logDebugMessage("A recipe with permission nodes detected!", "advanced-data");
+                            if (!p.hasPermission((String) recipe.getAdvancedData("permission-node"))) {
+                                if (recipe.hasAdvancedData("permission-error"))
+                                    lp.printError((String) recipe.getAdvancedData("permission-error"));
+                                else
+                                    lp.printError("mech.custom-crafting.recipe-permission");
+                                ((CraftingInventory) event.getView().getTopInventory()).setResult(null);
+                                return;
+                            }
                         }
-                    }
 
-                    CraftBookPlugin.logDebugMessage("A recipe with custom data is being crafted!", "advanced-data");
-                    bits = applyAdvancedEffects(event.getRecipe().getResult(), recipeRecipeEntry.getKey(), p);
-                    break;
-                }
+                        CraftBookPlugin.logDebugMessage("A recipe with custom data is being crafted!", "advanced-data");
+                        bits = applyAdvancedEffects(event.getRecipe().getResult(), recipeRecipeEntry.getKey(), p);
+                        break;
+                    }
                 }
             }
-            if(hasFailed)
+            if (hasFailed)
                 throw new InvalidCraftingException("Unmet Item Meta");
-        } catch(InvalidCraftingException e){
-            ((CraftingInventory)event.getView().getTopInventory()).setResult(null);
+        } catch (InvalidCraftingException e) {
+            ((CraftingInventory) event.getView().getTopInventory()).setResult(null);
             return;
         } catch (Exception e) {
             e.printStackTrace();
-            ((CraftingInventory)event.getView().getTopInventory()).setResult(null);
+            ((CraftingInventory) event.getView().getTopInventory()).setResult(null);
             return;
         }
-        if(bits != null && !bits.equals(event.getRecipe().getResult())) {
-            bits.setAmount(((CraftingInventory)event.getView().getTopInventory()).getResult().getAmount());
-            ((CraftingInventory)event.getView().getTopInventory()).setResult(bits);
+        if (bits != null && !bits.equals(event.getRecipe().getResult())) {
+            bits.setAmount(((CraftingInventory) event.getView().getTopInventory()).getResult().getAmount());
+            ((CraftingInventory) event.getView().getTopInventory()).setResult(bits);
         }
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void prepareFurnace(InventoryClickEvent event) {
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(!(event.getInventory() instanceof FurnaceInventory)) return;
-        if(event.getAction() != InventoryAction.PLACE_ALL && event.getAction() != InventoryAction.PLACE_ONE && event.getAction() != InventoryAction.PLACE_SOME) return;
-        if(event.getSlot() != 0) return;
+        if (!(event.getInventory() instanceof FurnaceInventory)) return;
+        if (event.getAction() != InventoryAction.PLACE_ALL && event.getAction() != InventoryAction.PLACE_ONE && event.getAction() != InventoryAction.PLACE_SOME)
+            return;
+        if (event.getSlot() != 0) return;
 
         boolean shouldCancel = false;
 
-        for(Entry<Recipe, RecipeManager.Recipe> recipeRecipeEntry : advancedRecipes.entrySet()) {
-            if(!(recipeRecipeEntry.getKey() instanceof FurnaceRecipe)) continue;
+        for (Entry<Recipe, RecipeManager.Recipe> recipeRecipeEntry : advancedRecipes.entrySet()) {
+            if (!(recipeRecipeEntry.getKey() instanceof FurnaceRecipe)) continue;
             FurnaceRecipe frec = (FurnaceRecipe) recipeRecipeEntry.getKey();
-            if(ItemUtil.areBaseItemsIdentical(frec.getInput(), event.getCurrentItem())) {
+            if (ItemUtil.areBaseItemsIdentical(frec.getInput(), event.getCurrentItem())) {
 
                 RecipeManager.Recipe recipe = recipeRecipeEntry.getValue();
-                if(ItemUtil.areItemsIdentical(event.getCurrentItem(), recipe.getIngredients().get(0).getItemStack())) {
+                if (ItemUtil.areItemsIdentical(event.getCurrentItem(), recipe.getIngredients().get(0).getItemStack())) {
                     shouldCancel = false;
                     break;
                 } else {
@@ -300,20 +303,20 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
             }
         }
 
-        if(shouldCancel)
+        if (shouldCancel)
             event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void onFurnaceCook(FurnaceSmeltEvent event) {
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         ItemStack bits = null;
         CraftBookPlugin.logDebugMessage("Smelting has been initiated!", "advanced-data");
-        for(Entry<Recipe, RecipeManager.Recipe> recipeRecipeEntry : advancedRecipes.entrySet()) {
-            if(!(recipeRecipeEntry.getKey() instanceof FurnaceRecipe)) continue;
+        for (Entry<Recipe, RecipeManager.Recipe> recipeRecipeEntry : advancedRecipes.entrySet()) {
+            if (!(recipeRecipeEntry.getKey() instanceof FurnaceRecipe)) continue;
             try {
-                if(checkFurnaceRecipes((FurnaceRecipe) recipeRecipeEntry.getKey(), event.getSource(), event.getResult())) {
+                if (checkFurnaceRecipes((FurnaceRecipe) recipeRecipeEntry.getKey(), event.getSource(), event.getResult())) {
 
                     RecipeManager.Recipe recipe = recipeRecipeEntry.getValue();
 
@@ -321,13 +324,13 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                     leftovers.add(event.getSource());
                     leftovers.removeAll(Collections.singleton(null));
 
-                    if(!ItemUtil.isStackValid(event.getSource()))
+                    if (!ItemUtil.isStackValid(event.getSource()))
                         continue;
-                    for(CraftingItemStack cit : recipe.getIngredients()) {
+                    for (CraftingItemStack cit : recipe.getIngredients()) {
 
-                        if(ItemUtil.areBaseItemsIdentical(cit.getItemStack(), event.getSource())) {
+                        if (ItemUtil.areBaseItemsIdentical(cit.getItemStack(), event.getSource())) {
                             CraftBookPlugin.logDebugMessage("Base item is correct!", "advanced-data");
-                            if(ItemUtil.areItemsIdentical(cit.getItemStack(), event.getSource())) {
+                            if (ItemUtil.areItemsIdentical(cit.getItemStack(), event.getSource())) {
                                 leftovers.remove(event.getSource());
                                 CraftBookPlugin.logDebugMessage("MetaData correct!", "advanced-data");
                             } else {
@@ -337,20 +340,20 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                         }
                     }
 
-                    if(!leftovers.isEmpty())
+                    if (!leftovers.isEmpty())
                         continue;
 
                     CraftBookPlugin.logDebugMessage("A recipe with custom data is being smelted!", "advanced-data");
                     bits = applyAdvancedEffects(event.getResult(), recipeRecipeEntry.getKey(), null);
                     break;
                 }
-            } catch(InvalidCraftingException e){
+            } catch (InvalidCraftingException e) {
                 event.setResult(null);
                 event.setCancelled(true);
                 return;
             }
         }
-        if(bits != null && !bits.equals(event.getResult())) {
+        if (bits != null && !bits.equals(event.getResult())) {
             bits.setAmount(event.getResult().getAmount());
             event.setResult(bits);
         }
@@ -359,13 +362,13 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onCraft(CraftItemEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         CraftBookPlugin.logDebugMessage("Crafting has been initiated!", "advanced-data");
         Player p = (Player) event.getWhoClicked();
-        for(Entry<Recipe, RecipeManager.Recipe> recipeRecipeEntry : advancedRecipes.entrySet()) {
+        for (Entry<Recipe, RecipeManager.Recipe> recipeRecipeEntry : advancedRecipes.entrySet()) {
 
-            if(ItemUtil.areRecipesIdentical(recipeRecipeEntry.getKey(), event.getRecipe())) {
+            if (ItemUtil.areRecipesIdentical(recipeRecipeEntry.getKey(), event.getRecipe())) {
                 CraftBookPlugin.logDebugMessage("A recipe with custom data is being crafted!", "advanced-data");
                 RecipeManager.Recipe recipe = recipeRecipeEntry.getValue();
                 applyPostData(recipe, p, event);
@@ -378,38 +381,38 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
     @SuppressWarnings("unchecked")
     public void applyPostData(RecipeManager.Recipe recipe, Player p, InventoryClickEvent event) {
 
-        if(recipe.hasAdvancedData("permission-node")) {
+        if (recipe.hasAdvancedData("permission-node")) {
             CraftBookPlugin.logDebugMessage("A recipe with permission nodes detected!", "advanced-data");
-            if(!event.getWhoClicked().hasPermission((String) recipe.getAdvancedData("permission-node"))) {
+            if (!event.getWhoClicked().hasPermission((String) recipe.getAdvancedData("permission-node"))) {
                 p.sendMessage(ChatColor.RED + "You do not have permission to craft this recipe!");
                 event.setCancelled(true);
                 return;
             }
         }
-        if(recipe.hasAdvancedData("extra-results")) {
+        if (recipe.hasAdvancedData("extra-results")) {
             CraftBookPlugin.logDebugMessage("A recipe with extra results is detected!", "advanced-data");
             ArrayList<CraftingItemStack> stacks = new ArrayList<>((Collection<CraftingItemStack>) recipe.getAdvancedData("extra-results"));
-            for(CraftingItemStack stack : stacks) {
-                if(stack.hasAdvancedData("chance"))
-                    if(ThreadLocalRandom.current().nextDouble() < (Double)stack.getAdvancedData("chance"))
+            for (CraftingItemStack stack : stacks) {
+                if (stack.hasAdvancedData("chance"))
+                    if (ThreadLocalRandom.current().nextDouble() < (Double) stack.getAdvancedData("chance"))
                         continue;
                 HashMap<Integer, ItemStack> leftovers = event.getWhoClicked().getInventory().addItem(stack.getItemStack());
-                if(!leftovers.isEmpty()) {
-                    for(ItemStack istack : leftovers.values())
+                if (!leftovers.isEmpty()) {
+                    for (ItemStack istack : leftovers.values())
                         event.getWhoClicked().getWorld().dropItemNaturally(event.getWhoClicked().getLocation(), istack);
                 }
             }
         }
-        if(recipe.hasAdvancedData("commands-player") || recipe.hasAdvancedData("commands-console")) {
+        if (recipe.hasAdvancedData("commands-player") || recipe.hasAdvancedData("commands-console")) {
             CraftBookPlugin.logDebugMessage("A recipe with commands is detected!", "advanced-data");
-            if(recipe.hasAdvancedData("commands-console")) {
-                for(String s : (List<String>)recipe.getAdvancedData("commands-console")) {
+            if (recipe.hasAdvancedData("commands-console")) {
+                for (String s : (List<String>) recipe.getAdvancedData("commands-console")) {
                     s = ParsingUtil.parseLine(s, p);
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s);
                 }
             }
-            if(recipe.hasAdvancedData("commands-player")) {
-                for(String s : (List<String>)recipe.getAdvancedData("commands-player")) {
+            if (recipe.hasAdvancedData("commands-player")) {
+                for (String s : (List<String>) recipe.getAdvancedData("commands-player")) {
                     s = ParsingUtil.parseLine(s, p);
                     PermissionAttachment att = p.addAttachment(CraftBookPlugin.inst());
                     att.setPermission("*", true);
@@ -424,9 +427,9 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
     }
 
     public static ItemStack craftItem(Recipe recipe) {
-        for(Recipe rec : advancedRecipes.keySet()) {
-            if(ItemUtil.areRecipesIdentical(rec, recipe))
-                return applyAdvancedEffects(recipe.getResult(),rec, null);
+        for (Recipe rec : advancedRecipes.keySet()) {
+            if (ItemUtil.areRecipesIdentical(rec, recipe))
+                return applyAdvancedEffects(recipe.getResult(), rec, null);
         }
 
         return recipe.getResult();
@@ -435,18 +438,18 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
     private static ItemStack applyAdvancedEffects(ItemStack stack, Recipe rep, Player player) {
         RecipeManager.Recipe recipe = advancedRecipes.get(rep);
 
-        if(recipe == null)
+        if (recipe == null)
             return stack;
 
         ItemStack res = stack.clone();
-        if(recipe.getResult().hasAdvancedData("item-meta"))
+        if (recipe.getResult().hasAdvancedData("item-meta"))
             res.setItemMeta(recipe.getResult().getItemStack().getItemMeta());
         return res;
     }
 
     private static boolean checkFurnaceRecipes(FurnaceRecipe rec1, ItemStack source, ItemStack result) {
-        if(ItemUtil.areBaseItemsIdentical(rec1.getInput(), source))
-            if(ItemUtil.areBaseItemsIdentical(rec1.getResult(), result))
+        if (ItemUtil.areBaseItemsIdentical(rec1.getInput(), source))
+            if (ItemUtil.areBaseItemsIdentical(rec1.getResult(), result))
                 return true;
 
         return false;

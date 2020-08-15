@@ -16,9 +16,9 @@
 
 package org.enginehub.craftbook.mechanics.drops;
 
+import org.bukkit.entity.EntityType;
 import org.enginehub.craftbook.mechanics.drops.rewards.DropReward;
 import org.enginehub.craftbook.util.TernaryState;
-import org.bukkit.entity.EntityType;
 
 import java.util.List;
 

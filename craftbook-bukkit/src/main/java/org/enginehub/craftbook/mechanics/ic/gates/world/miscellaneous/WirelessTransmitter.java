@@ -14,35 +14,13 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-// $Id$
-/*
- * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with this program. If not,
- * see <http://www.gnu.org/licenses/>.
- */
-
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
+import com.sk89q.minecraft.util.commands.CommandContext;
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
@@ -56,8 +34,13 @@ import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.ICMechanic;
 import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
 import org.enginehub.craftbook.mechanics.ic.PersistentDataIC;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import com.sk89q.util.yaml.YAMLProcessor;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class WirelessTransmitter extends AbstractIC {
 
@@ -105,7 +88,7 @@ public class WirelessTransmitter extends AbstractIC {
 
     public static void setValue(String band, boolean val) {
 
-        if(!val) //List preening
+        if (!val) //List preening
             memory.remove(band);
         else
             memory.add(band);
@@ -129,11 +112,11 @@ public class WirelessTransmitter extends AbstractIC {
         @Override
         public String[] getLongDescription() {
 
-            return new String[]{
-                    "The '''MC1110''' transmits the input value to a particular named ''band'' or ''network''.",
-                    "To receive the value of the transmitter, use [[../MC1111/]].",
-                    "",
-                    "If there are multiple transmitters for the same band, the last one to transmit to a particular band will have its state apply until the next transmission."
+            return new String[] {
+                "The '''MC1110''' transmits the input value to a particular named ''band'' or ''network''.",
+                "To receive the value of the transmitter, use [[../MC1111/]].",
+                "",
+                "If there are multiple transmitters for the same band, the last one to transmit to a particular band will have its state apply until the next transmission."
             };
         }
 
@@ -147,22 +130,24 @@ public class WirelessTransmitter extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Trigger IC",//Inputs
-                    "Same as Input",//Outputs
+                "Trigger IC",//Inputs
+                "Same as Input",//Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Wireless Band", "Player's CBID (Automatic)"};
+            return new String[] { "Wireless Band", "Player's CBID (Automatic)" };
         }
 
         @Override
         public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
 
-            if (requirename && (sign.getLine(3).isEmpty() || !ICMechanic.hasRestrictedPermissions(player, this, "MC1110"))) sign.setLine(3, player.getCraftBookId());
-            else if (!sign.getLine(3).isEmpty() && !ICMechanic.hasRestrictedPermissions(player, this, "MC1110")) sign.setLine(3, player.getCraftBookId());
+            if (requirename && (sign.getLine(3).isEmpty() || !ICMechanic.hasRestrictedPermissions(player, this, "MC1110")))
+                sign.setLine(3, player.getCraftBookId());
+            else if (!sign.getLine(3).isEmpty() && !ICMechanic.hasRestrictedPermissions(player, this, "MC1110"))
+                sign.setLine(3, player.getCraftBookId());
             sign.update(false);
         }
 
@@ -174,21 +159,21 @@ public class WirelessTransmitter extends AbstractIC {
         }
 
         @Override
-        public void loadPersistentData (DataInputStream stream) throws IOException {
+        public void loadPersistentData(DataInputStream stream) throws IOException {
 
             int length = stream.readInt();
-            for(int i = 0; i < length; i++)
+            for (int i = 0; i < length; i++)
                 memory.add(stream.readUTF());
             stream.close();
             getStorageFile().delete();
         }
 
         @Override
-        public void savePersistentData (DataOutputStream stream) throws IOException {
+        public void savePersistentData(DataOutputStream stream) throws IOException {
         }
 
         @Override
-        public File getStorageFile () {
+        public File getStorageFile() {
             return new File(CraftBookPlugin.inst().getDataFolder(), "wireless-bands.dat");
         }
 
@@ -197,22 +182,22 @@ public class WirelessTransmitter extends AbstractIC {
         public void load() {
             super.load();
 
-            if(ICMechanic.instance.savePersistentData && CraftBookPlugin.inst().hasPersistentStorage() && CraftBookPlugin.inst().getPersistentStorage().has("wireless-ic-states"))
+            if (ICMechanic.instance.savePersistentData && CraftBookPlugin.inst().hasPersistentStorage() && CraftBookPlugin.inst().getPersistentStorage().has("wireless-ic-states"))
                 WirelessTransmitter.memory.addAll((Set<String>) CraftBookPlugin.inst().getPersistentStorage().get("wireless-ic-states"));
         }
 
         @Override
         public void unload() {
-            if(ICMechanic.instance.savePersistentData && CraftBookPlugin.inst().hasPersistentStorage())
+            if (ICMechanic.instance.savePersistentData && CraftBookPlugin.inst().hasPersistentStorage())
                 CraftBookPlugin.inst().getPersistentStorage().set("wireless-ic-states", memory);
         }
 
         @Override
-        public void onICCommand (CommandContext args, CommandSender sender) {
+        public void onICCommand(CommandContext args, CommandSender sender) {
 
             if (args.getString(1).equalsIgnoreCase("get")) {
 
-                if(memory.contains(args.getString(2)))
+                if (memory.contains(args.getString(2)))
                     sender.sendMessage("Wireless-Band-State: TRUE");
                 else
                     sender.sendMessage("Wireless-Band-State: FALSE");
@@ -226,7 +211,7 @@ public class WirelessTransmitter extends AbstractIC {
                     sender.sendMessage(ChatColor.RED + "Invalid Boolean Argument!");
             } else if (args.getString(1).equalsIgnoreCase("toggle") && args.argsLength() > 2) {
 
-                if(memory.contains(args.getString(2)))
+                if (memory.contains(args.getString(2)))
                     memory.remove(args.getString(2));
                 else
                     memory.add(args.getString(2));
@@ -235,28 +220,28 @@ public class WirelessTransmitter extends AbstractIC {
         }
 
         @Override
-        public int getMinCommandArgs () {
+        public int getMinCommandArgs() {
             return 2;
         }
 
         @Override
-        public String[][] getCommandInformation () {
+        public String[][] getCommandInformation() {
             return new String[][] {
-                    new String[] {
-                            "get <band>",
-                            "none",
-                            "Gets the value of the wireless band."
-                    },
-                    new String[] {
-                            "set <band> <value>",
-                            "none",
-                            "Sets the value of the wireless band."
-                    },
-                    new String[] {
-                            "toggle <band>",
-                            "none",
-                            "Toggles the value of the wireless band."
-                    }
+                new String[] {
+                    "get <band>",
+                    "none",
+                    "Gets the value of the wireless band."
+                },
+                new String[] {
+                    "set <band> <value>",
+                    "none",
+                    "Sets the value of the wireless band."
+                },
+                new String[] {
+                    "toggle <band>",
+                    "none",
+                    "Toggles the value of the wireless band."
+                }
             };
         }
     }

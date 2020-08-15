@@ -16,19 +16,19 @@
 
 package org.enginehub.craftbook.mechanics.pipe;
 
-import java.util.List;
-
 import org.bukkit.block.Block;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.BlockEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public class PipeEvent extends BlockEvent {
 
     private List<ItemStack> items;
     private static final HandlerList handlers = new HandlerList();
 
-    public PipeEvent (Block theBlock, List<ItemStack> items) {
+    public PipeEvent(Block theBlock, List<ItemStack> items) {
         super(theBlock);
         this.items = items;
     }

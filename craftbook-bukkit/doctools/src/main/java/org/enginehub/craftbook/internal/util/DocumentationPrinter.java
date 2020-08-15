@@ -25,9 +25,9 @@ public class DocumentationPrinter {
                 try (Stream<Path> walk = Files.walk(getGenerationFolder())) {
                     //noinspection ResultOfMethodCallIgnored
                     walk.sorted(Comparator.reverseOrder())
-                            .map(Path::toFile)
-                            .peek(System.out::println)
-                            .forEach(File::delete);
+                        .map(Path::toFile)
+                        .peek(System.out::println)
+                        .forEach(File::delete);
                 }
             }
 

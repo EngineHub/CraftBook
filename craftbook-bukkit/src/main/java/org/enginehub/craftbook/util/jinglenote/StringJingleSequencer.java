@@ -16,8 +16,8 @@
 
 package org.enginehub.craftbook.util.jinglenote;
 
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.bukkit.Bukkit;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -48,7 +48,7 @@ public class StringJingleSequencer implements JingleSequencer {
     public void run() throws InterruptedException {
 
         position = 0;
-        if(song == null)
+        if (song == null)
             return;
 
         isPlaying = true;
@@ -61,7 +61,7 @@ public class StringJingleSequencer implements JingleSequencer {
                 isPlaying = false;
                 return;
             }
-            for(JingleNotePlayer player : players)
+            for (JingleNotePlayer player : players)
                 player.play(song.get(position));
             position++;
         }, delay, delay);
@@ -200,24 +200,24 @@ public class StringJingleSequencer implements JingleSequencer {
     }
 
     @Override
-    public boolean isPlaying () {
+    public boolean isPlaying() {
         return isPlaying;
     }
 
     @Override
-    public boolean hasPlayedBefore () {
+    public boolean hasPlayedBefore() {
         return playedBefore;
     }
 
     @Override
-    public void stop (JingleNotePlayer player) {
+    public void stop(JingleNotePlayer player) {
         players.remove(player);
     }
 
     @Override
-    public void play (JingleNotePlayer player) {
+    public void play(JingleNotePlayer player) {
         players.add(player);
-        if(!playedBefore)
+        if (!playedBefore)
             try {
                 run();
             } catch (InterruptedException e) {
@@ -231,7 +231,7 @@ public class StringJingleSequencer implements JingleSequencer {
     }
 
     @Override
-    public Set<JingleNotePlayer> getPlayers () {
+    public Set<JingleNotePlayer> getPlayers() {
         return players;
     }
 }

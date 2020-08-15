@@ -17,7 +17,6 @@
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -77,7 +76,7 @@ public class FireBarrage extends FireShooter {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"speed:spread", "vertical gain"};
+            return new String[] { "speed:spread", "vertical gain" };
         }
     }
 }

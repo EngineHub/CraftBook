@@ -42,23 +42,23 @@ public final class UUIDMappings {
             DatabaseMetaData dbm = db.getMetaData();
             ResultSet tables = dbm.getTables(null, null, "mappings", null);
 
-            if(!tables.next()) { //We already have something in this table, don't create it!
+            if (!tables.next()) { //We already have something in this table, don't create it!
                 String createTable = "CREATE TABLE mappings (UUID CHAR(36) PRIMARY KEY, CBID CHAR(6) UNIQUE)";
                 try {
                     Statement state = db.createStatement();
                     state.executeUpdate(createTable);
-                } catch(SQLException e) {
+                } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-}
+    }
 
     private static void close(ResultSet results) {
 
-        if(results != null) {
+        if (results != null) {
             try {
                 results.close();
             } catch (SQLException e) {
@@ -69,7 +69,7 @@ public final class UUIDMappings {
 
     private static void close(PreparedStatement statement) {
 
-        if(statement != null) {
+        if (statement != null) {
             try {
                 statement.close();
             } catch (SQLException e) {
@@ -97,7 +97,7 @@ public final class UUIDMappings {
 
             results = statement.executeQuery();
 
-            if(!results.next())
+            if (!results.next())
                 return null;
 
             uuid = UUID.fromString(results.getString(1));
@@ -131,13 +131,13 @@ public final class UUIDMappings {
 
             results = statement.executeQuery();
 
-            if(!results.next()) {
+            if (!results.next()) {
 
                 //We need to generate one.
                 boolean foundOne = false;
-                while(!foundOne) {
+                while (!foundOne) {
                     StringBuilder sb = new StringBuilder();
-                    for(int i = 0; i < 6; i++)
+                    for (int i = 0; i < 6; i++)
                         sb.append(Integer.toHexString(ThreadLocalRandom.current().nextInt(16)));
 
                     sb.setLength(6); //Just makin' sure.
@@ -150,7 +150,7 @@ public final class UUIDMappings {
                     close(results);
                     results = statement.executeQuery();
 
-                    if(!results.next()) {
+                    if (!results.next()) {
                         foundOne = true;
                     } else
                         continue;
@@ -166,7 +166,7 @@ public final class UUIDMappings {
             }
 
             cbId = results.getString(1);
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             close(statement);
@@ -179,8 +179,9 @@ public final class UUIDMappings {
 
     public void disable() {
         try {
-            if(db != null && !db.isClosed())
+            if (db != null && !db.isClosed())
                 db.close();
-        } catch(SQLException ignored){}
+        } catch (SQLException ignored) {
+        }
     }
 }

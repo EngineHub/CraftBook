@@ -17,7 +17,6 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -131,17 +130,17 @@ public class Counter extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Trigger IC",//Inputs
-                    "Reset Counter",
-                    "Nothing",
-                    "High on Counter Complete"//Outputs
+                "Trigger IC",//Inputs
+                "Reset Counter",
+                "Nothing",
+                "High on Counter Complete"//Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"reset ticks:(Optional)INF", "current ticks"};
+            return new String[] { "reset ticks:(Optional)INF", "current ticks" };
         }
     }
 }

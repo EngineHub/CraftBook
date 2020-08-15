@@ -18,7 +18,6 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.weather;
 
 import org.bukkit.Server;
 import org.bukkit.World;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
@@ -120,15 +119,15 @@ public class WeatherControl extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Set weather state",//Inputs
-                    "Input 1"//Outputs
+                "Set weather state",//Inputs
+                "Input 1"//Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"rain duration", "thunder duration"};
+            return new String[] { "rain duration", "thunder duration" };
         }
     }
 }

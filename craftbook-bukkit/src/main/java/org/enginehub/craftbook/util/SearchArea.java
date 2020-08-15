@@ -16,9 +16,6 @@
 
 package org.enginehub.craftbook.util;
 
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.mechanics.ic.ICMechanic;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.Vector3;
@@ -32,6 +29,9 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.mechanics.ic.ICMechanic;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,7 +58,7 @@ public final class SearchArea {
 
     /**
      * Creates a standard SearchArea using a radius and a center point.
-     * 
+     *
      * @param center
      * @param radius
      */
@@ -70,7 +70,7 @@ public final class SearchArea {
 
     /**
      * Creates a SearchArea using a WorldGuard region.
-     * 
+     *
      * @param region
      */
     private SearchArea(ProtectedRegion region, World world) {
@@ -85,20 +85,20 @@ public final class SearchArea {
 
     /**
      * Parses a line and creates the appropriate system of parsing for this Area.
-     * 
+     *
      * @param block The block to measure the offsets off. (Must be a sign)
      * @param line The line to parse
      */
     public static SearchArea createArea(Block block, String line) {
 
-        if(line.startsWith("r:")) {
+        if (line.startsWith("r:")) {
 
-            if(CraftBookPlugin.plugins.getWorldGuard() == null)
+            if (CraftBookPlugin.plugins.getWorldGuard() == null)
                 return new SearchArea();
 
             ProtectedRegion reg = WorldGuard.getInstance().getPlatform().getRegionContainer()
-                    .get(BukkitAdapter.adapt(block.getWorld())).getRegion(StringUtils.replace(line, "r:", ""));
-            if(reg == null)
+                .get(BukkitAdapter.adapt(block.getWorld())).getRegion(StringUtils.replace(line, "r:", ""));
+            if (reg == null)
                 return new SearchArea();
 
             return new SearchArea(reg, block.getWorld());
@@ -107,7 +107,7 @@ public final class SearchArea {
             String[] locationParts = RegexUtil.EQUALS_PATTERN.split(line);
             Location offset = SignUtil.getBackBlock(block).getLocation();
             Vector3 radius = ICUtil.parseRadius(locationParts[0]);
-            if(locationParts.length > 1)
+            if (locationParts.length > 1)
                 offset = ICUtil.parseBlockLocation(CraftBookBukkitUtil.toChangedSign(block), locationParts[1], ICMechanic.instance.defaultCoordinates).getLocation();
 
             return new SearchArea(offset, radius);
@@ -116,13 +116,13 @@ public final class SearchArea {
 
     public static boolean isValidArea(Block block, String line) {
 
-        if(line.startsWith("r:")) {
+        if (line.startsWith("r:")) {
 
-            if(CraftBookPlugin.plugins.getWorldGuard() == null)
+            if (CraftBookPlugin.plugins.getWorldGuard() == null)
                 return false;
 
             ProtectedRegion reg = WorldGuard.getInstance().getPlatform().getRegionContainer()
-                    .get(BukkitAdapter.adapt(block.getWorld())).getRegion(StringUtils.replace(line, "r:", ""));
+                .get(BukkitAdapter.adapt(block.getWorld())).getRegion(StringUtils.replace(line, "r:", ""));
             return reg != null;
 
         } else {
@@ -131,11 +131,11 @@ public final class SearchArea {
             SignUtil.getBackBlock(block).getLocation();
             try {
                 ICUtil.parseUnsafeRadius(locationParts[0]);
-                if(locationParts.length > 1)
+                if (locationParts.length > 1)
                     ICUtil.parseUnsafeBlockLocation(locationParts[1]);
 
                 return true;
-            } catch(Exception e){
+            } catch (Exception e) {
                 return false;
             }
         }
@@ -143,15 +143,15 @@ public final class SearchArea {
 
     /**
      * Gets a list of all the players within this SearchArea.
-     * 
+     *
      * @return The list of players.
      */
     public List<Player> getPlayersInArea() {
 
         List<Player> players = new ArrayList<>();
 
-        for(Player player : Bukkit.getOnlinePlayers())
-            if(isWithinArea(player.getLocation()))
+        for (Player player : Bukkit.getOnlinePlayers())
+            if (isWithinArea(player.getLocation()))
                 players.add(player);
 
         return players;
@@ -159,7 +159,7 @@ public final class SearchArea {
 
     /**
      * Gets a list of entities in the area that are of specific types.
-     * 
+     *
      * @param types The list of types.
      * @return The entities.
      */
@@ -167,18 +167,18 @@ public final class SearchArea {
 
         List<Entity> entities = new ArrayList<>();
 
-        for(Chunk chunk : getChunksInArea())
-            for(Entity ent : chunk.getEntities()) {
-                if(!ent.isValid() || !isWithinArea(ent.getLocation())) continue;
+        for (Chunk chunk : getChunksInArea())
+            for (Entity ent : chunk.getEntities()) {
+                if (!ent.isValid() || !isWithinArea(ent.getLocation())) continue;
 
                 boolean isType = false;
-                for(EntityType type : types) {
-                    if(type.is(ent)) {
+                for (EntityType type : types) {
+                    if (type.is(ent)) {
                         isType = true;
                         break;
                     }
                 }
-                if(!isType) continue;
+                if (!isType) continue;
 
                 entities.add(ent);
             }
@@ -192,17 +192,17 @@ public final class SearchArea {
 
     /**
      * Check if a certain location is within the bounds of this SearchArea.
-     * 
+     *
      * @param location The location to check.
      * @return If it is inside.
      */
     public boolean isWithinArea(Location location) {
 
-        if(hasRegion()) {
-            if(!region.isPhysicalArea() || region.contains(BukkitAdapter.adapt(location).toVector().toBlockPoint()) && location.getWorld().equals(world))
+        if (hasRegion()) {
+            if (!region.isPhysicalArea() || region.contains(BukkitAdapter.adapt(location).toVector().toBlockPoint()) && location.getWorld().equals(world))
                 return true;
-        } else if(hasRadiusAndCenter()) {
-            if(LocationUtil.isWithinRadius(location, center, radius))
+        } else if (hasRadiusAndCenter()) {
+            if (LocationUtil.isWithinRadius(location, center, radius))
                 return true;
         } else
             return true;
@@ -212,14 +212,14 @@ public final class SearchArea {
 
     /**
      * Get a set of chunks inside this SearchArea.
-     * 
+     *
      * @return the set of chunks.
      */
     public Set<Chunk> getChunksInArea() {
 
         Set<Chunk> chunks = new HashSet<>();
 
-        if(hasRegion()) {
+        if (hasRegion()) {
 
             Chunk c1 = getWorld().getChunkAt(region.getMinimumPoint().getBlockX() >> 4, region.getMinimumPoint().getBlockZ() >> 4);
 
@@ -229,9 +229,9 @@ public final class SearchArea {
             int zMin = Math.min(c1.getZ(), c2.getZ());
             int zMax = Math.max(c1.getZ(), c2.getZ());
 
-            for(int x = xMin; x <= xMax; x++)
-                for(int z = zMin; z <= zMax; z++)
-                    chunks.add(getWorld().getChunkAt(x,z));
+            for (int x = xMin; x <= xMax; x++)
+                for (int z = zMin; z <= zMax; z++)
+                    chunks.add(getWorld().getChunkAt(x, z));
         } else if (hasRadiusAndCenter()) {
 
             int chunkRadiusX = blockRadius.getBlockX() < 16 ? 1 : blockRadius.getBlockX() / 16;
@@ -250,21 +250,21 @@ public final class SearchArea {
 
     /**
      * Get a random block from within the area.
-     * 
+     *
      * @return the block.
      */
     public Block getRandomBlockInArea() {
 
-        int xMin,xMax,yMin,yMax,zMin,zMax;
+        int xMin, xMax, yMin, yMax, zMin, zMax;
 
-        if(hasRegion()) {
+        if (hasRegion()) {
             xMin = region.getMinimumPoint().getBlockX();
             xMax = region.getMaximumPoint().getBlockX();
             yMin = region.getMinimumPoint().getBlockY();
             yMax = region.getMaximumPoint().getBlockY();
             zMin = region.getMinimumPoint().getBlockZ();
             zMax = region.getMaximumPoint().getBlockZ();
-        } else if(hasRadiusAndCenter()) {
+        } else if (hasRadiusAndCenter()) {
             xMin = Math.min(center.getBlockX() - blockRadius.getBlockX(), center.getBlockX() + blockRadius.getBlockX());
             xMax = Math.max(center.getBlockX() - blockRadius.getBlockX(), center.getBlockX() + blockRadius.getBlockX());
             yMin = Math.min(center.getBlockY() - blockRadius.getBlockY(), center.getBlockY() + blockRadius.getBlockY());
@@ -278,14 +278,14 @@ public final class SearchArea {
         int y = yMin + ThreadLocalRandom.current().nextInt(yMax - yMin + 1);
         int z = zMin + ThreadLocalRandom.current().nextInt(zMax - zMin + 1);
         Location loc = new Location(getWorld(), x, y, z);
-        if(!isWithinArea(loc))
+        if (!isWithinArea(loc))
             return null;
         return loc.getBlock();
     }
 
     /**
      * Checks if this SearchArea is a Region type, compared to other types.
-     * 
+     *
      * @return If it is a Region type.
      */
     public boolean hasRegion() {
@@ -295,7 +295,7 @@ public final class SearchArea {
 
     /**
      * Checks if this SearchArea is a Radius & Center type, compared to other types.
-     * 
+     *
      * @return If it is a Radius&Center type.
      */
     public boolean hasRadiusAndCenter() {
@@ -305,7 +305,7 @@ public final class SearchArea {
 
     /**
      * Get the center point of the radius.
-     * 
+     *
      * @return The center point.
      */
     public Location getCenter() {
@@ -315,7 +315,7 @@ public final class SearchArea {
 
     /**
      * Get the Radius this area contains.
-     * 
+     *
      * @return The radius.
      */
     public Vector3 getRadius() {
@@ -324,7 +324,7 @@ public final class SearchArea {
 
     /**
      * Get the WorldGuard region that this area contains.
-     * 
+     *
      * @return The region.
      */
     public ProtectedRegion getRegion() {
@@ -334,12 +334,12 @@ public final class SearchArea {
 
     /**
      * Get the world the WorldGuard region exists in.
-     * 
+     *
      * @return the world
      */
     public World getWorld() {
 
-        if(world == null && center != null) {
+        if (world == null && center != null) {
 
             return center.getWorld();
         }
@@ -348,7 +348,7 @@ public final class SearchArea {
 
     /**
      * Checks whether this SearchArea has a valid search type.
-     * 
+     *
      * @return if the area has a valid search type.
      */
     public boolean isValid() {

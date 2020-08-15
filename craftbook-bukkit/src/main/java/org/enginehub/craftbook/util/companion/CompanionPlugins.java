@@ -16,14 +16,12 @@
 
 package org.enginehub.craftbook.util.companion;
 
-import net.milkbowl.vault.economy.Economy;
-
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.RegisteredServiceProvider;
-
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 public class CompanionPlugins {
 
@@ -75,7 +73,8 @@ public class CompanionPlugins {
     }
 
     /**
-     * Gets the Vault {@link Economy} service if it exists, this method should be used for economic actions.
+     * Gets the Vault {@link Economy} service if it exists, this method should be used for economic
+     * actions.
      *
      * This method can return null.
      *

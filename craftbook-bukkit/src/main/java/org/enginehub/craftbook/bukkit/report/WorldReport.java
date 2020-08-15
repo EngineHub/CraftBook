@@ -67,8 +67,8 @@ public class WorldReport extends DataReport {
             DataReport protection = new DataReport("Protection");
             protection.append("PVP?", world.getPVP());
             protection.append("Game Rules", Arrays.stream(world.getGameRules())
-                    .map(name -> name + "=" + world.getGameRuleValue(name))
-                    .collect(Collectors.joining(", ")));
+                .map(name -> name + "=" + world.getGameRuleValue(name))
+                .collect(Collectors.joining(", ")));
             report.append(protection.getTitle(), protection);
 
             append(report.getTitle(), report);

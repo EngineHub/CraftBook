@@ -17,7 +17,6 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -69,12 +68,12 @@ public class HalfAdder extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Nothing",//Inputs
-                    "First bit to add",
-                    "Second bit to add",
-                    "Sum",//Outputs
-                    "Carry",
-                    "Carry (Same as Output 2)"
+                "Nothing",//Inputs
+                "First bit to add",
+                "Second bit to add",
+                "Sum",//Outputs
+                "Carry",
+                "Carry (Same as Output 2)"
             };
         }
 

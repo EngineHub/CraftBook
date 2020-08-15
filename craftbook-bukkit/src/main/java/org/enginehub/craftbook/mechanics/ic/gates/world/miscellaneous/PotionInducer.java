@@ -16,15 +16,11 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
-import java.util.EnumSet;
-import java.util.Set;
-
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -37,6 +33,9 @@ import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
 import org.enginehub.craftbook.util.EntityType;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SearchArea;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * @author Me4502
@@ -67,14 +66,13 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        String[] effectInfo = RegexUtil.COLON_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(getLine(2),2)[0], 3);
+        String[] effectInfo = RegexUtil.COLON_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(getLine(2), 2)[0], 3);
 
         int effectID, effectAmount, effectTime;
 
         try {
             effectID = Integer.parseInt(effectInfo[0]);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             effectID = 1;
         }
         try {
@@ -89,29 +87,29 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
         }
         effect = new PotionEffect(PotionEffectType.getById(effectID), effectTime * 20, effectAmount - 1, true);
         try {
-            types = EntityType.getDetected(RegexUtil.EQUALS_PATTERN.split(getLine(2),2)[1]);
-        } catch(Exception e) {
+            types = EntityType.getDetected(RegexUtil.EQUALS_PATTERN.split(getLine(2), 2)[1]);
+        } catch (Exception e) {
             types = EnumSet.of(EntityType.PLAYER);
         }
 
         //Converter.
         boolean converting = false;
-        if(getRawLine(3).toLowerCase().endsWith("p") && (!getRawLine(2).contains("=") || converting)) {
+        if (getRawLine(3).toLowerCase().endsWith("p") && (!getRawLine(2).contains("=") || converting)) {
             getSign().setLine(2, getRawLine(2) + (!getRawLine(2).contains("=") ? "=p" : "p"));
             getSign().setLine(3, getRawLine(3).substring(0, getRawLine(3).length() - 1));
             converting = true;
         }
-        if(getRawLine(3).toLowerCase().endsWith("m") && (!getRawLine(2).contains("=") || converting)) {
+        if (getRawLine(3).toLowerCase().endsWith("m") && (!getRawLine(2).contains("=") || converting)) {
             getSign().setLine(2, getRawLine(2) + (!getRawLine(2).contains("=") ? "=m" : "m"));
             getSign().setLine(3, getRawLine(3).substring(0, getRawLine(3).length() - 1));
             converting = true;
         }
-        if(getRawLine(3).toLowerCase().endsWith("p") && (!getRawLine(2).contains("=") || converting)) {
+        if (getRawLine(3).toLowerCase().endsWith("p") && (!getRawLine(2).contains("=") || converting)) {
             getSign().setLine(2, getRawLine(2) + (!getRawLine(2).contains("=") ? "=p" : "p"));
             getSign().setLine(3, getRawLine(3).substring(0, getRawLine(3).length() - 1));
             converting = true;
         }
-        if(converting)
+        if (converting)
             getSign().update(false);
 
         area = SearchArea.createArea(CraftBookBukkitUtil.toSign(getSign()).getBlock(), getLine(3));
@@ -140,7 +138,7 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
     @Override
     public void think(ChipState state) {
 
-        if(!state.getInput(0))
+        if (!state.getInput(0))
             state.setOutput(0, induce());
     }
 
@@ -181,7 +179,7 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
         public String[] getLineHelp() {
 
             return new String[] {
-                    "id:level:time=entitytypes", "range=offset"
+                "id:level:time=entitytypes", "range=offset"
             };
         }
     }

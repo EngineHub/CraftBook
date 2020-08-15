@@ -16,14 +16,12 @@
 
 package org.enginehub.craftbook.bukkit;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.sk89q.bukkit.util.CommandInspector;
-import org.enginehub.craftbook.util.TextUtil;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.extension.platform.Actor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.enginehub.craftbook.util.TextUtil;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.inject.InjectedValueStore;
 import org.enginehub.piston.inject.Key;
@@ -32,6 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class BukkitCommandInspector implements CommandInspector {
     private static final Logger logger = LoggerFactory.getLogger(BukkitCommandInspector.class);

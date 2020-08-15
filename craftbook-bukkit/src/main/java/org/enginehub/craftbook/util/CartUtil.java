@@ -31,7 +31,6 @@ import org.bukkit.entity.minecart.SpawnerMinecart;
 import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 import java.util.List;
@@ -56,23 +55,23 @@ public final class CartUtil {
         EntityType type = cart.getType();
         final Minecart toCart;
 
-        if(type == EntityType.MINECART_CHEST) {
+        if (type == EntityType.MINECART_CHEST) {
             toCart = cart.getWorld().spawn(destination, StorageMinecart.class);
             ((StorageMinecart) toCart).getInventory().setContents(((StorageMinecart) cart).getInventory().getContents());
             ((StorageMinecart) cart).getInventory().clear();
-        } else if(type == EntityType.MINECART_FURNACE) {
+        } else if (type == EntityType.MINECART_FURNACE) {
             toCart = cart.getWorld().spawn(destination, PoweredMinecart.class);
-        } else if(type == EntityType.MINECART_HOPPER) {
+        } else if (type == EntityType.MINECART_HOPPER) {
             toCart = cart.getWorld().spawn(destination, HopperMinecart.class);
             ((HopperMinecart) toCart).getInventory().setContents(((HopperMinecart) cart).getInventory().getContents());
             ((HopperMinecart) cart).getInventory().clear();
-        } else if(type == EntityType.MINECART_MOB_SPAWNER) {
+        } else if (type == EntityType.MINECART_MOB_SPAWNER) {
             toCart = cart.getWorld().spawn(destination, SpawnerMinecart.class);
-        } else if(type == EntityType.MINECART_TNT)
+        } else if (type == EntityType.MINECART_TNT)
             toCart = cart.getWorld().spawn(destination, ExplosiveMinecart.class);
-        else if(type == EntityType.MINECART_COMMAND) {
+        else if (type == EntityType.MINECART_COMMAND) {
             toCart = cart.getWorld().spawn(destination, CommandMinecart.class);
-            ((CommandMinecart) toCart).setCommand(((CommandMinecart)toCart).getCommand());
+            ((CommandMinecart) toCart).setCommand(((CommandMinecart) toCart).getCommand());
             ((CommandMinecart) toCart).setName(toCart.getName());
         } else
             toCart = cart.getWorld().spawn(destination, RideableMinecart.class);
@@ -98,19 +97,19 @@ public final class CartUtil {
 
     public static ItemStack getCartStack(Minecart cart) {
 
-        if(cart instanceof RideableMinecart)
+        if (cart instanceof RideableMinecart)
             return new ItemStack(Material.MINECART, 1);
-        else if(cart instanceof StorageMinecart)
+        else if (cart instanceof StorageMinecart)
             return new ItemStack(Material.CHEST_MINECART, 1);
-        else if(cart instanceof PoweredMinecart)
+        else if (cart instanceof PoweredMinecart)
             return new ItemStack(Material.FURNACE_MINECART, 1);
-        else if(cart instanceof ExplosiveMinecart)
+        else if (cart instanceof ExplosiveMinecart)
             return new ItemStack(Material.TNT_MINECART, 1);
-        else if(cart instanceof HopperMinecart)
+        else if (cart instanceof HopperMinecart)
             return new ItemStack(Material.HOPPER_MINECART, 1);
-        else if(cart instanceof CommandMinecart)
+        else if (cart instanceof CommandMinecart)
             return new ItemStack(Material.COMMAND_BLOCK_MINECART, 1);
-        else if(cart instanceof SpawnerMinecart)
+        else if (cart instanceof SpawnerMinecart)
             return new ItemStack(Material.MINECART, 1);
 
         return null;

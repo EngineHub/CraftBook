@@ -1,9 +1,9 @@
 package org.enginehub.craftbook.internal.util;
 
-import org.enginehub.craftbook.mechanic.CraftBookMechanic;
-import org.enginehub.craftbook.mechanic.MechanicType;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

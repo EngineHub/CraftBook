@@ -16,15 +16,6 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.entity;
 
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
-import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
-import org.enginehub.craftbook.mechanics.ic.ChipState;
-import org.enginehub.craftbook.mechanics.ic.IC;
-import org.enginehub.craftbook.mechanics.ic.ICFactory;
-import org.enginehub.craftbook.util.InventoryUtil;
-import org.enginehub.craftbook.util.SearchArea;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -39,13 +30,22 @@ import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Wolf;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
+import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
+import org.enginehub.craftbook.mechanics.ic.ChipState;
+import org.enginehub.craftbook.mechanics.ic.IC;
+import org.enginehub.craftbook.mechanics.ic.ICFactory;
+import org.enginehub.craftbook.util.InventoryUtil;
+import org.enginehub.craftbook.util.SearchArea;
 
 import java.util.Collections;
 import java.util.EnumMap;
 
 public class AnimalBreeder extends AbstractSelfTriggeredIC {
 
-    public AnimalBreeder (Server server, ChangedSign sign, ICFactory factory) {
+    public AnimalBreeder(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -64,31 +64,31 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
         return "Animal Breeder";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
         return "ANIMAL BREEDER";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
-        if(chip.getInput(0))
+        if (chip.getInput(0))
             chip.setOutput(0, breed());
     }
 
     @Override
-    public boolean isActive () {
+    public boolean isActive() {
         return true;
     }
 
     @Override
-    public void think (ChipState chip) {
+    public void think(ChipState chip) {
 
-        if(chip.getInput(0))
+        if (chip.getInput(0))
             chip.setOutput(0, breed());
     }
 
@@ -104,17 +104,17 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
         lastEntity.clear();
         InventoryHolder inv = null;
 
-        if(InventoryUtil.doesBlockHaveInventory(chest))
+        if (InventoryUtil.doesBlockHaveInventory(chest))
             inv = (InventoryHolder) chest.getState();
 
-        if(inv == null)
+        if (inv == null)
             return false;
 
         for (Entity entity : area.getEntitiesInArea(Collections.singletonList(org.enginehub.craftbook.util.EntityType.MOB_PEACEFUL))) {
             if (entity.isValid() && entity instanceof Ageable) {
-                if(!((Ageable) entity).canBreed() || !canBreed(entity))
+                if (!((Ageable) entity).canBreed() || !canBreed(entity))
                     continue;
-                if(breedAnimal(inv, entity))
+                if (breedAnimal(inv, entity))
                     return true;
                 else
                     lastEntity.put(entity.getType(), entity);
@@ -131,26 +131,26 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
 
     public boolean breedAnimal(InventoryHolder inv, Entity entity) {
 
-        if(lastEntity.get(entity.getType()) != null) {
+        if (lastEntity.get(entity.getType()) != null) {
 
             if (entity instanceof Cow || entity instanceof Sheep) {
 
-                if(InventoryUtil.doesInventoryContain(inv.getInventory(), false, new ItemStack(Material.WHEAT, 2))) {
+                if (InventoryUtil.doesInventoryContain(inv.getInventory(), false, new ItemStack(Material.WHEAT, 2))) {
 
-                    if(InventoryUtil.removeItemsFromInventory(inv, new ItemStack(Material.WHEAT, 2))) {
+                    if (InventoryUtil.removeItemsFromInventory(inv, new ItemStack(Material.WHEAT, 2))) {
                         Ageable animal = (Ageable) entity.getWorld().spawnEntity(entity.getLocation(), entity.getType());
                         animal.setBaby();
                         ((Ageable) entity).setBreed(false);
-                        if(entity instanceof Sheep && animal instanceof Sheep)
+                        if (entity instanceof Sheep && animal instanceof Sheep)
                             ((Sheep) animal).setColor(((Sheep) entity).getColor());
                         return true;
                     }
                 }
             } else if (entity instanceof Pig) {
 
-                if(InventoryUtil.doesInventoryContain(inv.getInventory(), false, new ItemStack(Material.CARROT, 2))) {
+                if (InventoryUtil.doesInventoryContain(inv.getInventory(), false, new ItemStack(Material.CARROT, 2))) {
 
-                    if(InventoryUtil.removeItemsFromInventory(inv, new ItemStack(Material.CARROT, 2))) {
+                    if (InventoryUtil.removeItemsFromInventory(inv, new ItemStack(Material.CARROT, 2))) {
                         Ageable animal = (Ageable) entity.getWorld().spawnEntity(entity.getLocation(), entity.getType());
                         animal.setBaby();
                         ((Ageable) entity).setBreed(false);
@@ -158,9 +158,9 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
                     }
                 }
             } else if (entity instanceof Chicken) {
-                if(InventoryUtil.doesInventoryContain(inv.getInventory(), false, new ItemStack(Material.WHEAT_SEEDS, 2))) {
+                if (InventoryUtil.doesInventoryContain(inv.getInventory(), false, new ItemStack(Material.WHEAT_SEEDS, 2))) {
 
-                    if(InventoryUtil.removeItemsFromInventory(inv, new ItemStack(Material.WHEAT_SEEDS, 2))) {
+                    if (InventoryUtil.removeItemsFromInventory(inv, new ItemStack(Material.WHEAT_SEEDS, 2))) {
                         Ageable animal = (Ageable) entity.getWorld().spawnEntity(entity.getLocation(), entity.getType());
                         animal.setBaby();
                         ((Ageable) entity).setBreed(false);
@@ -169,12 +169,12 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
                 }
             } else if (entity instanceof Wolf) {
 
-                Material[] validItems = new Material[]{Material.CHICKEN, Material.COOKED_CHICKEN, Material.BEEF, Material.COOKED_BEEF,
-                        Material.PORKCHOP, Material.COOKED_PORKCHOP, Material.ROTTEN_FLESH};
+                Material[] validItems = new Material[] { Material.CHICKEN, Material.COOKED_CHICKEN, Material.BEEF, Material.COOKED_BEEF,
+                    Material.PORKCHOP, Material.COOKED_PORKCHOP, Material.ROTTEN_FLESH };
 
-                for(Material item : validItems) {
-                    if(InventoryUtil.doesInventoryContain(inv.getInventory(), false, new ItemStack(item, 2))) {
-                        if(InventoryUtil.removeItemsFromInventory(inv, new ItemStack(item, 2))) {
+                for (Material item : validItems) {
+                    if (InventoryUtil.doesInventoryContain(inv.getInventory(), false, new ItemStack(item, 2))) {
+                        if (InventoryUtil.removeItemsFromInventory(inv, new ItemStack(item, 2))) {
                             Ageable animal = (Ageable) entity.getWorld().spawnEntity(entity.getLocation(), entity.getType());
                             animal.setBaby();
                             ((Ageable) entity).setBreed(false);
@@ -209,7 +209,7 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+oSearchArea", null};
+            return new String[] { "+oSearchArea", null };
         }
     }
 }

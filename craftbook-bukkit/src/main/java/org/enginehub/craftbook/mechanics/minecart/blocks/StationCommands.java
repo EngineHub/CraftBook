@@ -16,13 +16,12 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.mechanics.minecart.StationManager;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanics.minecart.StationManager;
 
 public class StationCommands {
 
@@ -30,7 +29,7 @@ public class StationCommands {
 
     }
 
-    @Command(aliases = {"station", "st"}, desc = "Commands to manage Craftbook station selection")
+    @Command(aliases = { "station", "st" }, desc = "Commands to manage Craftbook station selection")
     public void st(CommandContext context, CommandSender sender) {
 
         if (!(sender instanceof Player)) {

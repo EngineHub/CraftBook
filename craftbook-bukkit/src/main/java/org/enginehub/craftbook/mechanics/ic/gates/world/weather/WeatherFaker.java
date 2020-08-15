@@ -16,14 +16,10 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.weather;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -32,6 +28,9 @@ import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
 import org.enginehub.craftbook.util.SearchArea;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Me4502
@@ -77,7 +76,7 @@ public class WeatherFaker extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"radius", "rain (If it should rain)"};
+            return new String[] { "radius", "rain (If it should rain)" };
         }
     }
 
@@ -92,18 +91,18 @@ public class WeatherFaker extends AbstractSelfTriggeredIC {
 
         if (chip.getInput(0)) {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                if(area.isWithinArea(p.getLocation())) {
+                if (area.isWithinArea(p.getLocation())) {
                     p.setPlayerWeather(rain ? WeatherType.DOWNFALL : WeatherType.CLEAR);
                     players.add(p.getName());
-                } else if(players.contains(p.getName())) {
+                } else if (players.contains(p.getName())) {
                     players.remove(p.getName());
                     p.resetPlayerWeather();
                 }
             }
         } else {
-            for(String p : players) {
+            for (String p : players) {
                 Player pp = Bukkit.getPlayerExact(p);
-                if(pp == null) continue;
+                if (pp == null) continue;
                 pp.resetPlayerWeather();
             }
             players.clear();

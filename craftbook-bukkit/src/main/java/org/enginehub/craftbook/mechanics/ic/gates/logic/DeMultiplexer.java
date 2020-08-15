@@ -17,7 +17,6 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -27,7 +26,7 @@ import org.enginehub.craftbook.mechanics.ic.ICFactory;
 
 public class DeMultiplexer extends AbstractIC {
 
-    public DeMultiplexer (Server server, ChangedSign sign, ICFactory factory) {
+    public DeMultiplexer(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -61,12 +60,12 @@ public class DeMultiplexer extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Swaps between Output 2 and 3",//Inputs
-                    "Value to carry",
-                    "Nothing",
-                    "Nothing",//Outputs
-                    "Output if Input 1 Low",
-                    "Output if Input 1 High"
+                "Swaps between Output 2 and 3",//Inputs
+                "Value to carry",
+                "Nothing",
+                "Nothing",//Outputs
+                "Output if Input 1 Low",
+                "Output if Input 1 High"
             };
         }
 

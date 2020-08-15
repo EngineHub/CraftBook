@@ -19,7 +19,6 @@ package org.enginehub.craftbook.mechanics.minecart.events;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.HandlerList;
-
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
@@ -30,7 +29,7 @@ public class CartBlockRedstoneEvent extends SourcedBlockRedstoneEvent {
     protected final CartMechanismBlocks blocks;
     protected final Minecart cart;
 
-    public CartBlockRedstoneEvent (Block source, Block block, int old, int n, CartMechanismBlocks blocks, Minecart cart) {
+    public CartBlockRedstoneEvent(Block source, Block block, int old, int n, CartMechanismBlocks blocks, Minecart cart) {
         super(source, block, old, n);
 
         this.blocks = blocks;
@@ -53,7 +52,7 @@ public class CartBlockRedstoneEvent extends SourcedBlockRedstoneEvent {
 
     /**
      * The minecart at this mechanic (If there is one)
-     * 
+     *
      * @return the minecart (Can be null)
      */
     public Minecart getMinecart() {

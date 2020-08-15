@@ -16,6 +16,11 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.sensors;
 
+import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -27,11 +32,6 @@ import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
 import org.enginehub.craftbook.util.BlockSyntax;
 import org.enginehub.craftbook.util.ICUtil;
 import org.enginehub.craftbook.util.RegexUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.world.block.BlockStateHolder;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
 
 public class BlockSensor extends AbstractSelfTriggeredIC {
 
@@ -122,7 +122,7 @@ public class BlockSensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"x:y:z", "id:data"};
+            return new String[] { "x:y:z", "id:data" };
         }
 
         @Override

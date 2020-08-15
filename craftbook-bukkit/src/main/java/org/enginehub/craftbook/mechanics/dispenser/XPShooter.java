@@ -32,9 +32,9 @@ public class XPShooter extends ItemShooter {
     public XPShooter() {
 
         super(Material.EXPERIENCE_BOTTLE, new Material[] {
-                Material.AIR,            Material.REDSTONE,   Material.AIR,
-                Material.REDSTONE,   Material.GLASS_BOTTLE,    Material.REDSTONE,
-                Material.AIR,            Material.REDSTONE,   Material.AIR
+            Material.AIR, Material.REDSTONE, Material.AIR,
+            Material.REDSTONE, Material.GLASS_BOTTLE, Material.REDSTONE,
+            Material.AIR, Material.REDSTONE, Material.AIR
         });
     }
 }

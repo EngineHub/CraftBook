@@ -17,7 +17,6 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -72,10 +71,10 @@ public class RsNandLatch extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Set",//Inputs
-                    "Reset",
-                    "Nothing",
-                    "Output",//Outputs
+                "Set",//Inputs
+                "Reset",
+                "Nothing",
+                "Output",//Outputs
             };
         }
 

@@ -16,13 +16,6 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.mechanics.minecart.StationManager;
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import org.enginehub.craftbook.util.BlockSyntax;
-import org.enginehub.craftbook.util.ItemSyntax;
-import org.enginehub.craftbook.util.RegexUtil;
-import org.enginehub.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Material;
@@ -39,6 +32,13 @@ import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.mechanics.minecart.StationManager;
+import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
+import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.ItemSyntax;
+import org.enginehub.craftbook.util.RegexUtil;
+import org.enginehub.craftbook.util.SignUtil;
 
 /**
  * @author LordEnki
@@ -193,7 +193,7 @@ public class CartSorter extends CartBlockMechanism {
                         try {
                             ItemStack item = ItemSyntax.getItem(parts[1] + ':' + parts[2]);
                             int index = Math.min(Math.max(Integer.parseInt(parts[3]) - 1, 0),
-                                    storageInventory.getContents().length - 1);
+                                storageInventory.getContents().length - 1);
                             ItemStack indexed = storageInventory.getContents()[index];
                             if (indexed != null && indexed.equals(item))
                                 return true;
@@ -241,7 +241,7 @@ public class CartSorter extends CartBlockMechanism {
     @Override
     public String[] getApplicableSigns() {
 
-        return new String[] {"Sort"};
+        return new String[] { "Sort" };
     }
 
     @Override

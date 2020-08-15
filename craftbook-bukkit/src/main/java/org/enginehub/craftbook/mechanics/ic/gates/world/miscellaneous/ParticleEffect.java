@@ -16,6 +16,9 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -26,9 +29,6 @@ import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
 import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
 import org.enginehub.craftbook.util.ICUtil;
 import org.enginehub.craftbook.util.RegexUtil;
-import org.bukkit.Effect;
-import org.bukkit.Location;
-import org.bukkit.Server;
 
 /**
  * @author Me4502
@@ -82,8 +82,8 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
         } catch (Exception e) {
             try {
                 effectID = Effect.valueOf(eff[0]).getId();
+            } catch (Exception ignored) {
             }
-            catch(Exception ignored){}
         }
         if (Effect.getById(effectID) == null) return;
         try {
@@ -97,13 +97,13 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
         } catch (Exception ignored) {
             times = 1;
         }
-        if(getLine(2).contains("=")) {
+        if (getLine(2).contains("=")) {
             String extra = getLine(2).split("=")[1];
             getSign().setLine(2, getLine(2).split("=")[0]);
             getSign().setLine(3, getLine(3) + "=" + extra);
             getSign().update(false);
         }
-        if(getLine(3).contains("="))
+        if (getLine(3).contains("="))
             offset = ICUtil.parseBlockLocation(getSign(), 3).getLocation();
         else
             offset = getBackBlock().getLocation().add(0, 1, 0);
@@ -140,7 +140,7 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"effectID:effectData=xOff:yOff:zOff", "amount of particles=offset"};
+            return new String[] { "effectID:effectData=xOff:yOff:zOff", "amount of particles=offset" };
         }
 
         @Override
@@ -154,17 +154,17 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
                 } catch (Exception e) {
                     try {
                         effectID = Effect.valueOf(eff[0]).getId();
+                    } catch (Exception ignored) {
                     }
-                    catch(Exception ignored){}
                 }
-                if (Effect.getById(effectID) == null) throw new ICVerificationException("Invalid effect!");
+                if (Effect.getById(effectID) == null)
+                    throw new ICVerificationException("Invalid effect!");
                 try {
                     effectData = Integer.parseInt(eff[1]);
                 } catch (Exception e) {
                     effectData = 0;
                 }
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 throw new ICVerificationException("Invalid effect!");
             }
         }

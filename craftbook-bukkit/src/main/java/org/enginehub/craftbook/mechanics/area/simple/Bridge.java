@@ -14,37 +14,8 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-// $Id$
-/*
- * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
- * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with this program. If not,
- * see <http://www.gnu.org/licenses/>.
- */
-
 package org.enginehub.craftbook.mechanics.area.simple;
 
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.util.BlockSyntax;
-import org.enginehub.craftbook.util.BlockUtil;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.ProtectionUtil;
-import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.SignClickEvent;
-import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
-import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -66,13 +37,27 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
+import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockUtil;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.ProtectionUtil;
+import org.enginehub.craftbook.util.SignUtil;
+import org.enginehub.craftbook.util.events.SignClickEvent;
+import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * The default bridge mechanism -- signposts on either side of a 3xN plane of (or 1xN plane if 1 on second line) blocks.
+ * The default bridge mechanism -- signposts on either side of a 3xN plane of (or 1xN plane if 1 on
+ * second line) blocks.
  *
  * @author hash
  */
@@ -81,14 +66,15 @@ public class Bridge extends CuboidToggleMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(!event.getLine(1).equalsIgnoreCase("[bridge]") && !event.getLine(1).equalsIgnoreCase("[bridge end]")) return;
+        if (!event.getLine(1).equalsIgnoreCase("[bridge]") && !event.getLine(1).equalsIgnoreCase("[bridge end]"))
+            return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if(!player.hasPermission("craftbook.mech.bridge")) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!player.hasPermission("craftbook.mech.bridge")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
             SignUtil.cancelSignChange(event);
             return;
@@ -99,10 +85,10 @@ public class Bridge extends CuboidToggleMechanic {
         else if (!event.getLine(0).equalsIgnoreCase("infinite"))
             event.setLine(0, "0");
 
-        if(event.getLine(1).equalsIgnoreCase("[bridge]")) {
+        if (event.getLine(1).equalsIgnoreCase("[bridge]")) {
             event.setLine(1, "[Bridge]");
             player.print("mech.bridge.create");
-        } else if(event.getLine(1).equalsIgnoreCase("[bridge end]")) {
+        } else if (event.getLine(1).equalsIgnoreCase("[bridge end]")) {
             event.setLine(1, "[Bridge End]");
             player.print("mech.bridge.end-create");
         }
@@ -111,20 +97,21 @@ public class Bridge extends CuboidToggleMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (!isApplicableSign(CraftBookBukkitUtil.toChangedSign(event.getClickedBlock()).getLine(1))) return;
+        if (!isApplicableSign(CraftBookBukkitUtil.toChangedSign(event.getClickedBlock()).getLine(1)))
+            return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.bridge.use")) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
         }
 
-        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
         }
@@ -169,10 +156,10 @@ public class Bridge extends CuboidToggleMechanic {
 
             event.setCancelled(true);
 
-            if(flipState(event.getClickedBlock(), player))
+            if (flipState(event.getClickedBlock(), player))
                 player.print("mech.bridge.toggle");
         } catch (InvalidMechanismException e) {
-            if(e.getMessage() != null)
+            if (e.getMessage() != null)
                 player.printError(e.getMessage());
         }
     }
@@ -180,13 +167,14 @@ public class Bridge extends CuboidToggleMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         if (!allowRedstone) return;
         if (event.isMinor()) return;
 
         if (!SignUtil.isSign(event.getBlock())) return;
-        if (!isApplicableSign(CraftBookBukkitUtil.toChangedSign(event.getBlock()).getLine(1))) return;
+        if (!isApplicableSign(CraftBookBukkitUtil.toChangedSign(event.getBlock()).getLine(1)))
+            return;
 
         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
             try {
@@ -199,7 +187,7 @@ public class Bridge extends CuboidToggleMechanic {
     @Override
     public Block getBlockBase(Block trigger) throws InvalidMechanismException {
         Block proximalBaseCenter = trigger.getRelative(BlockFace.UP);
-        if (trigger.getY() < trigger.getWorld().getMaxHeight()-1 && Blocks.containsFuzzy(blocks, BukkitAdapter.adapt(proximalBaseCenter.getBlockData())))
+        if (trigger.getY() < trigger.getWorld().getMaxHeight() - 1 && Blocks.containsFuzzy(blocks, BukkitAdapter.adapt(proximalBaseCenter.getBlockData())))
             return proximalBaseCenter; // On Top
 
         // If we've reached this point nothing was found on the top, check the bottom
@@ -241,7 +229,7 @@ public class Bridge extends CuboidToggleMechanic {
     @Override
     public CuboidRegion getCuboidArea(Block trigger, Block proximalBaseCenter, Block distalBaseCenter) throws InvalidMechanismException {
         double distance = proximalBaseCenter.getLocation().distanceSquared(distalBaseCenter.getLocation());
-        if (distance <= 2*2) {
+        if (distance <= 2 * 2) {
             throw new InvalidMechanismException("Bridge too short!");
         }
         CuboidRegion toggle = new CuboidRegion(CraftBookBukkitUtil.toVector(proximalBaseCenter), CraftBookBukkitUtil.toVector(distalBaseCenter));
@@ -260,14 +248,14 @@ public class Bridge extends CuboidToggleMechanic {
 
         // Expand Left
         for (int i = 0; i < left; i++) {
-            if(!BlockUtil.areBlocksIdentical(distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i), proximalBaseCenter.getRelative(SignUtil.getLeft(trigger), i)))
+            if (!BlockUtil.areBlocksIdentical(distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i), proximalBaseCenter.getRelative(SignUtil.getLeft(trigger), i)))
                 throw new InvalidMechanismException("mech.bridge.material");
             toggle.expand(CraftBookBukkitUtil.toVector(SignUtil.getLeft(trigger)), BlockVector3.ZERO);
         }
 
         // Expand Right
         for (int i = 0; i < right; i++) {
-            if(!BlockUtil.areBlocksIdentical(distalBaseCenter.getRelative(SignUtil.getRight(trigger), i), proximalBaseCenter.getRelative(SignUtil.getRight(trigger), i)))
+            if (!BlockUtil.areBlocksIdentical(distalBaseCenter.getRelative(SignUtil.getRight(trigger), i), proximalBaseCenter.getRelative(SignUtil.getRight(trigger), i)))
                 throw new InvalidMechanismException("mech.bridge.material");
             toggle.expand(CraftBookBukkitUtil.toVector(SignUtil.getRight(trigger)), BlockVector3.ZERO);
         }
@@ -294,11 +282,12 @@ public class Bridge extends CuboidToggleMechanic {
         // Find the other side
         Block farSide = getFarSign(trigger);
 
-        if (farSide.getType() != trigger.getType()) throw new InvalidMechanismException("mech.bridge.other-sign");
+        if (farSide.getType() != trigger.getType())
+            throw new InvalidMechanismException("mech.bridge.other-sign");
 
         // Check the other side's base blocks for matching type
         BlockFace face = trigger.getFace(proximalBaseCenter);
-        if(face != BlockFace.UP && face != BlockFace.DOWN) face = face.getOppositeFace();
+        if (face != BlockFace.UP && face != BlockFace.DOWN) face = face.getOppositeFace();
         Block distalBaseCenter = farSide.getRelative(face);
         if (!BlockUtil.areBlocksIdentical(distalBaseCenter, proximalBaseCenter))
             throw new InvalidMechanismException("mech.bridge.material");
@@ -356,6 +345,6 @@ public class Bridge extends CuboidToggleMechanic {
 
         config.setComment("blocks", "Blocks bridges can use.");
         blocks = BlockSyntax.getBlocks(config.getStringList("blocks",
-                getDefaultBlocks().stream().sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
+            getDefaultBlocks().stream().sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
     }
 }

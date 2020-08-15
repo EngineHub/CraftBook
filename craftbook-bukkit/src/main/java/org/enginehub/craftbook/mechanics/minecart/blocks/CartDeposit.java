@@ -16,6 +16,13 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
+import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.world.block.BlockTypes;
+import org.bukkit.block.Chest;
+import org.bukkit.entity.minecart.StorageMinecart;
+import org.bukkit.event.EventHandler;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.BlockSyntax;
@@ -25,13 +32,6 @@ import org.enginehub.craftbook.util.RailUtil;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.Tuple2;
-import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.world.block.BlockTypes;
-import org.bukkit.block.Chest;
-import org.bukkit.entity.minecart.StorageMinecart;
-import org.bukkit.event.EventHandler;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,18 +59,19 @@ public class CartDeposit extends CartBlockMechanism {
 
         // go
         List<Tuple2<ItemInfo, Integer>> items = new ArrayList<>();
-        for(String data : RegexUtil.COMMA_PATTERN.split(event.getBlocks().getSign().getLine(2))) {
+        for (String data : RegexUtil.COMMA_PATTERN.split(event.getBlocks().getSign().getLine(2))) {
             int itemID = -1;
             short itemData = -1;
             int amount = -1;
             try {
                 String[] splitLine = RegexUtil.COLON_PATTERN.split(RegexUtil.ASTERISK_PATTERN.split(data)[0]);
                 itemID = Integer.parseInt(splitLine[0]);
-                if(splitLine.length > 1)
+                if (splitLine.length > 1)
                     itemData = Short.parseShort(splitLine[1]);
                 try {
                     amount = Integer.parseInt(RegexUtil.ASTERISK_PATTERN.split(data)[1]);
-                } catch(Exception ignored){}
+                } catch (Exception ignored) {
+                }
             } catch (Exception ignored) {
                 continue;
             }
@@ -96,16 +97,16 @@ public class CartDeposit extends CartBlockMechanism {
                     if (!ItemUtil.isStackValid(item))
                         continue;
                     Iterator<Tuple2<ItemInfo, Integer>> iter = items.iterator();
-                    while(iter.hasNext()) {
+                    while (iter.hasNext()) {
                         Tuple2<ItemInfo, Integer> inf = iter.next();
                         if (!inf.a.isTypeValid() || inf.a.getType() == item.getType()) {
                             if (inf.a.getData() < 0 || inf.a.getData() == item.getDurability()) {
-                                if(inf.b < 0) {
+                                if (inf.b < 0) {
                                     transferItems.add(item.clone());
                                     cartinventory.remove(item);
                                 } else {
                                     ItemStack stack = item.clone();
-                                    if(item.getAmount() > inf.b) {
+                                    if (item.getAmount() > inf.b) {
                                         stack.setAmount(inf.b);
                                         iter.remove();
                                         items.add(new Tuple2<>(inf.a, 0));
@@ -131,7 +132,7 @@ public class CartDeposit extends CartBlockMechanism {
             if (transferItems.isEmpty()) return;
 
             CraftBookPlugin.logDebugMessage("collecting " + transferItems.size() + " item stacks", "cart-deposit.collect");
-            for (ItemStack stack: transferItems)
+            for (ItemStack stack : transferItems)
                 CraftBookPlugin.logDebugMessage("collecting " + stack.getAmount() + " items of type " + stack.getType().toString(), "cart-deposit.collect");
 
             for (Chest container : containers) {
@@ -141,7 +142,7 @@ public class CartDeposit extends CartBlockMechanism {
                 Inventory containerinventory = container.getInventory();
 
                 leftovers.addAll(containerinventory.addItem(transferItems.toArray(new ItemStack[transferItems.size()
-                                                                                                ])).values());
+                    ])).values());
                 transferItems.clear();
                 transferItems.addAll(leftovers);
                 leftovers.clear();
@@ -168,16 +169,16 @@ public class CartDeposit extends CartBlockMechanism {
                         if (!ItemUtil.isStackValid(item))
                             continue;
                         Iterator<Tuple2<ItemInfo, Integer>> iter = items.iterator();
-                        while(iter.hasNext()) {
+                        while (iter.hasNext()) {
                             Tuple2<ItemInfo, Integer> inf = iter.next();
                             if (!inf.a.isTypeValid() || inf.a.getType() == item.getType())
                                 if (inf.a.getData() < 0 || inf.a.getData() == item.getDurability()) {
-                                    if(inf.b < 0) {
+                                    if (inf.b < 0) {
                                         transferitems.add(item.clone());
                                         containerinventory.remove(item);
                                     } else {
                                         ItemStack stack = item.clone();
-                                        if(item.getAmount() > inf.b) {
+                                        if (item.getAmount() > inf.b) {
                                             stack.setAmount(inf.b);
                                             iter.remove();
                                             items.add(new Tuple2<>(inf.a, 0));
@@ -204,7 +205,7 @@ public class CartDeposit extends CartBlockMechanism {
             if (transferitems.isEmpty()) return;
 
             CraftBookPlugin.logDebugMessage("depositing " + transferitems.size() + " stacks", "cart-deposit.deposit");
-            for (ItemStack stack: transferitems)
+            for (ItemStack stack : transferitems)
                 CraftBookPlugin.logDebugMessage("depositing " + stack.getAmount() + " items oftype " + stack.getType().toString(), "cart-deposit.deposit");
 
             leftovers.addAll(cartinventory.addItem(transferitems.toArray(new ItemStack[transferitems.size()])).values());
@@ -222,7 +223,7 @@ public class CartDeposit extends CartBlockMechanism {
 
                 leftovers.addAll(containerinventory.addItem(transferitems.toArray(new ItemStack[transferitems.size()])).values());
                 containerinventory.clear();
-                for(ItemStack item : leftovers)
+                for (ItemStack item : leftovers)
                     containerinventory.addItem(item);
                 transferitems.clear();
                 transferitems.addAll(leftovers);
@@ -242,7 +243,7 @@ public class CartDeposit extends CartBlockMechanism {
     @Override
     public String[] getApplicableSigns() {
 
-        return new String[] {"Collect", "Deposit"};
+        return new String[] { "Collect", "Deposit" };
     }
 
     @Override

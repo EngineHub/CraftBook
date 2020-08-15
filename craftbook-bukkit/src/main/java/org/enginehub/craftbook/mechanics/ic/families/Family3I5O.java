@@ -16,6 +16,9 @@
 
 package org.enginehub.craftbook.mechanics.ic.families;
 
+import com.sk89q.worldedit.util.Location;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractChipState;
@@ -23,9 +26,6 @@ import org.enginehub.craftbook.mechanics.ic.AbstractICFamily;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.util.ICUtil;
 import org.enginehub.craftbook.util.SignUtil;
-import com.sk89q.worldedit.util.Location;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 
 public class Family3I5O extends AbstractICFamily {
 
@@ -105,7 +105,7 @@ public class Family3I5O extends AbstractICFamily {
 
             Block block = getBlock(pin);
             if (block != null) {
-                if(pin == 3 || pin == 4 || pin == 5)
+                if (pin == 3 || pin == 4 || pin == 5)
                     ICUtil.setState(block, value, icBlock.getRelative(SignUtil.getBack(CraftBookBukkitUtil.toSign(sign).getBlock()), 2));
                 else
                     ICUtil.setState(block, value, icBlock.getRelative(SignUtil.getBack(CraftBookBukkitUtil.toSign(sign).getBlock())));
@@ -127,7 +127,7 @@ public class Family3I5O extends AbstractICFamily {
     }
 
     @Override
-    public String getName () {
+    public String getName() {
         return "3I5O";
     }
 }

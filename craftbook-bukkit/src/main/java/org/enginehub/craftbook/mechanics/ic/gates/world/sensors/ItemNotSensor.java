@@ -17,7 +17,6 @@
 package org.enginehub.craftbook.mechanics.ic.gates.world.sensors;
 
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.IC;

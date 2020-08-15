@@ -25,7 +25,7 @@ public class SelfTriggerUnregisterEvent extends BlockEvent implements Cancellabl
 
     private UnregisterReason reason;
 
-    public SelfTriggerUnregisterEvent (Block theBlock, UnregisterReason reason) {
+    public SelfTriggerUnregisterEvent(Block theBlock, UnregisterReason reason) {
         super(theBlock);
 
         this.reason = reason;
@@ -47,12 +47,12 @@ public class SelfTriggerUnregisterEvent extends BlockEvent implements Cancellabl
     }
 
     @Override
-    public boolean isCancelled () {
+    public boolean isCancelled() {
         return cancelled;
     }
 
     @Override
-    public void setCancelled (boolean arg0) {
+    public void setCancelled(boolean arg0) {
         cancelled = arg0;
     }
 
@@ -60,6 +60,6 @@ public class SelfTriggerUnregisterEvent extends BlockEvent implements Cancellabl
 
     public enum UnregisterReason {
 
-        UNLOAD,BREAK,ERROR,NOT_HANDLED,UNKNOWN;
+        UNLOAD, BREAK, ERROR, NOT_HANDLED, UNKNOWN;
     }
 }

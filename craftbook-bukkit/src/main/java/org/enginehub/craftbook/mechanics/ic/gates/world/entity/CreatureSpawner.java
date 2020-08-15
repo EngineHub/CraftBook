@@ -14,24 +14,17 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-// $Id$
-/*
- * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with this program. If not,
- * see <http://www.gnu.org/licenses/>.
- */
-
 package org.enginehub.craftbook.mechanics.ic.gates.world.entity;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -43,15 +36,6 @@ import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
 import org.enginehub.craftbook.util.EntityUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.RegexUtil;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Skeleton;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Locale;
 
@@ -72,7 +56,7 @@ public class CreatureSpawner extends AbstractIC {
         type = EntityType.fromName(getSign().getLine(2).trim().toLowerCase(Locale.ENGLISH));
         if (type == null) {
             type = EntityType.valueOf(getSign().getLine(2).trim().toUpperCase(Locale.ENGLISH));
-            if(type == null)
+            if (type == null)
                 type = EntityType.PIG;
         }
         String line = getSign().getLine(3).trim();
@@ -104,13 +88,13 @@ public class CreatureSpawner extends AbstractIC {
 
         Block center = getBackBlock();
 
-        if(!center.getChunk().isLoaded())
+        if (!center.getChunk().isLoaded())
             return;
 
         if (chip.getInput(0)) if (center.getRelative(0, 1, 0).getType() == Material.SPAWNER) {
 
             org.bukkit.block.CreatureSpawner sp = (org.bukkit.block.CreatureSpawner) center.getRelative(0, 1,
-                    0).getState();
+                0).getState();
             sp.setSpawnedType(type);
             sp.update();
         } else {
@@ -118,7 +102,7 @@ public class CreatureSpawner extends AbstractIC {
             // spawn amount of mobs
             for (int i = 0; i < amount; i++) {
                 Entity entity = loc.getWorld().spawn(loc, type.getEntityClass());
-                if(entity instanceof Skeleton)
+                if (entity instanceof Skeleton)
                     ((Skeleton) entity).getEquipment().setItemInHand(new ItemStack(Material.BOW, 1));
                 EntityUtil.setEntityData(entity, data);
             }
@@ -147,14 +131,14 @@ public class CreatureSpawner extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"entitytype", "+odata*amount"};
+            return new String[] { "entitytype", "+odata*amount" };
         }
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             EntityType type = EntityType.fromName(sign.getLine(2).trim().toLowerCase(Locale.ENGLISH));
-            if(type == null)
+            if (type == null)
                 type = EntityType.valueOf(sign.getLine(2).trim().toUpperCase(Locale.ENGLISH));
             if (type == null)
                 throw new ICVerificationException("Invalid Entity! See bukkit EntityType list!");

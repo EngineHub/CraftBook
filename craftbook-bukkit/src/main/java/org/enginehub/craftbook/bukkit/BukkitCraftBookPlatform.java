@@ -16,29 +16,27 @@
 
 package org.enginehub.craftbook.bukkit;
 
-import static com.sk89q.worldedit.util.formatting.WorldEditText.reduceToText;
-
 import com.sk89q.bukkit.util.CommandInfo;
 import com.sk89q.bukkit.util.CommandRegistration;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlatform;
-import org.enginehub.craftbook.YamlConfiguration;
-import org.enginehub.craftbook.mechanic.BukkitMechanicManager;
-import org.enginehub.craftbook.mechanic.MechanicManager;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.command.util.PermissionCondition;
 import com.sk89q.worldedit.util.report.ReportList;
+import io.papermc.lib.PaperLib;
+import org.bukkit.Bukkit;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlatform;
+import org.enginehub.craftbook.YamlConfiguration;
+import org.enginehub.craftbook.mechanic.BukkitMechanicManager;
+import org.enginehub.craftbook.mechanic.MechanicManager;
 import org.enginehub.craftbook.util.profile.cache.ProfileCache;
 import org.enginehub.craftbook.util.profile.resolver.BukkitPlayerService;
 import org.enginehub.craftbook.util.profile.resolver.CacheForwardingService;
 import org.enginehub.craftbook.util.profile.resolver.CombinedProfileService;
 import org.enginehub.craftbook.util.profile.resolver.HttpRepositoryService;
-import org.enginehub.craftbook.util.profile.resolver.ProfileService;
 import org.enginehub.craftbook.util.profile.resolver.PaperPlayerService;
-import io.papermc.lib.PaperLib;
-import org.bukkit.Bukkit;
+import org.enginehub.craftbook.util.profile.resolver.ProfileService;
 import org.enginehub.piston.CommandManager;
 
 import java.nio.file.Path;
@@ -46,6 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.sk89q.worldedit.util.formatting.WorldEditText.reduceToText;
 
 public class BukkitCraftBookPlatform implements CraftBookPlatform {
 
@@ -72,7 +72,7 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
         } catch (Exception ignored) {
         }
         config = new BukkitConfiguration(
-                new YAMLProcessor(CraftBook.getInstance().getPlatform().getConfigDir().resolve("config.yml").toFile(), true, YAMLFormat.EXTENDED));
+            new YAMLProcessor(CraftBook.getInstance().getPlatform().getConfigDir().resolve("config.yml").toFile(), true, YAMLFormat.EXTENDED));
 
         try {
             config.load();
@@ -95,22 +95,22 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
 
         CommandRegistration registration = new CommandRegistration(CraftBookPlugin.inst());
         registration.register(commandManager.getAllCommands()
-                .map(command -> {
-                    String[] permissionsArray = command.getCondition()
-                            .as(PermissionCondition.class)
-                            .map(PermissionCondition::getPermissions)
-                            .map(s -> s.toArray(new String[0]))
-                            .orElseGet(() -> new String[0]);
+            .map(command -> {
+                String[] permissionsArray = command.getCondition()
+                    .as(PermissionCondition.class)
+                    .map(PermissionCondition::getPermissions)
+                    .map(s -> s.toArray(new String[0]))
+                    .orElseGet(() -> new String[0]);
 
-                    String[] aliases = Stream.concat(
-                            Stream.of(command.getName()),
-                            command.getAliases().stream()
-                    ).toArray(String[]::new);
-                    // TODO Handle localisation correctly
-                    return new CommandInfo(reduceToText(command.getUsage(), WorldEdit.getInstance().getConfiguration().defaultLocale),
-                            reduceToText(command.getDescription(), WorldEdit.getInstance().getConfiguration().defaultLocale), aliases,
-                            inspector, permissionsArray);
-                }).collect(Collectors.toList()));
+                String[] aliases = Stream.concat(
+                    Stream.of(command.getName()),
+                    command.getAliases().stream()
+                ).toArray(String[]::new);
+                // TODO Handle localisation correctly
+                return new CommandInfo(reduceToText(command.getUsage(), WorldEdit.getInstance().getConfiguration().defaultLocale),
+                    reduceToText(command.getDescription(), WorldEdit.getInstance().getConfiguration().defaultLocale), aliases,
+                    inspector, permissionsArray);
+            }).collect(Collectors.toList()));
     }
 
     public void resetCommandRegistration(CraftBookPlugin plugin) {

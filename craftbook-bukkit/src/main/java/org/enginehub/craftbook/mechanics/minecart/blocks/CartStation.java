@@ -16,15 +16,6 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
-import static org.enginehub.craftbook.util.CartUtil.stop;
-
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
-import org.enginehub.craftbook.util.BlockSyntax;
-import org.enginehub.craftbook.util.ItemSyntax;
-import org.enginehub.craftbook.util.ItemUtil;
-import org.enginehub.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Location;
@@ -35,6 +26,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import org.enginehub.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
+import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
+import org.enginehub.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
+import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.ItemSyntax;
+import org.enginehub.craftbook.util.ItemUtil;
+import org.enginehub.craftbook.util.SignUtil;
+
+import static org.enginehub.craftbook.util.CartUtil.stop;
 
 public class CartStation extends CartBlockMechanism {
 
@@ -63,7 +63,7 @@ public class CartStation extends CartBlockMechanism {
         if (!blocks.matches(getMaterial())) return;
         if (!blocks.matches("station")) return;
 
-        if(cart == null)
+        if (cart == null)
             return;
 
         // go
@@ -108,10 +108,10 @@ public class CartStation extends CartBlockMechanism {
 
         if (!event.getBlocks().getSign().getLine(2).equalsIgnoreCase("AUTOSTART")) return;
 
-        if(!event.getBlocks().getSign().getLine(3).isEmpty() && event.getEntered() instanceof Player) {
+        if (!event.getBlocks().getSign().getLine(3).isEmpty() && event.getEntered() instanceof Player) {
 
             ItemStack testItem = ItemSyntax.getItem(event.getBlocks().getSign().getLine(3));
-            if(!ItemUtil.areItemsIdentical(testItem, ((Player) event.getEntered()).getItemInHand()))
+            if (!ItemUtil.areItemsIdentical(testItem, ((Player) event.getEntered()).getItemInHand()))
                 return;
         }
 
@@ -145,7 +145,7 @@ public class CartStation extends CartBlockMechanism {
     @Override
     public String[] getApplicableSigns() {
 
-        return new String[] {"station"};
+        return new String[] { "station" };
     }
 
     @Override

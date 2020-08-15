@@ -14,28 +14,12 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-// $Id$
-/*
- * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with this program. If not,
- * see <http://www.gnu.org/licenses/>.
- */
-
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
-import org.enginehub.craftbook.CraftBookPlayer;
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -44,7 +28,6 @@ import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.ICMechanic;
 import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
-import com.sk89q.util.yaml.YAMLProcessor;
 
 public class WirelessReceiver extends AbstractSelfTriggeredIC {
 
@@ -120,11 +103,11 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLongDescription() {
 
-            return new String[]{
-                    "The '''MC1111''' receives the state in a particular ''band'' or ''network'' when the clock input goes from low to high.",
-                    "The corresponding transmitter is the [[../MC1110/]] IC.",
-                    "",
-                    "If there are multiple transmitters for the same band, the last one to transmit to a particular band will have its state apply until the next transmission."
+            return new String[] {
+                "The '''MC1111''' receives the state in a particular ''band'' or ''network'' when the clock input goes from low to high.",
+                "The corresponding transmitter is the [[../MC1110/]] IC.",
+                "",
+                "If there are multiple transmitters for the same band, the last one to transmit to a particular band will have its state apply until the next transmission."
             };
         }
 
@@ -138,22 +121,24 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Trigger IC",//Inputs
-                    "State of Wireless Band",//Outputs
+                "Trigger IC",//Inputs
+                "State of Wireless Band",//Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Wireless Band", "Player's CBID (Automatic)"};
+            return new String[] { "Wireless Band", "Player's CBID (Automatic)" };
         }
 
         @Override
         public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
 
-            if (requirename && (sign.getLine(3).isEmpty() || !ICMechanic.hasRestrictedPermissions(player, this, "MC1111"))) sign.setLine(3, player.getCraftBookId());
-            else if (!sign.getLine(3).isEmpty() && !ICMechanic.hasRestrictedPermissions(player, this, "MC1111")) sign.setLine(3, player.getCraftBookId());
+            if (requirename && (sign.getLine(3).isEmpty() || !ICMechanic.hasRestrictedPermissions(player, this, "MC1111")))
+                sign.setLine(3, player.getCraftBookId());
+            else if (!sign.getLine(3).isEmpty() && !ICMechanic.hasRestrictedPermissions(player, this, "MC1111"))
+                sign.setLine(3, player.getCraftBookId());
             sign.update(false);
         }
 
@@ -166,7 +151,7 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public boolean isActive () {
+    public boolean isActive() {
         return true;
     }
 }

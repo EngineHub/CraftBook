@@ -16,7 +16,6 @@
 
 package org.enginehub.craftbook.util;
 
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -36,6 +35,7 @@ import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -53,7 +53,7 @@ public final class ItemUtil {
 
     /**
      * Add an itemstack to an existing itemstack.
-     * 
+     *
      * @param base The itemstack to be added to.
      * @param toAdd The itemstack to add to the base.
      * @return The unaddable items.
@@ -75,7 +75,7 @@ public final class ItemUtil {
 
     /**
      * Filter a list of items by inclusions and exclusions.
-     * 
+     *
      * @param stacks The base list of items.
      * @param inclusions The list of items to include, skipped if empty.
      * @param exclusions The list of items to exclude, skipped if empty.
@@ -85,9 +85,9 @@ public final class ItemUtil {
 
         List<ItemStack> ret = new ArrayList<>();
 
-        for(ItemStack stack : stacks) {
+        for (ItemStack stack : stacks) {
 
-            if(doesItemPassFilters(stack, inclusions, exclusions))
+            if (doesItemPassFilters(stack, inclusions, exclusions))
                 ret.add(stack);
         }
 
@@ -96,7 +96,7 @@ public final class ItemUtil {
 
     /**
      * Check whether or not an item passes filters.
-     * 
+     *
      * @param stack The item to check if it passes.
      * @param inclusions The list of items to include, skipped if empty.
      * @param exclusions The list of items to exclude, skipped if empty.
@@ -105,32 +105,32 @@ public final class ItemUtil {
     public static boolean doesItemPassFilters(ItemStack stack, Set<ItemStack> inclusions, Set<ItemStack> exclusions) {
 
         boolean passesFilters = true;
-        if(inclusions != null && inclusions.size() > 0) {
+        if (inclusions != null && inclusions.size() > 0) {
             for (ItemStack fil : inclusions) {
 
-                if(!ItemUtil.isStackValid(fil))
+                if (!ItemUtil.isStackValid(fil))
                     continue;
 
-                if(ItemUtil.areItemsIdentical(fil, stack)) {
+                if (ItemUtil.areItemsIdentical(fil, stack)) {
                     passesFilters = true;
                     break;
                 } else
                     passesFilters = false;
             }
-            if(!passesFilters)
+            if (!passesFilters)
                 return false;
         }
-        if(exclusions != null && exclusions.size() > 0) {
+        if (exclusions != null && exclusions.size() > 0) {
             for (ItemStack fil : exclusions) {
 
-                if(!ItemUtil.isStackValid(fil))
+                if (!ItemUtil.isStackValid(fil))
                     continue;
-                if(ItemUtil.areItemsIdentical(fil, stack)) {
+                if (ItemUtil.areItemsIdentical(fil, stack)) {
                     passesFilters = false;
                     break;
                 }
             }
-            if(!passesFilters)
+            if (!passesFilters)
                 return false;
         }
 
@@ -150,56 +150,56 @@ public final class ItemUtil {
 
     public static boolean areRecipesIdentical(Recipe rec1, Recipe rec2) {
 
-        if(rec1 == null || rec2 == null)
+        if (rec1 == null || rec2 == null)
             return rec1 == rec2;
-        if(ItemUtil.areItemsIdentical(rec1.getResult(), rec2.getResult())) {
+        if (ItemUtil.areItemsIdentical(rec1.getResult(), rec2.getResult())) {
             CraftBookPlugin.logDebugMessage("Recipes have same results!", "advanced-data.compare-recipes");
-            if(rec1 instanceof ShapedRecipe && rec2 instanceof ShapedRecipe) {
+            if (rec1 instanceof ShapedRecipe && rec2 instanceof ShapedRecipe) {
                 CraftBookPlugin.logDebugMessage("Shaped recipe!", "advanced-data.compare-recipes.shaped");
                 ShapedRecipe recipe1 = (ShapedRecipe) rec1;
                 ShapedRecipe recipe2 = (ShapedRecipe) rec2;
-                if(recipe1.getShape().length == recipe2.getShape().length) {
+                if (recipe1.getShape().length == recipe2.getShape().length) {
                     CraftBookPlugin.logDebugMessage("Same size!", "advanced-data.compare-recipes.shaped");
                     List<ItemStack> stacks1 = new ArrayList<>();
 
-                    for(String s : recipe1.getShape())
-                        for(char c : s.toCharArray())
-                            for(Entry<Character, ItemStack> entry : recipe1.getIngredientMap().entrySet())
-                                if(entry.getKey() == c)
+                    for (String s : recipe1.getShape())
+                        for (char c : s.toCharArray())
+                            for (Entry<Character, ItemStack> entry : recipe1.getIngredientMap().entrySet())
+                                if (entry.getKey() == c)
                                     stacks1.add(entry.getValue());
                     List<ItemStack> stacks2 = new ArrayList<>();
 
-                    for(String s : recipe2.getShape())
-                        for(char c : s.toCharArray())
-                            for(Entry<Character, ItemStack> entry : recipe2.getIngredientMap().entrySet())
-                                if(entry.getKey() == c)
+                    for (String s : recipe2.getShape())
+                        for (char c : s.toCharArray())
+                            for (Entry<Character, ItemStack> entry : recipe2.getIngredientMap().entrySet())
+                                if (entry.getKey() == c)
                                     stacks2.add(entry.getValue());
 
-                    if(stacks2.size() != stacks1.size()) {
+                    if (stacks2.size() != stacks1.size()) {
                         CraftBookPlugin.logDebugMessage("Recipes have different amounts of ingredients!", "advanced-data.compare-recipes.shaped");
                         return false;
                     }
                     List<ItemStack> test = new ArrayList<>(stacks1);
-                    if(test.size() == 0) {
+                    if (test.size() == 0) {
                         CraftBookPlugin.logDebugMessage("Recipes are the same!", "advanced-data.compare-recipes.shaped");
                         return true;
                     }
-                    if(!test.removeAll(stacks2) && test.size() > 0) {
+                    if (!test.removeAll(stacks2) && test.size() > 0) {
                         CraftBookPlugin.logDebugMessage("Recipes are NOT the same!", "advanced-data.compare-recipes.shaped");
                         return false;
                     }
-                    if(test.size() > 0) {
+                    if (test.size() > 0) {
                         CraftBookPlugin.logDebugMessage("Recipes are NOT the same!", "advanced-data.compare-recipes.shaped");
                         return false;
                     }
                 }
-            } else if(rec1 instanceof ShapelessRecipe && rec2 instanceof ShapelessRecipe) {
+            } else if (rec1 instanceof ShapelessRecipe && rec2 instanceof ShapelessRecipe) {
 
                 CraftBookPlugin.logDebugMessage("Shapeless Recipe!", "advanced-data.compare-recipes.shapeless");
                 ShapelessRecipe recipe1 = (ShapelessRecipe) rec1;
                 ShapelessRecipe recipe2 = (ShapelessRecipe) rec2;
 
-                if(VerifyUtil.withoutNulls(recipe1.getIngredientList()).size() != VerifyUtil.withoutNulls(recipe2.getIngredientList()).size()) {
+                if (VerifyUtil.withoutNulls(recipe1.getIngredientList()).size() != VerifyUtil.withoutNulls(recipe2.getIngredientList()).size()) {
                     CraftBookPlugin.logDebugMessage("Recipes have different amounts of ingredients!", "advanced-data.compare-recipes.shapeless");
                     return false;
                 }
@@ -207,15 +207,15 @@ public final class ItemUtil {
                 CraftBookPlugin.logDebugMessage("Same Size!", "advanced-data.compare-recipes.shapeless");
 
                 List<ItemStack> test = new ArrayList<>(VerifyUtil.withoutNulls(recipe1.getIngredientList()));
-                if(test.size() == 0) {
+                if (test.size() == 0) {
                     CraftBookPlugin.logDebugMessage("Recipes are the same!", "advanced-data.compare-recipes.shapeless");
                     return true;
                 }
-                if(!test.removeAll(VerifyUtil.withoutNulls(recipe2.getIngredientList())) && test.size() > 0) {
+                if (!test.removeAll(VerifyUtil.withoutNulls(recipe2.getIngredientList())) && test.size() > 0) {
                     CraftBookPlugin.logDebugMessage("Recipes are NOT the same!", "advanced-data.compare-recipes.shapeless");
                     return false;
                 }
-                if(test.size() > 0) {
+                if (test.size() > 0) {
                     CraftBookPlugin.logDebugMessage("Recipes are NOT the same!", "advanced-data.compare-recipes.shapeless");
                     return false;
                 }
@@ -231,13 +231,13 @@ public final class ItemUtil {
 
     public static boolean isValidItemMeta(ItemMeta meta) {
 
-        if(meta.hasDisplayName())
-            if(!meta.getDisplayName().equals("$IGNORE"))
+        if (meta.hasDisplayName())
+            if (!meta.getDisplayName().equals("$IGNORE"))
                 return true;
 
-        if(meta.hasLore())
-            for(String lore : meta.getLore())
-                if(!lore.equals("$IGNORE"))
+        if (meta.hasLore())
+            for (String lore : meta.getLore())
+                if (!lore.equals("$IGNORE"))
                     return true;
 
         return meta.hasEnchants();
@@ -251,64 +251,65 @@ public final class ItemUtil {
     public static boolean areItemMetaIdentical(ItemMeta meta, ItemMeta meta2, boolean checkEnchants) {
         //Display Names
         String displayName1;
-        if(meta.hasDisplayName())
+        if (meta.hasDisplayName())
             displayName1 = ChatColor.translateAlternateColorCodes('&', stripResetChar(meta.getDisplayName().trim()));
         else
             displayName1 = "$IGNORE";
 
         String displayName2;
-        if(meta2.hasDisplayName())
+        if (meta2.hasDisplayName())
             displayName2 = ChatColor.translateAlternateColorCodes('&', stripResetChar(meta2.getDisplayName().trim()));
         else
             displayName2 = "";
 
-        if(!displayName1.equals(displayName2)) {
-            if(!displayName1.equals("$IGNORE") && !displayName2.equals("$IGNORE"))
+        if (!displayName1.equals(displayName2)) {
+            if (!displayName1.equals("$IGNORE") && !displayName2.equals("$IGNORE"))
                 return false;
         }
         CraftBookPlugin.logDebugMessage("Display names are the same", "item-checks.meta.names");
 
         //Lore
         List<String> lore1 = new ArrayList<>();
-        if(meta.hasLore())
-            for(String lore : meta.getLore())
+        if (meta.hasLore())
+            for (String lore : meta.getLore())
                 lore1.add(ChatColor.translateAlternateColorCodes('&', stripResetChar(lore.trim())));
 
         List<String> lore2 = new ArrayList<>();
-        if(meta2.hasLore())
-            for(String lore : meta2.getLore())
+        if (meta2.hasLore())
+            for (String lore : meta2.getLore())
                 lore2.add(ChatColor.translateAlternateColorCodes('&', stripResetChar(lore.trim())));
 
-        if(lore1.size() != lore2.size())
+        if (lore1.size() != lore2.size())
             return false;
         CraftBookPlugin.logDebugMessage("Has same lore lengths", "item-checks.meta.lores");
 
-        for(int i = 0; i < lore1.size(); i++) {
-            if(lore1.get(i).contains("$IGNORE") || lore2.get(i).contains("$IGNORE")) continue; //Ignore this line.
-            if(!lore1.get(i).equals(lore2.get(i)))
+        for (int i = 0; i < lore1.size(); i++) {
+            if (lore1.get(i).contains("$IGNORE") || lore2.get(i).contains("$IGNORE"))
+                continue; //Ignore this line.
+            if (!lore1.get(i).equals(lore2.get(i)))
                 return false;
         }
 
         CraftBookPlugin.logDebugMessage("Lore is the same", "item-checks.meta.lores");
 
-        if(checkEnchants) {
+        if (checkEnchants) {
             //Enchants
             List<Enchantment> ench1 = new ArrayList<>();
-            if(meta.hasEnchants())
+            if (meta.hasEnchants())
                 ench1.addAll(meta.getEnchants().keySet());
 
             List<Enchantment> ench2 = new ArrayList<>();
-            if(meta2.hasEnchants())
+            if (meta2.hasEnchants())
                 ench2.addAll(meta2.getEnchants().keySet());
 
-            if(ench1.size() != ench2.size())
+            if (ench1.size() != ench2.size())
                 return false;
             CraftBookPlugin.logDebugMessage("Has same enchantment lengths", "item-checks.meta.enchants");
 
-            for(Enchantment ench : ench1) {
-                if(!ench2.contains(ench))
+            for (Enchantment ench : ench1) {
+                if (!ench2.contains(ench))
                     return false;
-                if(meta.getEnchantLevel(ench) != meta2.getEnchantLevel(ench))
+                if (meta.getEnchantLevel(ench) != meta2.getEnchantLevel(ench))
                     return false;
             }
 
@@ -378,24 +379,23 @@ public final class ItemUtil {
 
     public static boolean areItemsIdentical(ItemStack item, ItemStack item2) {
 
-        if(!isStackValid(item) || !isStackValid(item2)) {
+        if (!isStackValid(item) || !isStackValid(item2)) {
             CraftBookPlugin.logDebugMessage("An invalid item was compared. Was first? " + !isStackValid(item), "item-checks");
             return !isStackValid(item) && !isStackValid(item2);
-        }
-        else {
-            if(!areBaseItemsIdentical(item,item2))
+        } else {
+            if (!areBaseItemsIdentical(item, item2))
                 return false;
             CraftBookPlugin.logDebugMessage("The items are basically identical", "item-checks");
 
-            if(item.hasItemMeta() != item2.hasItemMeta()) {
-                if(item.hasItemMeta() && isValidItemMeta(item.getItemMeta())) return false;
-                else if(item2.hasItemMeta() && isValidItemMeta(item2.getItemMeta())) return false;
+            if (item.hasItemMeta() != item2.hasItemMeta()) {
+                if (item.hasItemMeta() && isValidItemMeta(item.getItemMeta())) return false;
+                else if (item2.hasItemMeta() && isValidItemMeta(item2.getItemMeta())) return false;
             }
 
             CraftBookPlugin.logDebugMessage("Both share the existance of metadata", "item-checks");
-            if(item.hasItemMeta()) {
+            if (item.hasItemMeta()) {
                 CraftBookPlugin.logDebugMessage("Both have metadata", "item-checks.meta");
-                if(!areItemMetaIdentical(item.getItemMeta(), item2.getItemMeta())) {
+                if (!areItemMetaIdentical(item.getItemMeta(), item2.getItemMeta())) {
                     CraftBookPlugin.logDebugMessage("Metadata is different", "item-checks.meta");
                     return false;
                 }
@@ -408,7 +408,7 @@ public final class ItemUtil {
 
     public static boolean areBaseItemsIdentical(ItemStack item, ItemStack item2) {
 
-        if(!isStackValid(item) || !isStackValid(item2))
+        if (!isStackValid(item) || !isStackValid(item2))
             return !isStackValid(item) && !isStackValid(item2);
         else {
             return item.getType() == item2.getType();
@@ -427,7 +427,7 @@ public final class ItemUtil {
     }
 
     public static boolean hasDisplayNameOrLore(ItemStack item) {
-        if(item.hasItemMeta()) {
+        if (item.hasItemMeta()) {
             ItemMeta meta = item.getItemMeta();
             return meta.hasDisplayName() || meta.hasLore();
         }
@@ -436,7 +436,7 @@ public final class ItemUtil {
 
     /**
      * Removes a specified amount from an item entity.
-     * 
+     *
      * @param item
      * @return true if success, otherwise false.
      */
@@ -451,7 +451,7 @@ public final class ItemUtil {
             return false;
         }
 
-        if(newStack.getAmount() < amount)
+        if (newStack.getAmount() < amount)
             return false;
 
         newStack.setAmount(newStack.getAmount() - amount);
@@ -671,13 +671,13 @@ public final class ItemUtil {
 
     /**
      * Checks whether the item is usable as a fuel in a furnace.
-     * 
+     *
      * @param item The item to check.
      * @return Whether it is usable in a furnace.
      */
     public static boolean isAFuel(ItemStack item) {
 
-        switch(item.getType()) {
+        switch (item.getType()) {
             case COAL:
             case CHARCOAL:
             case COAL_BLOCK:
@@ -726,31 +726,31 @@ public final class ItemUtil {
                 return true;
             default:
                 return Tag.ITEMS_BOATS.isTagged(item.getType())
-                        || Tag.WOODEN_DOORS.isTagged(item.getType())
-                        || Tag.CARPETS.isTagged(item.getType())
-                        || Tag.WOODEN_BUTTONS.isTagged(item.getType())
-                        || Tag.ITEMS_BANNERS.isTagged(item.getType())
-                        || Tag.LOGS.isTagged(item.getType())
-                        || Tag.LEAVES.isTagged(item.getType())
-                        || Tag.PLANKS.isTagged(item.getType())
-                        || Tag.WOODEN_STAIRS.isTagged(item.getType())
-                        || Tag.WOODEN_SLABS.isTagged(item.getType())
-                        || Tag.SAPLINGS.isTagged(item.getType())
-                        || Tag.WOOL.isTagged(item.getType())
-                        || Tag.WOODEN_PRESSURE_PLATES.isTagged(item.getType())
-                        || Tag.SIGNS.isTagged(item.getType());
+                    || Tag.WOODEN_DOORS.isTagged(item.getType())
+                    || Tag.CARPETS.isTagged(item.getType())
+                    || Tag.WOODEN_BUTTONS.isTagged(item.getType())
+                    || Tag.ITEMS_BANNERS.isTagged(item.getType())
+                    || Tag.LOGS.isTagged(item.getType())
+                    || Tag.LEAVES.isTagged(item.getType())
+                    || Tag.PLANKS.isTagged(item.getType())
+                    || Tag.WOODEN_STAIRS.isTagged(item.getType())
+                    || Tag.WOODEN_SLABS.isTagged(item.getType())
+                    || Tag.SAPLINGS.isTagged(item.getType())
+                    || Tag.WOOL.isTagged(item.getType())
+                    || Tag.WOODEN_PRESSURE_PLATES.isTagged(item.getType())
+                    || Tag.SIGNS.isTagged(item.getType());
         }
     }
 
     /**
      * Checks whether an item is a potion ingredient.
-     * 
+     *
      * @param item The item to check.
      * @return If the item is a potion ingredient.
      */
     public static boolean isAPotionIngredient(ItemStack item) {
 
-        switch(item.getType()) {
+        switch (item.getType()) {
             case NETHER_WART:
             case GLOWSTONE_DUST:
             case REDSTONE:
@@ -878,16 +878,16 @@ public final class ItemUtil {
 
     public static ItemStack makeItemValid(ItemStack invalid) {
 
-        if(invalid == null)
+        if (invalid == null)
             return new ItemStack(Material.STONE);
 
         ItemStack valid = invalid.clone();
 
-        if(valid.getDurability() < 0)
+        if (valid.getDurability() < 0)
             valid.setDurability((short) 0);
-        if(valid.getType() == null || valid.getType() == Material.MOVING_PISTON)
+        if (valid.getType() == null || valid.getType() == Material.MOVING_PISTON)
             valid.setType(Material.STONE);
-        if(valid.getAmount() < 1)
+        if (valid.getAmount() < 1)
             valid.setAmount(1);
 
         return valid;
@@ -895,7 +895,7 @@ public final class ItemUtil {
 
     /**
      * Gets all {@link Item}s at a certain {@link Block}.
-     * 
+     *
      * @param block The {@link Block} to check for items at.
      * @return A {@link ArrayList} of {@link Item}s.
      */
@@ -920,8 +920,8 @@ public final class ItemUtil {
         return items;
     }
 
-    public static boolean isArmor(Material type){
-        switch(type) {
+    public static boolean isArmor(Material type) {
+        switch (type) {
             case LEATHER_HELMET:
             case LEATHER_CHESTPLATE:
             case LEATHER_LEGGINGS:
@@ -951,12 +951,12 @@ public final class ItemUtil {
 
     /**
      * Returns the maximum durability that an item can have.
-     * 
+     *
      * @param type
      * @return
      */
     public static short getMaxDurability(Material type) {
-        switch(type) {
+        switch (type) {
             case DIAMOND_AXE:
             case DIAMOND_HOE:
             case DIAMOND_PICKAXE:
@@ -1005,8 +1005,8 @@ public final class ItemUtil {
 
         if (level > 0) {
             int chance = (int) (100d / (level + 1));
-            if(isArmor(stack.getType())) {
-                chance = (int)(60d + (40d / (level + 1)));
+            if (isArmor(stack.getType())) {
+                chance = (int) (60d + (40d / (level + 1)));
             }
             int roll = ThreadLocalRandom.current().nextInt(100);
             return !(roll < chance);
@@ -1018,13 +1018,13 @@ public final class ItemUtil {
     public static void damageHeldItem(Player player) {
         ItemStack heldItem = player.getInventory().getItemInMainHand();
         ItemMeta meta = heldItem.getItemMeta();
-        if(meta instanceof Damageable && getMaxDurability(heldItem.getType()) > 0) {
+        if (meta instanceof Damageable && getMaxDurability(heldItem.getType()) > 0) {
             if (!shouldDamageItem(heldItem)) {
                 return;
             }
             ((Damageable) meta).setDamage(((Damageable) meta).getDamage() + 1);
             heldItem.setItemMeta(meta);
-            if(((Damageable) meta).getDamage() <= getMaxDurability(heldItem.getType()))
+            if (((Damageable) meta).getDamage() <= getMaxDurability(heldItem.getType()))
                 player.getInventory().setItemInMainHand(heldItem);
             else
                 player.getInventory().setItemInMainHand(null);
@@ -1032,7 +1032,7 @@ public final class ItemUtil {
     }
 
     public static boolean isStainedGlass(Material typeId) {
-        switch(typeId) {
+        switch (typeId) {
             case BLACK_STAINED_GLASS:
             case BLUE_STAINED_GLASS:
             case BROWN_STAINED_GLASS:
@@ -1056,7 +1056,7 @@ public final class ItemUtil {
     }
 
     public static boolean isStainedGlassPane(Material typeId) {
-        switch(typeId) {
+        switch (typeId) {
             case BLACK_STAINED_GLASS_PANE:
             case BLUE_STAINED_GLASS_PANE:
             case BROWN_STAINED_GLASS_PANE:

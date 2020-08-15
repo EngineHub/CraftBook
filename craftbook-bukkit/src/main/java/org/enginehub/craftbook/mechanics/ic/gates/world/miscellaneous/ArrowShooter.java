@@ -14,32 +14,15 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-// $Id$
-/*
- * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with this program. If not,
- * see <http://www.gnu.org/licenses/>.
- */
-
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.util.Vector;
-
 import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -124,14 +107,14 @@ public class ArrowShooter extends AbstractIC {
         double z = targetDir.getZ() - signBlock.getZ();
         Vector velocity = new Vector(x, vert, z);
         Location shootLoc = new Location(CraftBookBukkitUtil.toSign(getSign()).getWorld(), targetDir.getX() + 0.5,
-                targetDir.getY() + 0.5,
-                targetDir.getZ() + 0.5);
+            targetDir.getY() + 0.5,
+            targetDir.getZ() + 0.5);
 
-        if(!shootLoc.getChunk().isLoaded())
+        if (!shootLoc.getChunk().isLoaded())
             return;
 
         for (short i = 0; i < n; i++)
-            CraftBookBukkitUtil.toSign(getSign()).getWorld().spawnArrow(shootLoc, velocity, (float)speed, (float)spread);
+            CraftBookBukkitUtil.toSign(getSign()).getWorld().spawnArrow(shootLoc, velocity, (float) speed, (float) spread);
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
@@ -156,7 +139,7 @@ public class ArrowShooter extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"speed:spread", "vertical gain"};
+            return new String[] { "speed:spread", "vertical gain" };
         }
     }
 }

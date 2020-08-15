@@ -16,8 +16,8 @@
 
 package org.enginehub.craftbook;
 
-import org.enginehub.craftbook.mechanic.MechanicManager;
 import com.sk89q.worldedit.util.report.ReportList;
+import org.enginehub.craftbook.mechanic.MechanicManager;
 import org.enginehub.craftbook.util.profile.cache.ProfileCache;
 import org.enginehub.craftbook.util.profile.resolver.ProfileService;
 import org.enginehub.piston.CommandManager;

@@ -45,7 +45,7 @@ public final class EnumUtil {
     public static String[] getStringArrayFromEnum(Class<? extends Enum<?>> c) {
 
         List<String> bits = new ArrayList<>();
-        for(Enum<? extends Enum<?>> s : c.getEnumConstants())
+        for (Enum<? extends Enum<?>> s : c.getEnumConstants())
             bits.add(s.name());
         return bits.toArray(new String[bits.size()]);
     }

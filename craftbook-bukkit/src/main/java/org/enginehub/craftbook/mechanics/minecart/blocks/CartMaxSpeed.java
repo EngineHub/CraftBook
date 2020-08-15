@@ -16,15 +16,15 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
+import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.world.block.BlockTypes;
+import org.bukkit.entity.Minecart;
+import org.bukkit.event.EventHandler;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.BlockSyntax;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
-import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.world.block.BlockTypes;
-import org.bukkit.entity.Minecart;
-import org.bukkit.event.EventHandler;
 
 public class CartMaxSpeed extends CartBlockMechanism {
 
@@ -38,19 +38,20 @@ public class CartMaxSpeed extends CartBlockMechanism {
         double maxSpeed = 0.4D;
         try {
             maxSpeed = Double.parseDouble(event.getBlocks().getSign().getLine(2));
-        } catch(Exception e){}
+        } catch (Exception e) {
+        }
 
         // enabled?
         if (Power.OFF == isActive(event.getBlocks())) return;
 
-        ((Minecart)event.getVehicle()).setMaxSpeed(maxSpeed);
+        ((Minecart) event.getVehicle()).setMaxSpeed(maxSpeed);
     }
 
     @Override
     public boolean verify(ChangedSign sign, CraftBookPlayer player) {
 
         try {
-            if(!sign.getLine(2).isEmpty())
+            if (!sign.getLine(2).isEmpty())
                 Double.parseDouble(sign.getLine(2));
         } catch (NumberFormatException e) {
             player.printError("Line 3 must be a number that represents the max speed!");
@@ -68,7 +69,7 @@ public class CartMaxSpeed extends CartBlockMechanism {
     @Override
     public String[] getApplicableSigns() {
 
-        return new String[]{"Max Speed"};
+        return new String[] { "Max Speed" };
     }
 
     @Override

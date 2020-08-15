@@ -16,12 +16,10 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
-import org.enginehub.craftbook.util.BlockSyntax;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-
+import org.bukkit.block.data.BlockData;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
@@ -30,11 +28,11 @@ import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
+import org.enginehub.craftbook.util.BlockSyntax;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SignUtil;
-import org.bukkit.block.data.BlockData;
 
 /**
  * @author Silthus
@@ -176,7 +174,7 @@ public class SetDoor extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"onID{:onData-offID:offData}", "offset x,y,z:width,height"};
+            return new String[] { "onID{:onData-offID:offData}", "offset x,y,z:width,height" };
         }
     }
 }

@@ -16,11 +16,6 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.util.RailUtil;
-import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import org.bukkit.Material;
@@ -28,6 +23,11 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.MultipleFacing;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
+import org.enginehub.craftbook.util.RailUtil;
+import org.enginehub.craftbook.util.SignUtil;
 
 /**
  * <p>
@@ -36,11 +36,14 @@ import org.bukkit.block.data.MultipleFacing;
  * is given.
  * </p>
  * <p>
- * Sign text and base block type are not validated by any constructors; this must be performed explicitly by calling
+ * Sign text and base block type are not validated by any constructors; this must be performed
+ * explicitly by calling
  * the appropriate methods after
- * construction. Selection of signs thus does not concern itself with sign text at all; but this is fine,
+ * construction. Selection of signs thus does not concern itself with sign text at all; but this is
+ * fine,
  * since if you have two signs in an area where
- * they could concievably contend for control of the mechanism, you would be doing something that ought be physically
+ * they could concievably contend for control of the mechanism, you would be doing something that
+ * ought be physically
  * impossible anyway (though yes,
  * it is possible if editing the world directly without physics).
  * </p>
@@ -53,9 +56,11 @@ public class CartMechanismBlocks {
      * Declarative constructor. No arguments are validated in any way.
      *
      * @param rail the block containing the rails.
-     * @param base the block on which the rails sit; the type of this block is what determines the mechanism type.
-     * @param sign the block containing the sign that gives additional configuration to the mechanism,
-     *             or null if not interested.
+     * @param base the block on which the rails sit; the type of this block is what determines
+     *     the mechanism type.
+     * @param sign the block containing the sign that gives additional configuration to the
+     *     mechanism,
+     *     or null if not interested.
      */
     private CartMechanismBlocks(Block rail, Block base, Block sign) {
 
@@ -65,7 +70,8 @@ public class CartMechanismBlocks {
     }
 
     /**
-     * Detecting factory; defers to one of the other three specific detecting factories based on whether the given
+     * Detecting factory; defers to one of the other three specific detecting factories based on
+     * whether the given
      * unknown block appears to be a sign,
      * rail, or base.
      *
@@ -81,12 +87,15 @@ public class CartMechanismBlocks {
 
     /**
      * <p>
-     * Detecting factory, based on the position of the rails. The base must be one block below and the sign if it
+     * Detecting factory, based on the position of the rails. The base must be one block below and
+     * the sign if it
      * exists must be two or three blocks
-     * below. Signs are guaranteed to be signs (unless they're null) and rails are guaranteed to be rails.
+     * below. Signs are guaranteed to be signs (unless they're null) and rails are guaranteed to be
+     * rails.
      * </p>
      * <p>
-     * This is the most important constructor, since it is the one invoked when processing cart move events.
+     * This is the most important constructor, since it is the one invoked when processing cart move
+     * events.
      * </p>
      *
      * @param rail the block containing the rails.
@@ -100,15 +109,16 @@ public class CartMechanismBlocks {
             face = ((Directional) rail.getBlockData()).getFacing().getOppositeFace();
         } else if (rail.getType() == Material.VINE) {
             MultipleFacing vine = (MultipleFacing) rail.getBlockData();
-            for(BlockFace test : vine.getAllowedFaces()) {
-                if(vine.hasFace(test)) {
+            for (BlockFace test : vine.getAllowedFaces()) {
+                if (vine.hasFace(test)) {
                     face = test.getOppositeFace();
                     break;
                 }
             }
         }
 
-        if (SignUtil.isSign(rail.getRelative(face, 2))) return new CartMechanismBlocks(rail, rail.getRelative(face, 1), rail.getRelative(face, 2));
+        if (SignUtil.isSign(rail.getRelative(face, 2)))
+            return new CartMechanismBlocks(rail, rail.getRelative(face, 1), rail.getRelative(face, 2));
         else if (SignUtil.isSign(rail.getRelative(face, 3)))
             return new CartMechanismBlocks(rail, rail.getRelative(face, 1), rail.getRelative(face, 3));
         else if (SignUtil.isSign(rail.getRelative(face, 1).getRelative(BlockFace.EAST, 1)))
@@ -123,11 +133,14 @@ public class CartMechanismBlocks {
     }
 
     /**
-     * Detecting factory, based on the position of the base. The rails must be one block above and the sign if it
+     * Detecting factory, based on the position of the base. The rails must be one block above and
+     * the sign if it
      * exists must be one or two blocks
-     * below. Signs are guaranteed to be signs (unless they're null) and rails are guaranteed to be rails.
+     * below. Signs are guaranteed to be signs (unless they're null) and rails are guaranteed to be
+     * rails.
      *
-     * @param base the block on which the rails sit; the type of this block is what determines the mechanism type.
+     * @param base the block on which the rails sit; the type of this block is what determines
+     *     the mechanism type.
      */
     private static CartMechanismBlocks findByBase(Block base) throws InvalidMechanismException {
 
@@ -149,21 +162,24 @@ public class CartMechanismBlocks {
     }
 
     /**
-     * Detecting factory, based on the position of the sign. The base must be one or two blocks above and the rails
+     * Detecting factory, based on the position of the sign. The base must be one or two blocks
+     * above and the rails
      * an additional block above the
      * base. Signs are guaranteed to be signs and rails are guaranteed to be rails.
      *
-     * @param sign the block containing the sign that gives additional configuration to the mechanism.
+     * @param sign the block containing the sign that gives additional configuration to the
+     *     mechanism.
      */
     private static CartMechanismBlocks findBySign(Block sign) throws InvalidMechanismException {
 
-        if (!SignUtil.isSign(sign)) throw new InvalidMechanismException("sign argument must be a sign!");
+        if (!SignUtil.isSign(sign))
+            throw new InvalidMechanismException("sign argument must be a sign!");
         if (RailUtil.isTrack(sign.getRelative(BlockFace.UP, 2).getType()))
             return new CartMechanismBlocks(sign.getRelative(BlockFace.UP, 2), sign.getRelative(BlockFace.UP, 1), sign);
         else if (RailUtil.isTrack(sign.getRelative(BlockFace.UP, 3).getType()))
             return new CartMechanismBlocks(sign.getRelative(BlockFace.UP, 3), sign.getRelative(BlockFace.UP, 2), sign);
         else if (RailUtil.isTrack(sign.getRelative(SignUtil.getBack(sign), 1).getRelative(BlockFace.UP, 1).getType()))
-            return new CartMechanismBlocks(sign.getRelative(SignUtil.getBack(sign), 1).getRelative(BlockFace.UP, 1), sign.getRelative( SignUtil.getBack(sign), 1), sign);
+            return new CartMechanismBlocks(sign.getRelative(SignUtil.getBack(sign), 1).getRelative(BlockFace.UP, 1), sign.getRelative(SignUtil.getBack(sign), 1), sign);
         throw new InvalidMechanismException("could not find rails.");
     }
 
@@ -173,7 +189,8 @@ public class CartMechanismBlocks {
     public Block from;
 
     /**
-     * This is a stupid but necessary thing since hash completely broke the ability to get the from location of the
+     * This is a stupid but necessary thing since hash completely broke the ability to get the from
+     * location of the
      * move event from a mechanism
      * itself.
      */
@@ -184,11 +201,11 @@ public class CartMechanismBlocks {
 
     /**
      * @param mechname
-     *
-     * @return true if the bracketed keyword on the sign matches the given mechname; false otherwise or if no sign.
-     *
-     * @throws ClassCastException if the declarative constructor was used in such a way that a non-sign block was
-     *                            specified for a sign.
+     * @return true if the bracketed keyword on the sign matches the given mechname; false otherwise
+     *     or if no sign.
+     * @throws ClassCastException if the declarative constructor was used in such a way that a
+     *     non-sign block was
+     *     specified for a sign.
      */
     public boolean matches(String mechname) {
 
@@ -199,7 +216,6 @@ public class CartMechanismBlocks {
 
     /**
      * @param mat
-     *
      * @return true if the base block is the same type as the given block.
      */
     public boolean matches(BlockStateHolder mat) {
@@ -208,8 +224,8 @@ public class CartMechanismBlocks {
 
     /**
      * @return a Sign BlockState, or null if there is no sign block.
-     *
-     * @throws ClassCastException if there a sign block is set, but it's not *actually* a sign block.
+     * @throws ClassCastException if there a sign block is set, but it's not *actually* a sign
+     *     block.
      */
     public ChangedSign getSign() {
 

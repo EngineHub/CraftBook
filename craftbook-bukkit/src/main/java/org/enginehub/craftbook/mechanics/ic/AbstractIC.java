@@ -14,33 +14,16 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-// $Id$
-/*
- * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- * 
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free
- * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with this program. If not,
- * see <http://www.gnu.org/licenses/>.
- */
-
 package org.enginehub.craftbook.mechanics.ic;
 
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SignUtil;
 
@@ -110,7 +93,7 @@ public abstract class AbstractIC implements IC {
 
         if (p.isSneaking()) {
             ICDocsParser.generateICDocs(CraftBookPlugin.inst().wrapPlayer(p),
-                    RegexUtil.RIGHT_BRACKET_PATTERN.split(RegexUtil.LEFT_BRACKET_PATTERN.split(getSign().getLine(1))[1])[0]);
+                RegexUtil.RIGHT_BRACKET_PATTERN.split(RegexUtil.LEFT_BRACKET_PATTERN.split(getSign().getLine(1))[1])[0]);
         }
     }
 
@@ -133,9 +116,9 @@ public abstract class AbstractIC implements IC {
     public boolean equals(Object o) {
 
         return o instanceof AbstractIC
-                && getSignTitle().equalsIgnoreCase(((AbstractIC) o).getSignTitle())
-                && getTitle().equalsIgnoreCase(((AbstractIC) o).getTitle())
-                && sign.equals(((AbstractIC) o).sign);
+            && getSignTitle().equalsIgnoreCase(((AbstractIC) o).getSignTitle())
+            && getTitle().equalsIgnoreCase(((AbstractIC) o).getTitle())
+            && sign.equals(((AbstractIC) o).sign);
     }
 
     @Override

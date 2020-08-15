@@ -42,7 +42,8 @@ public final class EvenMoreExecutors {
      * @return the newly created thread pool
      */
     public static ExecutorService newBoundedCachedThreadPool(int minThreads, int maxThreads, int queueSize) {
-        return newBoundedCachedThreadPool(minThreads, maxThreads, queueSize, null);}
+        return newBoundedCachedThreadPool(minThreads, maxThreads, queueSize, null);
+    }
 
     /**
      * Creates a thread pool that creates new threads as needed up to
@@ -57,9 +58,9 @@ public final class EvenMoreExecutors {
      */
     public static ExecutorService newBoundedCachedThreadPool(int minThreads, int maxThreads, int queueSize, String threadFormat) {
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
-                minThreads, maxThreads,
-                60L, TimeUnit.SECONDS,
-                new LinkedBlockingDeque<>(queueSize));
+            minThreads, maxThreads,
+            60L, TimeUnit.SECONDS,
+            new LinkedBlockingDeque<>(queueSize));
         threadPoolExecutor.allowCoreThreadTimeOut(true);
         if (threadFormat != null) {
             threadPoolExecutor.setThreadFactory(new ThreadFactoryBuilder().setNameFormat(threadFormat).build());

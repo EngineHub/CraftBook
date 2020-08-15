@@ -16,6 +16,12 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
+import com.sk89q.worldedit.math.BlockVector3;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.Tag;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.Ageable;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -27,12 +33,6 @@ import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.ICUtil;
 import org.enginehub.craftbook.util.SearchArea;
-import com.sk89q.worldedit.math.BlockVector3;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.Tag;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.Ageable;
 
 public class CombineHarvester extends AbstractSelfTriggeredIC {
 
@@ -70,9 +70,9 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
     @Override
     public void think(ChipState chip) {
 
-        if(chip.getInput(0)) return;
+        if (chip.getInput(0)) return;
 
-        for(int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
             chip.setOutput(0, harvest());
     }
 
@@ -80,7 +80,7 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
 
         Block b = area.getRandomBlockInArea();
 
-        if(b == null) return false;
+        if (b == null) return false;
 
         if (harvestable(b)) {
             ICUtil.collectItem(this, BlockVector3.at(0, 1, 0), BlockUtil.getBlockDrops(b, null));
@@ -138,12 +138,12 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"SearchArea", null};
+            return new String[] { "SearchArea", null };
         }
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
-            if(!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
+            if (!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
                 throw new ICVerificationException("Invalid SearchArea on 3rd line!");
         }
     }

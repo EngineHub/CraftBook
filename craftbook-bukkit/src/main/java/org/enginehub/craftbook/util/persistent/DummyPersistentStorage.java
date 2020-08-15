@@ -24,27 +24,27 @@ public class DummyPersistentStorage extends PersistentStorage {
     private Map<String, Object> map;
 
     @Override
-    public void open () {
+    public void open() {
         map = new HashMap<>();
     }
 
     @Override
-    public void close () {
+    public void close() {
         map = null; //Dummy doesn't save.
     }
 
     @Override
-    public String getType () {
+    public String getType() {
         return "DUMMY";
     }
 
     @Override
-    public Object get (String location) {
+    public Object get(String location) {
         return map.get(location);
     }
 
     @Override
-    public void set (String location, Object data) {
+    public void set(String location, Object data) {
         map.put(location, data);
     }
 
@@ -54,35 +54,35 @@ public class DummyPersistentStorage extends PersistentStorage {
     }
 
     @Override
-    public boolean isValid () {
+    public boolean isValid() {
         return true;
     }
 
     @Override
-    public int getVersion () {
+    public int getVersion() {
         return 0;
     }
 
     @Override
-    public int getCurrentVersion () {
+    public int getCurrentVersion() {
         return 0;
     }
 
     @Override
-    public void convertVersion (int version) {
+    public void convertVersion(int version) {
 
     }
 
     @Override
-    public void importData (Map<String, Object> data, boolean replace) {
-        if(replace)
+    public void importData(Map<String, Object> data, boolean replace) {
+        if (replace)
             map = data;
         else
             map.putAll(data);
     }
 
     @Override
-    public Map<String, Object> exportData () {
+    public Map<String, Object> exportData() {
         return map;
     }
 }

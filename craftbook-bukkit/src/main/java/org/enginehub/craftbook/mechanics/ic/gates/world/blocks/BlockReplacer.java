@@ -16,6 +16,14 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
@@ -28,26 +36,18 @@ import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
 import org.enginehub.craftbook.util.BlockSyntax;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.RegexUtil;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.world.block.BlockState;
-import com.sk89q.worldedit.world.block.BlockStateHolder;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class BlockReplacer extends AbstractIC {
 
-    public BlockReplacer (Server server, ChangedSign sign, ICFactory factory) {
+    public BlockReplacer(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         chip.setOutput(0, replaceBlocks(chip.getInput(0)));
     }
@@ -69,7 +69,7 @@ public class BlockReplacer extends AbstractIC {
 
         String[] data = RegexUtil.COLON_PATTERN.split(getLine(3));
         delay = Integer.parseInt(data[0]);
-        if(data.length > 1)
+        if (data.length > 1)
             mode = Integer.parseInt(data[1]);
         else
             mode = 0;
@@ -78,27 +78,27 @@ public class BlockReplacer extends AbstractIC {
 
     public boolean replaceBlocks(final boolean on, final Block block, final Set<Location> traversedBlocks) {
 
-        if(traversedBlocks.size() > 15000)
+        if (traversedBlocks.size() > 15000)
             return true;
 
-        if(mode == 0) {
-            for(BlockFace f : LocationUtil.getDirectFaces()) {
+        if (mode == 0) {
+            for (BlockFace f : LocationUtil.getDirectFaces()) {
 
                 final Block b = block.getRelative(f);
 
-                if(traversedBlocks.contains(b.getLocation()))
+                if (traversedBlocks.contains(b.getLocation()))
                     continue;
                 traversedBlocks.add(b.getLocation());
 
                 BlockState bState = BukkitAdapter.adapt(b.getBlockData());
 
-                if(onBlock.equalsFuzzy(bState)) {
-                    if(!on) {
+                if (onBlock.equalsFuzzy(bState)) {
+                    if (!on) {
                         b.setBlockData(BukkitAdapter.adapt(offBlock), physics);
                     }
                     Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> replaceBlocks(on, b, traversedBlocks), delay);
                 } else if (offBlock.equalsFuzzy(bState)) {
-                    if(on) {
+                    if (on) {
                         b.setBlockData(BukkitAdapter.adapt(onBlock), physics);
                     }
                     Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> replaceBlocks(on, b, traversedBlocks), delay);
@@ -113,13 +113,12 @@ public class BlockReplacer extends AbstractIC {
         Block block = getBackBlock();
         BlockState blockState = BukkitAdapter.adapt(block.getBlockData());
 
-        if(onBlock.equalsFuzzy(blockState)) {
-            if(!on) {
+        if (onBlock.equalsFuzzy(blockState)) {
+            if (!on) {
                 block.setBlockData(BukkitAdapter.adapt(offBlock), physics);
             }
-        }
-        else if (offBlock.equalsFuzzy(blockState))
-            if(on) {
+        } else if (offBlock.equalsFuzzy(blockState))
+            if (on) {
                 block.setBlockData(BukkitAdapter.adapt(onBlock), physics);
             }
         Set<Location> traversedBlocks = new HashSet<>();
@@ -128,12 +127,12 @@ public class BlockReplacer extends AbstractIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
         return "Block Replacer";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
         return "BLOCK REPLACER";
     }
 
@@ -164,45 +163,39 @@ public class BlockReplacer extends AbstractIC {
             String[] onIds = RegexUtil.COLON_PATTERN.split(ids[0]);
             try {
                 Integer.parseInt(onIds[0]);
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 throw new ICVerificationException("Must provide an on ID!");
             }
             try {
-                if(onIds.length > 1)
+                if (onIds.length > 1)
                     Byte.parseByte(onIds[1]);
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 throw new ICVerificationException("Invalid on Data!");
             }
 
             String[] offIds = RegexUtil.COLON_PATTERN.split(ids[1]);
             try {
                 Integer.parseInt(offIds[0]);
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 throw new ICVerificationException("Must provide an off ID!");
             }
             try {
-                if(offIds.length > 1)
+                if (offIds.length > 1)
                     Byte.parseByte(offIds[1]);
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 throw new ICVerificationException("Invalid off Data!");
             }
 
             String[] data = RegexUtil.COLON_PATTERN.split(sign.getLine(3));
             try {
                 Integer.parseInt(data[0]);
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 throw new ICVerificationException("Must provide a delay!");
             }
             try {
-                if(data.length > 1)
+                if (data.length > 1)
                     Integer.parseInt(data[1]);
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 throw new ICVerificationException("Invalid mode!");
             }
         }
@@ -210,7 +203,7 @@ public class BlockReplacer extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"onID{:onData}-offID{:offData}}", "delay{:mode:physics}"};
+            return new String[] { "onID{:onData}-offID{:offData}}", "delay{:mode:physics}" };
         }
     }
 }

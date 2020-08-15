@@ -16,16 +16,16 @@
 
 package org.enginehub.craftbook.mechanic;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.collect.ImmutableList;
-import org.enginehub.craftbook.mechanic.load.LoadDependency;
-import org.enginehub.craftbook.mechanic.load.LoadPriority;
 import com.sk89q.worldedit.registry.Keyed;
 import com.sk89q.worldedit.registry.Registry;
+import org.enginehub.craftbook.mechanic.load.LoadDependency;
+import org.enginehub.craftbook.mechanic.load.LoadPriority;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class MechanicType<T extends CraftBookMechanic> implements Keyed {
 
@@ -39,7 +39,7 @@ public class MechanicType<T extends CraftBookMechanic> implements Keyed {
     private final List<LoadDependency> dependencies;
 
     private MechanicType(String id, String name, String className, MechanicCategory category, LoadPriority loadPriority,
-            List<LoadDependency> dependencies) {
+                         List<LoadDependency> dependencies) {
         this.id = id;
         this.name = name;
         this.className = className;

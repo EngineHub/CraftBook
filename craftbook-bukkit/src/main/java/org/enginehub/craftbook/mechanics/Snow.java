@@ -17,14 +17,6 @@
 package org.enginehub.craftbook.mechanics;
 
 import com.google.common.collect.Lists;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.util.BlockSyntax;
-import org.enginehub.craftbook.util.BlockUtil;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.ProtectionUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -51,6 +43,13 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockUtil;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.ProtectionUtil;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -67,8 +66,8 @@ public class Snow extends AbstractCraftBookMechanic {
     private static final double SNOW_MELTING_TEMPERATURE = 0.05D;
     private static final double SNOW_FORM_TEMPERATURE = 0.15D;
 
-    private static final BlockFace[] UPDATE_FACES = {BlockFace.UP, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST};
-    private static final BlockFace[] DISPERSE_FACES = {BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST};
+    private static final BlockFace[] UPDATE_FACES = { BlockFace.UP, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST };
+    private static final BlockFace[] DISPERSE_FACES = { BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST };
 
     private BukkitTask randomTickTask;
     private BukkitTask dispersionTask;
@@ -81,10 +80,10 @@ public class Snow extends AbstractCraftBookMechanic {
         }
         if (dispersionMode) {
             dispersionTask = Bukkit.getScheduler().runTaskTimer(
-                    CraftBookPlugin.inst(),
-                    dispersionQueueRunner = new DispersionQueue(),
-                    dispersionTickSpeed,
-                    dispersionTickSpeed
+                CraftBookPlugin.inst(),
+                dispersionQueueRunner = new DispersionQueue(),
+                dispersionTickSpeed,
+                dispersionTickSpeed
             );
         }
 
@@ -109,8 +108,8 @@ public class Snow extends AbstractCraftBookMechanic {
 
     private boolean isReplacable(Block block) {
         return !(block.getType() == Material.WATER || block.getType() == Material.LAVA)
-                && (BlockUtil.isBlockReplacable(block.getType())
-                || Blocks.containsFuzzy(dispersionReplacables, BukkitAdapter.adapt(block.getBlockData())));
+            && (BlockUtil.isBlockReplacable(block.getType())
+            || Blocks.containsFuzzy(dispersionReplacables, BukkitAdapter.adapt(block.getBlockData())));
     }
 
     private boolean canLandOn(Block block) {
@@ -136,7 +135,7 @@ public class Snow extends AbstractCraftBookMechanic {
                     return;
                 }
 
-                if (!ProtectionUtil.canBuild((Player)event.getEntity().getShooter(), block.getLocation(), true)) {
+                if (!ProtectionUtil.canBuild((Player) event.getEntity().getShooter(), block.getLocation(), true)) {
                     return;
                 }
             }
@@ -169,7 +168,7 @@ public class Snow extends AbstractCraftBookMechanic {
         if (toBlock.getType() == Material.SNOW) {
             org.bukkit.block.data.type.Snow levelled = (org.bukkit.block.data.type.Snow) toBlock.getBlockData();
 
-            if(slowdown) {
+            if (slowdown) {
                 if (levelled.getLayers() > 4) {
                     event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 2));
                 } else if (levelled.getLayers() > levelled.getMinimumLayers()) {
@@ -220,7 +219,7 @@ public class Snow extends AbstractCraftBookMechanic {
         Block below = snow.getRelative(BlockFace.DOWN);
         Material belowType = below.getType();
 
-        if(isReplacable(below)) {
+        if (isReplacable(below)) {
             if (belowType != Material.SNOW) {
                 return increaseSnow(below, disperse);
             } else {
@@ -250,7 +249,7 @@ public class Snow extends AbstractCraftBookMechanic {
             return true;
         }
 
-        if(snow.getType() != Material.SNOW) {
+        if (snow.getType() != Material.SNOW) {
             if (belowType == Material.SNOW) {
                 boolean allowed = pileHigh && below.getRelative(BlockFace.DOWN, maxPileHeight).getType() != Material.SNOW;
                 if (!allowed) {
@@ -263,7 +262,7 @@ public class Snow extends AbstractCraftBookMechanic {
                 return false;
             }
 
-            if(isReplacable(snow)) {
+            if (isReplacable(snow)) {
                 snow.setType(Material.SNOW, false);
                 if (disperse && belowType == Material.SNOW) {
                     addToDispersionQueue(snow);
@@ -275,8 +274,8 @@ public class Snow extends AbstractCraftBookMechanic {
         }
 
         org.bukkit.block.data.type.Snow snowData = (org.bukkit.block.data.type.Snow) snow.getBlockData();
-        if(snowData.getLayers() + 1 > snowData.getMaximumLayers()) {
-            if(pileHigh && below.getRelative(BlockFace.DOWN, maxPileHeight).getType() != Material.SNOW) {
+        if (snowData.getLayers() + 1 > snowData.getMaximumLayers()) {
+            if (pileHigh && below.getRelative(BlockFace.DOWN, maxPileHeight).getType() != Material.SNOW) {
                 snow.setType(Material.SNOW, false);
                 if (disperse) {
                     addToDispersionQueue(snow);
@@ -289,7 +288,7 @@ public class Snow extends AbstractCraftBookMechanic {
             snowData.setLayers(snowData.getLayers() + 1);
             snow.setBlockData(snowData);
 
-            if(disperse) {
+            if (disperse) {
                 addToDispersionQueue(snow);
             }
         }
@@ -385,7 +384,7 @@ public class Snow extends AbstractCraftBookMechanic {
             int diff;
             if (blockType == Material.SNOW) {
                 org.bukkit.block.data.type.Snow blockData = (org.bukkit.block.data.type.Snow) block.getBlockData();
-                if(snowData.getLayers() <= blockData.getLayers() + 1) {
+                if (snowData.getLayers() <= blockData.getLayers() + 1) {
                     continue;
                 }
                 diff = snowData.getLayers() - blockData.getLayers();
@@ -488,10 +487,10 @@ public class Snow extends AbstractCraftBookMechanic {
 
     private static List<String> getDefaultReplacables() {
         return Lists.newArrayList(
-                BlockTypes.DEAD_BUSH.getId(),
-                BlockTypes.GRASS.getId(),
-                BlockTypes.FIRE.getId(),
-                BlockTypes.FERN.getId());
+            BlockTypes.DEAD_BUSH.getId(),
+            BlockTypes.GRASS.getId(),
+            BlockTypes.FIRE.getId(),
+            BlockTypes.FERN.getId());
     }
 
     @Override

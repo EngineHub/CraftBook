@@ -16,12 +16,6 @@
 
 package org.enginehub.craftbook.util;
 
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.BukkitCraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.worldedit.math.Vector3;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -32,6 +26,12 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.BukkitCraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 
 import java.util.HashSet;
 
@@ -46,17 +46,17 @@ public final class LocationUtil {
 
     public static boolean isWithinRadiusPolygon(Location l1, Location l2, Vector3 radius) {
 
-        if(!l1.getWorld().equals(l2.getWorld())) return false;
-        if(l2.getX() < l1.getX() + radius.getX() && l2.getX() > l1.getX() - radius.getX())
-            if(l2.getY() < l1.getY() + radius.getY() && l2.getY() > l1.getY() - radius.getY())
-                if(l2.getZ() < l1.getZ() + radius.getZ() && l2.getZ() > l1.getZ() - radius.getX())
+        if (!l1.getWorld().equals(l2.getWorld())) return false;
+        if (l2.getX() < l1.getX() + radius.getX() && l2.getX() > l1.getX() - radius.getX())
+            if (l2.getY() < l1.getY() + radius.getY() && l2.getY() > l1.getY() - radius.getY())
+                if (l2.getZ() < l1.getZ() + radius.getZ() && l2.getZ() > l1.getZ() - radius.getX())
                     return true;
         return false;
     }
 
     /**
      * Passed a vector, and it smartly detects if its spherical or polygon.
-     * 
+     *
      * @param l1
      * @param l2
      * @param radius
@@ -64,7 +64,7 @@ public final class LocationUtil {
      */
     public static boolean isWithinRadius(Location l1, Location l2, Vector3 radius) {
 
-        return radius.getX() == radius.getZ() && radius.getX() == radius.getY() && isWithinSphericalRadius(l1,l2,radius.getX()) || (radius.getX() != radius.getY() || radius.getY() != radius.getZ() || radius.getX() != radius.getZ()) && isWithinRadiusPolygon(l1,l2,radius);
+        return radius.getX() == radius.getZ() && radius.getX() == radius.getY() && isWithinSphericalRadius(l1, l2, radius.getX()) || (radius.getX() != radius.getY() || radius.getY() != radius.getZ() || radius.getX() != radius.getZ()) && isWithinRadiusPolygon(l1, l2, radius);
     }
 
     public static Entity[] getNearbyEntities(Location l, Vector3 radius) {
@@ -93,7 +93,6 @@ public final class LocationUtil {
      *
      * @param l1
      * @param l2
-     *
      * @return
      */
     public static double getDistance(Location l1, Location l2) {
@@ -103,7 +102,7 @@ public final class LocationUtil {
 
     public static double getDistanceSquared(Location l1, Location l2) {
 
-        if(!l1.getWorld().equals(l2.getWorld())) return Integer.MAX_VALUE;
+        if (!l1.getWorld().equals(l2.getWorld())) return Integer.MAX_VALUE;
 
         if (CraftBook.getInstance().getPlatform().getConfiguration().useBlockDistance)
             return getBlockDistance(l1, l2) * getBlockDistance(l1, l2);
@@ -111,16 +110,16 @@ public final class LocationUtil {
     }
 
     /**
-     * Gets the greatest distance between two locations. Only takes int locations and does not check a round radius.
+     * Gets the greatest distance between two locations. Only takes int locations and does not check
+     * a round radius.
      *
      * @param l1 to compare
      * @param l2 to compare
-     *
      * @return greatest distance
      */
     public static int getBlockDistance(Location l1, Location l2) {
 
-        if(!l1.getWorld().equals(l2.getWorld())) return Integer.MAX_VALUE;
+        if (!l1.getWorld().equals(l2.getWorld())) return Integer.MAX_VALUE;
 
         int x = Math.abs(l1.getBlockX() - l2.getBlockX());
         int y = Math.abs(l1.getBlockY() - l2.getBlockY());
@@ -134,11 +133,10 @@ public final class LocationUtil {
     /**
      * Gets the offset of the blocks location based on the coordiante grid.
      *
-     * @param block   to get offsetfrom
+     * @param block to get offsetfrom
      * @param offsetX to add
      * @param offsetY to add
      * @param offsetZ to add
-     *
      * @return block offset by given coordinates
      */
     public static Block getOffset(Block block, int offsetX, int offsetY, int offsetZ) {
@@ -149,21 +147,22 @@ public final class LocationUtil {
     public static Block getRelativeOffset(ChangedSign sign, int offsetX, int offsetY, int offsetZ) {
 
         return getRelativeOffset(SignUtil.getBackBlock(CraftBookBukkitUtil.toSign(sign).getBlock()),
-                SignUtil.getFacing(CraftBookBukkitUtil.toSign(sign).getBlock()),
-                offsetX, offsetY, offsetZ);
+            SignUtil.getFacing(CraftBookBukkitUtil.toSign(sign).getBlock()),
+            offsetX, offsetY, offsetZ);
     }
 
     /**
-     * Gets the block located relative to the signs front. That means that when the sign is attached to a block and
+     * Gets the block located relative to the signs front. That means that when the sign is attached
+     * to a block and
      * the player is looking at it it
-     * will add the offsetX to left or right, offsetY is added up or down and offsetZ is added front or back.
+     * will add the offsetX to left or right, offsetY is added up or down and offsetZ is added front
+     * or back.
      *
-     * @param block   to get relative position from
-     * @param front   to work with
+     * @param block to get relative position from
+     * @param front to work with
      * @param offsetX amount to move left(negative) or right(positive)
      * @param offsetY amount to move up(positive) or down(negative)
      * @param offsetZ amount to move back(negative) or front(positive)
-     *
      * @return block located at the relative offset position
      */
     public static Block getRelativeOffset(Block block, BlockFace front, int offsetX, int offsetY, int offsetZ) {
@@ -229,7 +228,6 @@ public final class LocationUtil {
      * @param block
      * @param facing
      * @param amount
-     *
      * @return The block
      */
     private static Block getRelativeBlock(Block block, BlockFace facing, int amount) {
@@ -246,7 +244,6 @@ public final class LocationUtil {
      *
      * @param block
      * @param direction
-     *
      * @return next air block in a direction.
      */
     public static Block getNextFreeSpace(Block block, BlockFace direction) {
@@ -264,7 +261,6 @@ public final class LocationUtil {
      * Gets centre of passed block.
      *
      * @param block
-     *
      * @return Centre location
      */
     public static Location getCenterOfBlock(Block block) {
@@ -280,10 +276,10 @@ public final class LocationUtil {
             for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
                 int x = (int) l.getX(), y = (int) l.getY(), z = (int) l.getZ();
                 for (Entity e : new Location(l.getWorld(), x + chX * 16, y, z + chZ * 16).getChunk().getEntities()) {
-                    if(!(e instanceof Player))
+                    if (!(e instanceof Player))
                         continue;
                     if (getDistanceSquared(e.getLocation(), l) <= radius * radius && e.getLocation().getBlock() != l
-                            .getBlock()) {
+                        .getBlock()) {
                         radiusEntities.add((Player) e);
                     }
                 }
@@ -309,24 +305,24 @@ public final class LocationUtil {
 
     /**
      * Gets an array of {@link BlockFace} that are direct.
-     * 
+     *
      * @return The array of {@link BlockFace}
      */
     public static BlockFace[] getDirectFaces() {
 
-        return new BlockFace[] {BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST};
+        return new BlockFace[] { BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST };
     }
 
     /**
      * Gets an array of {@link BlockFace} that are indirect.
-     * 
+     *
      * Note: This is only indirect along the X and Z axis due to bukkit constraints.
-     * 
+     *
      * @return The array of {@link BlockFace}
      */
     public static BlockFace[] getIndirectFaces() {
 
-        return new BlockFace[] {BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH_EAST, BlockFace.NORTH_WEST, BlockFace.SOUTH_EAST, BlockFace.SOUTH_WEST};
+        return new BlockFace[] { BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH_EAST, BlockFace.NORTH_WEST, BlockFace.SOUTH_EAST, BlockFace.SOUTH_WEST };
     }
 
 
@@ -334,20 +330,21 @@ public final class LocationUtil {
      * Teleports the vehicle the player is in to the given destination.
      * Player is ejected out of the vehicle prior to teleportation,
      * otherwise it doesn't work.
-     * @param player        The player that will be ejected and whose vehicle will be teleported.
-     * @param newLocation   The location the vehicle will be teleported to.
+     *
+     * @param player The player that will be ejected and whose vehicle will be teleported.
+     * @param newLocation The location the vehicle will be teleported to.
      * @return The {@link Entity} the player was in or null if player was not in vehicle.
      */
     public static Entity ejectAndTeleportPlayerVehicle(CraftBookPlayer player, Location newLocation) {
 
-        Player bukkitPlayer = ((BukkitCraftBookPlayer)player).getPlayer();
+        Player bukkitPlayer = ((BukkitCraftBookPlayer) player).getPlayer();
 
-        if(bukkitPlayer == null || !bukkitPlayer.isInsideVehicle())
+        if (bukkitPlayer == null || !bukkitPlayer.isInsideVehicle())
             return null;
 
         Entity vehicle = bukkitPlayer.getVehicle();
 
-        if(vehicle == null)
+        if (vehicle == null)
             return null;
 
         newLocation.setYaw(vehicle.getLocation().getYaw());
@@ -366,14 +363,14 @@ public final class LocationUtil {
      * by six ticks through a {@link BukkitRunnable} because
      * it doesn't work otherwise.
      *
-     * @param vehicle   The vehicle that will set the player as a passenger.
-     * @param player    The player that will be put inside the provided vehicle.
+     * @param vehicle The vehicle that will set the player as a passenger.
+     * @param player The player that will be put inside the provided vehicle.
      */
     public static void addVehiclePassengerDelayed(Entity vehicle, CraftBookPlayer player) {
 
-        Player bukkitPlayer = ((BukkitCraftBookPlayer)player).getPlayer();
+        Player bukkitPlayer = ((BukkitCraftBookPlayer) player).getPlayer();
 
-        if(bukkitPlayer == null || vehicle == null)
+        if (bukkitPlayer == null || vehicle == null)
             return;
 
         // The runnableDelayInTicks = 6 was the lowest number that
@@ -382,9 +379,9 @@ public final class LocationUtil {
 
         // vehicle.teleport() seems to have a delay. Calling vehicle.setPassenger()
         // without the delayed runnable will not set the passenger.
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run () {
+            public void run() {
                 vehicle.addPassenger(bukkitPlayer);
             }
         }.runTaskLater(CraftBookPlugin.inst(), runnableDelayInTicks);
@@ -393,8 +390,8 @@ public final class LocationUtil {
     public static Location center(Location loc) {
 
         return new Location(loc.getWorld(), loc.getBlockX() + 0.5, loc.getBlockY() + 0.5,
-                loc.getBlockZ() + 0.5, loc.getPitch(),
-                loc.getYaw());
+            loc.getBlockZ() + 0.5, loc.getPitch(),
+            loc.getYaw());
     }
 
     public static final double EQUALS_PRECISION = 0.0001;
@@ -405,6 +402,6 @@ public final class LocationUtil {
     public static boolean equals(Location a, Location b) {
 
         return Math.abs(a.getX() - b.getX()) <= EQUALS_PRECISION && Math.abs(a.getY() - b.getY()) <= EQUALS_PRECISION
-                && Math.abs(a.getZ() - b.getZ()) <= EQUALS_PRECISION;
+            && Math.abs(a.getZ() - b.getZ()) <= EQUALS_PRECISION;
     }
 }

@@ -16,13 +16,10 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.sensors;
 
-import java.util.Collections;
-
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -35,6 +32,8 @@ import org.enginehub.craftbook.util.ICUtil;
 import org.enginehub.craftbook.util.ItemSyntax;
 import org.enginehub.craftbook.util.ItemUtil;
 import org.enginehub.craftbook.util.SearchArea;
+
+import java.util.Collections;
 
 /**
  * @author Silthus
@@ -120,7 +119,7 @@ public class ItemSensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"SearchArea", "id:data"};
+            return new String[] { "SearchArea", "id:data" };
         }
     }
 }

@@ -16,9 +16,9 @@
 
 package org.enginehub.craftbook.bukkit.report;
 
-import org.enginehub.craftbook.CraftBook;
 import com.sk89q.worldedit.util.report.DataReport;
 import com.sk89q.worldedit.util.report.HierarchyObjectReport;
+import org.enginehub.craftbook.CraftBook;
 
 public class GlobalConfigReport extends DataReport {
 

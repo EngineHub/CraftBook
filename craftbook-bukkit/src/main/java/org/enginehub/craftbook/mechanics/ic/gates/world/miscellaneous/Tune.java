@@ -18,7 +18,6 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -61,12 +60,12 @@ public class Tune extends AbstractSelfTriggeredIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            if(sequencer == null)
+            if (sequencer == null)
                 sequencer = new StringJingleSequencer(tune, delay);
-            if(sequencer.isPlaying() || !sequencer.hasPlayedBefore()) {
+            if (sequencer.isPlaying() || !sequencer.hasPlayedBefore()) {
                 for (Player player : getServer().getOnlinePlayers()) {
                     if (!area.isWithinArea(player.getLocation())) {
-                        if(jNote.isPlaying(player.getName()))
+                        if (jNote.isPlaying(player.getName()))
                             jNote.stop(player.getName());
                     } else if (!jNote.isPlaying(player.getName())) {
                         jNote.play(player.getName(), sequencer, area);
@@ -89,7 +88,8 @@ public class Tune extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        if (!getLine(3).isEmpty()) area = SearchArea.createArea(getLocation().getBlock(), getLine(3));
+        if (!getLine(3).isEmpty())
+            area = SearchArea.createArea(getLocation().getBlock(), getLine(3));
         else area = SearchArea.createEmptyArea();
 
         if (getLine(2).contains(":")) {
@@ -136,7 +136,7 @@ public class Tune extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Delay:Tune", "Radius"};
+            return new String[] { "Delay:Tune", "Radius" };
         }
 
         @Override

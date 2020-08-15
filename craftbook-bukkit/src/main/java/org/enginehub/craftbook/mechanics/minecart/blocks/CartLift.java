@@ -16,12 +16,6 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import org.enginehub.craftbook.util.BlockSyntax;
-import org.enginehub.craftbook.util.CartUtil;
-import org.enginehub.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Location;
@@ -29,6 +23,12 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
+import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.CartUtil;
+import org.enginehub.craftbook.util.SignUtil;
 
 public class CartLift extends CartBlockMechanism {
 
@@ -39,7 +39,8 @@ public class CartLift extends CartBlockMechanism {
         if (!event.getBlocks().matches(getMaterial())) return;
         if (!event.getBlocks().hasSign()) return;
         if (event.isMinor()) return;
-        if (!(event.getBlocks().matches("cartlift up") || event.getBlocks().matches("cartlift down"))) return;
+        if (!(event.getBlocks().matches("cartlift up") || event.getBlocks().matches("cartlift down")))
+            return;
 
         Minecart cart = (Minecart) event.getVehicle();
 
@@ -53,9 +54,9 @@ public class CartLift extends CartBlockMechanism {
 
         while (true) {
 
-            if(destination.getLocation().getBlockY() <= 0 && !up)
+            if (destination.getLocation().getBlockY() <= 0 && !up)
                 return;
-            if(destination.getLocation().getBlockY() >= destination.getWorld().getMaxHeight()-1 && up)
+            if (destination.getLocation().getBlockY() >= destination.getWorld().getMaxHeight() - 1 && up)
                 return;
 
             destination = destination.getRelative(face);
@@ -84,7 +85,7 @@ public class CartLift extends CartBlockMechanism {
     @Override
     public String[] getApplicableSigns() {
 
-        return new String[] {"CartLift Up", "CartLift Down", "CartLift"};
+        return new String[] { "CartLift Up", "CartLift Down", "CartLift" };
     }
 
     @Override

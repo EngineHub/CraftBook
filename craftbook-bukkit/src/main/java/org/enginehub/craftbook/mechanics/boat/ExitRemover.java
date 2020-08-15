@@ -16,11 +16,6 @@
 
 package org.enginehub.craftbook.mechanics.boat;
 
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.util.EntityUtil;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.ItemUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Boat;
@@ -30,13 +25,18 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.EntityUtil;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.ItemUtil;
 
 public class ExitRemover extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleExit(VehicleExitEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         if (!(event.getVehicle() instanceof Boat)) return;
 
@@ -54,17 +54,17 @@ public class ExitRemover extends AbstractCraftBookMechanic {
         }
 
         @Override
-        public void run () {
+        public void run() {
 
-            if(!boat.isValid() || boat.isDead() || !boat.isEmpty()) return;
+            if (!boat.isValid() || boat.isDead() || !boat.isEmpty()) return;
 
-            if(giveItem) {
+            if (giveItem) {
                 ItemStack stack = new ItemStack(ItemUtil.getBoatFromTree(boat.getWoodType()), 1);
 
-                if(player instanceof Player) {
-                    if(!((Player) player).getInventory().addItem(stack).isEmpty())
+                if (player instanceof Player) {
+                    if (!((Player) player).getInventory().addItem(stack).isEmpty())
                         player.getLocation().getWorld().dropItemNaturally(player.getLocation(), stack);
-                } else if(player != null)
+                } else if (player != null)
                     player.getLocation().getWorld().dropItemNaturally(player.getLocation(), stack);
                 else
                     boat.getLocation().getWorld().dropItemNaturally(boat.getLocation(), stack);

@@ -19,7 +19,6 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 import org.bukkit.Server;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -59,17 +58,18 @@ public class SoundEffect extends AbstractIC {
         String soundName = getSign().getLine(3).trim();
         try {
             sound = Sound.valueOf(soundName);
-        } catch(Exception e){}
-        if(sound == null && getSign().getLine(3).trim().length() == 15) {
-            for(Sound s : Sound.values()) {
+        } catch (Exception e) {
+        }
+        if (sound == null && getSign().getLine(3).trim().length() == 15) {
+            for (Sound s : Sound.values()) {
 
-                if(s.name().length() > 15 && s.name().startsWith(getSign().getLine(3))) {
+                if (s.name().length() > 15 && s.name().startsWith(getSign().getLine(3))) {
                     sound = s;
                     break;
                 }
             }
         }
-        if(sound == null)
+        if (sound == null)
             sound = Sound.ENTITY_COW_AMBIENT;
     }
 
@@ -120,7 +120,7 @@ public class SoundEffect extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"volume:pitch", "sound name"};
+            return new String[] { "volume:pitch", "sound name" };
         }
 
         @Override
@@ -129,18 +129,18 @@ public class SoundEffect extends AbstractIC {
             Sound sound = null;
             try {
                 sound = Sound.valueOf(sign.getLine(3).trim());
-            } catch(Exception e) {
+            } catch (Exception e) {
             }
-            if(sound == null && sign.getLine(3).trim().length() == 15) {
-                for(Sound s : Sound.values()) {
+            if (sound == null && sign.getLine(3).trim().length() == 15) {
+                for (Sound s : Sound.values()) {
 
-                    if(s.name().length() > 15 && s.name().startsWith(sign.getLine(3))) {
+                    if (s.name().length() > 15 && s.name().startsWith(sign.getLine(3))) {
                         sound = s;
                         break;
                     }
                 }
             }
-            if(sound == null)
+            if (sound == null)
                 throw new ICVerificationException("Unknown Sound!");
         }
     }

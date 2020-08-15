@@ -17,7 +17,6 @@
 package org.enginehub.craftbook.mechanics.ic.gates.world.weather;
 
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -76,8 +75,8 @@ public class RainSensor extends AbstractSelfTriggeredIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Trigger IC",//Inputs
-                    "High if raining"//Outputs
+                "Trigger IC",//Inputs
+                "High if raining"//Outputs
             };
         }
 

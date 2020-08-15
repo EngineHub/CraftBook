@@ -16,6 +16,12 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Chest;
+import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -26,12 +32,6 @@ import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
 import org.enginehub.craftbook.util.ItemUtil;
 import org.enginehub.craftbook.util.SearchArea;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Chest;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -72,9 +72,9 @@ public class Cultivator extends AbstractSelfTriggeredIC {
     @Override
     public void think(ChipState state) {
 
-        if(state.getInput(0)) return;
+        if (state.getInput(0)) return;
 
-        for(int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
             state.setOutput(0, cultivate());
     }
 
@@ -82,7 +82,7 @@ public class Cultivator extends AbstractSelfTriggeredIC {
 
         Block b = area.getRandomBlockInArea();
 
-        if(b == null) return false;
+        if (b == null) return false;
 
         if (b.getType() == Material.DIRT || b.getType() == Material.GRASS_BLOCK) {
             if (b.getRelative(BlockFace.UP).getType() == Material.AIR && damageHoe()) {
@@ -95,7 +95,7 @@ public class Cultivator extends AbstractSelfTriggeredIC {
     }
 
     private static final Set<Material> hoes = EnumSet.of(Material.WOODEN_HOE, Material.STONE_HOE, Material.IRON_HOE, Material.GOLDEN_HOE,
-            Material.DIAMOND_HOE);
+        Material.DIAMOND_HOE);
 
     public boolean damageHoe() {
 
@@ -107,7 +107,7 @@ public class Cultivator extends AbstractSelfTriggeredIC {
                 if (ItemUtil.isStackValid(c.getInventory().getItem(slot))) {
                     ItemStack item = c.getInventory().getItem(slot);
                     item.setDurability((short) (item.getDurability() + 1));
-                    if(item.getDurability() > ItemUtil.getMaxDurability(item.getType()))
+                    if (item.getDurability() > ItemUtil.getMaxDurability(item.getType()))
                         item = null;
                     c.getInventory().setItem(slot, item);
                     return true;
@@ -140,25 +140,25 @@ public class Cultivator extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLongDescription() {
 
-            return new String[]{
-                    "The '''MC1235''' tills farmland in the alloted radius using a hoe placed inside the above chest.",
-                    "This IC is part of the Farming IC family, and can be used to make a fully automated farm.",
-                    "",
-                    "== Video example ==",
-                    "",
-                    "<div style=\"text-align: center\">{{#ev:youtube|GnMfQtTAZZc|480}}</div>"
+            return new String[] {
+                "The '''MC1235''' tills farmland in the alloted radius using a hoe placed inside the above chest.",
+                "This IC is part of the Farming IC family, and can be used to make a fully automated farm.",
+                "",
+                "== Video example ==",
+                "",
+                "<div style=\"text-align: center\">{{#ev:youtube|GnMfQtTAZZc|480}}</div>"
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+oSearchArea", null};
+            return new String[] { "+oSearchArea", null };
         }
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
-            if(!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
+            if (!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
                 throw new ICVerificationException("Invalid SearchArea on 3rd line!");
         }
     }

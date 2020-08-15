@@ -16,16 +16,16 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import org.enginehub.craftbook.util.BlockSyntax;
-import org.enginehub.craftbook.util.LocationUtil;
-import org.enginehub.craftbook.util.RedstoneUtil.Power;
-import org.enginehub.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
+import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
+import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.LocationUtil;
+import org.enginehub.craftbook.util.RedstoneUtil.Power;
+import org.enginehub.craftbook.util.SignUtil;
 
 import java.util.List;
 
@@ -74,7 +74,7 @@ public class CartEjector extends CartBlockMechanism {
     @Override
     public String[] getApplicableSigns() {
 
-        return new String[] {"Eject"};
+        return new String[] { "Eject" };
     }
 
     @Override

@@ -16,21 +16,20 @@
 
 package org.enginehub.craftbook.mechanics.minecart;
 
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
-
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.util.EventUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
 
 public class NoCollide extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onCartCollision(VehicleEntityCollisionEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         if (event.getVehicle() instanceof Minecart) {
             if (event.getVehicle().isEmpty() && !empty) return;

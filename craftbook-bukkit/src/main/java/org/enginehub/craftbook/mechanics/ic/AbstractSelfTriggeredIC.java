@@ -17,12 +17,11 @@
 package org.enginehub.craftbook.mechanics.ic;
 
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 
 public abstract class AbstractSelfTriggeredIC extends AbstractIC implements SelfTriggeredIC {
 
-    public AbstractSelfTriggeredIC (Server server, ChangedSign sign, ICFactory factory) {
+    public AbstractSelfTriggeredIC(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 

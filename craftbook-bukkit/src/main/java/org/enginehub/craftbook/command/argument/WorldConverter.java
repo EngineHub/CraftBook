@@ -36,7 +36,7 @@ public class WorldConverter implements ArgumentConverter<World> {
 
     public static void register(CommandManager commandManager) {
         commandManager.registerConverter(Key.of(World.class),
-                new WorldConverter()
+            new WorldConverter()
         );
     }
 
@@ -58,19 +58,19 @@ public class WorldConverter implements ArgumentConverter<World> {
     @Override
     public List<String> getSuggestions(String input, InjectedValueAccess context) {
         return getWorlds()
-                .map(World::getName)
-                .filter(world -> world.startsWith(input))
-                .collect(Collectors.toList());
+            .map(World::getName)
+            .filter(world -> world.startsWith(input))
+            .collect(Collectors.toList());
     }
 
     @Override
     public ConversionResult<World> convert(String s, InjectedValueAccess injectedValueAccess) {
         World result = getWorlds()
-                .filter(world -> world.getName().equals(s))
-                .findAny().orElse(null);
+            .filter(world -> world.getName().equals(s))
+            .findAny().orElse(null);
         return result == null
-                ? FailedConversion.from(new IllegalArgumentException(
-                "Not a valid world: " + s))
-                : SuccessfulConversion.fromSingle(result);
+            ? FailedConversion.from(new IllegalArgumentException(
+            "Not a valid world: " + s))
+            : SuccessfulConversion.fromSingle(result);
     }
 }

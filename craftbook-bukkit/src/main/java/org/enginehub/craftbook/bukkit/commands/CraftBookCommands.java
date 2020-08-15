@@ -18,15 +18,6 @@ package org.enginehub.craftbook.bukkit.commands;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.report.GlobalConfigReport;
-import org.enginehub.craftbook.bukkit.report.LoadedICsReport;
-import org.enginehub.craftbook.bukkit.report.MechanicReport;
-import org.enginehub.craftbook.exception.CraftBookException;
-import org.enginehub.craftbook.mechanic.MechanicCommands;
-import org.enginehub.craftbook.util.ItemSyntax;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
@@ -46,6 +37,15 @@ import com.sk89q.worldguard.bukkit.util.report.SchedulerReport;
 import com.sk89q.worldguard.bukkit.util.report.ServerReport;
 import com.sk89q.worldguard.bukkit.util.report.ServicesReport;
 import com.sk89q.worldguard.bukkit.util.report.WorldReport;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.report.GlobalConfigReport;
+import org.enginehub.craftbook.bukkit.report.LoadedICsReport;
+import org.enginehub.craftbook.bukkit.report.MechanicReport;
+import org.enginehub.craftbook.exception.CraftBookException;
+import org.enginehub.craftbook.mechanic.MechanicCommands;
+import org.enginehub.craftbook.util.ItemSyntax;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.CommandManagerService;
 import org.enginehub.piston.annotation.Command;
@@ -68,17 +68,17 @@ public class CraftBookCommands {
 
             CommandManager manager = service.newCommandManager();
             registration.register(
-                    manager,
-                    CraftBookCommandsRegistration.builder(),
-                    new CraftBookCommands()
+                manager,
+                CraftBookCommandsRegistration.builder(),
+                new CraftBookCommands()
             );
 
             MechanicCommands.register(service, manager, registration);
 
             builder.addPart(SubCommandPart.builder(TranslatableComponent.of("worldedit.argument.action"), TextComponent.of("Sub-command to run."))
-                    .withCommands(manager.getAllCommands().collect(Collectors.toList()))
-                    .required()
-                    .build());
+                .withCommands(manager.getAllCommands().collect(Collectors.toList()))
+                .required()
+                .build());
         });
     }
 
@@ -96,28 +96,28 @@ public class CraftBookCommands {
         actor.print("The CraftBook config has been reloaded.");
     }
 
-    @Command(name = "version", aliases = {"ver"}, desc = "Get CraftBook version.")
+    @Command(name = "version", aliases = { "ver" }, desc = "Get CraftBook version.")
     public void version(Actor actor) {
         actor.printInfo(TranslatableComponent.of("craftbook.version.version", TextComponent.of(CraftBookPlugin.getVersion())));
         actor.printInfo(
-                TextComponent.of("https://github.com/EngineHub/CraftBook/")
-                        .clickEvent(ClickEvent.openUrl("https://github.com/EngineHub/CraftBook/"))
+            TextComponent.of("https://github.com/EngineHub/CraftBook/")
+                .clickEvent(ClickEvent.openUrl("https://github.com/EngineHub/CraftBook/"))
         );
     }
 
-    @Command(name = "iteminfo", aliases = {"itemsyntax", "item"}, desc = "Provides item syntax for held item.")
+    @Command(name = "iteminfo", aliases = { "itemsyntax", "item" }, desc = "Provides item syntax for held item.")
     public void itemInfo(CraftBookPlayer player) {
         player.print("Main hand: " + ItemSyntax.getStringFromItem(BukkitAdapter.adapt(player.getItemInHand(HandSide.MAIN_HAND))));
         player.print("Off hand: " + ItemSyntax.getStringFromItem(BukkitAdapter.adapt(player.getItemInHand(HandSide.OFF_HAND))));
     }
 
     @Command(name = "report", desc = "Writes a report on CraftBook")
-    @CommandPermissions({"craftbook.report"})
+    @CommandPermissions({ "craftbook.report" })
     public void report(Actor actor,
-            @Switch(name = 'i', desc = "Include the loaded ICs Report.")
-                boolean loadedIcReport,
-            @Switch(name = 'p', desc = "Submit the report to pastebin.")
-                boolean pastebin) throws CraftBookException, AuthorizationException {
+                       @Switch(name = 'i', desc = "Include the loaded ICs Report.")
+                           boolean loadedIcReport,
+                       @Switch(name = 'p', desc = "Submit the report to pastebin.")
+                           boolean pastebin) throws CraftBookException, AuthorizationException {
         ReportList report = new ReportList("Report");
 
         report.add(new ServerReport());
@@ -148,10 +148,10 @@ public class CraftBookCommands {
             CraftBookPlugin.inst().checkPermission(BukkitAdapter.adapt(actor), "craftbook.report.pastebin");
 
             ActorCallbackPaste.pastebin(
-                    CraftBook.getInstance().getSupervisor(),
-                    actor,
-                    result,
-                    "CraftBook report: %s.report"
+                CraftBook.getInstance().getSupervisor(),
+                actor,
+                result,
+                "CraftBook report: %s.report"
             );
         }
     }

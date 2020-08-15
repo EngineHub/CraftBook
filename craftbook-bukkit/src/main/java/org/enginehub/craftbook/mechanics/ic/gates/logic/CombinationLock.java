@@ -18,7 +18,6 @@ package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -102,17 +101,17 @@ public class CombinationLock extends AbstractIC {
         public String[] getPinDescription(ChipState state) {
 
             return new String[] {
-                    "Combination Bit 1",//Inputs
-                    "Combination Bit 2",
-                    "Combination Bit 3",
-                    "High on Correct Combination"//Outputs
+                "Combination Bit 1",//Inputs
+                "Combination Bit 2",
+                "Combination Bit 3",
+                "High on Correct Combination"//Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Combination. X = On, O = Off (XOX)", null};
+            return new String[] { "Combination. X = On, O = Off (XOX)", null };
         }
     }
 }

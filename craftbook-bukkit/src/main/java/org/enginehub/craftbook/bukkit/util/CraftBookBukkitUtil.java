@@ -16,13 +16,13 @@
 
 package org.enginehub.craftbook.bukkit.util;
 
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.util.SignUtil;
 import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.util.SignUtil;
 
 public final class CraftBookBukkitUtil {
 

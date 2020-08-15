@@ -16,8 +16,8 @@
 
 package org.enginehub.craftbook.mechanics.ic;
 
-import org.enginehub.craftbook.CraftBook;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.enginehub.craftbook.CraftBook;
 
 import java.io.IOException;
 
@@ -30,7 +30,7 @@ public class ICConfiguration {
         this.config = config;
     }
 
-    public void load () {
+    public void load() {
 
         try {
             config.load();

@@ -16,10 +16,10 @@
 
 package org.enginehub.craftbook.util.persistent;
 
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.CraftBook;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,19 +31,19 @@ public class YAMLPersistentStorage extends PersistentStorage {
     private YAMLProcessor processor;
 
     @Override
-    public void open () {
+    public void open() {
 
         CraftBook.logger.info("Loading persistent data from YAML!");
 
         File oldFile = new File(CraftBookPlugin.inst().getDataFolder(), "persistance.yml");
-        if(oldFile.exists()) {
+        if (oldFile.exists()) {
             oldFile.renameTo(new File(CraftBookPlugin.inst().getDataFolder(), "persistence.yml"));
             oldFile.delete();
         }
 
         File file = new File(CraftBookPlugin.inst().getDataFolder(), "persistence.yml");
         try {
-            if(!file.exists())
+            if (!file.exists())
                 file.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
@@ -57,7 +57,7 @@ public class YAMLPersistentStorage extends PersistentStorage {
             CraftBook.logger.warn("Persistent Data Corrupt! Data will be reset!");
         }
 
-        if(getVersion() != getCurrentVersion()) { //Convert.
+        if (getVersion() != getCurrentVersion()) { //Convert.
             CraftBook.logger.info("Converting database of type: " + getType() + " from version " + getVersion() + " to " + getCurrentVersion());
             convertVersion(getCurrentVersion());
             processor.clear();
@@ -71,7 +71,7 @@ public class YAMLPersistentStorage extends PersistentStorage {
     }
 
     @Override
-    public void close () {
+    public void close() {
 
         CraftBook.logger.info("Saving persistent data to YAML!");
 
@@ -80,55 +80,55 @@ public class YAMLPersistentStorage extends PersistentStorage {
     }
 
     @Override
-    public Object get (String location) {
+    public Object get(String location) {
         return processor.getProperty(location);
     }
 
     @Override
-    public void set (String location, Object data) {
+    public void set(String location, Object data) {
         processor.setProperty(location, data);
     }
 
     @Override
-    public boolean has (String location) {
+    public boolean has(String location) {
         return processor.getProperty(location) != null;
     }
 
     @Override
-    public boolean isValid () {
+    public boolean isValid() {
         return processor != null;
     }
 
     @Override
-    public String getType () {
+    public String getType() {
         return "YAML";
     }
 
     @Override
-    public int getVersion () {
+    public int getVersion() {
         return processor.getInt("version", getCurrentVersion());
     }
 
     @Override
-    public void convertVersion (int version) {
+    public void convertVersion(int version) {
         //Not yet needed.
     }
 
     @Override
-    public int getCurrentVersion () {
+    public int getCurrentVersion() {
         return 1;
     }
 
     @Override
-    public void importData (Map<String, Object> data, boolean replace) {
-        if(replace)
+    public void importData(Map<String, Object> data, boolean replace) {
+        if (replace)
             processor.clear();
-        for(Entry<String, Object> dat : data.entrySet())
+        for (Entry<String, Object> dat : data.entrySet())
             processor.setProperty(dat.getKey(), dat.getValue());
     }
 
     @Override
-    public Map<String, Object> exportData () {
+    public Map<String, Object> exportData() {
         return processor.getMap();
     }
 }

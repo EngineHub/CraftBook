@@ -16,15 +16,6 @@
 
 package org.enginehub.craftbook.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
@@ -38,15 +29,24 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 @Ignore
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ItemUtil.class, ItemSyntax.class})
+@PrepareForTest({ ItemUtil.class, ItemSyntax.class })
 public class ItemUtilTest {
 
     @Test
     public void testAddToStack() {
 
-        ItemStack mockStack = newMockItemStack(Material.SAND,(byte) 0, 38);
+        ItemStack mockStack = newMockItemStack(Material.SAND, (byte) 0, 38);
         ItemStack mockStack2 = newMockItemStack(Material.SAND, (byte) 0, 10);
 
         when(mockStack.getMaxStackSize()).thenReturn(48);
@@ -67,15 +67,15 @@ public class ItemUtilTest {
     public void testFilterItems() {
 
         ArrayList<ItemStack> items = new ArrayList<>();
-        items.add(newMockItemStack(Material.GRASS_BLOCK,(byte) 0,1));
-        items.add(newMockItemStack(Material.GRAVEL,(byte) 0,1));
-        items.add(newMockItemStack(Material.STONE,(byte) 0,1));
+        items.add(newMockItemStack(Material.GRASS_BLOCK, (byte) 0, 1));
+        items.add(newMockItemStack(Material.GRAVEL, (byte) 0, 1));
+        items.add(newMockItemStack(Material.STONE, (byte) 0, 1));
         HashSet<ItemStack> inclusions = new HashSet<>();
-        inclusions.add(newMockItemStack(Material.GRASS_BLOCK,(byte) 0,1));
+        inclusions.add(newMockItemStack(Material.GRASS_BLOCK, (byte) 0, 1));
         List<ItemStack> filtered = ItemUtil.filterItems(items, inclusions, null);
         assertEquals(1, filtered.size());
         HashSet<ItemStack> exclusions = new HashSet<>();
-        exclusions.add(newMockItemStack(Material.GRAVEL,(byte) 0,1));
+        exclusions.add(newMockItemStack(Material.GRAVEL, (byte) 0, 1));
         filtered = ItemUtil.filterItems(items, null, exclusions);
         assertEquals(2, filtered.size());
     }
@@ -83,19 +83,19 @@ public class ItemUtilTest {
     @Test
     public void testAreItemsIdentical() {
 
-        ItemStack test1 = newMockItemStack(Material.OAK_PLANKS,(byte) 4,1);
-        ItemStack test2 = newMockItemStack(Material.OAK_PLANKS,(byte) 8,1);
+        ItemStack test1 = newMockItemStack(Material.OAK_PLANKS, (byte) 4, 1);
+        ItemStack test2 = newMockItemStack(Material.OAK_PLANKS, (byte) 8, 1);
         assertTrue(!ItemUtil.areItemsIdentical(test1, test2));
-        test2 = newMockItemStack(Material.GRASS_BLOCK,(byte) 8,1);
+        test2 = newMockItemStack(Material.GRASS_BLOCK, (byte) 8, 1);
         assertTrue(!ItemUtil.areItemsIdentical(test1, test2));
-        test2 = newMockItemStack(Material.OAK_PLANKS,(byte) 4,1);
+        test2 = newMockItemStack(Material.OAK_PLANKS, (byte) 4, 1);
         assertTrue(ItemUtil.areItemsIdentical(test1, test2));
     }
 
     @Test
     public void testIsStackValid() {
 
-        ItemStack mockStack = newMockItemStack(Material.AIR,(byte) 0,5);
+        ItemStack mockStack = newMockItemStack(Material.AIR, (byte) 0, 5);
         assertTrue(!ItemUtil.isStackValid(mockStack));
         when(mockStack.getType()).thenReturn(Material.BEETROOT);
         when(mockStack.getAmount()).thenReturn(5);

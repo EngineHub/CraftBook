@@ -76,7 +76,7 @@ public class VariableKey {
      * Gets the original form this variable was written in.
      *
      * <p>
-     *     If the namespace was not provided, it will not be shown here.
+     * If the namespace was not provided, it will not be shown here.
      * </p>
      *
      * @return the original form.
@@ -94,7 +94,7 @@ public class VariableKey {
             String fakeNamespace = Bukkit.getOfflinePlayer(UUID.fromString(this.namespace)).getName();
             if (fakeNamespace != null) {
                 mainText = TextComponent.empty().append(
-                        TextComponent.of("*" + fakeNamespace, TextColor.GRAY, TextDecoration.ITALIC)
+                    TextComponent.of("*" + fakeNamespace, TextColor.GRAY, TextDecoration.ITALIC)
                 ).append(TextComponent.of("|" + this.variable, TextColor.WHITE));
             } else {
                 mainText = TextComponent.of(toString(), TextColor.WHITE);
@@ -106,10 +106,10 @@ public class VariableKey {
         Component copyComponent = TranslatableComponent.of("craftbook.variables.list.copy");
         if (this.namespace.contains("-")) {
             mainText = mainText
-                    .hoverEvent(HoverEvent.showText(TextComponent.of(toString()).append(TextComponent.newline().append(copyComponent))));
+                .hoverEvent(HoverEvent.showText(TextComponent.of(toString()).append(TextComponent.newline().append(copyComponent))));
         } else {
             mainText = mainText
-                    .hoverEvent(HoverEvent.showText(copyComponent));
+                .hoverEvent(HoverEvent.showText(copyComponent));
         }
 
         return mainText.clickEvent(ClickEvent.copyToClipboard(toString()));
@@ -130,25 +130,25 @@ public class VariableKey {
     public boolean hasPermission(Actor actor, String action) {
         if (getNamespace().equals(actor.getUniqueId().toString())) {
             if (actor.hasPermission("craftbook.variables." + action + ".self")
-                    || actor.hasPermission("craftbook.variables." + action + ".self." + getVariable())) {
+                || actor.hasPermission("craftbook.variables." + action + ".self." + getVariable())) {
                 return true;
             }
         }
 
         return actor.hasPermission("craftbook.variables." + action + '.' + getNamespace())
-                || actor.hasPermission("craftbook.variables." + action + '.' + getNamespace() + '.' + getVariable());
+            || actor.hasPermission("craftbook.variables." + action + '.' + getNamespace() + '.' + getVariable());
     }
 
     /**
      * Parse a variable key from a string.
      *
      * <p>
-     *     Note: This refers to a directly entered variable
-     *     `a|b` rather than in-line format `%a|b%`.
+     * Note: This refers to a directly entered variable
+     * `a|b` rather than in-line format `%a|b%`.
      * </p>
      *
      * <p>
-     *     If an actor is provided, the user's namespace <em>may</em> be used.
+     * If an actor is provided, the user's namespace <em>may</em> be used.
      * </p>
      *
      * @param line The line
@@ -172,7 +172,7 @@ public class VariableKey {
      * Create a new VariableKey from a namespace and key.
      *
      * <p>
-     *      If an actor is provided, the user's namespace <em>may</em> be used.
+     * If an actor is provided, the user's namespace <em>may</em> be used.
      * </p>
      *
      * @param namespace The namespace
@@ -220,7 +220,7 @@ public class VariableKey {
         }
         VariableKey that = (VariableKey) o;
         return namespace.equals(that.namespace) &&
-                variable.equals(that.variable);
+            variable.equals(that.variable);
     }
 
     @Override

@@ -17,13 +17,6 @@
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
 import com.google.common.collect.Lists;
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
-import org.enginehub.craftbook.mechanics.ic.ConfigurableIC;
-import org.enginehub.craftbook.mechanics.ic.IC;
-import org.enginehub.craftbook.mechanics.ic.ICFactory;
-import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
-import org.enginehub.craftbook.util.BlockSyntax;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -34,6 +27,13 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
+import org.enginehub.craftbook.mechanics.ic.ConfigurableIC;
+import org.enginehub.craftbook.mechanics.ic.IC;
+import org.enginehub.craftbook.mechanics.ic.ICFactory;
+import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
+import org.enginehub.craftbook.util.BlockSyntax;
 
 import java.util.List;
 
@@ -62,11 +62,11 @@ public class SetBlockChest extends SetBlock {
     @Override
     protected void doSet(Block body, BlockStateHolder item, boolean force) {
 
-        if(Blocks.containsFuzzy(((Factory)getFactory()).blockBlacklist, item))
+        if (Blocks.containsFuzzy(((Factory) getFactory()).blockBlacklist, item))
             return;
 
-        BlockFace toPlace = ((Factory)getFactory()).above ? BlockFace.UP : BlockFace.DOWN;
-        BlockFace chest = !((Factory)getFactory()).above ? BlockFace.UP : BlockFace.DOWN;
+        BlockFace toPlace = ((Factory) getFactory()).above ? BlockFace.UP : BlockFace.DOWN;
+        BlockFace chest = !((Factory) getFactory()).above ? BlockFace.UP : BlockFace.DOWN;
 
         if (force || body.getRelative(toPlace).getType() == Material.AIR) {
             if (takeFromChest(body.getRelative(chest), item.getBlockType().getItemType())) {
@@ -96,12 +96,12 @@ public class SetBlockChest extends SetBlock {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if(sign.getLine(2) == null || sign.getLine(2).isEmpty())
+            if (sign.getLine(2) == null || sign.getLine(2).isEmpty())
                 throw new ICVerificationException("A block must be provided on line 2!");
             BlockStateHolder item = BlockSyntax.getBlock(sign.getLine(2));
-            if(item == null || !item.getBlockType().hasItemType())
+            if (item == null || !item.getBlockType().hasItemType())
                 throw new ICVerificationException("An invalid block was provided on line 2!");
-            if(Blocks.containsFuzzy(blockBlacklist, item))
+            if (Blocks.containsFuzzy(blockBlacklist, item))
                 throw new ICVerificationException("A blacklisted block was provided on line 2!");
         }
 
@@ -114,11 +114,11 @@ public class SetBlockChest extends SetBlock {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"id{:data}", "+oFORCE if it should force"};
+            return new String[] { "id{:data}", "+oFORCE if it should force" };
         }
 
         @Override
-        public void addConfiguration (YAMLProcessor config, String path) {
+        public void addConfiguration(YAMLProcessor config, String path) {
 
             config.setComment("blacklist", "Stops the IC from placing the listed blocks.");
             blockBlacklist = BlockSyntax.getBlocks(config.getStringList("blacklist", Lists.newArrayList(BlockTypes.BEDROCK.getId())), true);

@@ -16,10 +16,10 @@
 
 package org.enginehub.craftbook.bukkit;
 
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.YamlConfiguration;
 import org.enginehub.craftbook.mechanic.MechanicType;
-import com.sk89q.util.yaml.YAMLProcessor;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -41,11 +41,11 @@ public class BukkitConfiguration extends YamlConfiguration {
             e.printStackTrace();
         }
 
-        if(config.getList("enabled-mechanics") != null) {
+        if (config.getList("enabled-mechanics") != null) {
             try {
                 Files.move(
-                        CraftBook.getInstance().getPlatform().getConfigDir().resolve("config.yml"),
-                        CraftBook.getInstance().getPlatform().getConfigDir().resolve("config.yml.old")
+                    CraftBook.getInstance().getPlatform().getConfigDir().resolve("config.yml"),
+                    CraftBook.getInstance().getPlatform().getConfigDir().resolve("config.yml.old")
                 );
 
                 CraftBookPlugin.inst().createDefaultConfiguration("config.yml");
@@ -59,27 +59,27 @@ public class BukkitConfiguration extends YamlConfiguration {
         config.setWriteDefaults(true);
 
         config.setHeader(
-                "# CraftBook Configuration for Bukkit.",
-                "# This configuration will automatically add new configuration options for you,",
-                "# So there is no need to regenerate this configuration unless you want to.",
-                "# More information about these features are available at:",
-                "# " + CraftBookPlugin.getDocsDomain() + "mechanics/",
-                "#",
-                "# NOTE! NOTHING IS ENABLED BY DEFAULT! ENABLE FEATURES TO USE THEM!",
-                "");
+            "# CraftBook Configuration for Bukkit.",
+            "# This configuration will automatically add new configuration options for you,",
+            "# So there is no need to regenerate this configuration unless you want to.",
+            "# More information about these features are available at:",
+            "# " + CraftBookPlugin.getDocsDomain() + "mechanics/",
+            "#",
+            "# NOTE! NOTHING IS ENABLED BY DEFAULT! ENABLE FEATURES TO USE THEM!",
+            "");
 
         enabledMechanics = new ArrayList<>();
         config.setComment("mechanics", "List of mechanics and whether they are enabled or not");
         MechanicType.REGISTRY.values()
-                .stream()
-                .sorted(Comparator.comparing((MechanicType<?> t) -> t.getCategory().name()).thenComparing(MechanicType::getId))
-                .forEach(mechanicType -> {
-                    String path = "mechanics." + mechanicType.getCategory().name().toLowerCase() + "." + mechanicType.getId();
-                    boolean enabled = config.getBoolean(path, mechanicType.getId().equals("variables"));
-                    if (enabled) {
-                        enabledMechanics.add(mechanicType.getId());
-                    }
-                });
+            .stream()
+            .sorted(Comparator.comparing((MechanicType<?> t) -> t.getCategory().name()).thenComparing(MechanicType::getId))
+            .forEach(mechanicType -> {
+                String path = "mechanics." + mechanicType.getCategory().name().toLowerCase() + "." + mechanicType.getId();
+                boolean enabled = config.getBoolean(path, mechanicType.getId().equals("variables"));
+                if (enabled) {
+                    enabledMechanics.add(mechanicType.getId());
+                }
+            });
 
         config.setComment("st-think-ticks", "WARNING! Changing this can result in all ST mechanics acting very weirdly, only change this if you know what you are doing!");
         stThinkRate = config.getInt("st-think-ticks", 2);

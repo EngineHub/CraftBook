@@ -36,9 +36,9 @@ public class ICCommands {
 
     public static void register(CommandManager commandManager, CommandRegistrationHandler registration) {
         registration.register(
-                commandManager,
-                ICCommandsRegistration.builder(),
-                new ICCommands()
+            commandManager,
+            ICCommandsRegistration.builder(),
+            new ICCommands()
         );
     }
 
@@ -46,14 +46,14 @@ public class ICCommands {
 
     }
 
-    @Command(name = "info", aliases = {"doc", "docs", "help", "man"}, desc = "Documentation on CraftBook IC's")
+    @Command(name = "info", aliases = { "doc", "docs", "help", "man" }, desc = "Documentation on CraftBook IC's")
     public void info(Actor actor, @Arg(desc = "The IC ID") String ic) {
         ICDocsParser.generateICDocs(actor, ic);
     }
 
     @Command(name = "list", desc = "List available IC's")
     public void listCmd(Actor actor,
-            @ArgFlag(name = 'p', desc = "The page", def = "1") int page
+                        @ArgFlag(name = 'p', desc = "The page", def = "1") int page
     ) {
         String[] lines = ICManager.inst().generateICText(actor, null, null);
         int pages = (lines.length - 1) / 9 + 1;
@@ -73,8 +73,8 @@ public class ICCommands {
 
     @Command(name = "search", desc = "Search available IC's with names")
     public void searchCmd(Actor actor,
-            @Arg(desc = "The search term") String term,
-            @ArgFlag(name = 'p', desc = "The page", def = "1") int page
+                          @Arg(desc = "The search term") String term,
+                          @ArgFlag(name = 'p', desc = "The page", def = "1") int page
     ) {
         String[] lines = ICManager.inst().generateICText(actor, term, null);
         int pages = (lines.length - 1) / 9 + 1;
@@ -92,7 +92,7 @@ public class ICCommands {
         }
     }
 
-    @Command(name = "midis", aliases = {"midilist"}, desc = "List MIDI's available for Melody IC")
+    @Command(name = "midis", aliases = { "midilist" }, desc = "List MIDI's available for Melody IC")
     public void midis(Actor actor, @ArgFlag(name = 'p', desc = "Page number", def = "1") int page) {
         List<String> lines = new ArrayList<>();
 

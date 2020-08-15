@@ -1,11 +1,11 @@
 package org.enginehub.craftbook.internal.util;
 
-import org.enginehub.craftbook.util.TextUtil;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.util.formatting.text.event.ClickEvent;
 import com.sk89q.worldedit.util.formatting.text.format.TextDecoration;
+import org.enginehub.craftbook.util.TextUtil;
 import org.enginehub.piston.util.TextHelper;
 
 import java.util.Locale;
@@ -39,8 +39,8 @@ public class ComponentRstRenderer {
             if (deco != null) {
                 if (currentDeco != null) {
                     throw new RuntimeException("Nested decorations are hell in RST. \n" +
-                            "Existing: " + currentDeco + "; New: " + deco + "\n" +
-                            "Offender: " + TextHelper.reduceToText(component));
+                        "Existing: " + currentDeco + "; New: " + deco + "\n" +
+                        "Offender: " + TextHelper.reduceToText(component));
                 }
                 rstDeco(content, deco);
             }
@@ -59,7 +59,8 @@ public class ComponentRstRenderer {
         ClickEvent ce = component.clickEvent();
         if (ce != null && (ce.action() == ClickEvent.Action.RUN_COMMAND || ce.action() == ClickEvent.Action.SUGGEST_COMMAND)) {
             return ce.value().equals(text);
-        } {
+        }
+        {
             return false;
         }
     }

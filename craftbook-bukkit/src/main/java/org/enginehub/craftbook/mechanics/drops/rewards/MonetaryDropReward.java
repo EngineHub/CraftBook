@@ -17,7 +17,6 @@
 package org.enginehub.craftbook.mechanics.drops.rewards;
 
 import org.bukkit.entity.Player;
-
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 public class MonetaryDropReward extends DropReward {
@@ -36,13 +35,13 @@ public class MonetaryDropReward extends DropReward {
     }
 
     @Override
-    public void giveReward (Player player) {
+    public void giveReward(Player player) {
 
         CraftBookPlugin.plugins.getEconomy().depositPlayer(player.getName(), amount);
     }
 
     @Override
-    public boolean doesRequirePlayer () {
+    public boolean doesRequirePlayer() {
         return true;
     }
 }

@@ -16,6 +16,10 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.sensors;
 
+import com.sk89q.worldedit.math.Vector3;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -26,16 +30,13 @@ import org.enginehub.craftbook.util.EntityType;
 import org.enginehub.craftbook.util.ICUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.RegexUtil;
-import com.sk89q.worldedit.math.Vector3;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 
 import java.util.Locale;
 import java.util.Set;
 
 /**
- * Movement Sensor. This IC is incomplete due to the bukkit API not providing ample movement velocity support.
+ * Movement Sensor. This IC is incomplete due to the bukkit API not providing ample movement
+ * velocity support.
  *
  * @author Me4502
  */
@@ -69,7 +70,7 @@ public class MovementSensor extends AbstractSelfTriggeredIC {
         // radius=x:y:z or radius, e.g. 1=-2:5:11
         radius = ICUtil.parseRadius(getSign());
         String radiusString = radius.getX() + "," + radius.getY() + "," + radius.getZ();
-        if(radius.getX() == radius.getY() && radius.getY() == radius.getZ())
+        if (radius.getX() == radius.getY() && radius.getY() == radius.getZ())
             radiusString = String.valueOf(radius.getX());
         if (getSign().getLine(2).contains("=")) {
             getSign().setLine(2, radiusString + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
@@ -144,7 +145,7 @@ public class MovementSensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"radius=x:y:z offset", "entity type"};
+            return new String[] { "radius=x:y:z offset", "entity type" };
         }
     }
 }

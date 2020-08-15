@@ -40,11 +40,11 @@ public final class EventUtil {
     }
 
     /**
-     * Used to filter events for processing. This allows for short circuiting code so that code isn't checked
+     * Used to filter events for processing. This allows for short circuiting code so that code
+     * isn't checked
      * unnecessarily.
      *
      * @param event The event to check
-     *
      * @return true if the event should be processed by this manager; false otherwise.
      */
     public static boolean passesFilter(Event event) {

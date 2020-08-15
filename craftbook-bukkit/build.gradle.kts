@@ -35,10 +35,10 @@ dependencies {
     "api"("com.destroystokyo.paper:paper-api:1.16.1-R0.1-SNAPSHOT")
     "implementation"("io.papermc:paperlib:1.0.4")
     "api"("com.sk89q.worldedit:worldedit-bukkit:${Versions.WORLDEDIT}") {
-        exclude(group =  "org.spigotmc")
+        exclude(group = "org.spigotmc")
     }
     "api"("com.sk89q.worldguard:worldguard-bukkit:${Versions.WORLDGUARD}") {
-        exclude(group =  "org.spigotmc")
+        exclude(group = "org.spigotmc")
     }
     "implementation"("net.milkbowl.vault:VaultAPI:1.7") { isTransitive = false }
     "implementation"("com.comphenix.protocol:ProtocolLib:4.5.1") { isTransitive = false }
@@ -83,7 +83,7 @@ tasks.named<ShadowJar>("shadowJar") {
         relocate("org.bstats", "org.enginehub.craftbook.bukkit.bstats") {
             include(dependency("org.bstats:bstats-bukkit:1.7"))
         }
-        relocate ("io.papermc.lib", "org.enginehub.craftbook.bukkit.paperlib") {
+        relocate("io.papermc.lib", "org.enginehub.craftbook.bukkit.paperlib") {
             include(dependency("io.papermc:paperlib:1.0.4"))
         }
     }

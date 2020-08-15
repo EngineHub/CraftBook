@@ -17,6 +17,16 @@
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
 import com.google.common.collect.Lists;
+import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.blocks.Blocks;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BaseBlock;
+import com.sk89q.worldedit.world.block.BlockTypes;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -28,16 +38,6 @@ import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
 import org.enginehub.craftbook.util.BlockSyntax;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.ICUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.blocks.Blocks;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.world.block.BaseBlock;
-import com.sk89q.worldedit.world.block.BlockTypes;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
 
 import java.util.List;
 
@@ -98,7 +98,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         BlockData brokenData = broken.getBlockData();
 
         if (broken.getType() == Material.AIR || broken.getType() == Material.MOVING_PISTON || Blocks
-                .containsFuzzy(((Factory) getFactory()).blockBlacklist, BukkitAdapter.adapt(brokenData))) {
+            .containsFuzzy(((Factory) getFactory()).blockBlacklist, BukkitAdapter.adapt(brokenData))) {
             return false;
         }
 
@@ -131,11 +131,11 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if(!sign.getLine(2).trim().isEmpty()) {
+            if (!sign.getLine(2).trim().isEmpty()) {
                 BaseBlock item = BlockSyntax.getBlock(sign.getLine(2), true);
-                if(item == null)
+                if (item == null)
                     throw new ICVerificationException("An invalid block was provided on line 2!");
-                if(Blocks.containsFuzzy(blockBlacklist, item))
+                if (Blocks.containsFuzzy(blockBlacklist, item))
                     throw new ICVerificationException("A blacklisted block was provided on line 2!");
             }
         }
@@ -149,11 +149,11 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+oBlock ID:Data", null};
+            return new String[] { "+oBlock ID:Data", null };
         }
 
         @Override
-        public void addConfiguration (YAMLProcessor config, String path) {
+        public void addConfiguration(YAMLProcessor config, String path) {
 
             config.setComment("blacklist", "Stops the IC from breaking the listed blocks.");
             blockBlacklist = BlockSyntax.getBlocks(config.getStringList("blacklist", Lists.newArrayList(BlockTypes.BEDROCK.getId())), true);

@@ -78,8 +78,8 @@ public class PerformanceReport extends DataReport {
             DataReport entities = new DataReport("Entity Distribution");
             for (Map.Entry<Class<? extends Entity>, Integer> entry : entityCounts.entrySet()) {
                 entities.append(entry.getKey().getSimpleName(), "%d [%f/chunk]",
-                        entry.getValue(),
-                        (float) (entry.getValue() / (double) loadedChunkCount));
+                    entry.getValue(),
+                    (float) (entry.getValue() / (double) loadedChunkCount));
             }
             report.append(entities.getTitle(), entities);
 
@@ -87,8 +87,8 @@ public class PerformanceReport extends DataReport {
             DataReport tileEntities = new DataReport("Tile Entity Distribution");
             for (Map.Entry<Class<? extends BlockState>, Integer> entry : tileEntityCounts.entrySet()) {
                 tileEntities.append(entry.getKey().getSimpleName(), "%d [%f/chunk]",
-                        entry.getValue(),
-                        (float) (entry.getValue() / (double) loadedChunkCount));
+                    entry.getValue(),
+                    (float) (entry.getValue() / (double) loadedChunkCount));
             }
             report.append(tileEntities.getTitle(), tileEntities);
 

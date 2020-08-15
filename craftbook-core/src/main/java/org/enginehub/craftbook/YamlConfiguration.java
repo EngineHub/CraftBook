@@ -44,7 +44,8 @@ public abstract class YamlConfiguration {
 
     public String persistentStorageType;
 
-    @Unreported public YAMLProcessor config;
+    @Unreported
+    public YAMLProcessor config;
 
     public YamlConfiguration(YAMLProcessor config) {
 

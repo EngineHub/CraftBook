@@ -16,14 +16,14 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import org.enginehub.craftbook.util.BlockSyntax;
-import org.enginehub.craftbook.util.RedstoneUtil.Power;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
+import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
+import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.RedstoneUtil.Power;
 
 public class CartBooster extends CartBlockMechanism {
 
@@ -38,13 +38,13 @@ public class CartBooster extends CartBlockMechanism {
 
         Vector newVelocity = event.getVehicle().getVelocity();
 
-        if(event.getBlocks().matches(minecartSpeedModMaxBoostBlock)) {
+        if (event.getBlocks().matches(minecartSpeedModMaxBoostBlock)) {
             newVelocity.normalize().multiply(event.getMinecart().getMaxSpeed());
-        } else if(event.getBlocks().matches(minecartSpeedMod25xBoostBlock))
+        } else if (event.getBlocks().matches(minecartSpeedMod25xBoostBlock))
             newVelocity.multiply(1.25d);
-        else if(event.getBlocks().matches(minecartSpeedMod20xSlowBlock))
+        else if (event.getBlocks().matches(minecartSpeedMod20xSlowBlock))
             newVelocity.multiply(0.8d);
-        else if(event.getBlocks().matches(minecartSpeedMod50xSlowBlock))
+        else if (event.getBlocks().matches(minecartSpeedMod50xSlowBlock))
             newVelocity.multiply(0.5d);
         else
             return;

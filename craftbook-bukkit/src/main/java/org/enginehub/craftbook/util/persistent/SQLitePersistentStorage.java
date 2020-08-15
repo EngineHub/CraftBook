@@ -16,6 +16,12 @@
 
 package org.enginehub.craftbook.util.persistent;
 
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -33,26 +39,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.enginehub.craftbook.CraftBook;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.util.io.BukkitObjectInputStream;
-import org.bukkit.util.io.BukkitObjectOutputStream;
-
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-
 public class SQLitePersistentStorage extends PersistentStorage {
 
     private Connection db;
 
     @Override
-    public void open () {
+    public void open() {
 
         createConnection();
     }
 
     public void createConnection() {
         File file = new File(CraftBookPlugin.inst().getDataFolder(), "persistance.db");
-        if(file.exists()) {
+        if (file.exists()) {
             file.renameTo(new File(CraftBookPlugin.inst().getDataFolder(), "persistence.db"));
             file.delete();
         }
@@ -63,38 +62,38 @@ public class SQLitePersistentStorage extends PersistentStorage {
             DatabaseMetaData dbm = db.getMetaData();
             ResultSet tables = dbm.getTables(null, null, "PersistentData", null);
 
-            if(!tables.next()) { //We already have something in this table, don't create it.
+            if (!tables.next()) { //We already have something in this table, don't create it.
                 String createTable = "CREATE TABLE PersistentData (KEY VARCHAR(255) PRIMARY KEY, VALUE TEXT)";
                 try {
                     Statement state = db.createStatement();
                     state.executeUpdate(createTable);
-                } catch(SQLException e) {
+                } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void close () {
+    public void close() {
         try {
-            if(!db.isClosed())
+            if (!db.isClosed())
                 db.close();
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public String getType () {
+    public String getType() {
         return "SQLite";
     }
 
     private static void close(ResultSet results) {
 
-        if(results != null) {
+        if (results != null) {
             try {
                 results.close();
             } catch (SQLException e) {
@@ -105,7 +104,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
 
     private static void close(PreparedStatement statement) {
 
-        if(statement != null) {
+        if (statement != null) {
             try {
                 statement.close();
             } catch (SQLException e) {
@@ -115,7 +114,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
     }
 
     @Override
-    public Object get (String location) {
+    public Object get(String location) {
 
         PreparedStatement statement = null;
         ResultSet results = null;
@@ -125,10 +124,10 @@ public class SQLitePersistentStorage extends PersistentStorage {
             statement.setString(1, location);
             results = statement.executeQuery();
 
-            if(!results.next()) return null;
+            if (!results.next()) return null;
 
             return fromString(results.getString(2));
-        } catch(SQLException | ClassNotFoundException | IOException e) {
+        } catch (SQLException | ClassNotFoundException | IOException e) {
             e.printStackTrace();
         } finally {
             close(results);
@@ -138,9 +137,9 @@ public class SQLitePersistentStorage extends PersistentStorage {
     }
 
     @Override
-    public void set (String location, Object data) {
+    public void set(String location, Object data) {
 
-        if(!(data instanceof Serializable) && !(data instanceof ConfigurationSerializable)) {
+        if (!(data instanceof Serializable) && !(data instanceof ConfigurationSerializable)) {
             CraftBook.logger.warn("Failed to put item in db! " + data.getClass().getSimpleName() + " is NOT serializable!");
             return;
         }
@@ -153,7 +152,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
             statement.setObject(2, toString(data));
 
             statement.executeUpdate();
-        } catch(SQLException | IOException e) {
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         } finally {
             close(statement);
@@ -161,7 +160,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
     }
 
     @Override
-    public boolean has (String location) {
+    public boolean has(String location) {
 
         PreparedStatement statement = null;
         ResultSet results = null;
@@ -172,7 +171,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
             results = statement.executeQuery();
 
             return results.next();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             close(statement);
@@ -182,7 +181,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
     }
 
     @Override
-    public boolean isValid () {
+    public boolean isValid() {
         try {
             return db != null && !db.isClosed();
         } catch (SQLException e) {
@@ -192,7 +191,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
     }
 
     @Override
-    public int getVersion () {
+    public int getVersion() {
 
         PreparedStatement statement = null;
         PreparedStatement insertStatement = null;
@@ -203,7 +202,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
             statement.setString(1, "VERSION");
             results = statement.executeQuery();
 
-            if(!results.next()) {
+            if (!results.next()) {
                 insertStatement = db.prepareStatement("INSERT INTO PersistentData VALUES(?,?)");
                 insertStatement.setString(1, "VERSION");
                 insertStatement.setInt(2, getCurrentVersion());
@@ -212,7 +211,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
             } else {
                 return results.getInt(2);
             }
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             close(statement);
@@ -224,22 +223,22 @@ public class SQLitePersistentStorage extends PersistentStorage {
     }
 
     @Override
-    public int getCurrentVersion () {
+    public int getCurrentVersion() {
         return 1;
     }
 
     @Override
-    public void convertVersion (int version) {
+    public void convertVersion(int version) {
         //Not needed atm.
     }
 
     @Override
-    public void importData (Map<String, Object> data, boolean replace) {
+    public void importData(Map<String, Object> data, boolean replace) {
 
         try {
-            if(replace)
+            if (replace)
                 db.prepareStatement("DELETE FROM PersistentData").execute();
-            for(Entry<String, Object> dat : data.entrySet())
+            for (Entry<String, Object> dat : data.entrySet())
                 set(dat.getKey(), dat.getValue());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -247,7 +246,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
     }
 
     @Override
-    public Map<String, Object> exportData () {
+    public Map<String, Object> exportData() {
 
         Map<String, Object> data = new HashMap<>();
 
@@ -257,7 +256,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
         try {
             statement = db.prepareStatement("SELECT * FROM PersistentData");
             results = statement.executeQuery();
-            while(results.next()) {
+            while (results.next()) {
                 data.put(results.getString(1), results.getObject(2));
             }
         } catch (SQLException e) {
@@ -272,7 +271,7 @@ public class SQLitePersistentStorage extends PersistentStorage {
     private static Object fromString(String s) throws IOException, ClassNotFoundException {
         byte[] data = s.getBytes(StandardCharsets.UTF_8);
         BukkitObjectInputStream ois = new BukkitObjectInputStream(new ByteArrayInputStream(data));
-        Object o  = ois.readObject();
+        Object o = ois.readObject();
         ois.close();
         return o;
     }

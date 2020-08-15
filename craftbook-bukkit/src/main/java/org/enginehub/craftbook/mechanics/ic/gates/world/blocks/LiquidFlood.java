@@ -16,6 +16,11 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
+import com.sk89q.worldedit.math.BlockVector3;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.block.Block;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -25,11 +30,6 @@ import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
 import org.enginehub.craftbook.util.ICUtil;
-import com.sk89q.worldedit.math.BlockVector3;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
 
 public class LiquidFlood extends AbstractSelfTriggeredIC {
 
@@ -130,7 +130,7 @@ public class LiquidFlood extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+owater/lava", "+oradius=x:y:z offset"};
+            return new String[] { "+owater/lava", "+oradius=x:y:z offset" };
         }
     }
 }

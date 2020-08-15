@@ -16,16 +16,16 @@
 
 package org.enginehub.craftbook.util;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import org.bukkit.entity.Minecart;
 import org.bukkit.util.Vector;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(CartUtil.class)
@@ -35,9 +35,9 @@ public class CartUtilsTest {
     public void testReverse() {
 
         Minecart cart = mock(Minecart.class);
-        when(cart.getVelocity()).thenReturn(new Vector(0,1,0));
+        when(cart.getVelocity()).thenReturn(new Vector(0, 1, 0));
         CartUtil.reverse(cart);
-        verify(cart).setVelocity(new Vector(0,-1,0));
+        verify(cart).setVelocity(new Vector(0, -1, 0));
     }
 
     @Test
@@ -45,6 +45,6 @@ public class CartUtilsTest {
 
         Minecart cart = mock(Minecart.class);
         CartUtil.stop(cart);
-        verify(cart).setVelocity(new Vector(0,0,0));
+        verify(cart).setVelocity(new Vector(0, 0, 0));
     }
 }

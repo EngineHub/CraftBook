@@ -37,7 +37,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Class for utilities that include adding items to a furnace based on if it is a fuel or not, and adding items to a chest. Also will include methdos for checking contents and removing.
+ * Class for utilities that include adding items to a furnace based on if it is a fuel or not, and
+ * adding items to a chest. Also will include methdos for checking contents and removing.
  */
 public class InventoryUtil {
 
@@ -46,12 +47,12 @@ public class InventoryUtil {
 
     /**
      * Adds items to an inventory, returning the leftovers.
-     * 
+     *
      * @param container The InventoryHolder to add the items to.
      * @param stacks The stacks to add to the inventory.
      * @return The stacks that could not be added.
      */
-    public static List<ItemStack> addItemsToInventory(InventoryHolder container, ItemStack ... stacks) {
+    public static List<ItemStack> addItemsToInventory(InventoryHolder container, ItemStack... stacks) {
         return addItemsToInventory(container, true, stacks);
     }
 
@@ -62,11 +63,11 @@ public class InventoryUtil {
      * @param stacks The stacks to add to the inventory.
      * @return The stacks that could not be added.
      */
-    public static List<ItemStack> addItemsToInventory(InventoryHolder container, boolean update, ItemStack ... stacks) {
+    public static List<ItemStack> addItemsToInventory(InventoryHolder container, boolean update, ItemStack... stacks) {
 
-        if(container instanceof Furnace) {
+        if (container instanceof Furnace) {
             return addItemsToFurnace((Furnace) container, stacks);
-        } else if(container instanceof BrewingStand) {
+        } else if (container instanceof BrewingStand) {
             return addItemsToBrewingStand((BrewingStand) container, stacks);
         } else { //Basic inventories like chests, dispensers, storage carts, etc.
             List<ItemStack> leftovers = new ArrayList<>();
@@ -87,18 +88,18 @@ public class InventoryUtil {
 
     /**
      * Adds items to a furnace, returning the leftovers.
-     * 
+     *
      * @param furnace The Furnace to add the items to.
      * @param stacks The stacks to add to the inventory.
      * @return The stacks that could not be added.
      */
-    public static List<ItemStack> addItemsToFurnace(Furnace furnace, ItemStack ... stacks) {
+    public static List<ItemStack> addItemsToFurnace(Furnace furnace, ItemStack... stacks) {
 
         List<ItemStack> leftovers = new ArrayList<>();
 
-        for(ItemStack stack : stacks) {
+        for (ItemStack stack : stacks) {
 
-            if(!ItemUtil.isStackValid(stack))
+            if (!ItemUtil.isStackValid(stack))
                 continue;
 
             if (ItemUtil.isFurnacable(stack) && fitsInSlot(stack, furnace.getInventory().getSmelting())) {
@@ -124,16 +125,16 @@ public class InventoryUtil {
 
     /**
      * Adds items to a BrewingStand, returning the leftovers.
-     * 
+     *
      * @param brewingStand The BrewingStand to add the items to.
      * @param stacks The stacks to add to the inventory.
      * @return The stacks that could not be added.
      */
-    public static List<ItemStack> addItemsToBrewingStand(BrewingStand brewingStand, ItemStack ... stacks) {
+    public static List<ItemStack> addItemsToBrewingStand(BrewingStand brewingStand, ItemStack... stacks) {
 
         List<ItemStack> leftovers = new ArrayList<>();
 
-        for(ItemStack stack : stacks) {
+        for (ItemStack stack : stacks) {
             BrewerInventory inv = brewingStand.getInventory();
             if (ItemUtil.isAPotionIngredient(stack) && InventoryUtil.fitsInSlot(stack, inv.getIngredient())) {
                 if (inv.getIngredient() == null) {
@@ -148,9 +149,9 @@ public class InventoryUtil {
                     leftovers.add(ItemUtil.addToStack(inv.getFuel(), stack));
                 }
             } else if (stack.getType() == Material.GLASS_BOTTLE
-                    || stack.getType() == Material.POTION
-                    || stack.getType() == Material.LINGERING_POTION
-                    || stack.getType() == Material.SPLASH_POTION) {
+                || stack.getType() == Material.POTION
+                || stack.getType() == Material.LINGERING_POTION
+                || stack.getType() == Material.SPLASH_POTION) {
                 for (int i = 0; i < 3; i++) {
                     if (stack == null) {
                         break;
@@ -176,13 +177,14 @@ public class InventoryUtil {
 
     /**
      * Checks whether the inventory contains all the given itemstacks.
-     * 
+     *
      * @param inv The inventory to check.
      * @param exact Whether the stacks need to be the exact amount.
      * @param stacks The stacks to check.
-     * @return whether the inventory contains all the items. If there are no items to check, it returns true.
+     * @return whether the inventory contains all the items. If there are no items to check, it
+     *     returns true.
      */
-    public static boolean doesInventoryContain(Inventory inv, boolean exact, ItemStack ... stacks) {
+    public static boolean doesInventoryContain(Inventory inv, boolean exact, ItemStack... stacks) {
         return doesInventoryContain(inv, !exact, false, false, false, stacks);
     }
 
@@ -195,13 +197,14 @@ public class InventoryUtil {
      * @param ignoreMeta Whether to ignore meta/nbt data.
      * @param ignoreEnchants Whether to ignore enchantment data.
      * @param stacks The stacks to check.
-     * @return whether the inventory contains all the items. If there are no items to check, it returns true.
+     * @return whether the inventory contains all the items. If there are no items to check, it
+     *     returns true.
      */
-    public static boolean doesInventoryContain(Inventory inv, boolean ignoreStackSize, boolean ignoreDurability, boolean ignoreMeta, boolean ignoreEnchants, ItemStack ... stacks) {
+    public static boolean doesInventoryContain(Inventory inv, boolean ignoreStackSize, boolean ignoreDurability, boolean ignoreMeta, boolean ignoreEnchants, ItemStack... stacks) {
 
         ArrayList<ItemStack> itemsToFind = new ArrayList<>(Arrays.asList(stacks));
 
-        if(itemsToFind.isEmpty())
+        if (itemsToFind.isEmpty())
             return true;
 
         List<ItemStack> items = new ArrayList<>(Arrays.asList(inv.getContents()));
@@ -211,35 +214,35 @@ public class InventoryUtil {
         }
 
         for (ItemStack item : items) {
-            if(!ItemUtil.isStackValid(item))
+            if (!ItemUtil.isStackValid(item))
                 continue;
 
-            for(ItemStack base : stacks) {
-                if(!itemsToFind.contains(base))
+            for (ItemStack base : stacks) {
+                if (!itemsToFind.contains(base))
                     continue;
 
-                if(!ItemUtil.isStackValid(base)) {
+                if (!ItemUtil.isStackValid(base)) {
                     itemsToFind.remove(base);
                     continue;
                 }
 
-                if(base.getType() == item.getType()) {
-                    if(!ignoreStackSize && base.getAmount() != item.getAmount())
+                if (base.getType() == item.getType()) {
+                    if (!ignoreStackSize && base.getAmount() != item.getAmount())
                         continue;
 
-                    if(!ignoreDurability && (base.getType().getMaxDurability() > 0 || item.getType().getMaxDurability() > 0) && base.getDurability() != item.getDurability())
+                    if (!ignoreDurability && (base.getType().getMaxDurability() > 0 || item.getType().getMaxDurability() > 0) && base.getDurability() != item.getDurability())
                         continue;
 
-                    if(!ignoreMeta) {
-                        if(base.hasItemMeta() != item.hasItemMeta()) {
-                            if(!ignoreEnchants)
+                    if (!ignoreMeta) {
+                        if (base.hasItemMeta() != item.hasItemMeta()) {
+                            if (!ignoreEnchants)
                                 continue;
-                            if(base.hasItemMeta() && ItemUtil.hasDisplayNameOrLore(base))
+                            if (base.hasItemMeta() && ItemUtil.hasDisplayNameOrLore(base))
                                 continue;
-                            else if(item.hasItemMeta() && ItemUtil.hasDisplayNameOrLore(item))
+                            else if (item.hasItemMeta() && ItemUtil.hasDisplayNameOrLore(item))
                                 continue;
-                        } else if(base.hasItemMeta()) {
-                            if(base.hasItemMeta() && !ItemUtil.areItemMetaIdentical(base.getItemMeta(), item.getItemMeta(), !ignoreEnchants))
+                        } else if (base.hasItemMeta()) {
+                            if (base.hasItemMeta() && !ItemUtil.areItemMetaIdentical(base.getItemMeta(), item.getItemMeta(), !ignoreEnchants))
                                 continue;
                         }
                     }
@@ -255,16 +258,16 @@ public class InventoryUtil {
 
     /**
      * Removes items from an inventory.
-     * 
+     *
      * @param inv The inventory to remove it from.
      * @param stacks The stacks to remove.
      * @return Whether the stacks were removed.
      */
-    public static boolean removeItemsFromInventory(InventoryHolder inv, ItemStack ... stacks) {
+    public static boolean removeItemsFromInventory(InventoryHolder inv, ItemStack... stacks) {
 
         List<ItemStack> leftovers = new ArrayList<>(inv.getInventory().removeItem(stacks).values());
 
-        if(!leftovers.isEmpty()) {
+        if (!leftovers.isEmpty()) {
             List<ItemStack> itemsToAdd = new ArrayList<>(Arrays.asList(stacks));
             itemsToAdd.removeAll(leftovers);
 
@@ -279,7 +282,7 @@ public class InventoryUtil {
 
     /**
      * Checks whether the itemstack can easily stack onto the other itemstack.
-     * 
+     *
      * @param stack The stack to add.
      * @param slot The base stack.
      * @return whether it can be added or not.
@@ -291,13 +294,13 @@ public class InventoryUtil {
 
     /**
      * Checks whether the block has an inventory.
-     * 
+     *
      * @param block The block.
      * @return If it has an inventory.
      */
     public static boolean doesBlockHaveInventory(Block block) {
 
-        switch(block.getType()) {
+        switch (block.getType()) {
             case CHEST:
             case TRAPPED_CHEST:
             case DROPPER:

@@ -17,7 +17,6 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
@@ -51,8 +50,8 @@ public class Random5Bit extends RandomBit {
         @Override
         public String[] getLongDescription() {
 
-            return new String[]{
-                    "The '''MC6020''' generates 5 random bits whenever the input (the \"clock\") goes from low to high."
+            return new String[] {
+                "The '''MC6020''' generates 5 random bits whenever the input (the \"clock\") goes from low to high."
             };
         }
 

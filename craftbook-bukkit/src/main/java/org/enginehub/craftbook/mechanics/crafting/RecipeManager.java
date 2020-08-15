@@ -16,13 +16,13 @@
 
 package org.enginehub.craftbook.mechanics.crafting;
 
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.util.ItemSyntax;
 import org.enginehub.craftbook.util.ItemUtil;
 import org.enginehub.craftbook.util.RegexUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -63,11 +63,11 @@ public class RecipeManager {
         }
 
         config.setHeader(
-                "# CraftBook Custom Recipes. CraftBook Version: " + CraftBookPlugin.inst().getDescription().getVersion(),
-                "# For more information on setting up custom recipes, see the wiki:",
-                "# " + CraftBookPlugin.getDocsDomain() + "/Custom_crafting",
-                "",
-                "");
+            "# CraftBook Custom Recipes. CraftBook Version: " + CraftBookPlugin.inst().getDescription().getVersion(),
+            "# For more information on setting up custom recipes, see the wiki:",
+            "# " + CraftBookPlugin.getDocsDomain() + "/Custom_crafting",
+            "",
+            "");
 
         List<String> keys = config.getKeys("crafting-recipes");
         if (keys != null) {
@@ -94,14 +94,14 @@ public class RecipeManager {
         config.clear();
 
         config.setHeader(
-                "# CraftBook Custom Recipes. CraftBook Version: " + CraftBookPlugin.inst().getDescription().getVersion(),
-                "# For more information on setting up custom recipes, see the wiki:",
-                "# " + CraftBookPlugin.getDocsDomain() + "/Custom_crafting",
-                "",
-                "");
+            "# CraftBook Custom Recipes. CraftBook Version: " + CraftBookPlugin.inst().getDescription().getVersion(),
+            "# For more information on setting up custom recipes, see the wiki:",
+            "# " + CraftBookPlugin.getDocsDomain() + "/Custom_crafting",
+            "",
+            "");
 
         config.addNode("crafting-recipes");
-        for(Recipe recipe : recipes)
+        for (Recipe recipe : recipes)
             recipe.save();
 
         config.save();
@@ -120,10 +120,10 @@ public class RecipeManager {
 
     public boolean removeRecipe(String name) {
         Iterator<Recipe> recs = recipes.iterator();
-        while(recs.hasNext()) {
+        while (recs.hasNext()) {
 
             Recipe rec = recs.next();
-            if(rec.getId().equalsIgnoreCase(name)) {
+            if (rec.getId().equalsIgnoreCase(name)) {
                 recs.remove();
                 save();
                 return true;
@@ -147,82 +147,81 @@ public class RecipeManager {
 
         @Override
         public boolean equals(Object o) {
-            if(o instanceof Recipe) {
-                if(shape != null)
-                    if(shape.size() != ((Recipe)o).shape.size())
+            if (o instanceof Recipe) {
+                if (shape != null)
+                    if (shape.size() != ((Recipe) o).shape.size())
                         return false;
-                if(ingredients != null) {
-                    if(ingredients.size() != ((Recipe)o).ingredients.size())
+                if (ingredients != null) {
+                    if (ingredients.size() != ((Recipe) o).ingredients.size())
                         return false;
                     List<CraftingItemStack> stacks = new ArrayList<>(ingredients);
-                    for(CraftingItemStack st : ((Recipe)o).ingredients) {
-                        if(stacks.size() <= 0)
+                    for (CraftingItemStack st : ((Recipe) o).ingredients) {
+                        if (stacks.size() <= 0)
                             return false;
                         Iterator<CraftingItemStack> it = stacks.iterator();
-                        while(it.hasNext()) {
+                        while (it.hasNext()) {
                             CraftingItemStack sta = it.next();
-                            if(st.equals(sta)) {
+                            if (st.equals(sta)) {
                                 it.remove();
                                 break;
                             }
                         }
                     }
 
-                    if(stacks.size() > 0)
+                    if (stacks.size() > 0)
                         return false;
                 }
-                if(items != null) {
-                    if(items.size() != ((Recipe)o).items.size())
+                if (items != null) {
+                    if (items.size() != ((Recipe) o).items.size())
                         return false;
 
                     List<CraftingItemStack> stacks = new ArrayList<>(items.keySet());
-                    for(CraftingItemStack st : ((Recipe)o).items.keySet()) {
-                        if(stacks.size() <= 0)
+                    for (CraftingItemStack st : ((Recipe) o).items.keySet()) {
+                        if (stacks.size() <= 0)
                             return false;
                         Iterator<CraftingItemStack> it = stacks.iterator();
-                        while(it.hasNext()) {
+                        while (it.hasNext()) {
                             CraftingItemStack sta = it.next();
-                            if(st.equals(sta)) {
+                            if (st.equals(sta)) {
                                 it.remove();
                                 break;
                             }
                         }
                     }
 
-                    if(stacks.size() > 0)
+                    if (stacks.size() > 0)
                         return false;
                 }
-                if(advancedData != null)
-                    if(advancedData.size() != ((Recipe)o).advancedData.size())
+                if (advancedData != null)
+                    if (advancedData.size() != ((Recipe) o).advancedData.size())
                         return false;
-                return ((Recipe) o).id.equals(id) && type == ((Recipe)o).type && result.equals(((Recipe)o).result);
-            }
-            else
+                return ((Recipe) o).id.equals(id) && type == ((Recipe) o).type && result.equals(((Recipe) o).result);
+            } else
                 return false;
         }
 
         @Override
         public int hashCode() {
             int ret = id.hashCode();
-            if(ingredients != null)
+            if (ingredients != null)
                 ret += ingredients.hashCode();
             else if (items != null)
                 ret += items.hashCode();
             ret += result.hashCode();
-            if(shape != null)
+            if (shape != null)
                 ret += shape.hashCode();
             return ret + advancedData.hashCode();
         }
 
         public boolean hasAdvancedData() {
-            if(ingredients != null) {
-                for(CraftingItemStack stack : ingredients)
-                    if(stack.hasAdvancedData())
+            if (ingredients != null) {
+                for (CraftingItemStack stack : ingredients)
+                    if (stack.hasAdvancedData())
                         return true;
             }
-            if(items != null) {
-                for(CraftingItemStack stack : items.keySet())
-                    if(stack.hasAdvancedData())
+            if (items != null) {
+                for (CraftingItemStack stack : items.keySet())
+                    if (stack.hasAdvancedData())
                         return true;
             }
             return result.hasAdvancedData() || !advancedData.isEmpty();
@@ -266,14 +265,14 @@ public class RecipeManager {
                 shape = config.getStringList("crafting-recipes." + id + ".shape", Collections.singletonList(""));
             }
             Iterator<CraftingItemStack> iterator = getItems("crafting-recipes." + id + ".results").iterator();
-            if(iterator.hasNext())
+            if (iterator.hasNext())
                 result = iterator.next();
             else
-                throw new InvalidCraftingException("Result is invalid in recipe: "+ id);
+                throw new InvalidCraftingException("Result is invalid in recipe: " + id);
 
-            if(iterator.hasNext()) {
+            if (iterator.hasNext()) {
                 ArrayList<CraftingItemStack> extraResults = new ArrayList<>();
-                while(iterator.hasNext())
+                while (iterator.hasNext())
                     extraResults.add(iterator.next());
                 addAdvancedData("extra-results", extraResults);
             }
@@ -288,12 +287,12 @@ public class RecipeManager {
 
             List<String> actions = config.getKeys("crafting-recipes." + id + ".craft-actions");
 
-            if(actions != null && !actions.isEmpty()) {
+            if (actions != null && !actions.isEmpty()) {
 
-                for(String s : actions) {
-                    if(s.equalsIgnoreCase("commands-console"))
+                for (String s : actions) {
+                    if (s.equalsIgnoreCase("commands-console"))
                         addAdvancedData("commands-console", config.getStringList("crafting-recipes." + id + ".craft-actions." + s, new ArrayList<>()));
-                    else if(s.equalsIgnoreCase("commands-player"))
+                    else if (s.equalsIgnoreCase("commands-player"))
                         addAdvancedData("commands-player", config.getStringList("crafting-recipes." + id + ".craft-actions." + s, new ArrayList<>()));
                 }
             }
@@ -303,9 +302,9 @@ public class RecipeManager {
         public void save() {
             config.addNode("crafting-recipes." + id);
             config.setProperty("crafting-recipes." + id + ".type", type.name);
-            if(type != RecipeType.SHAPED) {
+            if (type != RecipeType.SHAPED) {
                 LinkedHashMap<String, Integer> resz = new LinkedHashMap<>();
-                for(CraftingItemStack stack : ingredients) {
+                for (CraftingItemStack stack : ingredients) {
                     resz.put(stack.toString() + ' ', stack.getItemStack().getAmount());
                 }
                 config.setProperty("crafting-recipes." + id + ".ingredients", resz);
@@ -315,7 +314,7 @@ public class RecipeManager {
                 }
             } else {
                 LinkedHashMap<String, Character> resz = new LinkedHashMap<>();
-                for(Map.Entry<CraftingItemStack, Character> craftingItemStackCharacterEntry : items.entrySet())
+                for (Map.Entry<CraftingItemStack, Character> craftingItemStackCharacterEntry : items.entrySet())
                     resz.put(craftingItemStackCharacterEntry.getKey().toString() + ' ', craftingItemStackCharacterEntry.getValue());
                 config.setProperty("crafting-recipes." + id + ".ingredients", resz);
                 config.setProperty("crafting-recipes." + id + ".shape", shape);
@@ -323,23 +322,23 @@ public class RecipeManager {
 
             LinkedHashMap<String, Integer> resz = new LinkedHashMap<>();
             resz.put(result.toString() + ' ', result.getItemStack().getAmount());
-            if(hasAdvancedData("extra-results")) {
+            if (hasAdvancedData("extra-results")) {
 
                 ArrayList<CraftingItemStack> extraResults =
-                        new ArrayList<>((Collection<? extends CraftingItemStack>) getAdvancedData("extra-results"));
-                for(CraftingItemStack s : extraResults)
+                    new ArrayList<>((Collection<? extends CraftingItemStack>) getAdvancedData("extra-results"));
+                for (CraftingItemStack s : extraResults)
                     resz.put(s.toString() + ' ', s.getItemStack().getAmount());
             }
             config.setProperty("crafting-recipes." + id + ".results", resz);
-            if(hasAdvancedData("permission-node"))
+            if (hasAdvancedData("permission-node"))
                 config.setProperty("crafting-recipes." + id + ".permission-node", getAdvancedData("permission-node"));
-            if(hasAdvancedData("permission-error"))
+            if (hasAdvancedData("permission-error"))
                 config.setProperty("crafting-recipes." + id + ".permission-error", getAdvancedData("permission-error"));
-            if(hasAdvancedData("commands-player") || hasAdvancedData("commands-console")) {
+            if (hasAdvancedData("commands-player") || hasAdvancedData("commands-console")) {
                 config.addNode("crafting-recipes." + id + ".craft-actions");
-                if(hasAdvancedData("commands-player"))
+                if (hasAdvancedData("commands-player"))
                     config.setProperty("crafting-recipes." + id + ".craft-actions.commands-player", getAdvancedData("commands-player"));
-                if(hasAdvancedData("commands-console"))
+                if (hasAdvancedData("commands-console"))
                     config.setProperty("crafting-recipes." + id + ".craft-actions.commands-console", getAdvancedData("commands-console"));
             }
         }
@@ -353,7 +352,7 @@ public class RecipeManager {
                     if (stack != null) {
                         stack.setAmount(1);
                         CraftingItemStack itemStack = new CraftingItemStack(stack);
-                        if(RegexUtil.PERCENT_PATTERN.split(item).length > 1)
+                        if (RegexUtil.PERCENT_PATTERN.split(item).length > 1)
                             itemStack.addAdvancedData("chance", Double.parseDouble(RegexUtil.PERCENT_PATTERN.split(item.trim())[1]));
                         items.put(itemStack, config.getString(path + '.' + item, "a").charAt(0));
                     }
@@ -376,7 +375,7 @@ public class RecipeManager {
                     if (stack != null) {
                         stack.setAmount(config.getInt(path + '.' + okey, 1));
                         CraftingItemStack itemStack = new CraftingItemStack(stack);
-                        if(RegexUtil.PERCENT_PATTERN.split(item).length > 1)
+                        if (RegexUtil.PERCENT_PATTERN.split(item).length > 1)
                             itemStack.addAdvancedData("chance", Double.parseDouble(RegexUtil.PERCENT_PATTERN.split(item)[1]));
                         items.add(itemStack);
                     }
@@ -441,11 +440,11 @@ public class RecipeManager {
 
         public void addAdvancedData(String key, Object data) {
             CraftBookPlugin.logDebugMessage("Adding advanced data of type: " + key + " to an ItemStack! {" + String.valueOf(data) + '}',
-                    "advanced-data.init");
+                "advanced-data.init");
             advancedData.put(key, data);
         }
 
-        public HashMap<String,Object> getAdvancedDataMap() {
+        public HashMap<String, Object> getAdvancedDataMap() {
             return advancedData;
         }
     }
@@ -464,7 +463,7 @@ public class RecipeManager {
         }
 
         public static RecipeType getTypeFromName(String name) {
-            if(name.equalsIgnoreCase("Shaped2x2") || name.equalsIgnoreCase("Shaped3x3")) {
+            if (name.equalsIgnoreCase("Shaped2x2") || name.equalsIgnoreCase("Shaped3x3")) {
                 CraftBook.logger.warn("You are using deprecated recipe type '" + name + "', we recommend you change it to 'shaped'!");
                 return SHAPED;
             }

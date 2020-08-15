@@ -16,11 +16,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.entity;
 
-import java.util.Locale;
-
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -29,8 +25,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
 import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -44,6 +40,8 @@ import org.enginehub.craftbook.util.ItemSyntax;
 import org.enginehub.craftbook.util.ItemUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SignUtil;
+
+import java.util.Locale;
 
 public class AdvancedEntitySpawner extends AbstractIC {
 
@@ -94,7 +92,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if(!location.getChunk().isLoaded())
+        if (!location.getChunk().isLoaded())
             return;
 
         if (!chip.getInput(0)) return;
@@ -146,7 +144,8 @@ public class AdvancedEntitySpawner extends AbstractIC {
 
                     String[] data = RegexUtil.COLON_PATTERN.split(bit);
 
-                    if (data[0].equalsIgnoreCase("e")) EntityUtil.setEntityData(ent, bit.substring(2));
+                    if (data[0].equalsIgnoreCase("e"))
+                        EntityUtil.setEntityData(ent, bit.substring(2));
                     else if (data[0].equalsIgnoreCase("r")) {
                         EntityType rider = EntityType.fromName(data[1].trim());
                         Entity rid = CraftBookBukkitUtil.toSign(getSign()).getWorld().spawnEntity(location, rider);
@@ -188,7 +187,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
                 } else {
                     if (SignUtil.isWallSign(CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0, upwards ? 1 : -1, 0)))
                         effectSign = CraftBookBukkitUtil
-                                .toChangedSign(CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0, upwards ? 1 : -1, 0));
+                            .toChangedSign(CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0, upwards ? 1 : -1, 0));
                     else break;
                 }
             }
@@ -217,7 +216,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+ox:y:z", "entitytype{*amount}"};
+            return new String[] { "+ox:y:z", "entitytype{*amount}" };
         }
 
         @Override
@@ -225,7 +224,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
 
             String[] splitLine3 = RegexUtil.ASTERISK_PATTERN.split(sign.getLine(3).trim());
             EntityType type = EntityType.fromName(splitLine3[0].trim().toLowerCase(Locale.ENGLISH));
-            if(type == null)
+            if (type == null)
                 try {
                     EntityType.valueOf(splitLine3[0].trim().toUpperCase(Locale.ENGLISH));
                 } catch (IllegalArgumentException e) {

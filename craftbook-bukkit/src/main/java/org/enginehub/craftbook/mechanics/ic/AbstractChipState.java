@@ -16,10 +16,6 @@
 
 package org.enginehub.craftbook.mechanics.ic;
 
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.util.ICUtil;
-import org.enginehub.craftbook.util.SignUtil;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.Location;
 import org.apache.commons.lang.Validate;
@@ -28,6 +24,10 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.AnaloguePowerable;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Powerable;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.util.ICUtil;
+import org.enginehub.craftbook.util.SignUtil;
 
 /**
  * @author Silthus
@@ -54,7 +54,7 @@ public abstract class AbstractChipState implements ChipState {
     @Override
     public boolean get(int pin) {
         Block block = getBlock(pin);
-        if(block == null) return false;
+        if (block == null) return false;
         BlockData data = block.getBlockData();
         if (data instanceof AnaloguePowerable) {
             return ((AnaloguePowerable) data).getPower() > 0;
@@ -85,9 +85,9 @@ public abstract class AbstractChipState implements ChipState {
         Block block = getBlock(pin);
         if (block != null) {
             return block.getType() == Material.REDSTONE_WIRE
-                    || block.getType() == Material.REPEATER
-                    || block.getType() == Material.COMPARATOR
-                    || block.getType() == Material.LEVER;
+                || block.getType() == Material.REPEATER
+                || block.getType() == Material.COMPARATOR
+                || block.getType() == Material.LEVER;
         }
         return false;
     }

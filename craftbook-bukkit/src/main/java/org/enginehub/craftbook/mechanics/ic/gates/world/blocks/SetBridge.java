@@ -16,6 +16,10 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
+import org.bukkit.Server;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
@@ -29,10 +33,6 @@ import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SignUtil;
-import org.bukkit.Server;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.BlockData;
 
 /**
  * @author Silthus
@@ -168,7 +168,7 @@ public class SetBridge extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"onID{:onData-offID:offData}", "offset x,y,z:width,depth"};
+            return new String[] { "onID{:onData-offID:offData}", "offset x,y,z:width,depth" };
         }
 
         @Override

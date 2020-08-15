@@ -20,7 +20,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
-
 import org.enginehub.craftbook.util.SearchArea;
 import org.enginehub.craftbook.util.jinglenote.Instrument;
 import org.enginehub.craftbook.util.jinglenote.JingleNotePlayer;
@@ -29,16 +28,16 @@ import org.enginehub.craftbook.util.jinglenote.JingleSequencer.Note;
 
 public class BukkitJingleNotePlayer extends JingleNotePlayer {
 
-    public BukkitJingleNotePlayer (String player, JingleSequencer seq, SearchArea area) {
+    public BukkitJingleNotePlayer(String player, JingleSequencer seq, SearchArea area) {
         super(player, seq, area);
     }
 
     private Player p = null;
 
     @Override
-    public void play (Note note)  {
+    public void play(Note note) {
 
-        if(!isPlaying()) return;
+        if (!isPlaying()) return;
 
         p.playSound(p.getLocation(), toSound(note.getInstrument()), SoundCategory.RECORDS, note.getVelocity(), note.getNote());
     }
@@ -93,7 +92,7 @@ public class BukkitJingleNotePlayer extends JingleNotePlayer {
     }
 
     private static Sound toSound(Instrument instrument) {
-        switch(instrument) {
+        switch (instrument) {
             case BASS:
                 return Sound.BLOCK_NOTE_BLOCK_BASS;
             case SNARE:

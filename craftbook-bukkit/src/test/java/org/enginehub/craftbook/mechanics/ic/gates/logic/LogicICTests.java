@@ -25,15 +25,15 @@ public class LogicICTests {
 
     public static LogicICTests instance;
 
-    LogicICTest[] tests = new LogicICTest[] {new AndGateTest()};
+    LogicICTest[] tests = new LogicICTest[] { new AndGateTest() };
 
     @Test
     public void testLogicICs() {
 
         instance = this;
 
-        for(LogicICTest test : tests)
-            if(!test.testIC())
+        for (LogicICTest test : tests)
+            if (!test.testIC())
                 throw new AssertionError();
     }
 

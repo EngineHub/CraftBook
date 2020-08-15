@@ -38,22 +38,22 @@ fun Project.applyLibrariesConfiguration() {
     }
     val altConfigFiles = { artifactType: String ->
         val deps = configurations["shade"].incoming.dependencies
-                .filterIsInstance<ModuleDependency>()
-                .map { it.copy() }
-                .map { dependency ->
-                    dependency.artifact {
-                        name = dependency.name
-                        type = artifactType
-                        extension = "jar"
-                        classifier = artifactType
-                    }
-                    dependency
+            .filterIsInstance<ModuleDependency>()
+            .map { it.copy() }
+            .map { dependency ->
+                dependency.artifact {
+                    name = dependency.name
+                    type = artifactType
+                    extension = "jar"
+                    classifier = artifactType
                 }
+                dependency
+            }
 
         files(configurations.detachedConfiguration(*deps.toTypedArray())
-                .resolvedConfiguration.lenientConfiguration.artifacts
-                .filter { it.classifier == artifactType }
-                .map { zipTree(it.file) })
+            .resolvedConfiguration.lenientConfiguration.artifacts
+            .filter { it.classifier == artifactType }
+            .map { zipTree(it.file) })
     }
     tasks.register<Jar>("sourcesJar") {
         from({

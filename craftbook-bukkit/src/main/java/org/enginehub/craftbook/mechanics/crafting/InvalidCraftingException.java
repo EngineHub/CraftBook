@@ -21,7 +21,7 @@ import org.enginehub.craftbook.exception.CraftBookException;
 public class InvalidCraftingException extends CraftBookException {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 4305166656444438242L;
 

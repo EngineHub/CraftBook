@@ -17,19 +17,6 @@
 package org.enginehub.craftbook.mechanics.area;
 
 import com.google.common.collect.Lists;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.ProtectionUtil;
-import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.SelfTriggerPingEvent;
-import org.enginehub.craftbook.util.events.SignClickEvent;
-import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -39,6 +26,19 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.ProtectionUtil;
+import org.enginehub.craftbook.util.SignUtil;
+import org.enginehub.craftbook.util.events.SelfTriggerPingEvent;
+import org.enginehub.craftbook.util.events.SignClickEvent;
+import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -60,10 +60,10 @@ public class Area extends AbstractCraftBookMechanic {
 
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
         registrar.registerTopLevelWithSubCommands(
-                "area",
-                Lists.newArrayList("togglearea"),
-                "CraftBook Area Commands",
-                AreaCommands::register
+            "area",
+            Lists.newArrayList("togglearea"),
+            "CraftBook Area Commands",
+            AreaCommands::register
         );
 
         return true;
@@ -81,9 +81,10 @@ public class Area extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if (!event.getLine(1).equalsIgnoreCase("[Area]") && !event.getLine(1).equalsIgnoreCase("[SaveArea]")) return;
+        if (!event.getLine(1).equalsIgnoreCase("[Area]") && !event.getLine(1).equalsIgnoreCase("[SaveArea]"))
+            return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
@@ -97,16 +98,16 @@ public class Area extends AbstractCraftBookMechanic {
         }
 
         if (event.getLine(1).equalsIgnoreCase("[Area]")) {
-            if(!player.hasPermission("craftbook.mech.area.sign.area")) {
-                if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+            if (!player.hasPermission("craftbook.mech.area.sign.area")) {
+                if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     player.print("mech.create-permission");
                 SignUtil.cancelSignChange(event);
                 return;
             }
             event.setLine(1, "[Area]");
         } else if (event.getLine(1).equalsIgnoreCase("[SaveArea]")) {
-            if(!player.hasPermission("craftbook.mech.area.sign.savearea")) {
-                if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+            if (!player.hasPermission("craftbook.mech.area.sign.savearea")) {
+                if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     player.print("mech.create-permission");
                 SignUtil.cancelSignChange(event);
                 return;
@@ -114,7 +115,7 @@ public class Area extends AbstractCraftBookMechanic {
             event.setLine(1, "[SaveArea]");
         }
         // check if the namespace and area exists
-        if(!isValidArea(event.getLine(0), event.getLine(2), event.getLine(3))) {
+        if (!isValidArea(event.getLine(0), event.getLine(2), event.getLine(3))) {
             player.printError("mech.area.missing");
             SignUtil.cancelSignChange(event);
             return;
@@ -126,9 +127,9 @@ public class Area extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         boolean save;
 
@@ -137,19 +138,19 @@ public class Area extends AbstractCraftBookMechanic {
         if (!sign.getLine(1).equals("[Area]") && !sign.getLine(1).equals("[SaveArea]")) return;
 
         if (!player.hasPermission("craftbook.mech.area.use")) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.print("mech.use-permission");
             return;
         }
 
-        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
         }
 
         // check if the namespace and area exists
-        if(!isValidArea(sign)) {
+        if (!isValidArea(sign)) {
             player.printError("mech.area.missing");
             return;
         }
@@ -180,9 +181,9 @@ public class Area extends AbstractCraftBookMechanic {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onSelfTriggerPing(SelfTriggerPingEvent event) {
 
-        if(SignUtil.isSign(event.getBlock())) {
+        if (SignUtil.isSign(event.getBlock())) {
             ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
-            if(sign.getLine(1).equals("[Area]")) {
+            if (sign.getLine(1).equals("[Area]")) {
                 isValidArea(sign); //Perform a conversion,
                 sign.update(false);
             }
@@ -192,7 +193,7 @@ public class Area extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         if (!allowRedstone) return;
         if (!SignUtil.isSign(event.getBlock())) return;
@@ -204,7 +205,7 @@ public class Area extends AbstractCraftBookMechanic {
         if (!sign.getLine(1).equals("[Area]") && !sign.getLine(1).equals("[SaveArea]")) return;
 
         // check if the namespace and area exists
-        if(!isValidArea(sign)) return;
+        if (!isValidArea(sign)) return;
 
         save = sign.getLine(1).equals("[SaveArea]");
 

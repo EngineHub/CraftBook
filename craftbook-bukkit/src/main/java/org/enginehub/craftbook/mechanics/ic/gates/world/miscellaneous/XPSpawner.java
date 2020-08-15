@@ -18,7 +18,6 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
 import org.bukkit.Server;
 import org.bukkit.entity.ExperienceOrb;
-
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -29,7 +28,7 @@ import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
 
 public class XPSpawner extends AbstractIC {
 
-    public XPSpawner (Server server, ChangedSign sign, ICFactory factory) {
+    public XPSpawner(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -40,35 +39,33 @@ public class XPSpawner extends AbstractIC {
 
         try {
             amount = Integer.parseInt(getLine(2));
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             amount = 1;
         }
 
         try {
             orbs = Integer.parseInt(getLine(3));
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             orbs = 1;
         }
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
         return "Experience Orb Spawner";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
         return "XP SPAWNER";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
-        if(chip.getInput(0)) {
+        if (chip.getInput(0)) {
 
-            for(int i = 0; i < orbs; i++) {
+            for (int i = 0; i < orbs; i++) {
                 ExperienceOrb orb = getLocation().getWorld().spawn(getLocation().add(0.5, 1.5, 0.5), ExperienceOrb.class);
                 orb.setExperience(amount);
             }
@@ -97,7 +94,7 @@ public class XPSpawner extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"amount of xp", "amount of orbs"};
+            return new String[] { "amount of xp", "amount of orbs" };
         }
     }
 }
