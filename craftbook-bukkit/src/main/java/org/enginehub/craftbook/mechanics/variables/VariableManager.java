@@ -16,18 +16,10 @@
 
 package org.enginehub.craftbook.mechanics.variables;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.mechanics.ic.ICManager;
-import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.extension.platform.Actor;
@@ -36,6 +28,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.ServerCommandEvent;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.mechanics.ic.ICManager;
+import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 
 import java.io.File;
 import java.util.Collection;
@@ -45,8 +43,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.annotation.Nullable;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class VariableManager extends AbstractCraftBookMechanic {
 
@@ -77,17 +77,17 @@ public class VariableManager extends AbstractCraftBookMechanic {
             }
             variableConfiguration = new VariableConfiguration(new YAMLProcessor(varFile, true, YAMLFormat.EXTENDED));
             variableConfiguration.load();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
 
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
         registrar.registerTopLevelWithSubCommands(
-                "variables",
-                Lists.newArrayList("var", "variable", "vars"),
-                "CraftBook Variable Commands",
-                VariableCommands::register
+            "variables",
+            Lists.newArrayList("var", "variable", "vars"),
+            "CraftBook Variable Commands",
+            VariableCommands::register
         );
 
         return true;
@@ -101,7 +101,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
         registrar.unregisterTopLevel("variable");
         registrar.unregisterTopLevel("vars");
 
-        if(variableConfiguration != null) {
+        if (variableConfiguration != null) {
             variableConfiguration.save();
             variableConfiguration = null;
         }
@@ -139,9 +139,9 @@ public class VariableManager extends AbstractCraftBookMechanic {
 
     /**
      * Sets the value of a variable, with the given namespace.
-     * 
+     *
      * <p>
-     *     To remove variables, use {@link VariableManager#removeVariable(VariableKey)}.
+     * To remove variables, use {@link VariableManager#removeVariable(VariableKey)}.
      * </p>
      *
      * @param key The variable key
@@ -172,12 +172,26 @@ public class VariableManager extends AbstractCraftBookMechanic {
         }
     }
 
+    private boolean signHasVariable(VariableKey variableKey, ChangedSign sign) {
+        for (String line : sign.getLines()) {
+            if (line.contains("%" + variableKey.toString() + "%")) {
+                return true;
+            } else if (variableKey.getNamespace().equals(GLOBAL_NAMESPACE)
+                || variableKey.getNamespace().contains("-")) {
+                if (line.contains("%" + variableKey.getVariable() + "%")) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     private void resetICCache(VariableKey variableKey) {
         // TODO Revisit once doing ICs
         if (ICManager.inst() != null) { //Make sure IC's are enabled.
             ICManager.getCachedICs().entrySet()
-                    .removeIf(ic -> ic.getValue().getSign().hasVariable(variableKey.toString())
-                            || ic.getValue().getSign().hasVariable(variableKey.getVariable()));
+                .removeIf(ic -> signHasVariable(variableKey, ic.getValue().getSign()));
         }
     }
 

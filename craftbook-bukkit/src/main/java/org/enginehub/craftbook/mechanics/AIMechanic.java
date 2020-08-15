@@ -16,17 +16,21 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.util.EventUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Difficulty;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.EventUtil;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -38,16 +42,17 @@ public class AIMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityTarget(EntityTargetEvent event) {
 
-        if (event.getEntity() == null || event.getEntity().getType() == null || event.getEntity().getType().getName() == null) return;
+        if (event.getEntity() == null || event.getEntity().getType() == null || event.getEntity().getType().getName() == null)
+            return;
 
         if (!EventUtil.passesFilter(event)) return;
 
-        if(isEntityEnabled(event.getEntity(), attackPassiveEnabled)) {
-            if(event.getTarget() != null) return;
-            if(!(event.getEntity() instanceof LivingEntity)) return;
-            for(Entity ent : event.getEntity().getNearbyEntities(15D, 15D, 15D)) {
-                if(ent instanceof Animals && ((LivingEntity) event.getEntity()).hasLineOfSight(ent)) {
-                    if(event.getEntity() instanceof Monster) {
+        if (isEntityEnabled(event.getEntity(), attackPassiveEnabled)) {
+            if (event.getTarget() != null) return;
+            if (!(event.getEntity() instanceof LivingEntity)) return;
+            for (Entity ent : event.getEntity().getNearbyEntities(15D, 15D, 15D)) {
+                if (ent instanceof Animals && ((LivingEntity) event.getEntity()).hasLineOfSight(ent)) {
+                    if (event.getEntity() instanceof Monster) {
                         event.setCancelled(true);
                         ((Monster) event.getEntity()).setTarget((Animals) ent);
                     } else
@@ -58,8 +63,8 @@ public class AIMechanic extends AbstractCraftBookMechanic {
             }
         }
 
-        if(isEntityEnabled(event.getEntity(), visionEnabled)) {
-            if(event.getTarget() == null) return;
+        if (isEntityEnabled(event.getEntity(), visionEnabled)) {
+            if (event.getTarget() == null) return;
             Difficulty diff = event.getEntity().getWorld().getDifficulty();
 
             if (event.getReason() != TargetReason.CLOSEST_PLAYER && event.getReason() != TargetReason.RANDOM_TARGET)
@@ -72,7 +77,8 @@ public class AIMechanic extends AbstractCraftBookMechanic {
                     event.setCancelled(true);
                     return;
                 }
-            if (event.getTarget().getLocation().getBlock().getLightLevel() > (diff == Difficulty.HARD ? 4 : 6) && enemy.hasLineOfSight(event.getTarget())) return; // They can clearly see the target.
+            if (event.getTarget().getLocation().getBlock().getLightLevel() > (diff == Difficulty.HARD ? 4 : 6) && enemy.hasLineOfSight(event.getTarget()))
+                return; // They can clearly see the target.
             if (event.getTarget() instanceof Player)
                 if (((Player) event.getTarget()).isSneaking()) {
                     int distance = (int) Math.floor(event.getTarget().getLocation().distanceSquared(enemy.getLocation()));
@@ -87,13 +93,14 @@ public class AIMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityShootBow(EntityShootBowEvent event) {
 
-        if (event.getEntity() == null || event.getEntity().getType() == null || event.getEntity().getType().getName() == null) return;
+        if (event.getEntity() == null || event.getEntity().getType() == null || event.getEntity().getType().getName() == null)
+            return;
 
         if (!EventUtil.passesFilter(event)) return;
 
-        if(isEntityEnabled(event.getEntity(), critBowEnabled)) {
+        if (isEntityEnabled(event.getEntity(), critBowEnabled)) {
             int amount = 0;
-            switch(event.getEntity().getWorld().getDifficulty()) {
+            switch (event.getEntity().getWorld().getDifficulty()) {
                 case EASY:
                     amount = 100;
                     break;
@@ -115,16 +122,16 @@ public class AIMechanic extends AbstractCraftBookMechanic {
 
     private static boolean isEntityEnabled(Entity ent, List<String> entities) {
 
-        if(entities == null) return false;
-        for(String entity : entities)
-            if(entity != null)
-                if(ent.getType().getName().equalsIgnoreCase(entity) || ent.getType().name().equalsIgnoreCase(entity))
+        if (entities == null) return false;
+        for (String entity : entities)
+            if (entity != null)
+                if (ent.getType().getName().equalsIgnoreCase(entity) || ent.getType().name().equalsIgnoreCase(entity))
                     return true;
         return false;
     }
 
     @Override
-    public boolean enable () {
+    public boolean enable() {
         return visionEnabled.size() > 0 && attackPassiveEnabled.size() > 0 && critBowEnabled.size() > 0;
     }
 
@@ -136,7 +143,7 @@ public class AIMechanic extends AbstractCraftBookMechanic {
     public void loadFromConfiguration(YAMLProcessor config) {
 
         config.setComment("vision-enable", "The list of entities to enable vision AI mechanics for.");
-        visionEnabled = config.getStringList("vision-enable", Arrays.asList("Zombie","PigZombie"));
+        visionEnabled = config.getStringList("vision-enable", Arrays.asList("Zombie", "PigZombie"));
 
         config.setComment("crit-bow-enable", "The list of entities to enable bow critical AI mechanics for.");
         critBowEnabled = config.getStringList("crit-bow-enable", Collections.singletonList("Skeleton"));

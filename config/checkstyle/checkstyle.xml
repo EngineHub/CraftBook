@@ -10,7 +10,8 @@ Checks based on Google Checks, modified for EngineHub.
 <module name="Checker">
     <property name="charset" value="UTF-8"/>
 
-    <property name="severity" value="error"/>
+    <!-- TODO Make this error when CB5 is finished -->
+    <property name="severity" value="warning"/>
 
     <property name="fileExtensions" value="java, properties, xml"/>
     <!-- Checks for whitespace                               -->

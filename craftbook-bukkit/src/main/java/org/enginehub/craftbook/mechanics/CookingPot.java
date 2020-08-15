@@ -16,18 +16,6 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.ItemUtil;
-import org.enginehub.craftbook.util.ProtectionUtil;
-import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.*;
-import org.enginehub.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -40,6 +28,22 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.ItemUtil;
+import org.enginehub.craftbook.util.ProtectionUtil;
+import org.enginehub.craftbook.util.SignUtil;
+import org.enginehub.craftbook.util.events.SelfTriggerPingEvent;
+import org.enginehub.craftbook.util.events.SelfTriggerThinkEvent;
+import org.enginehub.craftbook.util.events.SelfTriggerUnregisterEvent;
+import org.enginehub.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
+import org.enginehub.craftbook.util.events.SignClickEvent;
+import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 import java.util.HashSet;
 import java.util.List;
@@ -50,14 +54,14 @@ public class CookingPot extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         if (!event.getLine(1).equalsIgnoreCase("[Cook]")) return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (!player.hasPermission("craftbook.mech.cook")) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
             SignUtil.cancelSignChange(event);
             return;
@@ -76,16 +80,16 @@ public class CookingPot extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPing(SelfTriggerPingEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(!SignUtil.isSign(event.getBlock())) return;
+        if (!SignUtil.isSign(event.getBlock())) return;
 
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
-        if(!sign.getLine(1).equals("[Cook]")) return;
+        if (!sign.getLine(1).equals("[Cook]")) return;
 
-        if(cookingPotChunkLimit) {
-            if(cookingSet.contains(event.getBlock().getChunk().getX() + ";" + event.getBlock().getChunk().getZ()))
+        if (cookingPotChunkLimit) {
+            if (cookingSet.contains(event.getBlock().getChunk().getX() + ";" + event.getBlock().getChunk().getZ()))
                 return;
 
             cookingSet.add(event.getBlock().getChunk().getX() + ";" + event.getBlock().getChunk().getZ());
@@ -97,27 +101,27 @@ public class CookingPot extends AbstractCraftBookMechanic {
     @EventHandler
     public void onUnregister(SelfTriggerUnregisterEvent event) {
 
-        if(cookingPotChunkLimit)
+        if (cookingPotChunkLimit)
             cookingSet.remove(event.getBlock().getChunk().getX() + ";" + event.getBlock().getChunk().getZ());
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onThink(SelfTriggerThinkEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(!SignUtil.isSign(event.getBlock())) return;
+        if (!SignUtil.isSign(event.getBlock())) return;
 
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
-        if(!sign.getLine(1).equals("[Cook]")) return;
+        if (!sign.getLine(1).equals("[Cook]")) return;
 
         event.setHandled(true);
 
-        if(cookingPotHeating && sign.getLine(0).equals("HEATING")) {
+        if (cookingPotHeating && sign.getLine(0).equals("HEATING")) {
 
             //So it's waiting.
-            if(ThreadLocalRandom.current().nextInt(200) != 0)
+            if (ThreadLocalRandom.current().nextInt(200) != 0)
                 return;
             sign.setLine(0, "");
         }
@@ -139,25 +143,25 @@ public class CookingPot extends AbstractCraftBookMechanic {
                 Inventory inventory = chest.getInventory();
 
                 List<ItemStack> items;
-                if(cookingPotOres)
+                if (cookingPotOres)
                     items = ItemUtil.getRawMaterials(inventory);
                 else
                     items = ItemUtil.getRawFood(inventory);
 
-                if(items.size() == 0) {
-                    if(cookingPotHeating) {
+                if (items.size() == 0) {
+                    if (cookingPotHeating) {
                         sign.setLine(0, "HEATING");
                         sign.update(false);
                     }
                     return;
                 }
 
-                if(lastTick < 500) {
+                if (lastTick < 500) {
 
                     int multiplier = getMultiplier(sign);
 
                     lastTick = cookingPotSuperFast ? lastTick + multiplier : lastTick + Math.min(multiplier, 5);
-                    if(multiplier > 0)
+                    if (multiplier > 0)
                         setMultiplier(sign, multiplier - 1);
                 }
                 if (lastTick >= 50) {
@@ -185,7 +189,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
                 lastTick = 0;
         }
 
-        if(oldTick != lastTick) {
+        if (oldTick != lastTick) {
             sign.setLine(2, String.valueOf(lastTick));
             sign.update(false);
         }
@@ -194,31 +198,32 @@ public class CookingPot extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK)
+            return;
 
         ChangedSign sign = event.getSign();
 
-        if(!sign.getLine(1).equals("[Cook]")) return;
+        if (!sign.getLine(1).equals("[Cook]")) return;
 
         CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getClickedBlock().getLocation());
 
         CraftBookPlayer p = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Block b = SignUtil.getBackBlock(event.getClickedBlock());
             Block cb = b.getRelative(0, 2, 0);
             if (cb.getType() == Material.CHEST) {
                 Player player = event.getPlayer();
-                if(!player.hasPermission("craftbook.mech.cook.refuel")) {
-                    if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+                if (!player.hasPermission("craftbook.mech.cook.refuel")) {
+                    if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                         p.printError("mech.restock-permission");
                     event.setCancelled(true);
                     return;
                 }
-                if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-                    if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+                if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+                    if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                         p.printError("area.use-permissions");
                     return;
                 }
@@ -230,7 +235,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
                     } else {
                         player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
                     }
-                    if(itemID == Material.LAVA_BUCKET && !cookingPotDestroyBuckets)
+                    if (itemID == Material.LAVA_BUCKET && !cookingPotDestroyBuckets)
                         player.getInventory().addItem(new ItemStack(Material.BUCKET, 1));
                     p.print("mech.cook.add-fuel");
                     event.setCancelled(true);
@@ -240,10 +245,10 @@ public class CookingPot extends AbstractCraftBookMechanic {
                 }
             }
 
-            if(sign.hasChanged())
+            if (sign.hasChanged())
                 sign.update(false);
         } else {
-            event.getPlayer().setFireTicks(getMultiplier(sign)+40);
+            event.getPlayer().setFireTicks(getMultiplier(sign) + 40);
             CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
             player.printError("mech.cook.ouch");
         }
@@ -252,13 +257,13 @@ public class CookingPot extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockDestroy(BlockBreakEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(!SignUtil.isSign(event.getBlock())) return;
+        if (!SignUtil.isSign(event.getBlock())) return;
 
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
-        if(!sign.getLine(1).equals("[Cook]")) return;
+        if (!sign.getLine(1).equals("[Cook]")) return;
 
         CraftBookPlugin.inst().getSelfTriggerManager().unregisterSelfTrigger(event.getBlock().getLocation(), UnregisterReason.BREAK);
     }
@@ -266,35 +271,35 @@ public class CookingPot extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if(!cookingPotAllowRedstone) return;
+        if (!cookingPotAllowRedstone) return;
 
-        if(!SignUtil.isSign(event.getBlock())) return;
+        if (!SignUtil.isSign(event.getBlock())) return;
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
-        if(!sign.getLine(1).equals("[Cook]")) return;
+        if (!sign.getLine(1).equals("[Cook]")) return;
 
         CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getBlock().getLocation());
 
         if (event.isOn() && !event.isMinor())
             increaseMultiplier(sign, event.getNewCurrent() - event.getOldCurrent());
 
-        if(sign.hasChanged())
+        if (sign.hasChanged())
             sign.update(false);
     }
 
     public void setMultiplier(ChangedSign sign, int amount) {
 
-        if(!cookingPotFuel)
+        if (!cookingPotFuel)
             amount = Math.max(amount, 1);
         sign.setLine(3, String.valueOf(amount));
     }
 
     public void increaseMultiplier(ChangedSign sign, int amount) {
 
-        if(sign.getLine(0).equals("HEATING"))
+        if (sign.getLine(0).equals("HEATING"))
             sign.setLine(0, "");
         setMultiplier(sign, getMultiplier(sign) + amount);
     }

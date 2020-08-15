@@ -17,15 +17,6 @@
 package org.enginehub.craftbook.mechanics.signcopier;
 
 import com.google.common.collect.Lists;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.ItemSyntax;
-import org.enginehub.craftbook.util.ProtectionUtil;
-import org.enginehub.craftbook.util.events.SignClickEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.HandSide;
@@ -37,6 +28,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.ItemSyntax;
+import org.enginehub.craftbook.util.ProtectionUtil;
+import org.enginehub.craftbook.util.events.SignClickEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,10 +51,10 @@ public class SignCopier extends AbstractCraftBookMechanic {
 
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
         registrar.registerTopLevelWithSubCommands(
-                "signedit",
-                Lists.newArrayList("edsign", "signcopy"),
-                "CraftBook SignCopier Commands",
-                SignEditCommands::register
+            "signedit",
+            Lists.newArrayList("edsign", "signcopy"),
+            "CraftBook SignCopier Commands",
+            SignEditCommands::register
         );
 
         return true;
@@ -74,20 +74,20 @@ public class SignCopier extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onRightClick(SignClickEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         CraftBookPlayer player = event.getWrappedPlayer();
 
         if (player.getItemInHand(HandSide.MAIN_HAND).getType() != item) return;
 
         if (!player.hasPermission("craftbook.mech.signcopy.use")) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
         }
 
-        if(!ProtectionUtil.canBuild(event.getPlayer(), event.getClickedBlock().getLocation(), false)) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canBuild(event.getPlayer(), event.getClickedBlock().getLocation(), false)) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
         }
@@ -97,7 +97,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
             player.print("mech.signcopy.copy");
             event.setCancelled(true);
         } else if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
-            if(signs.containsKey(player.getName())) {
+            if (signs.containsKey(player.getName())) {
 
                 Sign s = (Sign) event.getClickedBlock().getState();
                 String[] lines = signs.get(player.getName());
@@ -105,8 +105,8 @@ public class SignCopier extends AbstractCraftBookMechanic {
                 SignChangeEvent sev = new SignChangeEvent(event.getClickedBlock(), event.getPlayer(), lines);
                 Bukkit.getPluginManager().callEvent(sev);
 
-                if(!sev.isCancelled()) {
-                    for(int i = 0; i < lines.length; i++)
+                if (!sev.isCancelled()) {
+                    for (int i = 0; i < lines.length; i++)
                         s.setLine(i, lines[i]);
                     s.update();
                 }

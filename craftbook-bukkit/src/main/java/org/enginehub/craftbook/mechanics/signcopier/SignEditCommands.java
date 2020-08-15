@@ -16,11 +16,11 @@
 
 package org.enginehub.craftbook.mechanics.signcopier;
 
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.exception.CraftBookException;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
 import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.exception.CraftBookException;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.annotation.Command;
 import org.enginehub.piston.annotation.CommandContainer;
@@ -31,9 +31,9 @@ public class SignEditCommands {
 
     public static void register(CommandManager commandManager, CommandRegistrationHandler registration) {
         registration.register(
-                commandManager,
-                SignEditCommandsRegistration.builder(),
-                new SignEditCommands()
+            commandManager,
+            SignEditCommandsRegistration.builder(),
+            new SignEditCommands()
         );
     }
 
@@ -41,12 +41,12 @@ public class SignEditCommands {
     }
 
     @Command(name = "edit", desc = "Edits the copied sign.")
-    @CommandPermissions({"craftbook.mech.signcopy.edit"})
+    @CommandPermissions({ "craftbook.mech.signcopy.edit" })
     public void editSign(CraftBookPlayer player,
-            @Arg(desc = "The line to edit") int line,
-            @Arg(desc = "The text to use", variable = true) String text) throws CraftBookException {
+                         @Arg(desc = "The line to edit") int line,
+                         @Arg(desc = "The text to use", variable = true) String text) throws CraftBookException {
 
-        if(!SignCopier.signs.containsKey(player.getName()))
+        if (!SignCopier.signs.containsKey(player.getName()))
             throw new CraftBookException("You haven't copied a sign!");
 
         if (line < 1 || line > 4) {

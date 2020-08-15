@@ -44,12 +44,12 @@ public interface CraftBookPlatform {
     String getPlatformVersion();
 
     /**
-     * Load the platform
+     * Load the platform.
      */
     void load();
 
     /**
-     * Unload the platform
+     * Unload the platform.
      */
     void unload();
 

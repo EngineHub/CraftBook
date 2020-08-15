@@ -97,11 +97,11 @@ public class BetterPlants extends AbstractCraftBookMechanic {
 
     private class GrowthTicker implements Runnable {
         @Override
-        public void run () {
+        public void run() {
             for (World world : Bukkit.getWorlds()) {
                 int x = 0, y = 0, z = 0;
 
-                if(fastTickRandoms) {
+                if (fastTickRandoms) {
                     x = ThreadLocalRandom.current().nextInt(16);
                     y = ThreadLocalRandom.current().nextInt(world.getMaxHeight());
                     z = ThreadLocalRandom.current().nextInt(16);
@@ -117,7 +117,7 @@ public class BetterPlants extends AbstractCraftBookMechanic {
 
                     block = chunk.getBlock(x, y, z);
 
-                    if(fernFarming && block.getType() == Material.FERN) {
+                    if (fernFarming && block.getType() == Material.FERN) {
                         block.setType(Material.LARGE_FERN, false);
                         Bisected topHalfData = ((Bisected) Material.LARGE_FERN.createBlockData());
                         topHalfData.setHalf(Bisected.Half.TOP);

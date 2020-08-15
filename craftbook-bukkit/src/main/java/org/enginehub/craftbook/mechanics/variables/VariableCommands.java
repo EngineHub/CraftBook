@@ -17,14 +17,6 @@
 package org.enginehub.craftbook.mechanics.variables;
 
 import com.google.common.collect.ImmutableMap;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.exception.CraftBookException;
-import org.enginehub.craftbook.mechanics.variables.exception.ExistingVariableException;
-import org.enginehub.craftbook.mechanics.variables.exception.InvalidVariableException;
-import org.enginehub.craftbook.mechanics.variables.exception.UnknownVariableException;
-import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
-import org.enginehub.craftbook.util.profile.Profile;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
 import com.sk89q.worldedit.extension.platform.Actor;
@@ -40,6 +32,14 @@ import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.util.formatting.text.event.ClickEvent;
 import com.sk89q.worldedit.util.formatting.text.event.HoverEvent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.exception.CraftBookException;
+import org.enginehub.craftbook.mechanics.variables.exception.ExistingVariableException;
+import org.enginehub.craftbook.mechanics.variables.exception.InvalidVariableException;
+import org.enginehub.craftbook.mechanics.variables.exception.UnknownVariableException;
+import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
+import org.enginehub.craftbook.util.profile.Profile;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.annotation.Command;
 import org.enginehub.piston.annotation.CommandContainer;
@@ -63,18 +63,18 @@ public class VariableCommands {
 
     public static void register(CommandManager commandManager, CommandRegistrationHandler registration) {
         registration.register(
-                commandManager,
-                VariableCommandsRegistration.builder(),
-                new VariableCommands()
+            commandManager,
+            VariableCommandsRegistration.builder(),
+            new VariableCommands()
         );
     }
 
     @Command(name = "set", desc = "Sets a variable.")
-    @CommandPermissions({"craftbook.variables.set"})
+    @CommandPermissions({ "craftbook.variables.set" })
     public void set(Actor actor,
-            @Arg(desc = "The variable name") String variable,
-            @Arg(desc = "The variable value") String value,
-            @ArgFlag(name = 'n', desc = "The namespace of the variable") String namespace
+                    @Arg(desc = "The variable name") String variable,
+                    @Arg(desc = "The variable value") String value,
+                    @ArgFlag(name = 'n', desc = "The namespace of the variable") String namespace
     ) throws CraftBookException, AuthorizationException {
         VariableKey key = VariableKey.of(namespace, variable, actor);
         checkVariableExists(key);
@@ -83,18 +83,18 @@ public class VariableCommands {
 
         VariableManager.instance.setVariable(key, value);
         actor.printInfo(TranslatableComponent.of(
-                "craftbook.variables.set",
-                key.getRichName(),
-                TextComponent.of(value, TextColor.WHITE)
+            "craftbook.variables.set",
+            key.getRichName(),
+            TextComponent.of(value, TextColor.WHITE)
         ));
     }
 
     @Command(name = "define", desc = "Defines a variable.")
-    @CommandPermissions({"craftbook.variables.define"})
+    @CommandPermissions({ "craftbook.variables.define" })
     public void define(Actor actor,
-            @Arg(desc = "The variable name") String variable,
-            @Arg(desc = "The variable value") String value,
-            @ArgFlag(name = 'n', desc = "The namespace of the variable") String namespace
+                       @Arg(desc = "The variable name") String variable,
+                       @Arg(desc = "The variable value") String value,
+                       @ArgFlag(name = 'n', desc = "The namespace of the variable") String namespace
     ) throws CraftBookException, AuthorizationException {
         VariableKey key = VariableKey.of(namespace, variable, actor);
 
@@ -107,17 +107,17 @@ public class VariableCommands {
 
         VariableManager.instance.setVariable(key, value);
         actor.printInfo(TranslatableComponent.of(
-                "craftbook.variables.set",
-                key.getRichName(),
-                TextComponent.of(value, TextColor.WHITE)
+            "craftbook.variables.set",
+            key.getRichName(),
+            TextComponent.of(value, TextColor.WHITE)
         ));
     }
 
     @Command(name = "get", desc = "Checks a variable.")
-    @CommandPermissions({"craftbook.variables.get"})
+    @CommandPermissions({ "craftbook.variables.get" })
     public void get(Actor actor,
-            @Arg(desc = "The variable name") String variable,
-            @ArgFlag(name = 'n', desc = "The namespace of the variable") String namespace) throws CraftBookException, AuthorizationException {
+                    @Arg(desc = "The variable name") String variable,
+                    @ArgFlag(name = 'n', desc = "The namespace of the variable") String namespace) throws CraftBookException, AuthorizationException {
         VariableKey key = VariableKey.of(namespace, variable, actor);
         checkVariableExists(key);
         checkVariablePermission(actor, key, "get");
@@ -125,20 +125,20 @@ public class VariableCommands {
         String value = VariableManager.instance.getVariable(key);
 
         actor.printInfo(TranslatableComponent.of(
-                "craftbook.variables.get",
-                key.getRichName(),
-                value == null
-                        ? TranslatableComponent.of("craftbook.variables.undefined", TextColor.WHITE)
-                        : TextComponent.of(value, TextColor.WHITE)
+            "craftbook.variables.get",
+            key.getRichName(),
+            value == null
+                ? TranslatableComponent.of("craftbook.variables.undefined", TextColor.WHITE)
+                : TextComponent.of(value, TextColor.WHITE)
         ));
     }
 
     @Command(name = "list", desc = "Lists variables")
-    @CommandPermissions({"craftbook.variables.list"})
+    @CommandPermissions({ "craftbook.variables.list" })
     public void list(Actor actor,
-            @ArgFlag(name = 'n', desc = "The namespace of the variable") String namespace,
-            @Switch(name = 'a', desc = "List all variables") boolean all,
-            @ArgFlag(name = 'p', desc = "Select page number", def = "1") int page
+                     @ArgFlag(name = 'n', desc = "The namespace of the variable") String namespace,
+                     @Switch(name = 'a', desc = "List all variables") boolean all,
+                     @ArgFlag(name = 'p', desc = "Select page number", def = "1") int page
     ) throws InvalidComponentException, VariableException {
         if (!all && namespace == null) {
             if (VariableManager.instance.defaultToGlobal || !(actor instanceof CraftBookPlayer)) {
@@ -167,18 +167,18 @@ public class VariableCommands {
         }
 
         VariableListPaginationBox variableListBox = new VariableListPaginationBox(
-                variableKeys,
-                namespace,
-                "/variables list -p %page% " + (namespace == null ? "-a" : "-n " + namespace)
+            variableKeys,
+            namespace,
+            "/variables list -p %page% " + (namespace == null ? "-a" : "-n " + namespace)
         );
         actor.printInfo(variableListBox.create(page));
     }
 
-    @Command(name = "remove", aliases = {"delete","rm"}, desc = "Remove a variable.")
-    @CommandPermissions({"craftbook.variables.remove"})
+    @Command(name = "remove", aliases = { "delete", "rm" }, desc = "Remove a variable.")
+    @CommandPermissions({ "craftbook.variables.remove" })
     public void remove(Actor actor,
-            @Arg(desc = "The variable name") String variable,
-            @ArgFlag(name = 'n', desc = "The namespace of the variable") String namespace
+                       @Arg(desc = "The variable name") String variable,
+                       @ArgFlag(name = 'n', desc = "The namespace of the variable") String namespace
     ) throws CraftBookException, AuthorizationException {
         VariableKey key = VariableKey.of(namespace, variable, actor);
         checkVariableExists(key);
@@ -189,11 +189,11 @@ public class VariableCommands {
     }
 
     @Command(name = "append", desc = "Append to a variable.")
-    @CommandPermissions({"craftbook.variables.append"})
+    @CommandPermissions({ "craftbook.variables.append" })
     public void append(Actor actor,
-            @Arg(desc = "The variable name") String variable,
-            @Arg(desc = "The appended value") String value,
-            @ArgFlag(name = 'n', desc = "The namespace of the variable") String namespace
+                       @Arg(desc = "The variable name") String variable,
+                       @Arg(desc = "The appended value") String value,
+                       @ArgFlag(name = 'n', desc = "The namespace of the variable") String namespace
     ) throws CraftBookException, AuthorizationException {
         VariableKey key = VariableKey.of(namespace, variable, actor);
         checkVariableExists(key);
@@ -202,18 +202,18 @@ public class VariableCommands {
 
         VariableManager.instance.setVariable(key, VariableManager.instance.getVariable(key) + value);
         actor.printInfo(TranslatableComponent.of(
-                "craftbook.variables.set",
-                key.getRichName(),
-                TextComponent.of(Objects.requireNonNull(VariableManager.instance.getVariable(key)), TextColor.WHITE)
+            "craftbook.variables.set",
+            key.getRichName(),
+            TextComponent.of(Objects.requireNonNull(VariableManager.instance.getVariable(key)), TextColor.WHITE)
         ));
     }
 
     @Command(name = "prepend", desc = "Prepend to a variable.")
-    @CommandPermissions({"craftbook.variables.prepend"})
+    @CommandPermissions({ "craftbook.variables.prepend" })
     public void prepend(Actor actor,
-            @Arg(desc = "The variable name") String variable,
-            @Arg(desc = "The prepended value") String value,
-            @ArgFlag(name = 'n', desc = "The namespace of the variable") String namespace
+                        @Arg(desc = "The variable name") String variable,
+                        @Arg(desc = "The prepended value") String value,
+                        @ArgFlag(name = 'n', desc = "The namespace of the variable") String namespace
     ) throws CraftBookException, AuthorizationException {
         VariableKey key = VariableKey.of(namespace, variable, actor);
         checkVariableExists(key);
@@ -222,17 +222,17 @@ public class VariableCommands {
 
         VariableManager.instance.setVariable(key, value + VariableManager.instance.getVariable(key));
         actor.printInfo(TranslatableComponent.of(
-                "craftbook.variables.set",
-                key.getRichName(),
-                TextComponent.of(Objects.requireNonNull(VariableManager.instance.getVariable(key)), TextColor.WHITE)
+            "craftbook.variables.set",
+            key.getRichName(),
+            TextComponent.of(Objects.requireNonNull(VariableManager.instance.getVariable(key)), TextColor.WHITE)
         ));
     }
 
     @Command(name = "toggle", desc = "Toggle a boolean.")
-    @CommandPermissions({"craftbook.variables.toggle"})
+    @CommandPermissions({ "craftbook.variables.toggle" })
     public void toggle(Actor actor,
-            @Arg(desc = "The variable name") String variable,
-            @ArgFlag(name = 'n', desc = "The namespace of the variable") String namespace
+                       @Arg(desc = "The variable name") String variable,
+                       @ArgFlag(name = 'n', desc = "The namespace of the variable") String namespace
     ) throws CraftBookException, AuthorizationException {
         VariableKey key = VariableKey.of(namespace, variable, actor);
         checkVariableExists(key);
@@ -249,26 +249,26 @@ public class VariableCommands {
                 result = var.equalsIgnoreCase("yes") ? "no" : "yes";
             } else {
                 throw new InvalidVariableException(TranslatableComponent.of(
-                        "craftbook.variables.not-boolean",
-                        key.getRichName()
+                    "craftbook.variables.not-boolean",
+                    key.getRichName()
                 ));
             }
 
             VariableManager.instance.setVariable(key, result);
             actor.printInfo(TranslatableComponent.of(
-                    "craftbook.variables.set",
-                    key.getRichName(),
-                    TextComponent.of(result, TextColor.WHITE)
+                "craftbook.variables.set",
+                key.getRichName(),
+                TextComponent.of(result, TextColor.WHITE)
             ));
         }
     }
 
     @Command(name = "setexpr", desc = "Set a variable to the result of a calculation.")
-    @CommandPermissions({"craftbook.variables.setexpr"})
+    @CommandPermissions({ "craftbook.variables.setexpr" })
     public void setExpr(Actor actor,
-            @ArgFlag(name = 'n', desc = "The namespace of the variable") String namespace,
-            @Arg(desc = "The variable name") String variable,
-            @Arg(desc = "Expression to evaluate", variable = true) List<String> input
+                        @ArgFlag(name = 'n', desc = "The namespace of the variable") String namespace,
+                        @Arg(desc = "The variable name") String variable,
+                        @Arg(desc = "Expression to evaluate", variable = true) List<String> input
     ) throws CraftBookException, AuthorizationException {
         VariableKey key = VariableKey.of(namespace, variable, actor);
         checkVariableExists(key);
@@ -281,8 +281,8 @@ public class VariableCommands {
                 f = Double.parseDouble(var);
             } catch (NumberFormatException e) {
                 throw new InvalidVariableException(TranslatableComponent.of(
-                        "craftbook.variables.not-numeric",
-                        key.getRichName()
+                    "craftbook.variables.not-numeric",
+                    key.getRichName()
                 ));
             }
 
@@ -298,9 +298,9 @@ public class VariableCommands {
 
             VariableManager.instance.setVariable(key, String.valueOf(result));
             actor.printInfo(TranslatableComponent.of(
-                    "craftbook.variables.set",
-                    key.getRichName(),
-                    TextComponent.of(result, TextColor.WHITE)
+                "craftbook.variables.set",
+                key.getRichName(),
+                TextComponent.of(result, TextColor.WHITE)
             ));
         }
     }
@@ -320,8 +320,8 @@ public class VariableCommands {
     private void checkVariableValue(String value) throws InvalidVariableException {
         if (!VariableManager.ALLOWED_VALUE_PATTERN.matcher(value).find()) {
             throw new InvalidVariableException(TranslatableComponent.of(
-                    "craftbook.variables.invalid-value",
-                    TextComponent.of(value)
+                "craftbook.variables.invalid-value",
+                TextComponent.of(value)
             ));
         }
     }
@@ -377,23 +377,23 @@ public class VariableCommands {
             }
 
             TextComponent labelComponent = TextComponent.of(label)
-                    .color(TextColor.YELLOW)
-                    .clickEvent(ClickEvent.copyToClipboard(key.toString()));
+                .color(TextColor.YELLOW)
+                .clickEvent(ClickEvent.copyToClipboard(key.toString()));
             Component copyComponent = TranslatableComponent.of("craftbook.variables.list.copy");
             if (this.singleNamespace) {
                 labelComponent = labelComponent
-                        .hoverEvent(HoverEvent.showText(TextComponent.of(key.toString()).append(TextComponent.newline().append(copyComponent))));
+                    .hoverEvent(HoverEvent.showText(TextComponent.of(key.toString()).append(TextComponent.newline().append(copyComponent))));
             } else {
                 labelComponent = labelComponent
-                        .hoverEvent(HoverEvent.showText(copyComponent));
+                    .hoverEvent(HoverEvent.showText(copyComponent));
             }
 
             return TextComponent.builder()
-                    .content("")
-                    .append(labelComponent)
-                    .append(TextComponent.of("="))
-                    .append(value.color(valueColor))
-                    .build();
+                .content("")
+                .append(labelComponent)
+                .append(TextComponent.of("="))
+                .append(value.color(valueColor))
+                .build();
         }
 
         @Override

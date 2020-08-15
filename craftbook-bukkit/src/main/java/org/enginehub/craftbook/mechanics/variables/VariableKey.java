@@ -16,10 +16,6 @@
 
 package org.enginehub.craftbook.mechanics.variables;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import org.enginehub.craftbook.mechanics.variables.exception.InvalidVariableException;
-import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
@@ -29,13 +25,16 @@ import com.sk89q.worldedit.util.formatting.text.event.HoverEvent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import com.sk89q.worldedit.util.formatting.text.format.TextDecoration;
 import org.bukkit.Bukkit;
+import org.enginehub.craftbook.mechanics.variables.exception.InvalidVariableException;
+import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 
 import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.annotation.Nullable;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class VariableKey {
 

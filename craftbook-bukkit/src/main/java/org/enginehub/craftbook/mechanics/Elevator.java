@@ -16,20 +16,6 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.BukkitCraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.LocationUtil;
-import org.enginehub.craftbook.util.ProtectionUtil;
-import org.enginehub.craftbook.util.RegexUtil;
-import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.SignClickEvent;
-import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import org.bukkit.Bukkit;
@@ -53,6 +39,20 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.BukkitCraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.LocationUtil;
+import org.enginehub.craftbook.util.ProtectionUtil;
+import org.enginehub.craftbook.util.RegexUtil;
+import org.enginehub.craftbook.util.SignUtil;
+import org.enginehub.craftbook.util.events.SignClickEvent;
+import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -61,7 +61,8 @@ import java.util.Locale;
 import java.util.UUID;
 
 /**
- * The default elevator mechanism -- wall signs in a vertical column that teleport the player vertically when triggered.
+ * The default elevator mechanism -- wall signs in a vertical column that teleport the player
+ * vertically when triggered.
  *
  * @author sk89q
  * @author hash
@@ -73,7 +74,7 @@ public class Elevator extends AbstractCraftBookMechanic {
 
     @Override
     public boolean enable() {
-        if(elevatorSlowMove) {
+        if (elevatorSlowMove) {
             flyingPlayers = new HashSet<>();
             playerVehicles = new HashMap<>();
         }
@@ -84,11 +85,11 @@ public class Elevator extends AbstractCraftBookMechanic {
     @Override
     public void disable() {
 
-        if(flyingPlayers != null) {
+        if (flyingPlayers != null) {
             Iterator<UUID> it = flyingPlayers.iterator();
-            while(it.hasNext()) {
+            while (it.hasNext()) {
                 OfflinePlayer op = Bukkit.getOfflinePlayer(it.next());
-                if(!op.isOnline()) {
+                if (!op.isOnline()) {
                     it.remove();
                     continue;
                 }
@@ -104,10 +105,10 @@ public class Elevator extends AbstractCraftBookMechanic {
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent event) {
 
-        if(!elevatorSlowMove) return;
-        if(!(event.getEntity() instanceof Player)) return;
-        if(!flyingPlayers.contains(event.getEntity().getUniqueId())) return;
-        if(event instanceof EntityDamageByEntityEvent) return;
+        if (!elevatorSlowMove) return;
+        if (!(event.getEntity() instanceof Player)) return;
+        if (!flyingPlayers.contains(event.getEntity().getUniqueId())) return;
+        if (event instanceof EntityDamageByEntityEvent) return;
 
         event.setCancelled(true);
     }
@@ -115,12 +116,12 @@ public class Elevator extends AbstractCraftBookMechanic {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
 
-        if(!elevatorSlowMove) return;
+        if (!elevatorSlowMove) return;
         //Clean up mechanics that store players that we don't want anymore.
         Iterator<UUID> it = flyingPlayers.iterator();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             UUID p = it.next();
-            if(event.getPlayer().getUniqueId().equals(p)) {
+            if (event.getPlayer().getUniqueId().equals(p)) {
                 event.getPlayer().setFlying(false);
                 event.getPlayer().setAllowFlight(event.getPlayer().getGameMode() == GameMode.CREATIVE);
                 it.remove();
@@ -132,18 +133,18 @@ public class Elevator extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         Direction dir = Direction.NONE;
-        if(event.getLine(1).equalsIgnoreCase("[lift down]")) dir = Direction.DOWN;
-        if(event.getLine(1).equalsIgnoreCase("[lift up]")) dir = Direction.UP;
-        if(event.getLine(1).equalsIgnoreCase("[lift]")) dir = Direction.RECV;
+        if (event.getLine(1).equalsIgnoreCase("[lift down]")) dir = Direction.DOWN;
+        if (event.getLine(1).equalsIgnoreCase("[lift up]")) dir = Direction.UP;
+        if (event.getLine(1).equalsIgnoreCase("[lift]")) dir = Direction.RECV;
 
-        if(dir == Direction.NONE) return;
+        if (dir == Direction.NONE) return;
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if(!player.hasPermission("craftbook.mech.elevator")) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!player.hasPermission("craftbook.mech.elevator")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
             SignUtil.cancelSignChange(event);
             return;
@@ -174,7 +175,7 @@ public class Elevator extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if(!elevatorAllowRedstone || event.isMinor() || !event.isOn())
+        if (!elevatorAllowRedstone || event.isMinor() || !event.isOn())
             return;
 
         if (!EventUtil.passesFilter(event))
@@ -194,18 +195,18 @@ public class Elevator extends AbstractCraftBookMechanic {
         BlockFace shift = dir == Direction.UP ? BlockFace.UP : BlockFace.DOWN;
         Block destination = findDestination(dir, shift, event.getBlock());
 
-        if(destination == null) return;
+        if (destination == null) return;
 
-        for(Player player : LocationUtil.getNearbyPlayers(event.getBlock().getLocation(), elevatorRedstoneRadius)) {
+        for (Player player : LocationUtil.getNearbyPlayers(event.getBlock().getLocation(), elevatorRedstoneRadius)) {
 
             CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(player);
-            if(flyingPlayers != null && flyingPlayers.contains(localPlayer.getUniqueId())) {
+            if (flyingPlayers != null && flyingPlayers.contains(localPlayer.getUniqueId())) {
                 localPlayer.printError("mech.lift.busy");
                 continue;
             }
 
             if (!localPlayer.hasPermission("craftbook.mech.elevator.use")) {
-                if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+                if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     localPlayer.printError("mech.use-permission");
                 continue;
             }
@@ -217,9 +218,9 @@ public class Elevator extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if(!elevatorButtonEnabled) return;
-        if(SignUtil.isSign(event.getClickedBlock())) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (!elevatorButtonEnabled) return;
+        if (SignUtil.isSign(event.getClickedBlock())) return;
 
         onCommonClick(event);
     }
@@ -227,7 +228,7 @@ public class Elevator extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         onCommonClick(event);
     }
 
@@ -254,25 +255,25 @@ public class Elevator extends AbstractCraftBookMechanic {
         BlockFace shift = dir == Direction.UP ? BlockFace.UP : BlockFace.DOWN;
         Block destination = findDestination(dir, shift, event.getClickedBlock());
 
-        if(destination == null) {
+        if (destination == null) {
             localPlayer.printError("mech.lift.no-destination");
             return;
         }
 
-        if(flyingPlayers != null && flyingPlayers.contains(localPlayer.getUniqueId())) {
+        if (flyingPlayers != null && flyingPlayers.contains(localPlayer.getUniqueId())) {
             localPlayer.printError("mech.lift.busy");
             return;
         }
 
         if (!localPlayer.hasPermission("craftbook.mech.elevator.use")) {
             event.setCancelled(true);
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 localPlayer.printError("mech.use-permission");
             return;
         }
 
-        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 localPlayer.printError("area.use-permissions");
             return;
         }
@@ -316,8 +317,7 @@ public class Elevator extends AbstractCraftBookMechanic {
             } else {
                 if (destination.getY() == clickedBlock.getWorld().getMaxHeight()) {
                     return null;
-                }
-                else if (destination.getY() == 0) {
+                } else if (destination.getY() == 0) {
                     return null;
                 }
             }
@@ -330,7 +330,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         // start with the block shifted vertically from the player
         // to the destination sign's height (plus one).
         Block floor = destination.getWorld().getBlockAt((int) Math.floor(player.getLocation().getX()), destination.getY() + 1,
-                (int) Math.floor(player.getLocation().getZ()));
+            (int) Math.floor(player.getLocation().getZ()));
         // well, unless that's already a ceiling.
         if (floor.getType().isSolid()) {
             floor = floor.getRelative(BlockFace.DOWN);
@@ -369,12 +369,12 @@ public class Elevator extends AbstractCraftBookMechanic {
         final Location newLocation = BukkitAdapter.adapt(player.getLocation());
         newLocation.setY(floor.getY() + 1);
 
-        if(elevatorSlowMove) {
+        if (elevatorSlowMove) {
 
             final Location lastLocation = BukkitAdapter.adapt(player.getLocation());
 
             if (player.isInsideVehicle()) {
-                Player bukkitPlayer = ((BukkitCraftBookPlayer)player).getPlayer();
+                Player bukkitPlayer = ((BukkitCraftBookPlayer) player).getPlayer();
                 playerVehicles.put(player.getUniqueId(), bukkitPlayer.getVehicle());
 
                 LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
@@ -384,17 +384,17 @@ public class Elevator extends AbstractCraftBookMechanic {
                 bukkitPlayer.teleport(lastLocation);
             }
 
-            new BukkitRunnable(){
+            new BukkitRunnable() {
                 @Override
-                public void run () {
+                public void run() {
 
-                    OfflinePlayer offlinePlayer = ((BukkitCraftBookPlayer)player).getPlayer();
-                    if(!offlinePlayer.isOnline()) {
+                    OfflinePlayer offlinePlayer = ((BukkitCraftBookPlayer) player).getPlayer();
+                    if (!offlinePlayer.isOnline()) {
                         cancel();
                         return;
                     }
                     Player p = offlinePlayer.getPlayer();
-                    if(!flyingPlayers.contains(p.getUniqueId()) && !p.getAllowFlight())
+                    if (!flyingPlayers.contains(p.getUniqueId()) && !p.getAllowFlight())
                         flyingPlayers.add(p.getUniqueId());
 
                     enableFlightMode(p);
@@ -404,16 +404,16 @@ public class Elevator extends AbstractCraftBookMechanic {
 
                     boolean isPlayerAlmostAtDestination = Math.abs(floor.getY() - p.getLocation().getY()) < 0.7;
 
-                    if(isPlayerAlmostAtDestination) {
+                    if (isPlayerAlmostAtDestination) {
                         finishElevatingPlayer(p);
                         return;
                     }
 
                     boolean didPlayerLeaveElevator =
-                            lastLocation.getBlockX() != p.getLocation().getBlockX() ||
+                        lastLocation.getBlockX() != p.getLocation().getBlockX() ||
                             lastLocation.getBlockZ() != p.getLocation().getBlockZ();
 
-                    if(didPlayerLeaveElevator) {
+                    if (didPlayerLeaveElevator) {
                         player.print("mech.lift.leave");
                         disableFlightMode(p);
                         playerVehicles.remove(p.getUniqueId());
@@ -494,7 +494,7 @@ public class Elevator extends AbstractCraftBookMechanic {
     }
 
     private Direction getVerticalDirection(Location from, Location to) {
-        if(from.getY() < to.getY())
+        if (from.getY() < to.getY())
             return Direction.UP;
         else if (from.getY() > to.getY())
             return Direction.DOWN;
@@ -511,7 +511,7 @@ public class Elevator extends AbstractCraftBookMechanic {
 
         boolean wasPlayerInVehicle = playerVehicles.containsKey(player.getUniqueId());
 
-        if(wasPlayerInVehicle) {
+        if (wasPlayerInVehicle) {
             Entity vehicle = playerVehicles.get(player.getUniqueId());
             LocationUtil.addVehiclePassengerDelayed(vehicle, player);
             playerVehicles.remove(player.getUniqueId());
@@ -559,7 +559,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         if (!SignUtil.isSign(block)) {
             if (elevatorButtonEnabled && Tag.BUTTONS.isTagged(block.getType())) {
                 Switch b = (Switch) block.getBlockData();
-                if(b == null || b.getFacing() == null)
+                if (b == null || b.getFacing() == null)
                     return Direction.NONE;
                 Block sign = block.getRelative(b.getFacing().getOppositeFace(), 2);
                 if (SignUtil.isSign(sign))

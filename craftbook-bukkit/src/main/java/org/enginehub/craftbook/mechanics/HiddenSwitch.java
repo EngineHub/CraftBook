@@ -16,9 +16,7 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -34,17 +32,18 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ItemSyntax;
 import org.enginehub.craftbook.util.ItemUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
 
 public class HiddenSwitch extends AbstractCraftBookMechanic {
 
@@ -60,12 +59,12 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(!event.getLine(1).equalsIgnoreCase("[x]")) return;
+        if (!event.getLine(1).equalsIgnoreCase("[x]")) return;
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if(!lplayer.hasPermission("craftbook.mech.hiddenswitch")) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!lplayer.hasPermission("craftbook.mech.hiddenswitch")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 lplayer.printError("mech.create-permission");
             SignUtil.cancelSignChange(event);
             return;
@@ -79,10 +78,10 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(player);
         ChangedSign s = null;
         Block testBlock = null;
-        if(anyside) {
-            for(BlockFace face : LocationUtil.getDirectFaces()) {
+        if (anyside) {
+            for (BlockFace face : LocationUtil.getDirectFaces()) {
                 testBlock = switchBlock.getRelative(face);
-                if(SignUtil.isWallSign(testBlock) && ((WallSign) testBlock.getBlockData()).getFacing() == face) {
+                if (SignUtil.isWallSign(testBlock) && ((WallSign) testBlock.getBlockData()).getFacing() == face) {
                     s = CraftBookBukkitUtil.toChangedSign(testBlock);
                     break;
                 }
@@ -90,12 +89,12 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
         } else {
             BlockFace face = eventFace.getOppositeFace();
             testBlock = switchBlock.getRelative(face);
-            if(SignUtil.isWallSign(testBlock) && ((WallSign) testBlock.getBlockData()).getFacing() == face) {
+            if (SignUtil.isWallSign(testBlock) && ((WallSign) testBlock.getBlockData()).getFacing() == face) {
                 s = CraftBookBukkitUtil.toChangedSign(testBlock);
             }
         }
 
-        if(s == null)
+        if (s == null)
             return false;
 
         if (s.getLine(1).equalsIgnoreCase("[X]")) {
@@ -119,14 +118,14 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
                 success = true;
             } else {
                 if (ItemUtil.areItemsIdentical(player.getInventory().getItemInMainHand(), itemID)
-                        || ItemUtil.areItemsIdentical(player.getInventory().getItemInOffHand(), itemID)) {
+                    || ItemUtil.areItemsIdentical(player.getInventory().getItemInOffHand(), itemID)) {
                     toggleSwitches(testBlock, eventFace.getOppositeFace());
                     success = true;
                 } else
                     lplayer.printError("mech.hiddenswitch.key");
             }
 
-            if(success)
+            if (success)
                 lplayer.print("mech.hiddenswitch.toggle");
 
             return !lplayer.isSneaking();
@@ -141,28 +140,29 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
         if (!EventUtil.passesFilter(event))
             return;
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND)
+            return;
 
         if (!(event.getBlockFace() == BlockFace.EAST || event.getBlockFace() == BlockFace.WEST
-                || event.getBlockFace() == BlockFace.NORTH || event.getBlockFace() == BlockFace.SOUTH
-                || event.getBlockFace() == BlockFace.UP || event.getBlockFace() == BlockFace.DOWN))
+            || event.getBlockFace() == BlockFace.NORTH || event.getBlockFace() == BlockFace.SOUTH
+            || event.getBlockFace() == BlockFace.UP || event.getBlockFace() == BlockFace.DOWN))
             return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if(!player.hasPermission("craftbook.mech.hiddenswitch.use"))
+        if (!player.hasPermission("craftbook.mech.hiddenswitch.use"))
             return;
 
         if (!isValidWallSign(event.getClickedBlock().getRelative(1, 0, 0))
-                && !isValidWallSign(event.getClickedBlock().getRelative(-1, 0, 0))
-                && !isValidWallSign(event.getClickedBlock().getRelative(0, 0, 1))
-                && !isValidWallSign(event.getClickedBlock().getRelative(0, 0, -1)))
+            && !isValidWallSign(event.getClickedBlock().getRelative(-1, 0, 0))
+            && !isValidWallSign(event.getClickedBlock().getRelative(0, 0, 1))
+            && !isValidWallSign(event.getClickedBlock().getRelative(0, 0, -1)))
             return;
 
-        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction()))
+        if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction()))
             return;
 
-        if(testBlock(event.getClickedBlock(), event.getBlockFace(), event.getPlayer()))
+        if (testBlock(event.getClickedBlock(), event.getBlockFace(), event.getPlayer()))
             event.setCancelled(true);
     }
 

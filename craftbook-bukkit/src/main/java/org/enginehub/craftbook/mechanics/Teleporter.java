@@ -16,19 +16,6 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.LocationUtil;
-import org.enginehub.craftbook.util.ParsingUtil;
-import org.enginehub.craftbook.util.ProtectionUtil;
-import org.enginehub.craftbook.util.RegexUtil;
-import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.SignClickEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.Location;
@@ -43,6 +30,19 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.LocationUtil;
+import org.enginehub.craftbook.util.ParsingUtil;
+import org.enginehub.craftbook.util.ProtectionUtil;
+import org.enginehub.craftbook.util.RegexUtil;
+import org.enginehub.craftbook.util.SignUtil;
+import org.enginehub.craftbook.util.events.SignClickEvent;
 
 /**
  * Teleporter Mechanism. Based off Elevator
@@ -56,14 +56,14 @@ public class Teleporter extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         if (!event.getLine(1).equalsIgnoreCase("[Teleporter]")) return;
 
         CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if(!localPlayer.hasPermission("craftbook.mech.teleporter")) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!localPlayer.hasPermission("craftbook.mech.teleporter")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 localPlayer.printError("mech.create-permission");
             SignUtil.cancelSignChange(event);
             return;
@@ -83,8 +83,8 @@ public class Teleporter extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if(SignUtil.isSign(event.getClickedBlock())) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (SignUtil.isSign(event.getClickedBlock())) return;
 
         onCommonClick(event);
     }
@@ -92,7 +92,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         onCommonClick(event);
     }
 
@@ -116,7 +116,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
             trigger = event.getClickedBlock();
         } else if (Tag.BUTTONS.isTagged(event.getClickedBlock().getType())) {
             Directional b = (Directional) event.getClickedBlock().getBlockData();
-            if(b == null || b.getFacing() == null) return;
+            if (b == null || b.getFacing() == null) return;
             Block sign = event.getClickedBlock().getRelative(b.getFacing().getOppositeFace(), 2);
             if (SignUtil.isSign(sign)) {
                 ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
@@ -131,16 +131,16 @@ public class Teleporter extends AbstractCraftBookMechanic {
         } else
             return;
 
-        if(trigger == null) return;
+        if (trigger == null) return;
 
         if (!localPlayer.hasPermission("craftbook.mech.teleporter.use")) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 localPlayer.printError("mech.use-permission");
             return;
         }
 
-        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 localPlayer.printError("area.use-permissions");
             return;
         }
@@ -196,7 +196,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
         }
 
         Block floor = trigger.getWorld().getBlockAt((int) Math.floor(toX), (int) (Math.floor(toY) + 1),
-                (int) Math.floor(toZ));
+            (int) Math.floor(toZ));
         // well, unless that's already a ceiling.
         if (floor.getType().isSolid())
             floor = floor.getRelative(BlockFace.DOWN);

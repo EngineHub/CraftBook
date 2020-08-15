@@ -16,13 +16,6 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.ItemSyntax;
-import org.enginehub.craftbook.util.ProtectionUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
@@ -40,8 +33,16 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.ItemSyntax;
+import org.enginehub.craftbook.util.ProtectionUtil;
 
 // TODO Potentially turn into a WE tool
+
 /**
  * This allows users to Right-click to check the power level of redstone.
  */
@@ -81,8 +82,8 @@ public class Ammeter extends AbstractCraftBookMechanic {
         int data = getSpecialData(block);
         if (data >= 0) {
             Component component = TranslatableComponent
-                    .of("craftbook.ammeter.line", getCurrentLine(data), TextComponent.of(data, TextColor.YELLOW))
-                    .color(TextColor.YELLOW);
+                .of("craftbook.ammeter.line", getCurrentLine(data), TextComponent.of(data, TextColor.YELLOW))
+                .color(TextColor.YELLOW);
             if (actionBar) {
                 player.printActionBar(component);
             } else {

@@ -16,10 +16,10 @@
 
 package org.enginehub.craftbook.mechanics.variables;
 
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 
 import java.io.IOException;
 import java.util.Map;
@@ -52,7 +52,7 @@ public class VariableConfiguration {
                     VariableKey key = VariableKey.of(namespace, variable, null);
 
                     if (VariableManager.DIRECT_VARIABLE_PATTERN.matcher(key.toString()).matches()
-                            && VariableManager.ALLOWED_VALUE_PATTERN.matcher(value).find()) {
+                        && VariableManager.ALLOWED_VALUE_PATTERN.matcher(value).find()) {
                         VariableManager.instance.setVariable(key, value);
                     } else {
                         throw new VariableException(TextComponent.of("Invalid variable " + key.toString() + " with value " + value), key);

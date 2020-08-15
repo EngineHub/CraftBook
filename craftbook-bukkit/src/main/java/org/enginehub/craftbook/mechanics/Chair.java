@@ -22,16 +22,6 @@ import com.comphenix.protocol.events.ListenerOptions;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.util.BlockSyntax;
-import org.enginehub.craftbook.util.BlockUtil;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.LocationUtil;
-import org.enginehub.craftbook.util.ProtectionUtil;
-import org.enginehub.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -58,6 +48,16 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockUtil;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.LocationUtil;
+import org.enginehub.craftbook.util.ProtectionUtil;
+import org.enginehub.craftbook.util.SignUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +74,7 @@ public class Chair extends AbstractCraftBookMechanic {
     private Map<String, ChairData> chairs;
 
     private static Entity fixArrow(Block block, Entity chairEntity) {
-        if(chairEntity == null || !chairEntity.isValid() || chairEntity.isDead()) {
+        if (chairEntity == null || !chairEntity.isValid() || chairEntity.isDead()) {
             chairEntity = block.getWorld().spawn(BlockUtil.getBlockCentre(block).subtract(0, 1.5, 0), ArmorStand.class);
             //block.getWorld().spawnArrow(BlockUtil.getBlockCentre(block).subtract(0, 0.5, 0), new Vector(0,-0.1,0), 0.01f, 0);
         }
@@ -94,7 +94,7 @@ public class Chair extends AbstractCraftBookMechanic {
         Entity ar = null;
         boolean hasUpdated = false;
         boolean isNew = false;
-        if(chairs.containsKey(player.getName())) {
+        if (chairs.containsKey(player.getName())) {
             ar = chairs.get(player.getName()).chairEntity;
             hasUpdated = true;
         } else {
@@ -113,7 +113,7 @@ public class Chair extends AbstractCraftBookMechanic {
 
         // Attach the player to said arrow.
         final Entity far = ar;
-        if(ar.isEmpty() && isNew) {
+        if (ar.isEmpty() && isNew) {
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), () -> {
                 if (chairLoc != null)
                     player.teleport(chairLoc);
@@ -139,7 +139,7 @@ public class Chair extends AbstractCraftBookMechanic {
         CraftBookPlugin.inst().wrapPlayer(player).print("mech.chairs.stand");
         final ChairData chairData = chairs.get(player.getName());
         final Entity ent = chairData.chairEntity;
-        if(ent != null) {
+        if (ent != null) {
             ent.eject();
             player.eject();
             ent.remove();
@@ -157,12 +157,13 @@ public class Chair extends AbstractCraftBookMechanic {
         for (BlockFace face : LocationUtil.getDirectFaces()) {
             Block otherBlock = block.getRelative(face);
 
-            if(searched.contains(otherBlock.getLocation())) continue;
+            if (searched.contains(otherBlock.getLocation())) continue;
             searched.add(otherBlock.getLocation());
 
             if (found) break;
 
-            if(block.getLocation().distanceSquared(original.getLocation()) > Math.pow(chairMaxDistance, 2)) continue;
+            if (block.getLocation().distanceSquared(original.getLocation()) > Math.pow(chairMaxDistance, 2))
+                continue;
 
             if (SignUtil.isSign(otherBlock) && SignUtil.getFront(otherBlock) == face) {
                 found = true;
@@ -185,8 +186,8 @@ public class Chair extends AbstractCraftBookMechanic {
     }
 
     private boolean hasChair(Block block) {
-        for(ChairData data : chairs.values())
-            if(block.equals(data.location))
+        for (ChairData data : chairs.values())
+            if (block.equals(data.location))
                 return true;
 
         return false;
@@ -194,7 +195,7 @@ public class Chair extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         if (hasChair(event.getBlock())) {
             event.setCancelled(true);
@@ -234,17 +235,17 @@ public class Chair extends AbstractCraftBookMechanic {
             if (chairRequireSign && !hasSign(event.getClickedBlock(), new ArrayList<>(), event.getClickedBlock()))
                 return;
             if (!lplayer.hasPermission("craftbook.mech.chair.use")) {
-                if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+                if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     lplayer.printError("mech.use-permission");
                 return;
             }
-            if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-                if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+            if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+                if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     lplayer.printError("area.use-permissions");
                 return;
             }
 
-            if(event.getPlayer().getLocation().distanceSquared(event.getClickedBlock().getLocation().add(0.5, 0.5, 0.5)) > Math.pow(chairMaxClickRadius, 2)) {
+            if (event.getPlayer().getLocation().distanceSquared(event.getClickedBlock().getLocation().add(0.5, 0.5, 0.5)) > Math.pow(chairMaxClickRadius, 2)) {
                 lplayer.printError("mech.chairs.too-far");
                 return;
             }
@@ -259,15 +260,15 @@ public class Chair extends AbstractCraftBookMechanic {
                 if (!event.getClickedBlock().getRelative(0, -1, 0).getType().isSolid()) {
                     lplayer.printError("mech.chairs.floating");
                     return;
-                } else if(event.getClickedBlock().getRelative(0, 1, 0).getType().isSolid()) {
+                } else if (event.getClickedBlock().getRelative(0, 1, 0).getType().isSolid()) {
                     lplayer.printError("mech.chairs.obstructed");
                     return;
                 }
 
-                Location chairLoc = event.getClickedBlock().getLocation().add(0.5,0,0.5);
+                Location chairLoc = event.getClickedBlock().getLocation().add(0.5, 0, 0.5);
 
                 BlockData blockData = event.getClickedBlock().getBlockData();
-                if(chairFacing && blockData instanceof Directional) {
+                if (chairFacing && blockData instanceof Directional) {
                     BlockFace direction = ((Directional) blockData).getFacing().getOppositeFace();
 
                     double dx = direction.getModX();
@@ -279,7 +280,7 @@ public class Chair extends AbstractCraftBookMechanic {
                             chairLoc.setYaw((float) (1.5 * Math.PI));
                         else
                             chairLoc.setYaw((float) (0.5 * Math.PI));
-                        chairLoc.setYaw((float)(chairLoc.getYaw() - Math.atan(dz / dx)));
+                        chairLoc.setYaw((float) (chairLoc.getYaw() - Math.atan(dz / dx)));
                     } else if (dz < 0)
                         chairLoc.setYaw((float) Math.PI);
 
@@ -305,7 +306,7 @@ public class Chair extends AbstractCraftBookMechanic {
         public void run() {
             for (Map.Entry<String, ChairData> pl : chairs.entrySet()) {
                 Player p = Bukkit.getPlayerExact(pl.getKey());
-                if (p == null  || p.isDead() || !p.isValid()) {
+                if (p == null || p.isDead() || !p.isValid()) {
                     ChairData data = chairs.remove(pl.getKey());
                     if (data != null && data.chairEntity != null) {
                         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
@@ -323,7 +324,8 @@ public class Chair extends AbstractCraftBookMechanic {
 
                     if (chairHealth && p.getHealth() < p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue())
                         p.setHealth(Math.min(p.getHealth() + chairHealAmount, p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()));
-                    if (p.getExhaustion() > -20d) p.setExhaustion((float)(p.getExhaustion() - 0.1d));
+                    if (p.getExhaustion() > -20d)
+                        p.setExhaustion((float) (p.getExhaustion() - 0.1d));
                 }
             }
         }
@@ -342,7 +344,7 @@ public class Chair extends AbstractCraftBookMechanic {
     }
 
     @Override
-    public boolean enable () {
+    public boolean enable() {
 
         chairs = new ConcurrentHashMap<>();
 
@@ -356,7 +358,7 @@ public class Chair extends AbstractCraftBookMechanic {
                     if (!e.isCancelled()) {
                         Player player = e.getPlayer();
                         if (e.getPacket().getBooleans().getValues().get(1))
-                            if(hasChair(player))
+                            if (hasChair(player))
                                 removeChair(player);
                     }
                 }
@@ -367,7 +369,7 @@ public class Chair extends AbstractCraftBookMechanic {
                 public void onPacketReceiving(PacketEvent e) {
                     if (!e.isCancelled()) {
                         Player player = e.getPlayer();
-                        if(hasChair(player))
+                        if (hasChair(player))
                             removeChair(player);
                     }
                 }
@@ -377,15 +379,15 @@ public class Chair extends AbstractCraftBookMechanic {
                 @Override
                 public void onPacketReceiving(PacketEvent e) {
                     if (!e.isCancelled()) {
-                        for(double d : e.getPacket().getDoubles().getValues())
-                            if(Double.isNaN(d)) {
+                        for (double d : e.getPacket().getDoubles().getValues())
+                            if (Double.isNaN(d)) {
                                 e.setCancelled(true);
                                 return;
                             }
                     }
                 }
             }).syncStart();
-        } catch(Throwable e) {
+        } catch (Throwable e) {
             CraftBook.logger.warn("ProtocolLib is required for chairs! Disabling chairs!");
             return false;
         }
@@ -394,11 +396,11 @@ public class Chair extends AbstractCraftBookMechanic {
     }
 
     @Override
-    public void disable () {
+    public void disable() {
         chairs = null;
         try {
             ProtocolLibrary.getProtocolManager().getAsynchronousManager().unregisterAsyncHandlers(CraftBookPlugin.inst());
-        } catch(Throwable ignored) {
+        } catch (Throwable ignored) {
         }
     }
 
@@ -425,7 +427,7 @@ public class Chair extends AbstractCraftBookMechanic {
 
         config.setComment("blocks", "A list of blocks that can be sat on.");
         chairBlocks =
-                BlockSyntax.getBlocks(config.getStringList("blocks", BlockCategories.STAIRS.getAll().stream().map(BlockType::getId).sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
+            BlockSyntax.getBlocks(config.getStringList("blocks", BlockCategories.STAIRS.getAll().stream().map(BlockType::getId).sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
 
         config.setComment("face-correct-direction", "When the player sits, automatically face them the direction of the chair. (If possible)");
         chairFacing = config.getBoolean("face-correct-direction", true);

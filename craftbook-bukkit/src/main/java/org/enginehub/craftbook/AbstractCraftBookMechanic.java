@@ -16,14 +16,14 @@
 
 package org.enginehub.craftbook;
 
+import com.sk89q.util.yaml.YAMLFormat;
+import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.event.Listener;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
-import com.sk89q.util.yaml.YAMLFormat;
-import com.sk89q.util.yaml.YAMLProcessor;
-import org.bukkit.event.Listener;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -69,14 +69,14 @@ public abstract class AbstractCraftBookMechanic implements CraftBookMechanic, Li
         String mechName = configFile.getName().substring(0, configFile.getName().length() - 4);
 
         mechanicConfig.setHeader(
-                "# CraftBook " + mechName + " Configuration",
-                "# -- Generated for version: " + CraftBookPlugin.getVersion(),
-                "# ",
-                "# More information about these features are available at...",
-                "# " + CraftBookPlugin.getDocsDomain(),
-                "#",
-                "# NOTE! Make sure to enable this in the config.yml file if you wish to use it.",
-                "");
+            "# CraftBook " + mechName + " Configuration",
+            "# -- Generated for version: " + CraftBookPlugin.getVersion(),
+            "# ",
+            "# More information about these features are available at...",
+            "# " + CraftBookPlugin.getDocsDomain(),
+            "#",
+            "# NOTE! Make sure to enable this in the config.yml file if you wish to use it.",
+            "");
 
         loadFromConfiguration(mechanicConfig);
 

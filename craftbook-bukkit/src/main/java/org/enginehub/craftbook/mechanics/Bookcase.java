@@ -16,13 +16,6 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.ProtectionUtil;
-import org.enginehub.craftbook.util.TernaryState;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -30,8 +23,19 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.ProtectionUtil;
+import org.enginehub.craftbook.util.TernaryState;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
@@ -69,17 +73,17 @@ public class Bookcase extends AbstractCraftBookMechanic {
         CraftBookPlugin.inst().createDefaultConfiguration("books.txt");
         BufferedReader reader = null;
         try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(CraftBookPlugin.inst().getDataFolder(),"books.txt")), "UTF-8"));
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(CraftBookPlugin.inst().getDataFolder(), "books.txt")), "UTF-8"));
             Set<String> list = new LinkedHashSet<>();
             String l;
-            while((l = reader.readLine()) != null)
+            while ((l = reader.readLine()) != null)
                 list.add(l);
 
             lines = list.toArray(new String[list.size()]);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if(reader != null) try {
+            if (reader != null) try {
                 reader.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -100,7 +104,6 @@ public class Bookcase extends AbstractCraftBookMechanic {
      * Get a line from the book lines file.
      *
      * @return a line from the book lines file.
-     *
      * @throws IOException if we have trouble with the "books.txt" configuration file.
      */
     private static String getBookLine() throws Exception {
@@ -110,7 +113,8 @@ public class Bookcase extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND)
+            return;
         if (event.getClickedBlock().getType() != Material.BOOKSHELF) return;
 
         if (!bookcaseReadWhenSneaking.doesPass(event.getPlayer().isSneaking())) return;
@@ -119,14 +123,14 @@ public class Bookcase extends AbstractCraftBookMechanic {
             return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if(!player.hasPermission("craftbook.mech.bookshelf.use")) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!player.hasPermission("craftbook.mech.bookshelf.use")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
         }
 
-        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
         }

@@ -120,8 +120,8 @@ public class PlatformCommandManager {
         } else {
             store.injectValue(Key.of(CraftBookPlayer.class), context -> {
                 throw new CommandException(
-                        TextComponent.of("This command must be used with a player."),
-                        ImmutableList.of()
+                    TextComponent.of("This command must be used with a player."),
+                    ImmutableList.of()
                 );
             });
         }
@@ -175,15 +175,15 @@ public class PlatformCommandManager {
             }
         } catch (UsageException e) {
             actor.print(TextComponent.builder("")
-                    .color(TextColor.RED)
-                    .append(e.getRichMessage())
-                    .build());
+                .color(TextColor.RED)
+                .append(e.getRichMessage())
+                .build());
             ImmutableList<Command> cmd = e.getCommands();
             if (!cmd.isEmpty()) {
                 actor.print(TextComponent.builder("Usage: ")
-                        .color(TextColor.RED)
-                        .append(HelpGenerator.create(e.getCommandParseResult()).getUsage())
-                        .build());
+                    .color(TextColor.RED)
+                    .append(HelpGenerator.create(e.getCommandParseResult()).getUsage())
+                    .build());
             }
         } catch (CommandExecutionException e) {
             // FIXME: Put this in an exception converter.
@@ -195,9 +195,9 @@ public class PlatformCommandManager {
             handleUnknownException(actor, e.getCause());
         } catch (CommandException e) {
             actor.print(TextComponent.builder("")
-                    .color(TextColor.RED)
-                    .append(e.getRichMessage())
-                    .build());
+                .color(TextColor.RED)
+                .append(e.getRichMessage())
+                .build());
         } catch (Throwable t) {
             handleUnknownException(actor, t);
         }
@@ -207,8 +207,8 @@ public class PlatformCommandManager {
         try {
             List<Substring> split = parseArgs(arguments).collect(Collectors.toList());
             List<String> argStrings = split.stream()
-                    .map(Substring::getSubstring)
-                    .collect(Collectors.toList());
+                .map(Substring::getSubstring)
+                .collect(Collectors.toList());
             MemoizingValueAccess access = initializeInjectedValues(() -> arguments, actor);
             ImmutableSet<Suggestion> suggestions;
             try {
@@ -222,19 +222,20 @@ public class PlatformCommandManager {
             }
 
             return suggestions.stream()
-                    .map(suggestion -> {
-                        int noSlashLength = arguments.length() - 1;
-                        Substring original = suggestion.getReplacedArgument() == split.size()
-                                ? Substring.from(arguments, noSlashLength, noSlashLength)
-                                : split.get(suggestion.getReplacedArgument());
-                        // increase original points by 1, for removed `/` in `parseArgs`
-                        return Substring.wrap(
-                                suggestion.getSuggestion(),
-                                original.getStart() + 1,
-                                original.getEnd() + 1
-                        );
-                    }).collect(Collectors.toList());
-        } catch (ConditionFailedException ignored) { }
+                .map(suggestion -> {
+                    int noSlashLength = arguments.length() - 1;
+                    Substring original = suggestion.getReplacedArgument() == split.size()
+                        ? Substring.from(arguments, noSlashLength, noSlashLength)
+                        : split.get(suggestion.getReplacedArgument());
+                    // increase original points by 1, for removed `/` in `parseArgs`
+                    return Substring.wrap(
+                        suggestion.getSuggestion(),
+                        original.getStart() + 1,
+                        original.getEnd() + 1
+                    );
+                }).collect(Collectors.toList());
+        } catch (ConditionFailedException ignored) {
+        }
 
         return Collections.emptyList();
     }

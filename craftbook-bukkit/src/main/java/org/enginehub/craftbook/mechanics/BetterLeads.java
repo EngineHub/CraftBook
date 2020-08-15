@@ -16,18 +16,18 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.InventoryUtil;
-import org.enginehub.craftbook.util.ItemUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LeashHitch;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityTargetEvent;
@@ -36,6 +36,13 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.bukkit.inventory.ItemStack;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.InventoryUtil;
+import org.enginehub.craftbook.util.ItemUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,10 +52,12 @@ public class BetterLeads extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerClick(final PlayerInteractEntityEvent event) {
-        if(!ItemUtil.isStackValid(InventoryUtil.getItemInHand(event.getPlayer(), event.getHand()))) return;
-        if(!(event.getRightClicked() instanceof LivingEntity)) return;
+        if (!ItemUtil.isStackValid(InventoryUtil.getItemInHand(event.getPlayer(), event.getHand())))
+            return;
+        if (!(event.getRightClicked() instanceof LivingEntity)) return;
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if(InventoryUtil.getItemInHand(event.getPlayer(), event.getHand()).getType() != Material.LEAD) return;
+        if (InventoryUtil.getItemInHand(event.getPlayer(), event.getHand()).getType() != Material.LEAD)
+            return;
 
         if (!EventUtil.passesFilter(event)) return;
 
@@ -63,36 +72,36 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         CraftBookPlugin.logDebugMessage("It is of type: " + typeName, "betterleads.allowed-mobs");
 
         boolean found = false;
-        for(String type : leadsAllowedMobs) {
-            if(type.equalsIgnoreCase(typeName)) {
+        for (String type : leadsAllowedMobs) {
+            if (type.equalsIgnoreCase(typeName)) {
                 found = true;
                 break;
             }
         }
 
-        if(!found)
+        if (!found)
             return;
 
         CraftBookPlugin.logDebugMessage(typeName + " is allowed in the configuration.", "betterleads.allowed-mobs");
 
-        if(!player.hasPermission("craftbook.mech.leads") && !player.hasPermission("craftbook.mech.leads.mobs." + typeName.toLowerCase())) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!player.hasPermission("craftbook.mech.leads") && !player.hasPermission("craftbook.mech.leads.mobs." + typeName.toLowerCase())) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
         }
 
         CraftBookPlugin.logDebugMessage("Leashing entity!", "betterleads.allowed-mobs");
-        if(event.getRightClicked() instanceof Creature && ((Creature) event.getRightClicked()).getTarget() != null && ((Creature) event.getRightClicked()).getTarget().equals(event.getPlayer()))
+        if (event.getRightClicked() instanceof Creature && ((Creature) event.getRightClicked()).getTarget() != null && ((Creature) event.getRightClicked()).getTarget().equals(event.getPlayer()))
             ((Creature) event.getRightClicked()).setTarget(null); //Rescan for a new target.
         event.setCancelled(true);
         Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), () -> {
-            if(!((LivingEntity) event.getRightClicked()).setLeashHolder(event.getPlayer())) {
+            if (!((LivingEntity) event.getRightClicked()).setLeashHolder(event.getPlayer())) {
                 CraftBookPlugin.logDebugMessage("Failed to leash entity!", "betterleads.allowed-mobs");
             }
         });
-        if(event.getPlayer().getGameMode() == GameMode.CREATIVE)
+        if (event.getPlayer().getGameMode() == GameMode.CREATIVE)
             return;
-        if(InventoryUtil.getItemInHand(event.getPlayer(), event.getHand()).getAmount() == 1)
+        if (InventoryUtil.getItemInHand(event.getPlayer(), event.getHand()).getAmount() == 1)
             InventoryUtil.setItemInHand(event.getPlayer(), event.getHand(), null);
         else {
             ItemStack newStack = InventoryUtil.getItemInHand(event.getPlayer(), event.getHand());
@@ -104,29 +113,29 @@ public class BetterLeads extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityTarget(EntityTargetEvent event) {
 
-        if(!leadsStopTarget && !leadsMobRepellant) return;
-        if(!(event.getEntity() instanceof Monster)) return;
-        if(!((LivingEntity) event.getEntity()).isLeashed()) return;
-        if(!(event.getTarget() instanceof Player)) return;
+        if (!leadsStopTarget && !leadsMobRepellant) return;
+        if (!(event.getEntity() instanceof Monster)) return;
+        if (!((LivingEntity) event.getEntity()).isLeashed()) return;
+        if (!(event.getTarget() instanceof Player)) return;
 
         if (!EventUtil.passesFilter(event)) return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer((Player) event.getTarget());
 
-        if(leadsStopTarget && player.hasPermission("craftbook.mech.leads.ignore-target")) {
-            if(((LivingEntity) event.getEntity()).getLeashHolder().equals(event.getTarget())) {
+        if (leadsStopTarget && player.hasPermission("craftbook.mech.leads.ignore-target")) {
+            if (((LivingEntity) event.getEntity()).getLeashHolder().equals(event.getTarget())) {
                 event.setTarget(null);
                 event.setCancelled(true);
                 return;
             }
         }
 
-        if(leadsMobRepellant && player.hasPermission("craftbook.mech.leads.mob-repel")) {
-            for(Entity ent : event.getTarget().getNearbyEntities(5, 5, 5)) {
-                if(ent == null || !ent.isValid()) continue;
-                if(ent.getType() != event.getEntity().getType())
+        if (leadsMobRepellant && player.hasPermission("craftbook.mech.leads.mob-repel")) {
+            for (Entity ent : event.getTarget().getNearbyEntities(5, 5, 5)) {
+                if (ent == null || !ent.isValid()) continue;
+                if (ent.getType() != event.getEntity().getType())
                     continue;
-                if(((LivingEntity) ent).getLeashHolder().equals(event.getTarget())) {
+                if (((LivingEntity) ent).getLeashHolder().equals(event.getTarget())) {
                     event.setTarget(null);
                     event.setCancelled(true);
                     return;
@@ -138,20 +147,21 @@ public class BetterLeads extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onHitchBreakRandomly(final HangingBreakEvent event) {
 
-        if(!leadsHitchPersists) return;
-        if(!(event.getEntity() instanceof LeashHitch)) return;
+        if (!leadsHitchPersists) return;
+        if (!(event.getEntity() instanceof LeashHitch)) return;
 
         if (!EventUtil.passesFilter(event)) return;
 
         int amountConnected = 0;
 
-        for(Entity ent : event.getEntity().getNearbyEntities(10, 10, 10)) {
-            if(!(ent instanceof LivingEntity)) continue;
-            if(!((LivingEntity) ent).isLeashed() || !((LivingEntity) ent).getLeashHolder().equals(event.getEntity())) continue;
+        for (Entity ent : event.getEntity().getNearbyEntities(10, 10, 10)) {
+            if (!(ent instanceof LivingEntity)) continue;
+            if (!((LivingEntity) ent).isLeashed() || !((LivingEntity) ent).getLeashHolder().equals(event.getEntity()))
+                continue;
             amountConnected++;
         }
 
-        if(amountConnected == 0) {
+        if (amountConnected == 0) {
             //Still needs to be used by further plugins in the event. We wouldn't want bukkit complaining now, would we?
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), event.getEntity()::remove);
         }
@@ -160,9 +170,9 @@ public class BetterLeads extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onHitchBreak(final HangingBreakByEntityEvent event) {
 
-        if(!leadsHitchPersists && !leadsOwnerBreakOnly) return;
-        if(!(event.getEntity() instanceof LeashHitch)) return;
-        if(!(event.getRemover() instanceof Player)) return;
+        if (!leadsHitchPersists && !leadsOwnerBreakOnly) return;
+        if (!(event.getEntity() instanceof LeashHitch)) return;
+        if (!(event.getRemover() instanceof Player)) return;
 
         if (!EventUtil.passesFilter(event)) return;
 
@@ -170,14 +180,15 @@ public class BetterLeads extends AbstractCraftBookMechanic {
 
         int amountConnected = 0;
 
-        for(Entity ent : event.getEntity().getNearbyEntities(10, 10, 10)) {
-            if(!(ent instanceof LivingEntity)) continue;
-            if(!((LivingEntity) ent).isLeashed() || !((LivingEntity) ent).getLeashHolder().equals(event.getEntity())) continue;
+        for (Entity ent : event.getEntity().getNearbyEntities(10, 10, 10)) {
+            if (!(ent instanceof LivingEntity)) continue;
+            if (!((LivingEntity) ent).isLeashed() || !((LivingEntity) ent).getLeashHolder().equals(event.getEntity()))
+                continue;
             boolean isOwner = false;
-            if(ent instanceof Tameable)
-                if(!((Tameable) ent).isTamed() || ((Tameable) ent).getOwner().equals(event.getRemover()))
+            if (ent instanceof Tameable)
+                if (!((Tameable) ent).isTamed() || ((Tameable) ent).getOwner().equals(event.getRemover()))
                     isOwner = true;
-            if(isOwner || !(ent instanceof Tameable) || !leadsOwnerBreakOnly || event.getRemover().hasPermission("craftbook.mech.leads.owner-break-only.bypass")) {
+            if (isOwner || !(ent instanceof Tameable) || !leadsOwnerBreakOnly || event.getRemover().hasPermission("craftbook.mech.leads.owner-break-only.bypass")) {
                 ((LivingEntity) ent).setLeashHolder(null);
                 event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), new ItemStack(Material.LEAD, 1));
             } else {
@@ -185,7 +196,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
             }
         }
 
-        if(!leadsHitchPersists && amountConnected == 0) {
+        if (!leadsHitchPersists && amountConnected == 0) {
             //Still needs to be used by further plugins in the event. We wouldn't want bukkit complaining now, would we?
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), event.getEntity()::remove);
         }
@@ -194,15 +205,16 @@ public class BetterLeads extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onUnleash(PlayerUnleashEntityEvent event) {
 
-        if(!leadsOwnerBreakOnly) return;
-        if(!(event.getEntity() instanceof LivingEntity)) return;
-        if(!((LivingEntity) event.getEntity()).isLeashed() || !(((LivingEntity) event.getEntity()).getLeashHolder() instanceof LeashHitch)) return;
-        if(!(event.getEntity() instanceof Tameable)) return;
-        if(!((Tameable) event.getEntity()).isTamed()) return;
+        if (!leadsOwnerBreakOnly) return;
+        if (!(event.getEntity() instanceof LivingEntity)) return;
+        if (!((LivingEntity) event.getEntity()).isLeashed() || !(((LivingEntity) event.getEntity()).getLeashHolder() instanceof LeashHitch))
+            return;
+        if (!(event.getEntity() instanceof Tameable)) return;
+        if (!((Tameable) event.getEntity()).isTamed()) return;
 
         if (!EventUtil.passesFilter(event)) return;
 
-        if(!Objects.equals(((Tameable) event.getEntity()).getOwner(), event.getPlayer())) {
+        if (!Objects.equals(((Tameable) event.getEntity()).getOwner(), event.getPlayer())) {
             event.setCancelled(true);
         }
     }
@@ -229,6 +241,6 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         leadsMobRepellant = config.getBoolean("mob-repel", false);
 
         config.setComment("allowed-mobs", "The list of mobs that can be tethered with a lead.");
-        leadsAllowedMobs = config.getStringList("allowed-mobs", Arrays.asList("ZOMBIE","SPIDER"));
+        leadsAllowedMobs = config.getStringList("allowed-mobs", Arrays.asList("ZOMBIE", "SPIDER"));
     }
 }

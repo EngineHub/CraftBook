@@ -16,10 +16,6 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.util.BlockSyntax;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
@@ -28,6 +24,10 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 /**
  * This mechanism allow players to toggle GlowStone.
@@ -39,14 +39,15 @@ public class GlowStone extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(event.isMinor())
+        if (event.isMinor())
             return;
 
-        if(!offBlock.equalsFuzzy(BukkitAdapter.adapt(event.getBlock().getBlockData())) && event.getBlock().getType() != Material.GLOWSTONE) return;
+        if (!offBlock.equalsFuzzy(BukkitAdapter.adapt(event.getBlock().getBlockData())) && event.getBlock().getType() != Material.GLOWSTONE)
+            return;
 
-        if(event.isOn() == (event.getBlock().getType() == Material.GLOWSTONE))
+        if (event.isOn() == (event.getBlock().getType() == Material.GLOWSTONE))
             return;
 
         if (event.isOn()) {
@@ -59,9 +60,10 @@ public class GlowStone extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(!offBlock.equalsFuzzy(BukkitAdapter.adapt(event.getBlock().getBlockData())) && event.getBlock().getType() != Material.GLOWSTONE) return;
+        if (!offBlock.equalsFuzzy(BukkitAdapter.adapt(event.getBlock().getBlockData())) && event.getBlock().getType() != Material.GLOWSTONE)
+            return;
 
         if (event.getBlock().getType() == Material.GLOWSTONE && (event.getBlock().isBlockIndirectlyPowered() || event.getBlock().isBlockPowered()))
             event.setCancelled(true);

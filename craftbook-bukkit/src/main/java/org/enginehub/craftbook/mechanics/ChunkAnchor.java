@@ -16,15 +16,6 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
@@ -34,28 +25,37 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.SignUtil;
+import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 public class ChunkAnchor extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(!event.getLine(1).equalsIgnoreCase("[chunk]")) return;
+        if (!event.getLine(1).equalsIgnoreCase("[chunk]")) return;
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if(!lplayer.hasPermission("craftbook.mech.chunk")) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!lplayer.hasPermission("craftbook.mech.chunk")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 lplayer.printError("mech.create-permission");
             SignUtil.cancelSignChange(event);
             return;
         }
 
-        if(checkChunks) {
-            for(BlockState state : event.getBlock().getChunk().getTileEntities()) {
-                if(state instanceof Sign) {
+        if (checkChunks) {
+            for (BlockState state : event.getBlock().getChunk().getTileEntities()) {
+                if (state instanceof Sign) {
                     Sign s = (Sign) state;
-                    if(s.getLine(1).equalsIgnoreCase("[Chunk]")) {
+                    if (s.getLine(1).equalsIgnoreCase("[Chunk]")) {
                         lplayer.printError("mech.anchor.already-anchored");
                         SignUtil.cancelSignChange(event);
                         return;
@@ -78,14 +78,14 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
     @EventHandler
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(!allowRedstone) return;
+        if (!allowRedstone) return;
         Block block = event.getBlock();
         if (SignUtil.isSign(block)) {
             ChangedSign sign = CraftBookBukkitUtil.toChangedSign(block);
 
-            if(!sign.getLine(1).equals("[Chunk]")) return;
+            if (!sign.getLine(1).equals("[Chunk]")) return;
 
             sign.setLine(3, event.getNewCurrent() > event.getOldCurrent() ? "on" : "off");
             sign.update(false);
@@ -97,10 +97,10 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
     private void updateChunkTicket(Chunk chunk) {
         boolean shouldAnchor = false;
 
-        for(BlockState state : chunk.getTileEntities()) {
-            if(state == null) continue;
-            if(state instanceof Sign) {
-                if(((Sign) state).getLine(1).equals("[Chunk]")) {
+        for (BlockState state : chunk.getTileEntities()) {
+            if (state == null) continue;
+            if (state instanceof Sign) {
+                if (((Sign) state).getLine(1).equals("[Chunk]")) {
                     if (!allowRedstone || !((Sign) state).getLine(3).equalsIgnoreCase("off")) {
                         shouldAnchor = true;
                         break;

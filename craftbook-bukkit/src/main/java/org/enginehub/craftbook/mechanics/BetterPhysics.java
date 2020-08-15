@@ -16,6 +16,7 @@
 
 package org.enginehub.craftbook.mechanics;
 
+import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -25,11 +26,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.util.EventUtil;
-import com.sk89q.util.yaml.YAMLProcessor;
 
 public class BetterPhysics extends AbstractCraftBookMechanic {
 
@@ -69,7 +68,7 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
     }
 
     private static void checkForPhysics(Block block) {
-        if(FallingLadders.isValid(block)) {
+        if (FallingLadders.isValid(block)) {
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new FallingLadders(block));
         }
     }
@@ -86,8 +85,8 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
         }
 
         @Override
-        public void run () {
-            if(!isValid(ladder)) return;
+        public void run() {
+            if (!isValid(ladder)) return;
             ladder.getWorld().spawnFallingBlock(ladder.getLocation().add(0.5, 0, 0.5), ladder.getBlockData());
             ladder.setType(Material.AIR, false);
 

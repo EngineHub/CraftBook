@@ -16,13 +16,6 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.ItemSyntax;
-import org.enginehub.craftbook.util.ProtectionUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
@@ -35,8 +28,16 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.ItemSyntax;
+import org.enginehub.craftbook.util.ProtectionUtil;
 
 // TODO Potentially turn into a WE tool
+
 /**
  * This allows users to Right-click to check the light level.
  */
@@ -75,10 +76,10 @@ public class LightStone extends AbstractCraftBookMechanic {
 
         block = event.getClickedBlock().getRelative(event.getBlockFace());
         Component component = TranslatableComponent
-                .of("craftbook.lightstone.line",
-                        getCurrentLine(block.getLightLevel()),
-                        TextComponent.of(block.getLightLevel(), TextColor.YELLOW))
-                .color(TextColor.YELLOW);
+            .of("craftbook.lightstone.line",
+                getCurrentLine(block.getLightLevel()),
+                TextComponent.of(block.getLightLevel(), TextColor.YELLOW))
+            .color(TextColor.YELLOW);
         if (actionBar) {
             player.printActionBar(component);
         } else {

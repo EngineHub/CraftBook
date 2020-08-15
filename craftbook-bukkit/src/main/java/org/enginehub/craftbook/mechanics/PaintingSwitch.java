@@ -16,13 +16,6 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.LocationUtil;
-import org.enginehub.craftbook.util.ProtectionUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Art;
 import org.bukkit.Bukkit;
@@ -35,6 +28,13 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.LocationUtil;
+import org.enginehub.craftbook.util.ProtectionUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,20 +61,20 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         if (event.getHand() == EquipmentSlot.HAND && event.getRightClicked() instanceof Painting) {
             CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
             Painting paint = (Painting) event.getRightClicked();
 
-            if(!player.hasPermission("craftbook.mech.paintingswitch.use")) {
-                if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+            if (!player.hasPermission("craftbook.mech.paintingswitch.use")) {
+                if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     player.printError("mech.use-permissions");
                 return;
             }
 
-            if(!ProtectionUtil.canBuild(event.getPlayer(), paint.getLocation(), true)) {
-                if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+            if (!ProtectionUtil.canBuild(event.getPlayer(), paint.getLocation(), true)) {
+                if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                     player.printError("area.use-permissions");
                 return;
             }
@@ -99,7 +99,7 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onHeldItemChange(PlayerItemHeldEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
@@ -121,7 +121,7 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
         }
         Art[] art = Art.values().clone();
         Painting paint = players.get(player.getUniqueId());
-        if(!LocationUtil.isWithinSphericalRadius(paint.getLocation(), event.getPlayer().getLocation(), 5)) {
+        if (!LocationUtil.isWithinSphericalRadius(paint.getLocation(), event.getPlayer().getLocation(), 5)) {
             player.printError("mech.painting.range");
             Painting p = players.remove(event.getPlayer().getUniqueId());
             if (p != null) {
@@ -160,10 +160,10 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
     @EventHandler
     public void onHangingEntityDestroy(HangingBreakByEntityEvent event) {
 
-        if(event.getEntity() instanceof Painting) {
+        if (event.getEntity() instanceof Painting) {
             UUID uuid = paintings.remove(event.getEntity());
 
-            if(uuid != null) {
+            if (uuid != null) {
                 CraftBookPlugin.inst().wrapPlayer(Bukkit.getPlayer(uuid)).print("mech.painting.stop");
                 players.remove(uuid);
             }
@@ -171,7 +171,7 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
     }
 
     @Override
-    public void disable () {
+    public void disable() {
         paintings.clear();
         players.clear();
     }

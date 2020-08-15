@@ -16,6 +16,15 @@
 
 package org.enginehub.craftbook.mechanics;
 
+import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.Directional;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.SignChangeEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
@@ -27,18 +36,10 @@ import org.enginehub.craftbook.util.HistoryHashMap;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.events.SignClickEvent;
-import com.sk89q.util.yaml.YAMLProcessor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.Directional;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.SignChangeEvent;
 
 /**
- * Handler for Light switches. Toggles all torches in the area from being redstone to normal torches. This is done
+ * Handler for Light switches. Toggles all torches in the area from being redstone to normal
+ * torches. This is done
  * every time a sign with [|] or [I]
  * is right clicked by a player.
  *
@@ -54,19 +55,21 @@ public class LightSwitch extends AbstractCraftBookMechanic {
     }
 
     /**
-     * Store a list of recent light toggles to prevent spamming. Someone clever can just use two signs though.
+     * Store a list of recent light toggles to prevent spamming. Someone clever can just use two
+     * signs though.
      */
     private HistoryHashMap<Location, Long> recentLightToggles;
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(!event.getLine(1).equalsIgnoreCase("[i]") && !event.getLine(1).equalsIgnoreCase("[|]")) return;
+        if (!event.getLine(1).equalsIgnoreCase("[i]") && !event.getLine(1).equalsIgnoreCase("[|]"))
+            return;
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if(!lplayer.hasPermission("craftbook.mech.light-switch")) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!lplayer.hasPermission("craftbook.mech.light-switch")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 lplayer.printError("You don't have permission for this.");
             SignUtil.cancelSignChange(event);
             return;
@@ -79,23 +82,24 @@ public class LightSwitch extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
         ChangedSign sign = event.getSign();
-        if(!sign.getLine(1).equalsIgnoreCase("[I]") && !sign.getLine(1).equalsIgnoreCase("[|]")) return;
+        if (!sign.getLine(1).equalsIgnoreCase("[I]") && !sign.getLine(1).equalsIgnoreCase("[|]"))
+            return;
 
         if (!EventUtil.passesFilter(event))
             return;
 
         CraftBookPlayer player = event.getWrappedPlayer();
         if (!player.hasPermission("craftbook.mech.light-switch.use")) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
         }
 
-        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
         }
@@ -108,9 +112,9 @@ public class LightSwitch extends AbstractCraftBookMechanic {
      * Toggle lights in the immediate area.
      *
      * @param block
-     *
-     * @return true if the block was recogized as a lightswitch; this may or may not mean that any lights were
-     *         actually toggled.
+     * @return true if the block was recogized as a lightswitch; this may or may not mean that any
+     *     lights were
+     *     actually toggled.
      */
     private boolean toggleLights(Block block, CraftBookPlayer player) {
 

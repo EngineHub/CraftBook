@@ -39,8 +39,8 @@ public class CraftBookManifest {
         );
     }
 
-    private static @Nullable
-    Attributes readAttributes() {
+    @Nullable
+    private static Attributes readAttributes() {
         Class<CraftBookManifest> clazz = CraftBookManifest.class;
         String className = clazz.getSimpleName() + ".class";
         String classPath = clazz.getResource(className).toString();

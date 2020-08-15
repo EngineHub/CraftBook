@@ -61,8 +61,8 @@ public class Marquee extends AbstractCraftBookMechanic {
             return;
         }
 
-        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
+        if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                 lplayer.printError("area.use-permissions");
             }
             return;
@@ -129,7 +129,7 @@ public class Marquee extends AbstractCraftBookMechanic {
         }
 
         String var = VariableManager.instance.getVariable(variableKey);
-        if(var == null) {
+        if (var == null) {
             lplayer.printError(TranslatableComponent.of(
                 "craftbook.variables.unknown-variable",
                 TextComponent.of(variableKey.toString())

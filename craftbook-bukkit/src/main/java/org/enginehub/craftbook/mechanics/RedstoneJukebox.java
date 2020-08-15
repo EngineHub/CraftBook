@@ -16,13 +16,12 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import org.enginehub.craftbook.util.EventUtil;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Jukebox;
 import org.bukkit.event.EventHandler;
-
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 /**
