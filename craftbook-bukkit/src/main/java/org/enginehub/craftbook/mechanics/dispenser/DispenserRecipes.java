@@ -42,7 +42,7 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
     private static DispenserRecipes instance;
 
     @Override
-    public boolean enable() {
+    public void enable() {
 
         instance = this;
         recipes = new HashSet<>();
@@ -51,8 +51,6 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
         if (fireArrowsEnable) addRecipe(new FireArrows());
         if (fanEnable) addRecipe(new Fan());
         if (cannonEnable) addRecipe(new Cannon());
-
-        return recipes.size() > 0;
     }
 
     /**

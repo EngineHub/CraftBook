@@ -43,12 +43,10 @@ import org.enginehub.craftbook.util.events.SignClickEvent;
 public class Payment extends AbstractCraftBookMechanic {
 
     @Override
-    public boolean enable() throws MechanicInitializationException {
+    public void enable() throws MechanicInitializationException {
         if (CraftBookPlugin.plugins.getEconomy() == null) {
             CraftBook.logger.warn("An economy plugin and Vault is required for the Payment mechanic!");
-            return false;
         }
-        return super.enable();
     }
 
     @EventHandler(priority = EventPriority.HIGH)

@@ -30,15 +30,14 @@ public interface CraftBookMechanic {
      * Called when a mechanic should be initialized. This includes creating of any maps, lists or
      * singleton instances.
      *
-     * @return if it enabled properly. Note: returning false will cause the mechanic to be disabled.
      * @throws MechanicInitializationException if the mechanic failed to initialise
      */
-    boolean enable() throws MechanicInitializationException;
+    default void enable() throws MechanicInitializationException {}
 
     /**
      * Called when the mechanic should be disabled. This should make sure all memory is released.
      */
-    void disable();
+    default void disable() {}
 
     /**
      * Load the configuration from file, and delegate

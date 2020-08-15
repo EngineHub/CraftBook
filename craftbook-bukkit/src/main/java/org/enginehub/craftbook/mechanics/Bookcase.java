@@ -68,7 +68,7 @@ public class Bookcase extends AbstractCraftBookMechanic {
     }
 
     @Override
-    public boolean enable() {
+    public void enable() {
 
         CraftBookPlugin.inst().createDefaultConfiguration("books.txt");
         BufferedReader reader = null;
@@ -89,7 +89,6 @@ public class Bookcase extends AbstractCraftBookMechanic {
                 e.printStackTrace();
             }
         }
-        return true;
     }
 
     @Override

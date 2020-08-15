@@ -77,7 +77,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
     private static final Map<Recipe, RecipeManager.Recipe> advancedRecipes = new HashMap<>();
 
     @Override
-    public boolean enable() {
+    public void enable() {
         INSTANCE = this;
 
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
@@ -98,8 +98,6 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
             }
         }
         CraftBook.logger.info("Registered " + recipes + " custom recipes!");
-
-        return true;
     }
 
     @Override

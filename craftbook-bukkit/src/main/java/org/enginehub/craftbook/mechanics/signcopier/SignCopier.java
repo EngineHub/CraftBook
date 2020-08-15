@@ -46,7 +46,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
     public static Map<String, String[]> signs;
 
     @Override
-    public boolean enable() {
+    public void enable() {
         signs = new HashMap<>();
 
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
@@ -56,8 +56,6 @@ public class SignCopier extends AbstractCraftBookMechanic {
             "CraftBook SignCopier Commands",
             SignEditCommands::register
         );
-
-        return true;
     }
 
     @Override

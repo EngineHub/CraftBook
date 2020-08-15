@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -55,7 +56,10 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.exception.CraftBookException;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.mechanic.MechanicTypes;
+import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.mechanics.items.CommandItemAction.ActionRunStage;
 import org.enginehub.craftbook.mechanics.items.CommandItemDefinition.CommandType;
 import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
@@ -124,7 +128,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
     }
 
     @Override
-    public boolean enable() {
+    public void enable() throws MechanicInitializationException {
 
         INSTANCE = this;
 
@@ -145,9 +149,8 @@ public class CommandItems extends AbstractCraftBookMechanic {
         try {
             config.load();
         } catch (IOException e) {
-            CraftBook.logger.error("Corrupt CommandItems command-items.yml File! Make sure that the correct syntax has been used, and that there "
-                + "are no tabs!", e);
-            return false;
+            throw new MechanicInitializationException(MechanicTypes.COMMAND_ITEMS, TextComponent.of("Corrupt CommandItems command-items.yml File! Make sure that the correct syntax has been used, and that there "
+                + "are no tabs!"), e);
         }
 
         int amount = 0;
@@ -161,8 +164,6 @@ public class CommandItems extends AbstractCraftBookMechanic {
             } else
                 CraftBook.logger.warn("Failed to add CommandItem: " + key);
         }
-
-        if (amount == 0) return false;
 
         config.save();
 
@@ -212,8 +213,6 @@ public class CommandItems extends AbstractCraftBookMechanic {
         }
 
         doChat = definitions.stream().anyMatch(def -> def.clickType == ClickType.PLAYER_CHAT);
-
-        return true;
     }
 
     public boolean addDefinition(CommandItemDefinition def) {
@@ -233,7 +232,11 @@ public class CommandItems extends AbstractCraftBookMechanic {
         config.save();
 
         disable();
-        enable();
+        try {
+            enable();
+        } catch (MechanicInitializationException e) {
+            e.printStackTrace();
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)

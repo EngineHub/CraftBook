@@ -79,7 +79,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
     }
 
     @Override
-    public boolean enable() {
+    public void enable() {
 
         ICManager.inst().enable();
 
@@ -90,8 +90,6 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             "CraftBook Integrated Circuit Commands",
             ICCommands::register
         );
-
-        return true;
     }
 
     @Override

@@ -32,9 +32,11 @@ public class LogicICTests {
 
         instance = this;
 
-        for (LogicICTest test : tests)
-            if (!test.testIC())
+        for (LogicICTest test : tests) {
+            if (!test.testIC()) {
                 throw new AssertionError();
+            }
+        }
     }
 
     public interface LogicICTest {

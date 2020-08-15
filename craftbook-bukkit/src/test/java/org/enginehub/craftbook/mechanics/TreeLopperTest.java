@@ -52,8 +52,9 @@ public class TreeLopperTest {
 
     @Test
     public void testOnBlockBreak() {
-        if (lopper == null)
+        if (lopper == null) {
             lopper = new TreeLopper();
+        }
 
         World world = mock(World.class);
 

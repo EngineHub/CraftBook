@@ -60,7 +60,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
     private Set<CustomDropDefinition> definitions;
 
     @Override
-    public boolean enable() {
+    public void enable() {
 
         definitions = new LinkedHashSet<>();
 
@@ -68,8 +68,6 @@ public class CustomDrops extends AbstractCraftBookMechanic {
         config = new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "custom-drops.yml"), false, YAMLFormat.EXTENDED);
 
         load();
-
-        return true;
     }
 
     public boolean load() {

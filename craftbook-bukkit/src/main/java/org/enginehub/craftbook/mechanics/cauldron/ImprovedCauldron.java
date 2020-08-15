@@ -68,13 +68,10 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
     public ImprovedCauldronCookbook recipes;
 
     @Override
-    public boolean enable() {
-
+    public void enable() {
         instance = this;
         CraftBookPlugin.inst().createDefaultConfiguration("cauldron-recipes.yml");
         recipes = new ImprovedCauldronCookbook(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "cauldron-recipes.yml"), true, YAMLFormat.EXTENDED));
-
-        return recipes.hasRecipes();
     }
 
     @Override

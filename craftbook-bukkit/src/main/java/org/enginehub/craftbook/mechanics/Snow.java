@@ -74,7 +74,7 @@ public class Snow extends AbstractCraftBookMechanic {
     private DispersionQueue dispersionQueueRunner;
 
     @Override
-    public boolean enable() {
+    public void enable() {
         if (meltSunlight || snowPiling) {
             randomTickTask = Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new SnowRandomTicker(), 20L, 20L);
         }
@@ -86,8 +86,6 @@ public class Snow extends AbstractCraftBookMechanic {
                 dispersionTickSpeed
             );
         }
-
-        return true;
     }
 
     @Override

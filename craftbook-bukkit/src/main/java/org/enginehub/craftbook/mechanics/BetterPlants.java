@@ -41,12 +41,10 @@ public class BetterPlants extends AbstractCraftBookMechanic {
     private BukkitTask growthTask;
 
     @Override
-    public boolean enable() {
+    public void enable() {
         if (fernFarming) {
             growthTask = Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new GrowthTicker(), 2L, 2L);
         }
-
-        return true;
     }
 
     @Override

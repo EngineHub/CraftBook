@@ -344,7 +344,7 @@ public class Chair extends AbstractCraftBookMechanic {
     }
 
     @Override
-    public boolean enable() {
+    public void enable() {
 
         chairs = new ConcurrentHashMap<>();
 
@@ -389,10 +389,7 @@ public class Chair extends AbstractCraftBookMechanic {
             }).syncStart();
         } catch (Throwable e) {
             CraftBook.logger.warn("ProtocolLib is required for chairs! Disabling chairs!");
-            return false;
         }
-
-        return true;
     }
 
     @Override

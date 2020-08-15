@@ -39,10 +39,9 @@ import static org.enginehub.craftbook.util.CartUtil.stop;
 public class CartStation extends CartBlockMechanism {
 
     @Override
-    public boolean enable() {
+    public void enable() {
         // TODO
 //        CraftBookPlugin.inst().registerCommands(StationCommands.class);
-        return true;
     }
 
     @EventHandler

@@ -17,25 +17,26 @@
 package org.enginehub.craftbook.mechanic;
 
 import com.google.common.collect.Lists;
-import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
 import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;
+import com.sk89q.worldedit.util.formatting.component.InvalidComponentException;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.bukkit.BukkitCraftBookPlatform;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.exception.CraftBookException;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.CommandManagerService;
 import org.enginehub.piston.annotation.Command;
 import org.enginehub.piston.annotation.CommandContainer;
 import org.enginehub.piston.annotation.param.Arg;
+import org.enginehub.piston.annotation.param.ArgFlag;
 import org.enginehub.piston.part.SubCommandPart;
 
 import java.util.Optional;
@@ -67,8 +68,12 @@ public class MechanicCommands {
     }
 
     @Command(name = "enable", desc = "Enable a mechanic")
-    @CommandPermissions({ "craftbook.enable-mechanic" })
-    public void enable(Actor actor, @Arg(desc = "The mechanic to enable") MechanicType<?> mechanicType) throws CraftBookException {
+    @CommandPermissions({ "craftbook.mechanic.enable" })
+    public void enable(Actor actor,
+                       @Arg(desc = "The mechanic to enable")
+                           MechanicType<?> mechanicType,
+                       @ArgFlag(name = 'l', desc = "Show the list box", def = "0")
+                               int listBoxPage) throws InvalidComponentException {
         CraftBookPlugin plugin = CraftBookPlugin.inst();
         try {
             CraftBook.getInstance().getPlatform().getMechanicManager().enableMechanic(mechanicType);
@@ -80,15 +85,30 @@ public class MechanicCommands {
                 Bukkit.getOnlinePlayers().forEach(Player::updateCommands);
             }
 
-            actor.print("Sucessfully enabled " + mechanicType.getName());
+            actor.printInfo(TranslatableComponent.of(
+                "craftbook.mechanisms.enable-success",
+                TextComponent.of(mechanicType.getName(), TextColor.WHITE)
+            ));
         } catch (MechanicInitializationException e) {
-            actor.printError("Failed to load " + mechanicType.getName());
+            actor.printError(TranslatableComponent.of(
+                "craftbook.mechanisms.enable-failed",
+                TextComponent.of(mechanicType.getName(), TextColor.WHITE),
+                e.getRichMessage()
+            ));
+        }
+
+        if (listBoxPage > 0) {
+            showListBox(actor, listBoxPage);
         }
     }
 
     @Command(name = "disable", desc = "Disable a mechanic")
-    @CommandPermissions({ "craftbook.disable-mechanic" })
-    public void disable(Actor actor, @Arg(desc = "The mechanic to enable") MechanicType<?> mechanicType) throws CommandPermissionsException {
+    @CommandPermissions({ "craftbook.mechanic.disable" })
+    public void disable(Actor actor,
+                        @Arg(desc = "The mechanic to disable")
+                            MechanicType<?> mechanicType,
+                        @ArgFlag(name = 'l', desc = "Show the list box", def = "0")
+                                int listBoxPage) throws InvalidComponentException {
         CraftBookPlugin plugin = CraftBookPlugin.inst();
         Optional<?> mech = CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(mechanicType);
         if (mech.isPresent() && CraftBook.getInstance().getPlatform().getMechanicManager().disableMechanic((CraftBookMechanic) mech.get())) {
@@ -100,10 +120,31 @@ public class MechanicCommands {
                 Bukkit.getOnlinePlayers().forEach(Player::updateCommands);
             }
 
-            actor.print("Sucessfully disabled " + mechanicType.getName());
+            actor.printInfo(TranslatableComponent.of(
+                "craftbook.mechanisms.disable-success",
+                TextComponent.of(mechanicType.getName(), TextColor.WHITE)
+            ));
         } else {
-            actor.printError("Failed to remove " + mechanicType.getName());
+            actor.printError(TranslatableComponent.of(
+                "craftbook.mechanisms.not-enabled",
+                TextComponent.of(mechanicType.getName(), TextColor.WHITE)
+            ));
+        }
+
+        if (listBoxPage > 0) {
+            showListBox(actor, listBoxPage);
         }
     }
 
+    @Command(name = "list", desc = "List mechanics")
+    @CommandPermissions({ "craftbook.mechanic.list" })
+    public void list(Actor actor, @ArgFlag(name = 'p', desc = "The page number", def = "1") int page) throws InvalidComponentException {
+        showListBox(actor, page);
+    }
+
+    private void showListBox(Actor actor, int page) throws InvalidComponentException {
+        MechanicListBox mechanicListBox = new MechanicListBox(actor);
+
+        actor.print(mechanicListBox.create(page));
+    }
 }

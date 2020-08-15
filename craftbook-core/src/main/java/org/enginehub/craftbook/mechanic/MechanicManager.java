@@ -147,14 +147,8 @@ public abstract class MechanicManager {
             }
             CraftBookMechanic mech = mechanicType.getMechanicClass().getDeclaredConstructor().newInstance();
             mech.loadConfiguration(new File(CraftBook.getInstance().getPlatform().getConfigDir().resolve("mechanics").toFile(), mechanicType.getName() + ".yml"));
+            mech.enable();
 
-            if (!mech.enable()) {
-                mech.disable();
-                throw new MechanicInitializationException(mechanicType, TranslatableComponent.of(
-                    "craftbook.mechanisms.enable-failed",
-                    TextComponent.of(mechanicType.getId())
-                ));
-            }
             loadedMechanics.add(mech);
             enableMechanicPlatformListeners(mech);
         } catch (MechanicInitializationException e) {

@@ -48,10 +48,9 @@ import org.enginehub.craftbook.util.events.SignClickEvent;
 public class LightSwitch extends AbstractCraftBookMechanic {
 
     @Override
-    public boolean enable() {
+    public void enable() {
 
         recentLightToggles = new HistoryHashMap<>(20);
-        return true;
     }
 
     /**

@@ -73,13 +73,11 @@ public class Elevator extends AbstractCraftBookMechanic {
     private HashMap<UUID, Entity> playerVehicles;
 
     @Override
-    public boolean enable() {
+    public void enable() {
         if (elevatorSlowMove) {
             flyingPlayers = new HashSet<>();
             playerVehicles = new HashMap<>();
         }
-
-        return true;
     }
 
     @Override

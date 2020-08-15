@@ -44,15 +44,6 @@ public abstract class AbstractCraftBookMechanic implements CraftBookMechanic, Li
     }
 
     @Override
-    public boolean enable() throws MechanicInitializationException {
-        return true;
-    }
-
-    @Override
-    public void disable() {
-    }
-
-    @Override
     public void loadConfiguration(File configFile) {
         YAMLProcessor mechanicConfig = new YAMLProcessor(configFile, true, YAMLFormat.EXTENDED);
 

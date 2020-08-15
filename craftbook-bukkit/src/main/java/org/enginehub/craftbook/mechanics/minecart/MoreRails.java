@@ -36,10 +36,9 @@ public class MoreRails extends AbstractCraftBookMechanic {
     public static MoreRails instance;
 
     @Override
-    public boolean enable() {
+    public void enable() {
 
         instance = this;
-        return true;
     }
 
     @EventHandler(priority = EventPriority.HIGH)

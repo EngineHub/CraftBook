@@ -23,6 +23,7 @@ import com.google.common.collect.Maps;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.extension.platform.Actor;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -32,6 +33,8 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.mechanic.MechanicTypes;
+import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.mechanics.ic.ICManager;
 import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 
@@ -63,7 +66,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
     private Map<String, Map<String, String>> variableStore;
 
     @Override
-    public boolean enable() {
+    public void enable() throws MechanicInitializationException {
         instance = this;
 
         CraftBookPlugin.logDebugMessage("Initializing Variables!", "startup.variables");
@@ -78,8 +81,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
             variableConfiguration = new VariableConfiguration(new YAMLProcessor(varFile, true, YAMLFormat.EXTENDED));
             variableConfiguration.load();
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            throw new MechanicInitializationException(MechanicTypes.VARIABLES, TranslatableComponent.of("craftbook.variables.failed-to-load"), e);
         }
 
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
@@ -89,8 +91,6 @@ public class VariableManager extends AbstractCraftBookMechanic {
             "CraftBook Variable Commands",
             VariableCommands::register
         );
-
-        return true;
     }
 
     @Override

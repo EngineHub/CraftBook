@@ -56,7 +56,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
     protected static HeadDrops instance;
 
     @Override
-    public boolean enable() {
+    public void enable() {
 
         instance = this;
 
@@ -67,8 +67,6 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             "CraftBook HeadDrops Commands",
             HeadDropsCommands::register
         );
-
-        return true;
     }
 
     @Override

@@ -69,9 +69,8 @@ public class BetterPistons extends AbstractCraftBookMechanic {
     protected static BetterPistons instance;
 
     @Override
-    public boolean enable() {
+    public void enable() {
         instance = this;
-        return true;
     }
 
     /**

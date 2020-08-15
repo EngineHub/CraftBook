@@ -35,10 +35,8 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
     protected static BetterPhysics instance;
 
     @Override
-    public boolean enable() {
-
+    public void enable() {
         instance = this;
-        return true;
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

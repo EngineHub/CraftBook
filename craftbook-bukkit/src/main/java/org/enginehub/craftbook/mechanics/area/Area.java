@@ -54,7 +54,7 @@ public class Area extends AbstractCraftBookMechanic {
     protected static Area instance;
 
     @Override
-    public boolean enable() {
+    public void enable() {
 
         instance = this;
 
@@ -65,8 +65,6 @@ public class Area extends AbstractCraftBookMechanic {
             "CraftBook Area Commands",
             AreaCommands::register
         );
-
-        return true;
     }
 
     @Override

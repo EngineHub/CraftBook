@@ -130,11 +130,6 @@ public class AIMechanic extends AbstractCraftBookMechanic {
         return false;
     }
 
-    @Override
-    public boolean enable() {
-        return visionEnabled.size() > 0 && attackPassiveEnabled.size() > 0 && critBowEnabled.size() > 0;
-    }
-
     private List<String> visionEnabled;
     private List<String> critBowEnabled;
     private List<String> attackPassiveEnabled;
