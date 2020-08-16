@@ -33,10 +33,6 @@ public final class CraftBookBukkitUtil {
         return toChangedSign(sign, null, null);
     }
 
-    public static ChangedSign toChangedSign(Block block, String[] lines) {
-        return toChangedSign(block, lines, null);
-    }
-
     public static ChangedSign toChangedSign(Block block, String[] lines, CraftBookPlayer player) {
         if (!SignUtil.isSign(block)) {
             return null;

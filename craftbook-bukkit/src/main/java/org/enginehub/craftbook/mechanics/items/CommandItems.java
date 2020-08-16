@@ -619,7 +619,6 @@ public class CommandItems extends AbstractCraftBookMechanic {
             command = StringUtils.replace(command, "@d.l", ((EntityDamageByEntityEvent) event).getEntity().getLocation().toString());
             command = StringUtils.replace(command, "@d.u", ((EntityDamageByEntityEvent) event).getEntity().getUniqueId().toString());
             if (((EntityDamageByEntityEvent) event).getEntity() instanceof Player) {
-                command = StringUtils.replace(command, "@d.i", CraftBookPlugin.inst().getUUIDMappings().getCBID(((EntityDamageByEntityEvent) event).getEntity().getUniqueId()));
                 command = StringUtils.replace(command, "@d", ((EntityDamageByEntityEvent) event).getEntity().getName());
             } else
                 command = StringUtils.replace(command, "@d", ((EntityDamageByEntityEvent) event).getEntity().getType().name());
@@ -635,7 +634,6 @@ public class CommandItems extends AbstractCraftBookMechanic {
             command = StringUtils.replace(command, "@d.l", ((PlayerInteractEntityEvent) event).getRightClicked().getLocation().toString());
             command = StringUtils.replace(command, "@d.u", ((PlayerInteractEntityEvent) event).getRightClicked().getUniqueId().toString());
             if (((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player) {
-                command = StringUtils.replace(command, "@d.i", CraftBookPlugin.inst().getUUIDMappings().getCBID(((PlayerInteractEntityEvent) event).getRightClicked().getUniqueId()));
                 command = StringUtils.replace(command, "@d", ((PlayerInteractEntityEvent) event).getRightClicked().getName());
             } else
                 command = StringUtils.replace(command, "@d", ((PlayerInteractEntityEvent) event).getRightClicked().getType().name());

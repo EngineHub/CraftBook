@@ -13,6 +13,7 @@ mechanics:
         jack_o_lantern: false
         jukebox: false
         redstone_fire: false
+        redstone_glowstone: false
     general:
         better_physics: false
         better_plants: false

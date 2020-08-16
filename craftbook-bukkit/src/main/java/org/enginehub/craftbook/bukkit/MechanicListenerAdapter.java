@@ -350,11 +350,6 @@ final class MechanicListenerAdapter implements Listener {
             return;
         }
 
-        // TODO Determine if necessary
-        if (!event.getVehicle().getWorld().isChunkLoaded(event.getVehicle().getLocation().getBlockX() >> 4, event.getVehicle().getLocation().getBlockZ() >> 4)) {
-            return;
-        }
-
         if (event.getVehicle() instanceof Minecart) {
             try {
                 Minecart cart = (Minecart) event.getVehicle();

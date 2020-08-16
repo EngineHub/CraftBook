@@ -15,6 +15,10 @@ repositories {
         url = uri("https://papermc.io/repo/repository/maven-public/")
     }
     maven {
+        name = "EngineHub"
+        url = uri("https://maven.enginehub.org/repo/")
+    }
+    maven {
         name = "bstats"
         url = uri("https://repo.codemc.org/repository/maven-public")
     }
@@ -31,4 +35,5 @@ repositories {
 dependencies {
     "implementation"(project(":craftbook-bukkit"))
     "implementation"("com.destroystokyo.paper:paper-api:1.16.1-R0.1-SNAPSHOT")
+    "implementation"("com.sk89q.worldedit:worldedit-cli:7.2.0-SNAPSHOT")
 }

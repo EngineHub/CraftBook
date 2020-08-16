@@ -28,34 +28,29 @@ public class SourcedBlockRedstoneEvent extends BlockRedstoneEvent {
     protected final Block source;
     private static final HandlerList handlers = new HandlerList();
 
-    public SourcedBlockRedstoneEvent(Block source, Block block, int old, int n) {
+    public SourcedBlockRedstoneEvent(Block source, Block block, int oldCurrent, int newCurrent) {
+        super(block, oldCurrent, newCurrent);
 
-        super(block, old, n);
         this.source = source;
     }
 
     public Block getSource() {
-
-        return source;
+        return this.source;
     }
 
     public boolean hasChanged() {
-
         return getOldCurrent() != getNewCurrent();
     }
 
     public boolean isMinor() {
-
         return !hasChanged() || wasOn() == isOn();
     }
 
     public boolean isOn() {
-
         return getNewCurrent() > 0;
     }
 
     public boolean wasOn() {
-
         return getOldCurrent() > 0;
     }
 

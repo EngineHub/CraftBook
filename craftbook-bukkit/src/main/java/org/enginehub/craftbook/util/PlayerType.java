@@ -24,7 +24,7 @@ import java.util.Locale;
 
 public enum PlayerType {
 
-    NAME('p'), UUID('u'), CBID('i'), GROUP('g'), PERMISSION_NODE('n'), TEAM('t'), ALL('a');
+    NAME('p'), UUID('u'), GROUP('g'), PERMISSION_NODE('n'), TEAM('t'), ALL('a');
 
     PlayerType(char prefix) {
 
@@ -49,8 +49,6 @@ public enum PlayerType {
         switch (this) {
             case GROUP:
                 return CraftBookPlugin.inst().inGroup(player, line);
-            case CBID:
-                return CraftBookPlugin.inst().getUUIDMappings().getCBID(player.getUniqueId()).equals(line);
             case NAME:
                 return player.getName().toLowerCase(Locale.ENGLISH).startsWith(line.toLowerCase(Locale.ENGLISH));
             case UUID:

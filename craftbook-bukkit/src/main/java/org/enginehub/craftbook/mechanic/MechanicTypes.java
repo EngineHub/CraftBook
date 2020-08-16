@@ -29,7 +29,7 @@ import org.enginehub.craftbook.mechanics.ChunkAnchor;
 import org.enginehub.craftbook.mechanics.CommandSigns;
 import org.enginehub.craftbook.mechanics.CookingPot;
 import org.enginehub.craftbook.mechanics.Elevator;
-import org.enginehub.craftbook.mechanics.GlowStone;
+import org.enginehub.craftbook.mechanics.RedstoneGlowstone;
 import org.enginehub.craftbook.mechanics.HiddenSwitch;
 import org.enginehub.craftbook.mechanics.JackOLantern;
 import org.enginehub.craftbook.mechanics.LightStone;
@@ -144,8 +144,6 @@ public class MechanicTypes {
     @Nullable
     public static final MechanicType<Gate> GATE = get("gate");
     @Nullable
-    public static final MechanicType<GlowStone> GLOWSTONE = get("glowstone");
-    @Nullable
     public static final MechanicType<HeadDrops> HEAD_DROPS = get("head_drops");
     @Nullable
     public static final MechanicType<HiddenSwitch> HIDDEN_SWITCH = get("hidden_switch");
@@ -227,6 +225,8 @@ public class MechanicTypes {
     public static final MechanicType<Pipes> PIPES = get("pipes");
     @Nullable
     public static final MechanicType<RedstoneFire> REDSTONE_FIRE = get("redstone_fire");
+    @Nullable
+    public static final MechanicType<RedstoneGlowstone> REDSTONE_GLOWSTONE = get("redstone_glowstone");
     @Nullable
     public static final MechanicType<SignCopier> SIGN_COPIER = get("sign_copier");
     @Nullable

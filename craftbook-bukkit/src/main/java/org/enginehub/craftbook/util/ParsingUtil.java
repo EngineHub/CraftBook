@@ -59,7 +59,6 @@ public final class ParsingUtil {
         line = StringUtils.replace(line, "@p.bz", String.valueOf(player.getLocation().getBlockZ()));
         line = StringUtils.replace(line, "@p.w", player.getLocation().getWorld().getName());
         line = StringUtils.replace(line, "@p.u", player.getUniqueId().toString());
-        line = StringUtils.replace(line, "@p.i", CraftBookPlugin.inst().getUUIDMappings().getCBID(player.getUniqueId()));
         line = StringUtils.replace(line, "@p", player.getName());
 
         return line;

@@ -18,9 +18,10 @@ package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -31,50 +32,64 @@ import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 /**
  * This mechanism allow players to toggle GlowStone.
- *
- * @author sk89q
  */
-public class GlowStone extends AbstractCraftBookMechanic {
+public class RedstoneGlowstone extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
-
-        if (event.isMinor())
+        if (!EventUtil.passesFilter(event)) {
             return;
+        }
 
-        if (!offBlock.equalsFuzzy(BukkitAdapter.adapt(event.getBlock().getBlockData())) && event.getBlock().getType() != Material.GLOWSTONE)
+        if (event.isMinor()) {
             return;
+        }
 
-        if (event.isOn() == (event.getBlock().getType() == Material.GLOWSTONE))
+        Material type = event.getBlock().getType();
+
+        // We only care about glowstone and the off block
+        if (type != Material.GLOWSTONE
+            && !offBlock.equalsFuzzy(BukkitAdapter.adapt(event.getBlock().getBlockData()))) {
             return;
+        }
 
-        if (event.isOn()) {
-            event.getBlock().setType(Material.GLOWSTONE);
+        boolean currentState = type == Material.GLOWSTONE;
+
+        if (event.isOn() == currentState) {
+            return;
+        }
+
+        setPowered(event.getBlock(), event.isOn());
+    }
+
+    private void setPowered(Block block, boolean state) {
+        if (state) {
+            block.setType(Material.GLOWSTONE);
         } else {
-            event.getBlock().setBlockData(BukkitAdapter.adapt(offBlock));
+            block.setBlockData(BukkitAdapter.adapt(offBlock));
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
-
-        if (!offBlock.equalsFuzzy(BukkitAdapter.adapt(event.getBlock().getBlockData())) && event.getBlock().getType() != Material.GLOWSTONE)
+        if (!preventBreaking || !EventUtil.passesFilter(event)) {
             return;
+        }
 
-        if (event.getBlock().getType() == Material.GLOWSTONE && (event.getBlock().isBlockIndirectlyPowered() || event.getBlock().isBlockPowered()))
+        if (event.getBlock().getType() == Material.GLOWSTONE && (event.getBlock().isBlockIndirectlyPowered() || event.getBlock().isBlockPowered())) {
             event.setCancelled(true);
+        }
     }
 
-    private BlockStateHolder offBlock;
+    private boolean preventBreaking;
+    private BaseBlock offBlock;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
+        config.setComment("off-block", "Sets the block that the glowstone turns into when turned off.");
+        offBlock = BlockSyntax.getBlock(config.getString("off-block", BlockTypes.SOUL_SAND.getId()), true);
 
-        config.setComment("glowstone-off-block", "Sets the block that the redstone glowstone mechanic turns into when turned off.");
-        offBlock = BlockSyntax.getBlock(config.getString("glowstone-off-block", BlockTypes.GLASS.getId()), true);
+        config.setComment("prevent-breaking", "Whether powered Glowstone should be unbreakable.");
+        preventBreaking = config.getBoolean("prevent-breaking", false);
     }
 }

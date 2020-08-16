@@ -56,7 +56,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("Sponge", org.enginehub.craftbook.mechanics.Sponge.class, MechanicCategory.GENERAL);
 //        registerMechanic("Chairs", org.enginehub.craftbook.mechanics.Chair.class, MechanicCategory.GENERAL);
 //        registerMechanic("Pay", org.enginehub.craftbook.mechanics.Payment.class, MechanicCategory.CIRCUIT);
-//        registerMechanic("Glowstone", org.enginehub.craftbook.mechanics.GlowStone.class, MechanicCategory.CIRCUIT);
 //        registerMechanic("Pipes", org.enginehub.craftbook.mechanics.pipe.Pipes.class, MechanicCategory.CIRCUIT);
 //        registerMechanic("BounceBlocks", org.enginehub.craftbook.mechanics.BounceBlocks.class, MechanicCategory.GENERAL);
 //        registerMechanic("IntegratedCircuits", org.enginehub.craftbook.mechanics.ic.ICMechanic.class, MechanicCategory.CIRCUIT);
@@ -173,6 +172,14 @@ public class BukkitMechanicManager extends MechanicManager {
             .name("BetterPhysics")
             .className("org.enginehub.craftbook.mechanics.BetterPhysics")
             .category(MechanicCategory.GENERAL)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("redstone_glowstone")
+            .name("RedstoneGlowstone")
+            .className("org.enginehub.craftbook.mechanics.RedstoneGlowstone")
+            .category(MechanicCategory.CIRCUIT)
             .buildAndRegister();
 
         // TODO CommandItems needs to load early (after variables).
