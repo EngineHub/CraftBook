@@ -118,13 +118,24 @@ public class MechanicType<T extends CraftBookMechanic> implements Keyed {
             return this;
         }
 
-        public MechanicType<T> build() {
+        public MechanicType<T> buildAndRegister() {
             checkNotNull(id, "ID must be provided");
             checkNotNull(name, "Name must be provided");
             checkNotNull(className, "Class name must be provided");
             checkNotNull(mechanicCategory, "Mechanic category must be provided");
 
-            return new MechanicType<>(this.id, this.name, this.className, this.mechanicCategory, this.loadPriority, this.dependencies);
+            MechanicType<T> mechanicType = new MechanicType<>(
+                this.id,
+                this.name,
+                this.className,
+                this.mechanicCategory,
+                this.loadPriority,
+                this.dependencies
+            );
+
+            MechanicType.REGISTRY.register(this.id, mechanicType);
+
+            return mechanicType;
         }
 
         public static <T extends CraftBookMechanic> Builder<T> create() {

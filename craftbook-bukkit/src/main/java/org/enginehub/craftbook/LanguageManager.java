@@ -202,8 +202,6 @@ public class LanguageManager {
         put("mech.lift.no-depart", "Cannot depart from this lift (can only arrive).");
         put("mech.lift.busy", "Elevator Busy!");
 
-        put("mech.lightstone.lightstone", "LightStone:");
-
         put("mech.lightswitch.create", "Light Switch Created!");
 
         put("mech.map.create", "Map Changer Created!");

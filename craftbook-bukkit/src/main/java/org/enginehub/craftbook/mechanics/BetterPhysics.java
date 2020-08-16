@@ -32,59 +32,58 @@ import org.enginehub.craftbook.util.EventUtil;
 
 public class BetterPhysics extends AbstractCraftBookMechanic {
 
-    protected static BetterPhysics instance;
-
-    @Override
-    public void enable() {
-        instance = this;
-    }
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockBreak(BlockBreakEvent event) {
-
-        if (!EventUtil.passesFilter(event))
+        if (!EventUtil.passesFilter(event)) {
             return;
+        }
 
         checkForPhysics(event.getBlock());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockPlace(BlockPlaceEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
         checkForPhysics(event.getBlock());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockUpdate(BlockPhysicsEvent event) {
-
-        if (!EventUtil.passesFilter(event))
+        if (!EventUtil.passesFilter(event)) {
             return;
+        }
 
         checkForPhysics(event.getBlock());
     }
 
-    private static void checkForPhysics(Block block) {
-        if (FallingLadders.isValid(block)) {
+    private void checkForPhysics(Block block) {
+        if (canLadderFall(block)) {
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new FallingLadders(block));
         }
     }
 
-    private static class FallingLadders implements Runnable {
-        private Block ladder;
+    public boolean canLadderFall(Block block) {
+        return ladders
+            && block.getType() == Material.LADDER
+            && block.getRelative(0, -1, 0).getType().isAir();
+    }
+
+    private class FallingLadders implements Runnable {
+        private final Block ladder;
 
         FallingLadders(Block ladder) {
             this.ladder = ladder;
         }
 
-        public static boolean isValid(Block block) {
-            return block.getType() == Material.LADDER && instance.ladders && block.getRelative(0, -1, 0).getType().isAir();
-        }
-
         @Override
         public void run() {
-            if (!isValid(ladder)) return;
+            if (!canLadderFall(ladder)) {
+                return;
+            }
+
             ladder.getWorld().spawnFallingBlock(ladder.getLocation().add(0.5, 0, 0.5), ladder.getBlockData());
             ladder.setType(Material.AIR, false);
 
@@ -96,8 +95,7 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
-        config.setComment("falling-ladders", "Enables BetterPhysics Falling Ladders.");
+        config.setComment("falling-ladders", "Causes ladders to fall when not held up by anything.");
         ladders = config.getBoolean("falling-ladders", true);
     }
 }

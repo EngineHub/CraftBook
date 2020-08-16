@@ -33,7 +33,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("CustomDrops", org.enginehub.craftbook.mechanics.drops.CustomDrops.class, MechanicCategory.CUSTOMISATION);
 //        registerMechanic("BetterAi", org.enginehub.craftbook.mechanics.AIMechanic.class, MechanicCategory.GENERAL);
 //        registerMechanic("PaintingSwitcher", org.enginehub.craftbook.mechanics.PaintingSwitch.class, MechanicCategory.GENERAL);
-//        registerMechanic("BetterPhysics", org.enginehub.craftbook.mechanics.BetterPhysics.class, MechanicCategory.GENERAL);
 //        registerMechanic("HeadDrops", org.enginehub.craftbook.mechanics.headdrops.HeadDrops.class, MechanicCategory.GENERAL);
 //        registerMechanic("BetterLeads", org.enginehub.craftbook.mechanics.BetterLeads.class, MechanicCategory.GENERAL);
 //        registerMechanic("TreeLopper", org.enginehub.craftbook.mechanics.TreeLopper.class, MechanicCategory.GENERAL);
@@ -94,88 +93,87 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("LandBoats", org.enginehub.craftbook.mechanics.boat.LandBoats.class, MechanicCategory.BOAT);
 //        registerMechanic("BoatExitRemover", org.enginehub.craftbook.mechanics.boat.ExitRemover.class, MechanicCategory.BOAT);
 
-        registerMechanic(MechanicType.Builder
+        MechanicType.Builder
             .create()
             .id("variables")
             .name("Variables")
             .className("org.enginehub.craftbook.mechanics.variables.VariableManager")
             .category(MechanicCategory.GENERAL)
             .loadPriority(LoadPriority.EARLY)
-            .build()
-        );
+            .buildAndRegister();
 
-        registerMechanic(MechanicType.Builder
+        MechanicType.Builder
             .create()
             .id("snow")
             .name("Snow")
             .className("org.enginehub.craftbook.mechanics.Snow")
             .category(MechanicCategory.GENERAL)
-            .build()
-        );
+            .buildAndRegister();
 
-        registerMechanic(MechanicType.Builder
+        MechanicType.Builder
             .create()
             .id("ammeter")
             .name("Ammeter")
             .className("org.enginehub.craftbook.mechanics.Ammeter")
             .category(MechanicCategory.TOOL)
-            .build()
-        );
+            .buildAndRegister();
 
-        registerMechanic(MechanicType.Builder
+        MechanicType.Builder
             .create()
             .id("lightstone")
             .name("LightStone")
             .className("org.enginehub.craftbook.mechanics.LightStone")
             .category(MechanicCategory.TOOL)
-            .build()
-        );
+            .buildAndRegister();
 
-        registerMechanic(MechanicType.Builder
+        MechanicType.Builder
             .create()
             .id("redstone_fire")
             .name("RedstoneFire")
             .className("org.enginehub.craftbook.mechanics.RedstoneFire")
             .category(MechanicCategory.CIRCUIT)
-            .build()
-        );
+            .buildAndRegister();
 
-        registerMechanic(MechanicType.Builder
+        MechanicType.Builder
             .create()
             .id("jukebox")
             .name("Jukebox")
             .className("org.enginehub.craftbook.mechanics.RedstoneJukebox")
             .category(MechanicCategory.CIRCUIT)
-            .build()
-        );
+            .buildAndRegister();
 
-        registerMechanic(MechanicType.Builder
+        MechanicType.Builder
             .create()
             .id("jack_o_lantern")
             .name("JackOLantern")
             .className("org.enginehub.craftbook.mechanics.JackOLantern")
             .category(MechanicCategory.CIRCUIT)
-            .build()
-        );
+            .buildAndRegister();
 
-        registerMechanic(MechanicType.Builder
+        MechanicType.Builder
             .create()
             .id("marquee")
             .name("Marquee")
             .className("org.enginehub.craftbook.mechanics.Marquee")
             .category(MechanicCategory.GENERAL)
             .dependsOn(new MechanicDependency(MechanicType.REGISTRY.get("variables")))
-            .build()
-        );
+            .buildAndRegister();
 
-        registerMechanic(MechanicType.Builder
+        MechanicType.Builder
             .create()
             .id("better_plants")
             .name("BetterPlants")
             .className("org.enginehub.craftbook.mechanics.BetterPlants")
             .category(MechanicCategory.GENERAL)
-            .build()
-        );
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("better_physics")
+            .name("BetterPhysics")
+            .className("org.enginehub.craftbook.mechanics.BetterPhysics")
+            .category(MechanicCategory.GENERAL)
+            .buildAndRegister();
 
         // TODO CommandItems needs to load early (after variables).
     }

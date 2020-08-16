@@ -16,8 +16,6 @@
 
 package org.enginehub.craftbook.mechanic;
 
-import com.google.common.base.CaseFormat;
-import com.google.common.base.Converter;
 import com.google.common.collect.ImmutableList;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
@@ -42,26 +40,6 @@ public abstract class MechanicManager {
     private final List<CraftBookMechanic> loadedMechanics = new ArrayList<>();
 
     public MechanicManager() {
-    }
-
-    @Deprecated
-    protected static void registerMechanic(String name, Class<? extends CraftBookMechanic> mechanicClass, MechanicCategory category) {
-        CraftBook.logger.warn("Legacy mechanic registered: " + name);
-        Converter<String, String> camelToSnake = CaseFormat.UPPER_CAMEL.converterTo(CaseFormat.LOWER_UNDERSCORE);
-
-        MechanicType<?> mechanicType = MechanicType.Builder
-            .create()
-            .id(camelToSnake.convert(name))
-            .name(name)
-            .className(mechanicClass.getName())
-            .category(category)
-            .build();
-
-        MechanicType.REGISTRY.register(mechanicType.getId(), mechanicType);
-    }
-
-    protected void registerMechanic(MechanicType<?> mechanicType) {
-        MechanicType.REGISTRY.register(mechanicType.getId(), mechanicType);
     }
 
     public abstract void setup();
