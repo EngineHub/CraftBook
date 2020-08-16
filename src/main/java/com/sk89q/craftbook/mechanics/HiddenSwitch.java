@@ -1,13 +1,13 @@
 package com.sk89q.craftbook.mechanics;
 
-import com.sk89q.craftbook.CraftBookPlayer;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Powerable;
+import org.bukkit.block.data.type.Switch;
 import org.bukkit.block.data.type.WallSign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +20,9 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -98,12 +100,12 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
             boolean success = false;
 
             if (!ItemUtil.isStackValid(itemID)) {
-                toggleSwitches(testBlock, eventFace.getOppositeFace());
+                toggleSwitches(testBlock);
                 success = true;
             } else {
                 if (ItemUtil.areItemsIdentical(player.getInventory().getItemInMainHand(), itemID)
                         || ItemUtil.areItemsIdentical(player.getInventory().getItemInOffHand(), itemID)) {
-                    toggleSwitches(testBlock, eventFace.getOppositeFace());
+                    toggleSwitches(testBlock);
                     success = true;
                 } else
                     lplayer.printError("mech.hiddenswitch.key");
@@ -149,13 +151,12 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
             event.setCancelled(true);
     }
 
-    private static void toggleSwitches(Block sign, BlockFace direction) {
-
+    private static void toggleSwitches(Block sign) {
         BlockFace[] checkFaces = new BlockFace[4];
         checkFaces[0] = BlockFace.UP;
         checkFaces[1] = BlockFace.DOWN;
 
-        switch (direction) {
+        switch (((WallSign) sign.getBlockData()).getFacing()) {
             case EAST:
             case WEST:
                 checkFaces[2] = BlockFace.NORTH;
@@ -174,15 +175,39 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
                 Powerable powerable = (Powerable) checkBlock.getBlockData();
                 powerable.setPowered(!powerable.isPowered());
                 checkBlock.setBlockData(powerable);
+
+                Switch lever = (Switch) checkBlock.getBlockData();
+                Block attachedBlock = checkBlock.getRelative(lever.getFacing().getOppositeFace());
+                forceUpdate(attachedBlock);
             } else if (Tag.BUTTONS.getValues().contains(checkBlock.getType())) {
                 Powerable powerable = (Powerable) checkBlock.getBlockData();
                 powerable.setPowered(true);
                 checkBlock.setBlockData(powerable);
-                powerable.setPowered(false);
-                Runnable turnOff = () -> checkBlock.setBlockData(powerable);
+
+                Switch button = (Switch) checkBlock.getBlockData();
+                Block attachedBlock = checkBlock.getRelative(button.getFacing().getOppositeFace());
+                forceUpdate(attachedBlock);
+
+                Runnable turnOff = () -> turnOffButton(checkBlock, attachedBlock, powerable);
                 Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), turnOff, Tag.WOODEN_BUTTONS.getValues().contains(checkBlock.getType()) ? 30L : 20L);
             }
         }
+    }
+
+    private static void turnOffButton(Block buttonBlock, Block attachedBlock, Powerable powerable) {
+        powerable.setPowered(false);
+        buttonBlock.setBlockData(powerable);
+        forceUpdate(attachedBlock);
+    }
+
+    private static void forceUpdate(Block attachedBlock) {
+        // Workaround for spigot not properly updating redstone. Changing the
+        // block material and then immediately changing it back forces a full
+        // update to surrounding redstone. The placeholder material is never
+        // visible.
+        BlockData attachedBlockData = attachedBlock.getBlockData();
+        attachedBlock.setType(attachedBlock.getType() == Material.DIRT ? Material.STONE : Material.DIRT, false);
+        attachedBlock.setBlockData(attachedBlockData, true);
     }
 
     private boolean anyside;
