@@ -22,7 +22,7 @@ import org.enginehub.craftbook.mechanics.BetterLeads;
 import org.enginehub.craftbook.mechanics.BetterPhysics;
 import org.enginehub.craftbook.mechanics.BetterPistons;
 import org.enginehub.craftbook.mechanics.BetterPlants;
-import org.enginehub.craftbook.mechanics.Bookcase;
+import org.enginehub.craftbook.mechanics.ReadableBookshelf;
 import org.enginehub.craftbook.mechanics.BounceBlocks;
 import org.enginehub.craftbook.mechanics.Chair;
 import org.enginehub.craftbook.mechanics.ChunkAnchor;
@@ -113,8 +113,6 @@ public class MechanicTypes {
     public static final MechanicType<RemoveEntities> BOAT_REMOVE_ENTITIES = get("boat_remove_entities");
     @Nullable
     public static final MechanicType<SpeedModifiers> BOAT_SPEED_MODIFIERS = get("boat_speed_modifiers");
-    @Nullable
-    public static final MechanicType<Bookcase> BOOKCASE = get("bookcase");
     @Nullable
     public static final MechanicType<BounceBlocks> BOUNCE_BLOCKS = get("bounce_blocks");
     @Nullable
@@ -223,6 +221,8 @@ public class MechanicTypes {
     public static final MechanicType<Payment> PAY = get("pay");
     @Nullable
     public static final MechanicType<Pipes> PIPES = get("pipes");
+    @Nullable
+    public static final MechanicType<ReadableBookshelf> READABLE_BOOKSHELF = get("readable_bookshelf");
     @Nullable
     public static final MechanicType<RedstoneFire> REDSTONE_FIRE = get("redstone_fire");
     @Nullable

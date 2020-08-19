@@ -124,7 +124,7 @@ public abstract class MechanicManager {
                 }
             }
             CraftBookMechanic mech = mechanicType.getMechanicClass().getDeclaredConstructor().newInstance();
-            mech.loadConfiguration(new File(CraftBook.getInstance().getPlatform().getConfigDir().resolve("mechanics").toFile(), mechanicType.getName() + ".yml"));
+            mech.loadConfiguration(new File(CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("mechanics").toFile(), mechanicType.getName() + ".yml"));
             mech.enable();
 
             loadedMechanics.add(mech);

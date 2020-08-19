@@ -72,7 +72,7 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
         } catch (Exception ignored) {
         }
         config = new BukkitConfiguration(
-            new YAMLProcessor(CraftBook.getInstance().getPlatform().getConfigDir().resolve("config.yml").toFile(), true, YAMLFormat.EXTENDED));
+            new YAMLProcessor(CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("config.yml").toFile(), true, YAMLFormat.EXTENDED));
 
         try {
             config.load();
@@ -120,7 +120,7 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
     }
 
     @Override
-    public Path getConfigDir() {
+    public Path getWorkingDirectory() {
         return CraftBookPlugin.inst().getDataFolder().toPath();
     }
 

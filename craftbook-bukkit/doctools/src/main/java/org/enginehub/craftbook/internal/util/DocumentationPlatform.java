@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 public class DocumentationPlatform extends BukkitCraftBookPlatform {
 
     @Override
-    public Path getConfigDir() {
+    public Path getWorkingDirectory() {
         return Paths.get("docgen_output");
     }
 

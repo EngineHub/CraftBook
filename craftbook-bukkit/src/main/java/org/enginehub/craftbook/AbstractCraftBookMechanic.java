@@ -22,8 +22,6 @@ import org.bukkit.event.Listener;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
-import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
-import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,11 +31,11 @@ public abstract class AbstractCraftBookMechanic implements CraftBookMechanic, Li
 
     private MechanicType<? extends CraftBookMechanic> mechanicType;
 
-    public MechanicType<? extends CraftBookMechanic> getMechanicType() throws InvalidMechanismException {
+    public MechanicType<? extends CraftBookMechanic> getMechanicType() {
         if (this.mechanicType == null) {
             this.mechanicType = CraftBook.getInstance().getPlatform().getMechanicManager().getMechanicType(this);
             if (this.mechanicType == null) {
-                throw new InvalidMechanismException("");
+                throw new RuntimeException("Invalid mechanic found");
             }
         }
         return this.mechanicType;

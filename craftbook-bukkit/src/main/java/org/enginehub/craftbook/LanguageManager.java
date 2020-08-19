@@ -130,10 +130,6 @@ public class LanguageManager {
         put("mech.area.create", "Toggle Area Created!");
         put("mech.area.missing", "The area or namespace does not exist.");
 
-        put("mech.bookcase.fail-line", "Failed to fetch a line from the books file.");
-        put("mech.bookcase.fail-file", "Failed to read the books file.");
-        put("mech.bookcase.read-line", "You pick up a book...");
-
         put("mech.bridge.create", "Bridge Created!");
         put("mech.bridge.toggle", "Bridge Toggled!");
         put("mech.bridge.end-create", "Bridge End Created!");

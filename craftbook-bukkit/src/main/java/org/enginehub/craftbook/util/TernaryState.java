@@ -16,31 +16,65 @@
 
 package org.enginehub.craftbook.util;
 
-public enum TernaryState {
+import java.util.Locale;
 
+/**
+ * An object that represents three possible values. True, False, or Neither.
+ */
+public enum TernaryState {
     TRUE, FALSE, NONE;
 
-    public static TernaryState getFromString(String s) {
+    /**
+     * Gets a TernaryState from the given string.
+     *
+     * <p>
+     *     Note, if the value is not truthy or falsy, it is
+     *     seen as {@link TernaryState#NONE}.
+     * </p>
+     *
+     * @param s The string to parse
+     * @return The parsed value
+     */
+    public static TernaryState parseTernaryState(String s) {
+        switch (s.toLowerCase()) {
+            case "yes":
+            case "true":
+            case "y":
+            case "t":
+            case "1":
+                return TRUE;
+            case "no":
+            case "false":
+            case "n":
+            case "f":
+            case "0":
+                return FALSE;
+        }
 
-        s = s.toLowerCase();
-
-        if (s.equals("yes") || s.equals("true") || s.equals("y") || s.equals("t") || s.equals("1"))
-            return TRUE;
-        if (s.equals("no") || s.equals("false") || s.equals("n") || s.equals("f") || s.equals("0") || s.equals("not"))
-            return FALSE;
         return NONE;
     }
 
-    public boolean doesPass(boolean bool) {
+    /**
+     * Gets whether the given test value passes this ternary state.
+     *
+     * @param test The test value
+     * @return Whether it passes
+     */
+    public boolean doesPass(boolean test) {
         switch (this) {
             case TRUE:
-                return bool;
+                return test;
             case FALSE:
-                return !bool;
+                return !test;
             case NONE:
                 return true;
             default:
                 return false;
         }
+    }
+
+    @Override
+    public String toString() {
+        return this.name().toLowerCase(Locale.ENGLISH);
     }
 }

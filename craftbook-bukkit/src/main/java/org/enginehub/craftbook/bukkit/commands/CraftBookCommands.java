@@ -137,7 +137,7 @@ public class CraftBookCommands {
         String result = report.toString();
 
         try {
-            Path dest = CraftBook.getInstance().getPlatform().getConfigDir().resolve("report.txt");
+            Path dest = CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("report.txt");
             Files.write(result, dest.toFile(), StandardCharsets.UTF_8);
             actor.print("CraftBook report written to " + dest.toAbsolutePath().toString());
         } catch (IOException e) {

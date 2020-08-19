@@ -16,6 +16,7 @@
 
 package org.enginehub.craftbook.mechanic;
 
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -180,6 +181,15 @@ public class BukkitMechanicManager extends MechanicManager {
             .name("RedstoneGlowstone")
             .className("org.enginehub.craftbook.mechanics.RedstoneGlowstone")
             .category(MechanicCategory.CIRCUIT)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("readable_bookshelf")
+            .name("ReadableBookshelf")
+            .description(TranslatableComponent.of("craftbook.readablebookshelf.description"))
+            .className("org.enginehub.craftbook.mechanics.ReadableBookshelf")
+            .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
         // TODO CommandItems needs to load early (after variables).

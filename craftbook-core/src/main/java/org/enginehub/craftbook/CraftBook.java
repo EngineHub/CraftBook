@@ -58,7 +58,7 @@ public class CraftBook {
         executorService = MoreExecutors.listeningDecorator(EvenMoreExecutors.newBoundedCachedThreadPool(0, 1, 20,
             "CraftBook Task Executor - %s"));
 
-        Path cacheDir = getPlatform().getConfigDir().resolve("cache");
+        Path cacheDir = getPlatform().getWorkingDirectory().resolve("cache");
         if (!Files.exists(cacheDir)) {
             try {
                 Files.createDirectories(cacheDir);

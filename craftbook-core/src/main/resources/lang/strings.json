@@ -3,6 +3,11 @@
 
     "craftbook.lightstone.line": "LightStone: {0} {1}L",
 
+    "craftbook.readablebookshelf.failed-to-read": "Failed to read books file",
+    "craftbook.readablebookshelf.empty": "Books file is empty",
+    "craftbook.readablebookshelf.read": "You pick up a book...",
+    "craftbook.readablebookshelf.description": "Reads a line from a file when a player right clicks a bookshelf",
+
     "craftbook.bounceblocks.create": "BounceBlock Created!",
     "craftbook.bounceblocks.invalid-velocity": "You need to enter a valid velocity on the 3rd line!",
 

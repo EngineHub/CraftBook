@@ -53,10 +53,15 @@ public class MechanicListBox extends PaginationBox {
 
         boolean isEnabled = manager.isMechanicEnabled(mechanic);
 
+        TextComponent mechanicName = TextComponent.of(mechanic.getName(), TextColor.WHITE);
+        if (mechanic.getDescription() != null && actor.isPlayer()) {
+            mechanicName = mechanicName.hoverEvent(HoverEvent.showText(mechanic.getDescription()));
+        }
+
         TextComponent.Builder builder = TextComponent.builder()
             .append(TextComponent.of("\u2588", isEnabled ? TextColor.GREEN : TextColor.RED))
             .append(TextComponent.space())
-            .append(TextComponent.of(mechanic.getName(), TextColor.WHITE))
+            .append(mechanicName)
             .append(TextComponent.space());
 
         if (actor.isPlayer()) {

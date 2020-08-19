@@ -141,7 +141,7 @@ public class CraftBookPlugin extends JavaPlugin {
      * @param name the filename
      */
     public void createDefaultConfiguration(String name) {
-        Path actual = CraftBook.getInstance().getPlatform().getConfigDir().resolve(name);
+        Path actual = CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve(name);
         ;
         if (Files.notExists(actual)) {
             try (InputStream stream = getResource("defaults/" + name)) {

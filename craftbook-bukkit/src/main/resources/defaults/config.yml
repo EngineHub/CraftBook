@@ -18,6 +18,7 @@ mechanics:
         better_physics: false
         better_plants: false
         marquee: false
+        readable_bookshelf: false
         snow: false
         variables: true
     tool:

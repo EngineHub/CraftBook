@@ -332,7 +332,7 @@ public class CommandItemCommands {
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
-            context.setSessionData("require-sneaking", TernaryState.getFromString(input));
+            context.setSessionData("require-sneaking", TernaryState.parseTernaryState(input));
             return new DelayPrompt();
         }
     }

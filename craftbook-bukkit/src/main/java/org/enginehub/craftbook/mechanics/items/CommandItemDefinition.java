@@ -115,7 +115,7 @@ public class CommandItemDefinition {
         }
 
         boolean consumeSelf = config.getBoolean(path + ".consume-self", false);
-        TernaryState requireSneaking = TernaryState.getFromString(config.getString(path + ".require-sneaking-state", "either"));
+        TernaryState requireSneaking = TernaryState.parseTernaryState(config.getString(path + ".require-sneaking-state", "either"));
 
         boolean keepOnDeath = config.getBoolean(path + ".keep-on-death", false);
         boolean fakeCommand = config.getBoolean(path + ".fake-command-compatibility", false);

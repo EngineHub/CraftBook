@@ -86,7 +86,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
             String type = config.getString("custom-drops." + key + ".type");
 
             boolean append = config.getBoolean("custom-drops." + key + ".append", false);
-            TernaryState silkTouch = TernaryState.getFromString(config.getString("custom-drops." + key + ".silk-touch", "none"));
+            TernaryState silkTouch = TernaryState.parseTernaryState(config.getString("custom-drops." + key + ".silk-touch", "none"));
             List<String> regions = config.getStringList("custom-drops." + key + ".regions", null);
             List<String> requiredItems = config.getStringList("custom-drops." + key + ".required-items", null);
             List<String> biomeStrings = config.getStringList("custom-drops." + key + ".biomes", null);

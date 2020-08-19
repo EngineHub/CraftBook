@@ -56,8 +56,6 @@ import java.util.regex.Pattern;
 /**
  * The Standard Item Syntax. This class is built to be able to survive on its own, without
  * CraftBook.
- *
- * @author Me4502
  */
 public final class ItemSyntax {
 
@@ -77,7 +75,6 @@ public final class ItemSyntax {
      *
      * @param item The {@link ItemStack} to convert into a {@link String}.
      * @return The {@link String} that represents the {@link ItemStack}.
-     * @author me4502
      */
     public static String getStringFromItem(ItemStack item) {
 
@@ -298,7 +295,6 @@ public final class ItemSyntax {
      *
      * @param line The line to parse it from.
      * @return The item to create.
-     * @author me4502
      */
     public static ItemStack getItem(String line) {
 

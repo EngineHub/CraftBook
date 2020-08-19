@@ -44,8 +44,8 @@ public class BukkitConfiguration extends YamlConfiguration {
         if (config.getList("enabled-mechanics") != null) {
             try {
                 Files.move(
-                    CraftBook.getInstance().getPlatform().getConfigDir().resolve("config.yml"),
-                    CraftBook.getInstance().getPlatform().getConfigDir().resolve("config.yml.old")
+                    CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("config.yml"),
+                    CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("config.yml.old")
                 );
 
                 CraftBookPlugin.inst().createDefaultConfiguration("config.yml");

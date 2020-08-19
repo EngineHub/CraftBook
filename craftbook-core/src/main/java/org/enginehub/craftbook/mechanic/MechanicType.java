@@ -19,6 +19,7 @@ package org.enginehub.craftbook.mechanic;
 import com.google.common.collect.ImmutableList;
 import com.sk89q.worldedit.registry.Keyed;
 import com.sk89q.worldedit.registry.Registry;
+import com.sk89q.worldedit.util.formatting.text.Component;
 import org.enginehub.craftbook.mechanic.load.LoadDependency;
 import org.enginehub.craftbook.mechanic.load.LoadPriority;
 
@@ -34,14 +35,21 @@ public class MechanicType<T extends CraftBookMechanic> implements Keyed {
     private final String id;
     private final String name;
     private final String className;
+    private final Component description;
     private final MechanicCategory category;
     private final LoadPriority loadPriority;
     private final List<LoadDependency> dependencies;
 
-    private MechanicType(String id, String name, String className, MechanicCategory category, LoadPriority loadPriority,
+    private MechanicType(String id,
+                         String name,
+                         Component description,
+                         String className,
+                         MechanicCategory category,
+                         LoadPriority loadPriority,
                          List<LoadDependency> dependencies) {
         this.id = id;
         this.name = name;
+        this.description = description;
         this.className = className;
         this.category = category;
         this.loadPriority = loadPriority;
@@ -55,6 +63,10 @@ public class MechanicType<T extends CraftBookMechanic> implements Keyed {
 
     public String getName() {
         return this.name;
+    }
+
+    public Component getDescription() {
+        return this.description;
     }
 
     @SuppressWarnings("unchecked")
@@ -82,6 +94,7 @@ public class MechanicType<T extends CraftBookMechanic> implements Keyed {
 
         private String id;
         private String name;
+        private Component description;
         private String className;
         private MechanicCategory mechanicCategory;
         private LoadPriority loadPriority = LoadPriority.NORMAL;
@@ -95,6 +108,11 @@ public class MechanicType<T extends CraftBookMechanic> implements Keyed {
 
         public Builder<T> name(String name) {
             this.name = name;
+            return this;
+        }
+
+        public Builder<T> description(Component description) {
+            this.description = description;
             return this;
         }
 
@@ -127,6 +145,7 @@ public class MechanicType<T extends CraftBookMechanic> implements Keyed {
             MechanicType<T> mechanicType = new MechanicType<>(
                 this.id,
                 this.name,
+                this.description,
                 this.className,
                 this.mechanicCategory,
                 this.loadPriority,

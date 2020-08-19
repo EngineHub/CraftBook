@@ -24,6 +24,6 @@ public class CraftBookResourceLoader implements ResourceLoader {
 
     @Override
     public Path getLocalResource(String pathName) {
-        return CraftBook.getInstance().getPlatform().getConfigDir().resolve(pathName);
+        return CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve(pathName);
     }
 }

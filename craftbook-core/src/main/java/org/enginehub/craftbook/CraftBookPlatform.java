@@ -65,7 +65,7 @@ public interface CraftBookPlatform {
      *
      * @return The config directory
      */
-    Path getConfigDir();
+    Path getWorkingDirectory();
 
     /**
      * Gets the Mechanic manager.

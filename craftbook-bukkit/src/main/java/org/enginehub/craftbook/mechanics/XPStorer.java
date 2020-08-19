@@ -322,7 +322,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         block = BlockSyntax.getBlock(config.getString("block", BlockTypes.SPAWNER.getId()), true);
 
         config.setComment("require-sneaking-state", "Sets how the player must be sneaking in order to use the XP Storer.");
-        sneakingState = TernaryState.getFromString(config.getString("require-sneaking-state", "no"));
+        sneakingState = TernaryState.parseTernaryState(config.getString("require-sneaking-state", "no"));
 
         config.setComment("radius-mode", "Allows XP Storer mechanics with a sign attached to work in a radius.");
         autonomousMode = config.getBoolean("radius-mode", false);
