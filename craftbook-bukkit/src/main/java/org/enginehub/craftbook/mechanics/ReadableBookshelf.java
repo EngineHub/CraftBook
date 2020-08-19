@@ -76,7 +76,7 @@ public class ReadableBookshelf extends AbstractCraftBookMechanic {
 
     @Override
     public void disable() {
-        lines = null;
+        this.lines = null;
     }
 
     /**

@@ -150,8 +150,6 @@ public class MechanicTypes {
     @Nullable
     public static final MechanicType<JackOLantern> JACK_O_LANTERN = get("jack_o_lantern");
     @Nullable
-    public static final MechanicType<RedstoneJukebox> JUKEBOX = get("jukebox");
-    @Nullable
     public static final MechanicType<LandBoats> LAND_BOATS = get("land_boats");
     @Nullable
     public static final MechanicType<LightSwitch> LIGHT_SWITCH = get("light_switch");
@@ -227,6 +225,8 @@ public class MechanicTypes {
     public static final MechanicType<RedstoneFire> REDSTONE_FIRE = get("redstone_fire");
     @Nullable
     public static final MechanicType<RedstoneGlowstone> REDSTONE_GLOWSTONE = get("redstone_glowstone");
+    @Nullable
+    public static final MechanicType<RedstoneJukebox> REDSTONE_JUKEBOX = get("redstone_jukebox");
     @Nullable
     public static final MechanicType<SignCopier> SIGN_COPIER = get("sign_copier");
     @Nullable

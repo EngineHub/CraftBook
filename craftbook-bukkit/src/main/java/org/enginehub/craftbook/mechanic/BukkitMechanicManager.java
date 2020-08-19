@@ -97,6 +97,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .create()
             .id("variables")
             .name("Variables")
+            .description(TranslatableComponent.of("craftbook.variables.description"))
             .className("org.enginehub.craftbook.mechanics.variables.VariableManager")
             .category(MechanicCategory.GENERAL)
             .loadPriority(LoadPriority.EARLY)
@@ -106,6 +107,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .create()
             .id("snow")
             .name("Snow")
+            .description(TranslatableComponent.of("craftbook.snow.description"))
             .className("org.enginehub.craftbook.mechanics.Snow")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
@@ -114,6 +116,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .create()
             .id("ammeter")
             .name("Ammeter")
+            .description(TranslatableComponent.of("craftbook.ammeter.description"))
             .className("org.enginehub.craftbook.mechanics.Ammeter")
             .category(MechanicCategory.TOOL)
             .buildAndRegister();
@@ -122,6 +125,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .create()
             .id("lightstone")
             .name("LightStone")
+            .description(TranslatableComponent.of("craftbook.lightstone.description"))
             .className("org.enginehub.craftbook.mechanics.LightStone")
             .category(MechanicCategory.TOOL)
             .buildAndRegister();
@@ -130,14 +134,16 @@ public class BukkitMechanicManager extends MechanicManager {
             .create()
             .id("redstone_fire")
             .name("RedstoneFire")
+            .description(TranslatableComponent.of("craftbook.redstonefire.description"))
             .className("org.enginehub.craftbook.mechanics.RedstoneFire")
             .category(MechanicCategory.CIRCUIT)
             .buildAndRegister();
 
         MechanicType.Builder
             .create()
-            .id("jukebox")
-            .name("Jukebox")
+            .id("redstone_jukebox")
+            .name("RedstoneJukebox")
+            .description(TranslatableComponent.of("craftbook.redstonejukebox.description"))
             .className("org.enginehub.craftbook.mechanics.RedstoneJukebox")
             .category(MechanicCategory.CIRCUIT)
             .buildAndRegister();
@@ -146,6 +152,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .create()
             .id("jack_o_lantern")
             .name("JackOLantern")
+            .description(TranslatableComponent.of("craftbook.jackolantern.description"))
             .className("org.enginehub.craftbook.mechanics.JackOLantern")
             .category(MechanicCategory.CIRCUIT)
             .buildAndRegister();
@@ -154,6 +161,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .create()
             .id("marquee")
             .name("Marquee")
+            .description(TranslatableComponent.of("craftbook.marquee.description"))
             .className("org.enginehub.craftbook.mechanics.Marquee")
             .category(MechanicCategory.GENERAL)
             .dependsOn(new MechanicDependency(MechanicType.REGISTRY.get("variables")))
@@ -163,6 +171,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .create()
             .id("better_plants")
             .name("BetterPlants")
+            .description(TranslatableComponent.of("craftbook.betterplants.description"))
             .className("org.enginehub.craftbook.mechanics.BetterPlants")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
@@ -171,6 +180,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .create()
             .id("better_physics")
             .name("BetterPhysics")
+            .description(TranslatableComponent.of("craftbook.betterphysics.description"))
             .className("org.enginehub.craftbook.mechanics.BetterPhysics")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
@@ -179,6 +189,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .create()
             .id("redstone_glowstone")
             .name("RedstoneGlowstone")
+            .description(TranslatableComponent.of("craftbook.redstoneglowstone.description"))
             .className("org.enginehub.craftbook.mechanics.RedstoneGlowstone")
             .category(MechanicCategory.CIRCUIT)
             .buildAndRegister();

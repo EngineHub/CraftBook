@@ -1,15 +1,33 @@
 {
     "craftbook.ammeter.line": "Ammeter: {0} {1}A",
+    "craftbook.ammeter.description": "Adds a tool that outputs the power level at the clicked block",
+
+    "craftbook.betterphysics.description": "Enhances physics of aspects of the game, such as allowing ladders to fall",
+
+    "craftbook.betterplants.description":"Enhances plants in the game, such as allowing ferns to be farmed",
+
+    "craftbook.bounceblocks.create": "BounceBlock Created!",
+    "craftbook.bounceblocks.invalid-velocity": "You need to enter a valid velocity on the 3rd line!",
+
+    "craftbook.jackolantern.description": "Allows Jack O Lanterns to be turned on and off with redstone",
 
     "craftbook.lightstone.line": "LightStone: {0} {1}L",
+    "craftbook.lightstone.description": "Adds a tool that outputs the light level at the clicked block",
+
+    "craftbook.marquee.description": "Lets players view Variable values by right clicking a sign",
 
     "craftbook.readablebookshelf.failed-to-read": "Failed to read books file",
     "craftbook.readablebookshelf.empty": "Books file is empty",
     "craftbook.readablebookshelf.read": "You pick up a book...",
     "craftbook.readablebookshelf.description": "Reads a line from a file when a player right clicks a bookshelf",
 
-    "craftbook.bounceblocks.create": "BounceBlock Created!",
-    "craftbook.bounceblocks.invalid-velocity": "You need to enter a valid velocity on the 3rd line!",
+    "craftbook.redstonefire.description": "Allows fire from netherrack or soul soil to be turned on and off with redstone",
+
+    "craftbook.redstoneglowstone.description": "Allows toggling glowstone on and off with redstone",
+
+    "craftbook.redstonejukebox.description": "Allows a Jukebox to be turned on and off with redstone",
+
+    "craftbook.snow.description": "Enhances snow, allowing it to build up and realistically spread",
 
     "craftbook.variables.unknown-variable": "Unknown variable: \"{0}\"",
     "craftbook.variables.already-exists": "Variable already exists: \"{0}\"",
@@ -25,6 +43,7 @@
     "craftbook.variables.not-boolean": "Variable {0} not of type 'boolean'",
     "craftbook.variables.no-permission": "You don't have permission to use the variable \"{0}\"",
     "craftbook.variables.failed-to-load": "Failed to load variables file",
+    "craftbook.variables.description": "Allows creation of variables, that can represent other text",
 
     "craftbook.mechanisms.missing-dependency": "Dependency not satisfied: {0}",
     "craftbook.mechanisms.already-enabled": "Mechanic {0} is already enabled",
