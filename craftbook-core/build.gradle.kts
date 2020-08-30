@@ -42,7 +42,7 @@ sourceSets {
 
 val crowdinApiKey = "crowdin_apikey"
 
-if (project.hasProperty(crowdinApiKey) && !gradle.startParameter.isOffline) {
+if (project.hasProperty(crowdinApiKey) && !gradle.startParameter.isOffline && false) {
     tasks.named<UploadSourceFileTask>("crowdinUpload") {
         apiKey = "${project.property(crowdinApiKey)}"
         projectId = "craftbook"
