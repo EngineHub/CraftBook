@@ -296,7 +296,7 @@ public class Chairs extends AbstractCraftBookMechanic {
             return;
         }
 
-        if (!player.hasPermission("craftbook.mech.chair.use")) {
+        if (!player.hasPermission("craftbook.chairs.use")) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                 player.printError("mech.use-permission");
             }
