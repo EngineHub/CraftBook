@@ -24,7 +24,7 @@ import org.enginehub.craftbook.mechanics.BetterPistons;
 import org.enginehub.craftbook.mechanics.BetterPlants;
 import org.enginehub.craftbook.mechanics.ReadableBookshelf;
 import org.enginehub.craftbook.mechanics.BounceBlocks;
-import org.enginehub.craftbook.mechanics.Chair;
+import org.enginehub.craftbook.mechanics.Chairs;
 import org.enginehub.craftbook.mechanics.ChunkAnchor;
 import org.enginehub.craftbook.mechanics.CommandSigns;
 import org.enginehub.craftbook.mechanics.CookingPot;
@@ -120,7 +120,7 @@ public class MechanicTypes {
     @Nullable
     public static final MechanicType<ImprovedCauldron> CAULDRON = get("cauldron");
     @Nullable
-    public static final MechanicType<Chair> CHAIRS = get("chairs");
+    public static final MechanicType<Chairs> CHAIRS = get("chairs");
     @Nullable
     public static final MechanicType<ChunkAnchor> CHUNK_ANCHOR = get("chunk_anchor");
     @Nullable

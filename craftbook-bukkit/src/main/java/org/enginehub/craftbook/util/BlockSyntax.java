@@ -90,7 +90,10 @@ public class BlockSyntax {
     }
 
     public static List<BaseBlock> getBlocks(List<String> lines, boolean wild) {
-        return lines.stream().map(line -> getBlock(line, wild)).filter(Objects::nonNull).collect(Collectors.toList());
+        return lines.stream()
+            .map(line -> getBlock(line, wild))
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
     }
 
     public static BlockData getBukkitBlock(String line) {

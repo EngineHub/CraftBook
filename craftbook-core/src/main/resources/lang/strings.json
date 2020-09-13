@@ -9,6 +9,12 @@
     "craftbook.bounceblocks.create": "BounceBlock Created!",
     "craftbook.bounceblocks.invalid-velocity": "You need to enter a valid velocity on the 3rd line!",
 
+    "craftbook.chairs.description": "Allows sitting on stair blocks.",
+    "craftbook.chairs.block-in-use": "This chair is in use!",
+    "craftbook.chairs.floating": "That chair is floating!",
+    "craftbook.chairs.obstructed": "That chair is obstructed!",
+    "craftbook.chairs.too-far-away": "That chair is too far away!",
+
     "craftbook.jackolantern.description": "Allows Jack O Lanterns to be turned on and off with redstone",
 
     "craftbook.lightstone.line": "LightStone: {0} {1}L",

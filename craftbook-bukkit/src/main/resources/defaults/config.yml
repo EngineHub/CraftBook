@@ -17,6 +17,7 @@ mechanics:
     general:
         better_physics: false
         better_plants: false
+        chairs: false
         marquee: false
         readable_bookshelf: false
         snow: false

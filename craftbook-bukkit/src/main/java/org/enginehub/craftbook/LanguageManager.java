@@ -148,13 +148,6 @@ public class LanguageManager {
         put("mech.cauldron.permissions", "You dont have permission to cook this recipe.");
         put("mech.cauldron.cook", "You have cooked the recipe:");
 
-        put("mech.chairs.sit", "You are now sitting!");
-        put("mech.chairs.stand", "You are no longer sitting!");
-        put("mech.chairs.in-use", "This chair is in use!");
-        put("mech.chairs.floating", "This chair has nothing below it!");
-        put("mech.chairs.too-far", "This chair is too far away!");
-        put("mech.chairs.obstructed", "This chair is obstructed!");
-
         put("mech.command.create", "Command Sign Created!");
 
         put("mech.command-items.out-of-sync", "Inventory became out of sync during usage of command-items!");

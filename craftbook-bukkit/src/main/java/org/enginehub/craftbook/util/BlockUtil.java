@@ -69,7 +69,6 @@ public final class BlockUtil {
     }
 
     public static Location getBlockCentre(Block block) {
-
         return block.getLocation().add(0.5, 0.5, 0.5);
     }
 

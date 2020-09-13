@@ -23,6 +23,7 @@ import org.bukkit.event.Listener;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.load.LoadPriority;
 import org.enginehub.craftbook.mechanic.load.MechanicDependency;
+import org.enginehub.craftbook.mechanic.load.PluginDependency;
 
 public class BukkitMechanicManager extends MechanicManager {
 
@@ -201,6 +202,16 @@ public class BukkitMechanicManager extends MechanicManager {
             .description(TranslatableComponent.of("craftbook.readablebookshelf.description"))
             .className("org.enginehub.craftbook.mechanics.ReadableBookshelf")
             .category(MechanicCategory.GENERAL)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("chairs")
+            .name("Chairs")
+            .description(TranslatableComponent.of("craftbook.chairs.description"))
+            .className("org.enginehub.craftbook.mechanics.Chairs")
+            .category(MechanicCategory.GENERAL)
+            .dependsOn(new PluginDependency("ProtocolLib"))
             .buildAndRegister();
 
         // TODO CommandItems needs to load early (after variables).
