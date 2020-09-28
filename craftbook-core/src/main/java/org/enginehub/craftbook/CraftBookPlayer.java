@@ -25,7 +25,10 @@ import com.sk89q.worldedit.util.formatting.text.Component;
  */
 public interface CraftBookPlayer extends Player {
 
-    String getCraftBookId();
+    @Deprecated
+    default String getCraftBookId() {
+        return "";
+    }
 
     void teleport(Location location); // TODO Add to WorldEdit
 
@@ -36,7 +39,9 @@ public interface CraftBookPlayer extends Player {
     boolean isHoldingBlock(); // TODO Add to WorldEdit
 
     @Deprecated
-    String translate(String message);
+    default String translate(String message) {
+        return message;
+    }
 
     /**
      * Print a {@link Component} to the action bar.

@@ -44,7 +44,6 @@ import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookManifest;
 import org.enginehub.craftbook.CraftBookPlatform;
 import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.LanguageManager;
 import org.enginehub.craftbook.PlatformCommandManager;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanics.variables.VariableManager;
@@ -52,14 +51,12 @@ import org.enginehub.craftbook.st.MechanicClock;
 import org.enginehub.craftbook.st.SelfTriggeringManager;
 import org.enginehub.craftbook.util.ArrayUtil;
 import org.enginehub.craftbook.util.RegexUtil;
-import org.enginehub.craftbook.util.UUIDMappings;
 import org.enginehub.craftbook.util.companion.CompanionPlugins;
 import org.enginehub.craftbook.util.persistent.PersistentStorage;
 import org.enginehub.craftbook.util.profile.Profile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -67,7 +64,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class CraftBookPlugin extends JavaPlugin {
@@ -83,12 +79,6 @@ public class CraftBookPlugin extends JavaPlugin {
     private static CraftBookPlugin instance;
     private static String version;
     private static CraftBookPlatform platform;
-
-    /**
-     * The language manager
-     */
-    @Deprecated
-    private LanguageManager languageManager;
 
     /**
      * Manager for commands. This automatically handles nested commands,
@@ -110,12 +100,8 @@ public class CraftBookPlugin extends JavaPlugin {
     /**
      * The persistent storage database of CraftBook.
      */
+    @Deprecated
     private PersistentStorage persistentStorage;
-
-    /**
-     * The UUID Mappings for CraftBook.
-     */
-    private UUIDMappings uuidMappings;
 
     /**
      * The manager for SelfTriggering components.
@@ -142,20 +128,24 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public void createDefaultConfiguration(String name) {
         Path actual = CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve(name);
-        ;
+
         if (Files.notExists(actual)) {
             try (InputStream stream = getResource("defaults/" + name)) {
-                if (stream == null) throw new FileNotFoundException();
-                copyDefaultConfig(stream, actual.toFile(), name);
+                if (stream == null) {
+                    throw new FileNotFoundException();
+                }
+                try {
+                    Files.copy(stream, actual);
+                    CraftBook.logger.info("Default configuration file written: " + name);
+                } catch (IOException e) {
+                    CraftBook.logger.warn("Failed to write default config file", e);
+                }
             } catch (IOException e) {
                 CraftBook.logger.error("Unable to read default configuration: " + name);
             }
         }
     }
 
-    /**
-     * Called on plugin enable.
-     */
     @Override
     public void onEnable() {
 
@@ -173,9 +163,6 @@ public class CraftBookPlugin extends JavaPlugin {
         if (persistentStorage != null) {
             persistentStorage.open();
         }
-
-        uuidMappings = new UUIDMappings();
-        uuidMappings.enable();
 
         logDebugMessage("Initializing Managers!", "startup");
         managerAdapter = new MechanicListenerAdapter();
@@ -264,12 +251,6 @@ public class CraftBookPlugin extends JavaPlugin {
                 e1.printStackTrace();
             }
         }
-
-        // Initialize the language manager.
-        logDebugMessage("Initializing Languages!", "startup");
-        languageManager = new LanguageManager();
-        languageManager.init();
-
         logDebugMessage("Initializing Mechanisms!", "startup");
         try {
             new File(CraftBookPlugin.inst().getDataFolder(), "mechanics").mkdirs();
@@ -291,8 +272,6 @@ public class CraftBookPlugin extends JavaPlugin {
             logDebugMessage("Initializing Metrics!", "startup");
             org.bstats.bukkit.Metrics metrics = new org.bstats.bukkit.Metrics(this, BSTATS_ID);
 
-            metrics.addCustomChart(new org.bstats.bukkit.Metrics.AdvancedPie("language",
-                () -> languageManager.getLanguages().stream().collect(Collectors.toMap(Function.identity(), o -> 1))));
             metrics.addCustomChart(new org.bstats.bukkit.Metrics.SimpleBarChart("enabled_mechanics",
                 () -> platform.getMechanicManager().getLoadedMechanics().stream().collect(Collectors.toMap(mech -> mech.getClass().getSimpleName(), o -> 1))));
         } catch (Throwable e) {
@@ -307,16 +286,8 @@ public class CraftBookPlugin extends JavaPlugin {
     public void onDisable() {
         platform.unload();
 
-        if (languageManager != null) {
-            languageManager.close();
-        }
-
         if (hasPersistentStorage()) {
             persistentStorage.close();
-        }
-
-        if (uuidMappings != null) {
-            uuidMappings.disable();
         }
     }
 
@@ -387,25 +358,6 @@ public class CraftBookPlugin extends JavaPlugin {
         // Set up the clock for self-triggered ICs.
         getServer().getScheduler().runTaskTimer(this, mechanicClock, 0, platform.getConfiguration().stThinkRate);
         getServer().getPluginManager().registerEvents(selfTriggerManager, this);
-    }
-
-    /**
-     * Retrieve the UUID Mappings system of CraftBook.
-     *
-     * @return The UUID Mappings System.
-     */
-    public UUIDMappings getUUIDMappings() {
-        return this.uuidMappings;
-    }
-
-    /**
-     * This method is used to get the CraftBook {@link LanguageManager}.
-     *
-     * @return The CraftBook {@link LanguageManager}
-     */
-    @Deprecated
-    public LanguageManager getLanguageManager() {
-        return this.languageManager;
     }
 
     public PlatformCommandManager getCommandManager() {
@@ -577,20 +529,6 @@ public class CraftBookPlugin extends JavaPlugin {
         mechanicClock = new MechanicClock();
         setupCraftBook();
         registerGlobalEvents();
-    }
-
-    private static void copyDefaultConfig(InputStream input, File actual, String name) {
-        try (FileOutputStream output = new FileOutputStream(actual)) {
-            byte[] buf = new byte[8192];
-            int length;
-            while ((length = input.read(buf)) > 0) {
-                output.write(buf, 0, length);
-            }
-
-            CraftBook.logger.info("Default configuration file written: " + name);
-        } catch (IOException e) {
-            CraftBook.logger.warn("Failed to write default config file", e);
-        }
     }
 
     public static boolean isDebugFlagEnabled(String flag) {

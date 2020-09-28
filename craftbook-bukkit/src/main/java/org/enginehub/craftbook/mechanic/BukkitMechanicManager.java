@@ -34,7 +34,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("DispenserRecipes", org.enginehub.craftbook.mechanics.dispenser.DispenserRecipes.class, MechanicCategory.GENERAL);
 //        registerMechanic("CustomDrops", org.enginehub.craftbook.mechanics.drops.CustomDrops.class, MechanicCategory.CUSTOMISATION);
 //        registerMechanic("BetterAi", org.enginehub.craftbook.mechanics.AIMechanic.class, MechanicCategory.GENERAL);
-//        registerMechanic("PaintingSwitcher", org.enginehub.craftbook.mechanics.PaintingSwitch.class, MechanicCategory.GENERAL);
 //        registerMechanic("HeadDrops", org.enginehub.craftbook.mechanics.headdrops.HeadDrops.class, MechanicCategory.GENERAL);
 //        registerMechanic("BetterLeads", org.enginehub.craftbook.mechanics.BetterLeads.class, MechanicCategory.GENERAL);
 //        registerMechanic("TreeLopper", org.enginehub.craftbook.mechanics.TreeLopper.class, MechanicCategory.GENERAL);
@@ -44,7 +43,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("LightSwitch", org.enginehub.craftbook.mechanics.LightSwitch.class, MechanicCategory.GENERAL);
 //        registerMechanic("ChunkAnchor", org.enginehub.craftbook.mechanics.ChunkAnchor.class, MechanicCategory.GENERAL);
 //        registerMechanic("HiddenSwitch", org.enginehub.craftbook.mechanics.HiddenSwitch.class, MechanicCategory.GENERAL);
-//        registerMechanic("Bookcase", org.enginehub.craftbook.mechanics.Bookcase.class, MechanicCategory.GENERAL);
 //        registerMechanic("SignCopier", org.enginehub.craftbook.mechanics.signcopier.SignCopier.class, MechanicCategory.TOOL);
 //        registerMechanic("Bridge", org.enginehub.craftbook.mechanics.area.simple.Bridge.class, MechanicCategory.GENERAL);
 //        registerMechanic("Door", org.enginehub.craftbook.mechanics.area.simple.Door.class, MechanicCategory.GENERAL);
@@ -56,7 +54,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("BetterPistons", org.enginehub.craftbook.mechanics.BetterPistons.class, MechanicCategory.GENERAL);
 //        registerMechanic("CookingPot", org.enginehub.craftbook.mechanics.CookingPot.class, MechanicCategory.GENERAL);
 //        registerMechanic("Sponge", org.enginehub.craftbook.mechanics.Sponge.class, MechanicCategory.GENERAL);
-//        registerMechanic("Chairs", org.enginehub.craftbook.mechanics.Chair.class, MechanicCategory.GENERAL);
 //        registerMechanic("Pay", org.enginehub.craftbook.mechanics.Payment.class, MechanicCategory.CIRCUIT);
 //        registerMechanic("Pipes", org.enginehub.craftbook.mechanics.pipe.Pipes.class, MechanicCategory.CIRCUIT);
 //        registerMechanic("BounceBlocks", org.enginehub.craftbook.mechanics.BounceBlocks.class, MechanicCategory.GENERAL);
@@ -212,6 +209,15 @@ public class BukkitMechanicManager extends MechanicManager {
             .className("org.enginehub.craftbook.mechanics.Chairs")
             .category(MechanicCategory.GENERAL)
             .dependsOn(new PluginDependency("ProtocolLib"))
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("painting_switcher")
+            .name("PaintingSwitcher")
+            .description(TranslatableComponent.of("craftbook.paintingswitcher.description"))
+            .className("org.enginehub.craftbook.mechanics.PaintingSwitcher")
+            .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
         // TODO CommandItems needs to load early (after variables).

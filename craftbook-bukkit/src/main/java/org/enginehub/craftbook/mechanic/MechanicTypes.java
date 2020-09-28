@@ -36,7 +36,7 @@ import org.enginehub.craftbook.mechanics.LightStone;
 import org.enginehub.craftbook.mechanics.LightSwitch;
 import org.enginehub.craftbook.mechanics.MapChanger;
 import org.enginehub.craftbook.mechanics.Marquee;
-import org.enginehub.craftbook.mechanics.PaintingSwitch;
+import org.enginehub.craftbook.mechanics.PaintingSwitcher;
 import org.enginehub.craftbook.mechanics.Payment;
 import org.enginehub.craftbook.mechanics.RedstoneFire;
 import org.enginehub.craftbook.mechanics.RedstoneJukebox;
@@ -214,7 +214,7 @@ public class MechanicTypes {
     @Nullable
     public static final MechanicType<VisionSteering> MINECART_VISION_STEERING = get("minecart_vision_steering");
     @Nullable
-    public static final MechanicType<PaintingSwitch> PAINTING_SWITCHER = get("painting_switcher");
+    public static final MechanicType<PaintingSwitcher> PAINTING_SWITCHER = get("painting_switcher");
     @Nullable
     public static final MechanicType<Payment> PAY = get("pay");
     @Nullable

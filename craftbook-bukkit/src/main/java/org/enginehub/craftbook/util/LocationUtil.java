@@ -40,8 +40,17 @@ public final class LocationUtil {
     private LocationUtil() {
     }
 
+    /**
+     * Gets whether l2 is within a spherical radius of l1.
+     *
+     * @param l1 The first location
+     * @param l2 The second location
+     * @param radius The radius
+     * @return If they are within the radius
+     */
     public static boolean isWithinSphericalRadius(Location l1, Location l2, double radius) {
-        return l1.getWorld().equals(l2.getWorld()) && Math.floor(getDistanceSquared(l1, l2)) <= radius * radius; // Floor for more accurate readings
+        return l1.getWorld().equals(l2.getWorld())
+            && Math.floor(getDistanceSquared(l1, l2)) <= radius * radius; // Floor for more accurate readings
     }
 
     public static boolean isWithinRadiusPolygon(Location l1, Location l2, Vector3 radius) {

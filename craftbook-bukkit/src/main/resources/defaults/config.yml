@@ -19,6 +19,7 @@ mechanics:
         better_plants: false
         chairs: false
         marquee: false
+        painting_switcher: false
         readable_bookshelf: false
         snow: false
         variables: true
@@ -41,11 +42,11 @@ indirect-redstone: false
 # Rounds all distance equations to the block grid.
 use-block-distance: false
 
-# Checks to see if WorldGuard allows building/using in the area when activating mechanics.
-check-worldguard-flags: true
+# Whether WorldGuard flags should be checked when performing CraftBook actions.
+obey-worldguard-flags: true
 
-# Use advanced methods to detect if a player can build or not. Use this if you use region protections other than WorldGuard, or experience issues with WorldGuard protection. This can add extra entries to Block Logging plugins when a mechanic is broken/placed.
-advanced-block-checks: true
+# Whether to obey other plugins attempts to cancel CraftBook actions.
+obey-plugin-protections: true
 
 # How often in milliseconds players can interact with CraftBook signs.
 sign-click-timeout: 500

@@ -33,8 +33,8 @@ public abstract class YamlConfiguration {
     public boolean useBlockDistance;
     public boolean safeDestruction;
     public int stThinkRate;
-    public boolean obeyWorldguard;
-    public boolean advancedBlockChecks;
+    public boolean obeyWorldGuard;
+    public boolean obeyPluginProtections;
     public boolean showPermissionMessages;
     public long signClickTimeout;
 

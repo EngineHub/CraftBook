@@ -16,7 +16,11 @@
 
 package org.enginehub.craftbook.mechanics;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import org.bukkit.Art;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Painting;
@@ -26,6 +30,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
@@ -36,106 +41,119 @@ import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
-/**
- * @author Me4502
- */
-public class PaintingSwitch extends AbstractCraftBookMechanic {
+public class PaintingSwitcher extends AbstractCraftBookMechanic {
 
-    private Map<Painting, UUID> paintings = new HashMap<>();
-    private Map<UUID, Painting> players = new HashMap<>();
+    private final BiMap<UUID, Painting> paintingMap = HashBiMap.create();
 
-    public boolean isBeingEdited(Painting paint) {
-
-        UUID player = paintings.get(paint);
-        if (player != null && players.get(player) != null) {
-            Player p = CraftBookPlugin.inst().getServer().getPlayer(player);
-            return p != null && LocationUtil.isWithinSphericalRadius(paint.getLocation(), p.getLocation(), 5);
+    public boolean isBeingEdited(Painting painting) {
+        UUID playerUuid = paintingMap.inverse().get(painting);
+        if (playerUuid != null && paintingMap.get(playerUuid) != null) {
+            Player player = Bukkit.getPlayer(playerUuid);
+            return player != null
+                && LocationUtil.isWithinSphericalRadius(painting.getLocation(), player.getLocation(), modifyRange);
         }
         return false;
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
         if (event.getHand() == EquipmentSlot.HAND && event.getRightClicked() instanceof Painting) {
             CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
             Painting paint = (Painting) event.getRightClicked();
 
             if (!player.hasPermission("craftbook.mech.paintingswitch.use")) {
-                if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+                if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                     player.printError("mech.use-permissions");
+                }
                 return;
             }
 
-            if (!ProtectionUtil.canBuild(event.getPlayer(), paint.getLocation(), true)) {
-                if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+            if (ProtectionUtil.isPlacementPrevented(event.getPlayer(), paint.getLocation().getBlock())) {
+                if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                     player.printError("area.use-permissions");
+                }
                 return;
             }
 
             if (!isBeingEdited(paint)) {
-                paintings.put(paint, player.getUniqueId());
-                players.put(player.getUniqueId(), paint);
-                player.print("mech.painting.editing");
-            } else if (paintings.get(paint).equals(player.getUniqueId())) {
-                paintings.remove(paint);
-                players.remove(player.getUniqueId());
-                player.print("mech.painting.stop");
+                paintingMap.put(player.getUniqueId(), paint);
+                player.printInfo(TranslatableComponent.of("craftbook.paintingswitcher.now-editing"));
+            } else if (paintingMap.inverse().get(paint).equals(player.getUniqueId())) {
+                paintingMap.remove(player.getUniqueId());
+                player.printInfo(TranslatableComponent.of("craftbook.paintingswitcher.no-longer-editing"));
             } else if (isBeingEdited(paint)) {
-                player.print(player.translate("mech.painting.used") + ' ' + paintings.get(paint));
+                Player otherPlayer = Bukkit.getPlayer(paintingMap.inverse().get(paint));
+                if (otherPlayer != null) {
+                    player.printError(TranslatableComponent.of("craftbook.paintingswitcher.in-use", TextComponent.of(otherPlayer.getName())));
+                }
             } else {
                 return;
             }
+
             event.setCancelled(true);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onHeldItemChange(PlayerItemHeldEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if (players.get(player.getUniqueId()) == null)
+        // Questionable as to which would be slower, realistically it'll be the permission lookup.
+        if (!paintingMap.containsKey(player.getUniqueId())) {
             return;
+        }
 
-        if (!player.hasPermission("craftbook.mech.paintingswitch.use")) return;
+        if (!player.hasPermission("craftbook.paintingswitcher.use")) {
+            return;
+        }
 
         boolean isForwards;
         if (event.getNewSlot() > event.getPreviousSlot()) {
             isForwards = true;
         } else if (event.getNewSlot() < event.getPreviousSlot()) {
             isForwards = false;
-        } else return;
+        } else {
+            return;
+        }
+
+        // Handle the cases where the player went from the end to the start, etc.
         if (event.getPreviousSlot() == 0 && event.getNewSlot() == 8) {
             isForwards = false;
         } else if (event.getPreviousSlot() == 8 && event.getNewSlot() == 0) {
             isForwards = true;
         }
-        Art[] art = Art.values().clone();
-        Painting paint = players.get(player.getUniqueId());
-        if (!LocationUtil.isWithinSphericalRadius(paint.getLocation(), event.getPlayer().getLocation(), 5)) {
-            player.printError("mech.painting.range");
-            Painting p = players.remove(event.getPlayer().getUniqueId());
-            if (p != null) {
-                paintings.remove(p);
-            }
 
+        // TODO Migrate to Registries at some point, if Bukkit improve their Registry API.
+        Art[] art = Art.values();
+        Painting paint = paintingMap.get(player.getUniqueId());
+        if (!paint.isValid()) {
+            paintingMap.remove(player.getUniqueId());
             return;
         }
+
+        if (!LocationUtil.isWithinSphericalRadius(paint.getLocation(), event.getPlayer().getLocation(), modifyRange)) {
+            player.printError(TranslatableComponent.of("craftbook.paintingswitcher.too-far-away"));
+            paintingMap.remove(event.getPlayer().getUniqueId());
+            return;
+        }
+
         int newID = paint.getArt().ordinal() + (isForwards ? 1 : -1);
         if (newID < 0) {
             newID = art.length - 1;
         } else if (newID > art.length - 1) {
             newID = 0;
         }
+
         while (!paint.setArt(art[newID])) {
             if (newID > 0 && !isForwards) {
                 newID--;
@@ -145,39 +163,46 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
                 break;
             }
         }
-        paintings.put(paint, player.getUniqueId());
-        players.put(player.getUniqueId(), paint);
+
+        paintingMap.put(player.getUniqueId(), paint);
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-
-        Painting p = players.remove(event.getPlayer().getUniqueId());
-        if (p != null)
-            paintings.remove(p);
+        paintingMap.remove(event.getPlayer().getUniqueId());
     }
 
     @EventHandler
-    public void onHangingEntityDestroy(HangingBreakByEntityEvent event) {
+    public void onKicked(PlayerKickEvent event) {
+        paintingMap.remove(event.getPlayer().getUniqueId());
+    }
 
+    @SuppressWarnings("SuspiciousMethodCalls")
+    @EventHandler
+    public void onHangingEntityDestroy(HangingBreakByEntityEvent event) {
         if (event.getEntity() instanceof Painting) {
-            UUID uuid = paintings.remove(event.getEntity());
+            UUID uuid = paintingMap.inverse().remove(event.getEntity());
 
             if (uuid != null) {
-                CraftBookPlugin.inst().wrapPlayer(Bukkit.getPlayer(uuid)).print("mech.painting.stop");
-                players.remove(uuid);
+                Player player = Bukkit.getPlayer(uuid);
+                if (player != null) {
+                    CraftBookPlugin.inst().wrapPlayer(player)
+                        .printInfo(TranslatableComponent.of("craftbook.paintingswitcher.no-longer-editing"));
+                }
             }
         }
     }
 
     @Override
     public void disable() {
-        paintings.clear();
-        players.clear();
+        paintingMap.clear();
     }
+
+    private int modifyRange;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
+        config.setComment("modify-range", "The maximum distance from which you can modify paintings.");
+        modifyRange = config.getInt("modify-range", 5);
     }
 }

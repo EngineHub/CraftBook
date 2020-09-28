@@ -16,101 +16,11 @@
 
 package org.enginehub.craftbook;
 
-import com.google.common.collect.Lists;
-import com.sk89q.util.yaml.YAMLFormat;
-import com.sk89q.util.yaml.YAMLProcessor;
-import org.bukkit.entity.Player;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
-/**
- * @author Me4502
- */
 @Deprecated
 public class LanguageManager {
 
-    private Map<String, YAMLProcessor> languageMap = new HashMap<>();
-
-    public void init() {
-        checkForLanguages();
-    }
-
-    public void close() {
-
-    }
-
-    private void checkForLanguages() {
-
-        for (String language : Lists.newArrayList("en_US")) {
-            language = language.trim();
-            File f = new File(CraftBookPlugin.inst().getDataFolder(), language + ".yml");
-            if (!f.exists())
-                try {
-                    f.createNewFile();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            YAMLProcessor lang = new YAMLProcessor(f, true, YAMLFormat.EXTENDED);
-
-            try {
-                lang.load();
-            } catch (Throwable e) {
-                CraftBook.logger.error("An error occured loading the languages file for: " + language + "! This language WILL NOT WORK UNTIL FIXED!");
-                e.printStackTrace();
-                continue;
-            }
-
-            lang.setWriteDefaults(true);
-
-            for (Entry<String, String> s : defaultMessages.entrySet())
-                lang.getString(s.getKey(), s.getValue());
-
-            lang.save();
-
-            languageMap.put(language.toLowerCase(), lang);
-        }
-    }
-
-    public String getString(String message, String language) {
-
-        //message = ChatColor.stripColor(message);
-        if (language == null || !languageMap.containsKey(language.toLowerCase()))
-            language = "en_US";
-        YAMLProcessor languageData = languageMap.get(language.toLowerCase());
-        String def = defaultMessages.get(message);
-        if (languageData == null) {
-            return def == null ? message : def;
-        } else {
-            String translated;
-            if (def == null || languageData.getString(message) != null)
-                translated = languageData.getString(message);
-            else {
-                translated = languageData.getString(message, def);
-            }
-
-            if (translated != null)
-                return translated;
-            else
-                return def == null ? message : def;
-        }
-    }
-
-    public static String getPlayersLanguage(Player p) {
-        return p.getLocale();
-    }
-
-    public Set<String> getLanguages() {
-
-        return languageMap.keySet();
-    }
-
-    @SuppressWarnings("serial")
     public static final HashMap<String, String> defaultMessages = new HashMap<String, String>(32, 1.0f) {{
         put("area.permissions", "You don't have permissions to do that in this area!");
         put("area.use-permissions", "You don't have permissions to use that in this area!");
@@ -195,11 +105,6 @@ public class LanguageManager {
 
         put("mech.map.create", "Map Changer Created!");
         put("mech.map.invalid", "Invalid Map ID!");
-
-        put("mech.painting.editing", "You are now editing this painting!");
-        put("mech.painting.stop", "You are no longer editing this painting!");
-        put("mech.painting.used", "This painting is already being edited by");
-        put("mech.painting.range", "You are too far away from the painting!");
 
         put("mech.pay.create", "Pay Created!");
         put("mech.pay.success", "Payment Successful! You paid: ");

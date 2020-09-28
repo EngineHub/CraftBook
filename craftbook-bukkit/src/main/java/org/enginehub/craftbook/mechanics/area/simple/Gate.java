@@ -446,7 +446,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if (!ProtectionUtil.canBuild(event.getPlayer(), event.getBlock().getLocation(), false)) {
+        if (ProtectionUtil.isBreakingPrevented(event.getPlayer(), event.getBlock())) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                 player.printError("area.break-permissions");
             return;

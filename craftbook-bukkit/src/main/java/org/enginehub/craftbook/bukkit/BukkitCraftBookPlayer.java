@@ -82,17 +82,7 @@ public final class BukkitCraftBookPlayer extends BukkitPlayer implements CraftBo
     }
 
     @Override
-    public String translate(String message) {
-        return plugin.getLanguageManager().getString(message, LanguageManager.getPlayersLanguage(player));
-    }
-
-    @Override
     public boolean isSneaking() {
         return player.isSneaking();
-    }
-
-    @Override
-    public String getCraftBookId() {
-        return CraftBookPlugin.inst().getUUIDMappings().getCBID(getUniqueId());
     }
 }

@@ -149,7 +149,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                 if (type == Types.BOUNCE || type == Types.CRUSH) {
                     Piston pis = (Piston) block.getBlockData();
                     Block off = block.getRelative(pis.getFacing());
-                    if (!ProtectionUtil.canBuild(event.getPlayer(), off, false)) {
+                    if (ProtectionUtil.isBreakingPrevented(event.getPlayer(), off)) {
                         if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                             player.printError("area.use-permission");
                         SignUtil.cancelSignChange(event);
@@ -168,7 +168,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                     Block off = block;
                     for (int i = 0; i < distance; i++) {
                         off = off.getRelative(pis.getFacing());
-                        if (!ProtectionUtil.canBuild(event.getPlayer(), off, false)) {
+                        if (ProtectionUtil.isBreakingPrevented(event.getPlayer(), off)) {
                             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
                                 player.printError("area.use-permission");
                             SignUtil.cancelSignChange(event);

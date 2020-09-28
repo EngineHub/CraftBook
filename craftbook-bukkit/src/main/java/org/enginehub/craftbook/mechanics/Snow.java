@@ -133,7 +133,7 @@ public class Snow extends AbstractCraftBookMechanic {
                     return;
                 }
 
-                if (!ProtectionUtil.canBuild((Player) event.getEntity().getShooter(), block.getLocation(), true)) {
+                if (ProtectionUtil.isPlacementPrevented((Player) event.getEntity().getShooter(), block)) {
                     return;
                 }
             }
@@ -188,7 +188,7 @@ public class Snow extends AbstractCraftBookMechanic {
                         return;
                     }
 
-                    if (!ProtectionUtil.canBuild(event.getPlayer(), event.getPlayer().getLocation(), false)) {
+                    if (ProtectionUtil.isBreakingPrevented(event.getPlayer(), event.getPlayer().getLocation().getBlock())) {
                         return;
                     }
 

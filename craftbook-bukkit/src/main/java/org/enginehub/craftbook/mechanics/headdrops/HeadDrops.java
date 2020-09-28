@@ -242,7 +242,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
 
             stack.setItemMeta(meta);
 
-            if (!ProtectionUtil.canBuild(event.getPlayer(), event.getBlock(), false))
+            if (ProtectionUtil.isBreakingPrevented(event.getPlayer(), event.getBlock()))
                 return;
 
             event.setCancelled(true);

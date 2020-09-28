@@ -96,11 +96,11 @@ public class BukkitConfiguration extends YamlConfiguration {
         config.setComment("use-block-distance", "Rounds all distance equations to the block grid.");
         useBlockDistance = config.getBoolean("use-block-distance", false);
 
-        config.setComment("check-worldguard-flags", "Checks to see if WorldGuard allows building/using in the area when activating mechanics.");
-        obeyWorldguard = config.getBoolean("check-worldguard-flags", true);
+        config.setComment("obey-worldguard-flags", "Whether WorldGuard flags should be checked when performing CraftBook actions.");
+        obeyWorldGuard = config.getBoolean("obey-worldguard-flags", true);
 
-        config.setComment("advanced-block-checks", "Use advanced methods to detect if a player can build or not. Use this if you use region protections other than WorldGuard, or experience issues with WorldGuard protection. This can add extra entries to Block Logging plugins when a mechanic is broken/placed.");
-        advancedBlockChecks = config.getBoolean("advanced-block-checks", true);
+        config.setComment("obey-plugin-protections", "Whether to obey other plugins attempts to cancel CraftBook actions.");
+        obeyPluginProtections = config.getBoolean("obey-plugin-protections", true);
 
         config.setComment("sign-click-timeout", "How often in milliseconds players can interact with CraftBook signs.");
         signClickTimeout = config.getInt("sign-click-timeout", 500);

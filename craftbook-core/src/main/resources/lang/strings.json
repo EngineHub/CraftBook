@@ -22,6 +22,11 @@
 
     "craftbook.marquee.description": "Lets players view Variable values by right clicking a sign",
 
+    "craftbook.paintingswitcher.now-editing": "You are now editing this painting!",
+    "craftbook.paintingswitcher.no-longer-editing": "You are no longer editing this painting!",
+    "craftbook.paintingswitcher.too-far-away": "You are too far away from that painting!",
+    "craftbook.paintingswitcher.in-use": "This painting is already in use by {0}!",
+
     "craftbook.readablebookshelf.failed-to-read": "Failed to read books file",
     "craftbook.readablebookshelf.empty": "Books file is empty",
     "craftbook.readablebookshelf.read": "You pick up a book...",
