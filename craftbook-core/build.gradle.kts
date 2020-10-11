@@ -40,7 +40,7 @@ dependencies {
     "implementation"("com.google.code.gson:gson:${Versions.GSON}")
     "implementation"("org.slf4j:slf4j-api:1.7.26")
     "implementation"("it.unimi.dsi:fastutil:${Versions.FAST_UTIL}")
-    "languageFiles"("${project.group}:craftbook-lang:${project.version}:10@zip")
+    "languageFiles"("${project.group}:craftbook-lang:${project.version}:4@zip")
 
     "compileOnly"("com.google.code.findbugs:jsr305:1.3.9")
     "testImplementation"("org.hamcrest:hamcrest-library:1.2.1")
