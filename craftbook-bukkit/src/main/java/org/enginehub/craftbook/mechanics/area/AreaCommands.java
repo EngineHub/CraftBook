@@ -35,7 +35,6 @@ import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.exception.CraftBookException;
-import org.enginehub.craftbook.util.ArrayUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.annotation.Command;
@@ -222,11 +221,11 @@ public class AreaCommands {
             String tmp = namespace.isEmpty() ? "All Areas " : "Areas for " + namespace;
             actor.print(ChatColor.GREEN + tmp + " - Page " + Math.abs(page) + " of " + (areaList.size() / 8 + 1));
             // list the areas one by one
-            for (String str : ArrayUtil.getArrayPage(areaList, page)) {
-                if (str != null && !str.isEmpty()) {
-                    actor.print(str);
-                }
-            }
+//            FIXME for (String str : ArrayUtil.getArrayPage(areaList, page)) {
+//                if (str != null && !str.isEmpty()) {
+//                    actor.print(str);
+//                }
+//            }
         } else {
             actor.printError("There are no saved areas in the '" + namespace + "' namespace.");
         }

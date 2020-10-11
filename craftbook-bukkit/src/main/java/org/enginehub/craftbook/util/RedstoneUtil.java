@@ -74,7 +74,7 @@ public final class RedstoneUtil {
         if (CraftBookPlugin.isDebugFlagEnabled("redstone"))
             debug(pow);
 
-        if (isPotentialPowerSource(mech, pow)) {
+        if (isPotentialPowerSource(pow.getType())) {
             if (pow.isBlockPowered() || pow.isBlockIndirectlyPowered()) return Power.ON;
             return Power.OFF;
         }
@@ -99,24 +99,6 @@ public final class RedstoneUtil {
             || typeId == Material.LIGHT_WEIGHTED_PRESSURE_PLATE
             || typeId == Material.COMPARATOR
             || typeId == Material.REDSTONE_BLOCK;
-    }
-
-    public static boolean isPotentialPowerSource(Block pow) {
-
-        return isPotentialPowerSource(pow.getType());
-    }
-
-    /**
-     * @param mech
-     * @param pow
-     * @return true if a mechanism in the mech block is able to receive power from the pow block
-     *     (i.e. if it's a
-     *     power conductor and if it has a sense
-     *     of directionality it is also pointing at mech).
-     */
-    public static boolean isPotentialPowerSource(Block mech, Block pow) {
-
-        return isPotentialPowerSource(pow);
     }
 
     public static void debug(Block block) {

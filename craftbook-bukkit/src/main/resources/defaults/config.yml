@@ -62,6 +62,3 @@ debug-flags: []
 
 # Show messages when a player does not have permission to do something.
 show-permission-messages: true
-
-# PersistentStorage stores data that can be accessed across server restart. Method of PersistentStorage storage (Note: DUMMY is practically off, and may cause issues). Can currently be any of the following: YAML, DUMMY, SQLite
-persistent-storage-type: YAML

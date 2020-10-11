@@ -117,9 +117,6 @@ public class BukkitConfiguration extends YamlConfiguration {
         config.setComment("show-permission-messages", "Show messages when a player does not have permission to do something.");
         showPermissionMessages = config.getBoolean("show-permission-messages", true);
 
-        config.setComment("persistent-storage-type", "PersistentStorage stores data that can be accessed across server restart. Method of PersistentStorage storage (Note: DUMMY is practically off, and may cause issues). Can currently be any of the following: YAML, DUMMY, SQLite");
-        persistentStorageType = config.getString("persistent-storage-type", "YAML");
-
         config.save();
     }
 

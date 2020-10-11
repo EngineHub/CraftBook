@@ -34,6 +34,7 @@ import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.st.BukkitSelfTriggerManager;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ItemUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
@@ -72,7 +73,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
         event.setLine(3, cookingPotFuel ? "0" : "1");
         player.print("mech.cook.create");
 
-        CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getBlock().getLocation());
+        ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).registerSelfTrigger(event.getBlock().getLocation());
     }
 
     private HashSet<String> cookingSet = new HashSet<>();
@@ -95,7 +96,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
             cookingSet.add(event.getBlock().getChunk().getX() + ";" + event.getBlock().getChunk().getZ());
         }
 
-        CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getBlock().getLocation());
+        event.setHandled(true);
     }
 
     @EventHandler
@@ -207,7 +208,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         if (!sign.getLine(1).equals("[Cook]")) return;
 
-        CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getClickedBlock().getLocation());
+        ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).registerSelfTrigger(event.getClickedBlock().getLocation());
 
         CraftBookPlayer p = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
@@ -265,7 +266,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         if (!sign.getLine(1).equals("[Cook]")) return;
 
-        CraftBookPlugin.inst().getSelfTriggerManager().unregisterSelfTrigger(event.getBlock().getLocation(), UnregisterReason.BREAK);
+        ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).unregisterSelfTrigger(event.getBlock().getLocation(), UnregisterReason.BREAK);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -281,7 +282,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         if (!sign.getLine(1).equals("[Cook]")) return;
 
-        CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getBlock().getLocation());
+        ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).registerSelfTrigger(event.getBlock().getLocation());
 
         if (event.isOn() && !event.isMinor())
             increaseMultiplier(sign, event.getNewCurrent() - event.getOldCurrent());

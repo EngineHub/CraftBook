@@ -18,6 +18,7 @@ package org.enginehub.craftbook;
 
 import com.sk89q.worldedit.util.report.ReportList;
 import org.enginehub.craftbook.mechanic.MechanicManager;
+import org.enginehub.craftbook.st.SelfTriggerManager;
 import org.enginehub.craftbook.util.profile.cache.ProfileCache;
 import org.enginehub.craftbook.util.profile.resolver.ProfileService;
 import org.enginehub.piston.CommandManager;
@@ -73,6 +74,13 @@ public interface CraftBookPlatform {
      * @return The mechanic manager
      */
     MechanicManager getMechanicManager();
+
+    /**
+     * Gets the self-trigger manager.
+     *
+     * @return The self trigger manager
+     */
+    SelfTriggerManager getSelfTriggerManager();
 
     /**
      * Get the global ConfigurationManager.

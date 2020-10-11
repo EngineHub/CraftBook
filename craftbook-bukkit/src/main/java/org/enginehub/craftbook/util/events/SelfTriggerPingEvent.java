@@ -22,8 +22,28 @@ import org.bukkit.event.block.BlockEvent;
 
 public class SelfTriggerPingEvent extends BlockEvent {
 
+    private boolean handled;
+
     public SelfTriggerPingEvent(Block theBlock) {
         super(theBlock);
+    }
+
+    /**
+     * Set whether this self trigger ping was handled and valid.
+     *
+     * @param handled If it was handled
+     */
+    public void setHandled(boolean handled) {
+        this.handled = handled;
+    }
+
+    /**
+     * Get whether this self trigger ping was handled and valid.
+     *
+     * @return If it was handled
+     */
+    public boolean isHandled() {
+        return this.handled;
     }
 
     private static final HandlerList handlers = new HandlerList();

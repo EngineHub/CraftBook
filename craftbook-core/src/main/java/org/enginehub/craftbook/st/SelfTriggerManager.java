@@ -16,13 +16,20 @@
 
 package org.enginehub.craftbook.st;
 
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+public interface SelfTriggerManager {
 
-public class MechanicClock implements Runnable {
+    /**
+     * Sets up the self trigger manager.
+     */
+    void setup();
 
-    @Override
-    public void run() {
+    /**
+     * Shuts down the self trigger manager.
+     */
+    void shutdown();
 
-        CraftBookPlugin.inst().getSelfTriggerManager().think();
-    }
+    /**
+     * Causes all self-triggering mechanics to think.
+     */
+    void think();
 }

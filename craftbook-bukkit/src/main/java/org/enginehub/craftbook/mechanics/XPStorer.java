@@ -42,6 +42,7 @@ import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.enginehub.craftbook.st.BukkitSelfTriggerManager;
 import org.enginehub.craftbook.util.BlockSyntax;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.InventoryUtil;
@@ -204,7 +205,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         event.setLine(2, String.valueOf(signRadius));
         player.print("mech.xp-storer.create");
 
-        CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getBlock().getLocation());
+        ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).registerSelfTrigger(event.getBlock().getLocation());
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -220,7 +221,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         if (!sign.getLine(1).equals("[XP]")) return;
 
-        CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getBlock().getLocation());
+        event.setHandled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGH)

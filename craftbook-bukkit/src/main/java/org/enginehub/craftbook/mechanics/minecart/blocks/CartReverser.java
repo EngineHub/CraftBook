@@ -19,6 +19,7 @@ package org.enginehub.craftbook.mechanics.minecart.blocks;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
@@ -26,9 +27,11 @@ import org.enginehub.craftbook.util.BlockSyntax;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
 import org.enginehub.craftbook.util.SignUtil;
 
-import static org.enginehub.craftbook.util.CartUtil.reverse;
-
 public class CartReverser extends CartBlockMechanism {
+
+    public void reverse(Minecart cart) {
+        cart.setVelocity(cart.getVelocity().normalize().multiply(-1));
+    }
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {

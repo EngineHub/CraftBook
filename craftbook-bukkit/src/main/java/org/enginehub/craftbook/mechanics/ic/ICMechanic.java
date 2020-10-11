@@ -36,6 +36,7 @@ import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
 import org.enginehub.craftbook.mechanics.pipe.PipePutEvent;
+import org.enginehub.craftbook.st.BukkitSelfTriggerManager;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ICUtil;
 import org.enginehub.craftbook.util.ICUtil.LocationCheckType;
@@ -205,7 +206,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         if (ic instanceof SelfTriggeredIC && (sign.getLine(1).trim().toUpperCase(Locale.ENGLISH).endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST())) {
             if (disableSelfTriggered)
                 return null;
-            CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(block.getLocation());
+            ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).registerSelfTrigger(block.getLocation());
         }
 
         Object[] rets = new Object[3];
@@ -334,7 +335,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         if (icData == null) return;
 
         // remove the ic from cache
-        CraftBookPlugin.inst().getSelfTriggerManager().unregisterSelfTrigger(event.getBlock().getLocation(), UnregisterReason.BREAK);
+        ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).unregisterSelfTrigger(event.getBlock().getLocation(), UnregisterReason.BREAK);
         ICManager.removeCachedIC(event.getBlock().getLocation());
         ((IC) icData[2]).onICBreak(event);
         if (!event.isCancelled())
@@ -480,7 +481,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
                         player.printError("Self-triggered ICs are disabled!");
                         return;
                     }
-                    CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(block.getLocation());
+                    ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).registerSelfTrigger(block.getLocation());
                 }
 
                 player.print("You've created " + registration.getId() + ": " + ic.getTitle() + ".");

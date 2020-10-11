@@ -42,8 +42,6 @@ public abstract class YamlConfiguration {
     public boolean debugLogToFile;
     public List<String> debugFlags;
 
-    public String persistentStorageType;
-
     @Unreported
     public YAMLProcessor config;
 

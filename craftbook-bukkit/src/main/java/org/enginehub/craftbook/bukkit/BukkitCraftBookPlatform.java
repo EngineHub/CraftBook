@@ -30,6 +30,8 @@ import org.enginehub.craftbook.CraftBookPlatform;
 import org.enginehub.craftbook.YamlConfiguration;
 import org.enginehub.craftbook.mechanic.BukkitMechanicManager;
 import org.enginehub.craftbook.mechanic.MechanicManager;
+import org.enginehub.craftbook.st.BukkitSelfTriggerManager;
+import org.enginehub.craftbook.st.SelfTriggerManager;
 import org.enginehub.craftbook.util.profile.cache.ProfileCache;
 import org.enginehub.craftbook.util.profile.resolver.BukkitPlayerService;
 import org.enginehub.craftbook.util.profile.resolver.CacheForwardingService;
@@ -51,6 +53,11 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
 
     private final MechanicManager mechanicManager = new BukkitMechanicManager();
     private YamlConfiguration config;
+
+    /**
+     * The manager for SelfTriggering components.
+     */
+    private BukkitSelfTriggerManager selfTriggerManager;
 
     @Override
     public String getPlatformName() {
@@ -82,11 +89,15 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
             Bukkit.getPluginManager().disablePlugin(CraftBookPlugin.inst());
             return;
         }
+
+        this.selfTriggerManager = new BukkitSelfTriggerManager();
+        this.selfTriggerManager.setup();
     }
 
     @Override
     public void unload() {
         this.mechanicManager.shutdown();
+        this.selfTriggerManager.shutdown();
     }
 
     @Override
@@ -127,6 +138,11 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
     @Override
     public MechanicManager getMechanicManager() {
         return this.mechanicManager;
+    }
+
+    @Override
+    public SelfTriggerManager getSelfTriggerManager() {
+        return this.selfTriggerManager;
     }
 
     @Override

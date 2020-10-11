@@ -27,8 +27,6 @@ import com.sk89q.worldedit.util.auth.AuthorizationException;
 import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -47,9 +45,6 @@ import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.PlatformCommandManager;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanics.variables.VariableManager;
-import org.enginehub.craftbook.st.MechanicClock;
-import org.enginehub.craftbook.st.SelfTriggeringManager;
-import org.enginehub.craftbook.util.ArrayUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.companion.CompanionPlugins;
 import org.enginehub.craftbook.util.profile.Profile;
@@ -90,16 +85,6 @@ public class CraftBookPlugin extends JavaPlugin {
      * The adapter for events to the manager.
      */
     private MechanicListenerAdapter managerAdapter;
-
-    /**
-     * The MechanicClock that manages all Self-Triggering Components.
-     */
-    private MechanicClock mechanicClock;
-
-    /**
-     * The manager for SelfTriggering components.
-     */
-    private SelfTriggeringManager selfTriggerManager;
 
     private static final int BSTATS_ID = 3319;
 
@@ -245,7 +230,6 @@ public class CraftBookPlugin extends JavaPlugin {
         }
 
         platform.getMechanicManager().enableMechanics();
-        setupSelfTriggered();
     }
 
     /**
@@ -314,35 +298,6 @@ public class CraftBookPlugin extends JavaPlugin {
         return instance;
     }
 
-    /**
-     * Setup the required components of self-triggered Mechanics.
-     */
-    private void setupSelfTriggered() {
-        mechanicClock = new MechanicClock();
-        selfTriggerManager = new SelfTriggeringManager();
-
-        CraftBook.logger.info("Enumerating chunks for self-triggered components...");
-
-        long start = System.currentTimeMillis();
-        int numChunks = 0;
-
-        for (World world : getServer().getWorlds()) {
-            Chunk[] chunks = world.getLoadedChunks();
-            for (Chunk chunk : chunks) {
-                selfTriggerManager.registerSelfTrigger(chunk);
-            }
-            numChunks += chunks.length;
-        }
-
-        long time = System.currentTimeMillis() - start;
-
-        CraftBook.logger.info(numChunks + " chunk(s) for " + getServer().getWorlds().size() + " world(s) processed " + "(" + time + "ms elapsed)");
-
-        // Set up the clock for self-triggered ICs.
-        getServer().getScheduler().runTaskTimer(this, mechanicClock, 0, platform.getConfiguration().stThinkRate);
-        getServer().getPluginManager().registerEvents(selfTriggerManager, this);
-    }
-
     public PlatformCommandManager getCommandManager() {
         return this.commandManager;
     }
@@ -376,7 +331,7 @@ public class CraftBookPlugin extends JavaPlugin {
             return PermissionsResolverManager.getInstance().getGroups(player);
         } catch (Throwable t) {
             t.printStackTrace();
-            return ArrayUtil.EMPTY_STRINGS;
+            return new String[0];
         }
     }
 
@@ -487,13 +442,6 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     /**
-     * Grabs the manager for self triggered components.
-     */
-    public SelfTriggeringManager getSelfTriggerManager() {
-        return this.selfTriggerManager;
-    }
-
-    /**
      * Reload configuration
      */
     public void reloadConfiguration() {
@@ -509,7 +457,6 @@ public class CraftBookPlugin extends JavaPlugin {
 
         platform.getConfiguration().load();
         managerAdapter = new MechanicListenerAdapter();
-        mechanicClock = new MechanicClock();
         setupCraftBook();
         registerGlobalEvents();
     }

@@ -14,28 +14,14 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.util;
+package org.enginehub.craftbook.st;
 
-import org.bukkit.entity.Minecart;
-import org.bukkit.util.Vector;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.enginehub.craftbook.CraftBook;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+public class MechanicClock implements Runnable {
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(CartUtil.class)
-public class CartUtilsTest {
-
-    @Test
-    public void testStop() {
-
-        Minecart cart = mock(Minecart.class);
-        CartUtil.stop(cart);
-        verify(cart).setVelocity(new Vector(0, 0, 0));
+    @Override
+    public void run() {
+        CraftBook.getInstance().getPlatform().getSelfTriggerManager().think();
     }
 }

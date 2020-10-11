@@ -19,18 +19,21 @@ package org.enginehub.craftbook.bukkit.report;
 import com.sk89q.worldedit.util.report.DataReport;
 import com.sk89q.worldedit.util.report.HierarchyObjectReport;
 import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.CraftBookPlatform;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.st.BukkitSelfTriggerManager;
 
 public class MechanicReport extends DataReport {
 
     public MechanicReport() {
         super("Mechanics");
 
-        CraftBookPlugin plugin = CraftBookPlugin.inst();
+        CraftBookPlatform platform = CraftBook.getInstance().getPlatform();
 
         append("Mechanics Loaded", CraftBook.getInstance().getPlatform().getMechanicManager().getLoadedMechanics().size());
-        append("ST Mechanics Loaded", plugin.getSelfTriggerManager() == null ? 0 : plugin.getSelfTriggerManager().getSelfTriggeringMechanics().size());
+        append("ST Mechanics Loaded", platform.getSelfTriggerManager() == null
+            ? 0
+            : ((BukkitSelfTriggerManager) platform.getSelfTriggerManager()).getSelfTriggeringMechanics().size());
 
         for (CraftBookMechanic mechanic : CraftBook.getInstance().getPlatform().getMechanicManager().getLoadedMechanics()) {
             DataReport report = new DataReport("Mechanic: " + mechanic.getClass().getSimpleName());
