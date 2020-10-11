@@ -43,7 +43,7 @@ public class CraftBook {
 
     private CraftBookPlatform platform;
     private final ResourceLoader resourceLoader = new CraftBookResourceLoader();
-    private final TranslationManager translationManager = new TranslationManager(resourceLoader);
+    private TranslationManager translationManager;
 
     private final Supervisor supervisor = new SimpleSupervisor();
     private ProfileCache profileCache;
@@ -55,6 +55,12 @@ public class CraftBook {
     }
 
     public void setup() {
+        try {
+            translationManager = new TranslationManager(resourceLoader);
+        } catch (IOException e) {
+            logger.error("Failed to initialise localisations", e);
+        }
+
         executorService = MoreExecutors.listeningDecorator(EvenMoreExecutors.newBoundedCachedThreadPool(0, 1, 20,
             "CraftBook Task Executor - %s"));
 

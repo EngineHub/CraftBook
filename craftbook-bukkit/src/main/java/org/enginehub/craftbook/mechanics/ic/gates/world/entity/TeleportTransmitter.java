@@ -16,20 +16,17 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.entity;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
-import org.enginehub.craftbook.mechanics.ic.ICMechanic;
 import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
 import org.enginehub.craftbook.util.HistoryHashMap;
 import org.enginehub.craftbook.util.LocationUtil;
@@ -37,10 +34,6 @@ import org.enginehub.craftbook.util.PlayerType;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SearchArea;
 import org.enginehub.craftbook.util.Tuple2;
-
-import java.util.HashSet;
-import java.util.Map.Entry;
-import java.util.Set;
 
 public class TeleportTransmitter extends AbstractSelfTriggeredIC {
 
@@ -196,7 +189,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         @Override
         public void load() {
 
-            if (!(ICMechanic.instance.savePersistentData && CraftBookPlugin.inst().hasPersistentStorage()))
+            /* FIXME if (!(ICMechanic.instance.savePersistentData && CraftBookPlugin.inst().hasPersistentStorage()))
                 return;
 
             if (CraftBookPlugin.inst().getPersistentStorage().has("teleport-ic-locations.list")) {
@@ -209,13 +202,13 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
                     Location loc = new Location(Bukkit.getWorld(bits[0]), Double.parseDouble(bits[1]), Double.parseDouble(bits[2]), Double.parseDouble(bits[3]));
                     TeleportTransmitter.lastKnownLocations.put(ent, loc);
                 }
-            }
+            }*/
         }
 
         @Override
         public void unload() {
 
-            if (!(ICMechanic.instance.savePersistentData && CraftBookPlugin.inst().hasPersistentStorage()))
+            /* FIXME if (!(ICMechanic.instance.savePersistentData && CraftBookPlugin.inst().hasPersistentStorage()))
                 return;
 
             CraftBookPlugin.inst().getPersistentStorage().set("teleport-ic-locations.list",
@@ -228,7 +221,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
                 String loc = locations.getValue().getWorld().getName() + ":" + locations.getValue().getBlockX() + ":" + locations.getValue().getBlockY() + ":" + locations.getValue().getBlockZ();
 
                 CraftBookPlugin.inst().getPersistentStorage().set("teleport-ic-locations." + locations.getKey(), loc);
-            }
+            }*/
         }
 
         @Override

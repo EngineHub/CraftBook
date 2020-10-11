@@ -139,20 +139,6 @@ public final class LocationUtil {
         else return z;
     }
 
-    /**
-     * Gets the offset of the blocks location based on the coordiante grid.
-     *
-     * @param block to get offsetfrom
-     * @param offsetX to add
-     * @param offsetY to add
-     * @param offsetZ to add
-     * @return block offset by given coordinates
-     */
-    public static Block getOffset(Block block, int offsetX, int offsetY, int offsetZ) {
-
-        return block.getWorld().getBlockAt(block.getX() + offsetX, block.getY() + offsetY, block.getZ() + offsetZ);
-    }
-
     public static Block getRelativeOffset(ChangedSign sign, int offsetX, int offsetY, int offsetZ) {
 
         return getRelativeOffset(SignUtil.getBackBlock(CraftBookBukkitUtil.toSign(sign).getBlock()),

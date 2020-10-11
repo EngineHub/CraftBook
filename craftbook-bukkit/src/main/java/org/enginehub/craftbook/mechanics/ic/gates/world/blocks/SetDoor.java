@@ -102,7 +102,7 @@ public class SetDoor extends AbstractIC {
             if (relativeOffset) {
                 center = LocationUtil.getRelativeOffset(getSign(), offsetX, offsetY, offsetZ);
             } else {
-                center = LocationUtil.getOffset(getBackBlock(), offsetX, offsetY, offsetZ);
+                center = getBackBlock().getRelative(offsetX, offsetY, offsetZ);
             }
         } else {
             center = getBackBlock().getRelative(BlockFace.UP);

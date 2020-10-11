@@ -56,7 +56,6 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.exception.CraftBookException;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
 import org.enginehub.craftbook.mechanic.MechanicTypes;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
@@ -64,7 +63,6 @@ import org.enginehub.craftbook.mechanics.items.CommandItemAction.ActionRunStage;
 import org.enginehub.craftbook.mechanics.items.CommandItemDefinition.CommandType;
 import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.ItemSyntax;
 import org.enginehub.craftbook.util.ItemUtil;
 import org.enginehub.craftbook.util.ParsingUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
@@ -72,7 +70,6 @@ import org.enginehub.craftbook.util.Tuple2;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -106,7 +103,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
     @Override
     public void disable() {
-        for (Entry<UUID, List<ItemStack>> deathPersistEntry : deathPersistItems.entrySet()) {
+        /* FIXME for (Entry<UUID, List<ItemStack>> deathPersistEntry : deathPersistItems.entrySet()) {
             Map<String, List<String>> items = (Map<String, List<String>>) CraftBookPlugin.inst().getPersistentStorage().get("command-items.death-items");
             List<String> its = items.get(deathPersistEntry.getKey().toString());
             if (its == null) its = new ArrayList<>();
@@ -115,7 +112,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
             }
             items.put(deathPersistEntry.getKey().toString(), its);
             CraftBookPlugin.inst().getPersistentStorage().set("command-items.death-items", items);
-        }
+        }*/
 
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
         registrar.unregisterTopLevel("commanditems");
@@ -195,7 +192,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
             }, 10, 10);
         }
 
-        if (!CraftBookPlugin.inst().getPersistentStorage().has("command-items.death-items")) {
+        /* FIXME if (!CraftBookPlugin.inst().getPersistentStorage().has("command-items.death-items")) {
             CraftBookPlugin.inst().getPersistentStorage().set("command-items.death-items", new HashMap<String, List<String>>());
         } else {
             Map<String, List<String>> items = (Map<String, List<String>>) CraftBookPlugin.inst().getPersistentStorage().get("command-items.death-items");
@@ -210,7 +207,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
 
             items.clear();
             CraftBookPlugin.inst().getPersistentStorage().set("command-items.death-items", items);
-        }
+        }*/
 
         doChat = definitions.stream().anyMatch(def -> def.clickType == ClickType.PLAYER_CHAT);
     }

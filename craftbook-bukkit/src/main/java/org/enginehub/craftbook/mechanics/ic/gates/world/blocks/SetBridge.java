@@ -102,7 +102,7 @@ public class SetBridge extends AbstractIC {
             if (relativeOffset) {
                 center = LocationUtil.getRelativeOffset(getSign(), offsetX, offsetY, offsetZ);
             } else {
-                center = LocationUtil.getOffset(center, offsetX, offsetY, offsetZ);
+                center = center.getRelative(offsetX, offsetY, offsetZ);
             }
         } else {
             center = center.getRelative(BlockFace.UP);

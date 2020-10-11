@@ -52,7 +52,6 @@ import org.enginehub.craftbook.st.SelfTriggeringManager;
 import org.enginehub.craftbook.util.ArrayUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.companion.CompanionPlugins;
-import org.enginehub.craftbook.util.persistent.PersistentStorage;
 import org.enginehub.craftbook.util.profile.Profile;
 
 import java.io.File;
@@ -96,12 +95,6 @@ public class CraftBookPlugin extends JavaPlugin {
      * The MechanicClock that manages all Self-Triggering Components.
      */
     private MechanicClock mechanicClock;
-
-    /**
-     * The persistent storage database of CraftBook.
-     */
-    @Deprecated
-    private PersistentStorage persistentStorage;
 
     /**
      * The manager for SelfTriggering components.
@@ -157,12 +150,6 @@ public class CraftBookPlugin extends JavaPlugin {
 
         plugins = new CompanionPlugins();
         plugins.initiate(this);
-
-        persistentStorage = PersistentStorage.createFromType(platform.getConfiguration().persistentStorageType);
-
-        if (persistentStorage != null) {
-            persistentStorage.open();
-        }
 
         logDebugMessage("Initializing Managers!", "startup");
         managerAdapter = new MechanicListenerAdapter();
@@ -285,10 +272,6 @@ public class CraftBookPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         platform.unload();
-
-        if (hasPersistentStorage()) {
-            persistentStorage.close();
-        }
     }
 
     // FIXME: Backport to WorldEdit/common lib
@@ -575,24 +558,6 @@ public class CraftBookPlugin extends JavaPlugin {
         if (CraftBook.getInstance().getPlatform().getConfiguration().debugLogToFile) {
             debugLogger.println("[" + code + "] " + message);
         }
-    }
-
-    public boolean hasPersistentStorage() {
-        return persistentStorage != null && persistentStorage.isValid();
-    }
-
-    public PersistentStorage getPersistentStorage() {
-        return persistentStorage;
-    }
-
-    public void setPersistentStorage(PersistentStorage storage) {
-        persistentStorage = storage;
-
-        platform.getConfiguration().persistentStorageType = storage.getType();
-
-        platform.getConfiguration().config.setProperty("persistent-storage-type", storage.getType());
-
-        platform.getConfiguration().config.save();
     }
 
     public static String getDocsDomain() {

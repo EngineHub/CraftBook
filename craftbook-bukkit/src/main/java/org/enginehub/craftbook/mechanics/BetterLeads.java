@@ -52,11 +52,11 @@ public class BetterLeads extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerClick(final PlayerInteractEntityEvent event) {
-        if (!ItemUtil.isStackValid(InventoryUtil.getItemInHand(event.getPlayer(), event.getHand())))
+        if (!ItemUtil.isStackValid(event.getPlayer().getInventory().getItem(event.getHand())))
             return;
         if (!(event.getRightClicked() instanceof LivingEntity)) return;
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if (InventoryUtil.getItemInHand(event.getPlayer(), event.getHand()).getType() != Material.LEAD)
+        if (event.getPlayer().getInventory().getItem(event.getHand()).getType() != Material.LEAD)
             return;
 
         if (!EventUtil.passesFilter(event)) return;
@@ -101,12 +101,12 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         });
         if (event.getPlayer().getGameMode() == GameMode.CREATIVE)
             return;
-        if (InventoryUtil.getItemInHand(event.getPlayer(), event.getHand()).getAmount() == 1)
-            InventoryUtil.setItemInHand(event.getPlayer(), event.getHand(), null);
+        if (event.getPlayer().getInventory().getItem(event.getHand()).getAmount() == 1)
+            event.getPlayer().getInventory().setItem(event.getHand(), null);
         else {
-            ItemStack newStack = InventoryUtil.getItemInHand(event.getPlayer(), event.getHand());
+            ItemStack newStack = event.getPlayer().getInventory().getItem(event.getHand());
             newStack.setAmount(newStack.getAmount() - 1);
-            InventoryUtil.setItemInHand(event.getPlayer(), event.getHand(), newStack);
+            event.getPlayer().getInventory().setItem(event.getHand(), newStack);
         }
     }
 
