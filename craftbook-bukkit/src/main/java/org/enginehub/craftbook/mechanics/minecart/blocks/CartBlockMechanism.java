@@ -197,7 +197,6 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
     public abstract String[] getApplicableSigns();
 
     public boolean verify(ChangedSign sign, CraftBookPlayer player) {
-
         return true;
     }
 }

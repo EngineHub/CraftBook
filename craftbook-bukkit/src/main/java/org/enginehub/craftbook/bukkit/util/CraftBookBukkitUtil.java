@@ -49,10 +49,6 @@ public final class CraftBookBukkitUtil {
         }
     }
 
-    public static BlockVector3 toVector(Block block) {
-        return BlockVector3.at(block.getX(), block.getY(), block.getZ());
-    }
-
     public static BlockVector3 toVector(BlockFace face) {
         return BlockVector3.at(face.getModX(), face.getModY(), face.getModZ());
     }

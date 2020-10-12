@@ -300,7 +300,7 @@ public class Door extends CuboidToggleMechanic {
             throw new InvalidMechanismException("Door too short!");
         }
         // Select the togglable region
-        CuboidRegion toggle = new CuboidRegion(CraftBookBukkitUtil.toVector(proximalBaseCenter), CraftBookBukkitUtil.toVector(distalBaseCenter));
+        CuboidRegion toggle = new CuboidRegion(BukkitAdapter.asBlockVector(proximalBaseCenter.getLocation()), BukkitAdapter.asBlockVector(distalBaseCenter.getLocation()));
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(trigger);
         int left, right;
         try {

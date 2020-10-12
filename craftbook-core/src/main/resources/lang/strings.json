@@ -38,6 +38,15 @@
 
     "craftbook.redstonejukebox.description": "Allows a Jukebox to be turned on and off with redstone",
 
+    "craftbook.signcopier.description": "Adds a tool for copying and pasting signs, as well as editing them.",
+    "craftbook.signcopier.copy": "You have copied the sign!",
+    "craftbook.signcopier.paste": "You have pasted the sign!",
+    "craftbook.signcopier.denied": "You're not allowed to paste signs here!",
+    "craftbook.signcopier.no-copy": "You haven't copied a sign...",
+    "craftbook.signcopier.invalid-line": "Line out of bounds. Must be between 1 and 4.",
+    "craftbook.signcopier.edited": "Line {0} is now set to \"{1}\".",
+    "craftbook.signcopier.cleared": "Cleared the copied sign.",
+
     "craftbook.snow.description": "Enhances snow, allowing it to build up and realistically spread",
 
     "craftbook.variables.unknown-variable": "Unknown variable: \"{0}\"",

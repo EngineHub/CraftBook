@@ -43,7 +43,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("LightSwitch", org.enginehub.craftbook.mechanics.LightSwitch.class, MechanicCategory.GENERAL);
 //        registerMechanic("ChunkAnchor", org.enginehub.craftbook.mechanics.ChunkAnchor.class, MechanicCategory.GENERAL);
 //        registerMechanic("HiddenSwitch", org.enginehub.craftbook.mechanics.HiddenSwitch.class, MechanicCategory.GENERAL);
-//        registerMechanic("SignCopier", org.enginehub.craftbook.mechanics.signcopier.SignCopier.class, MechanicCategory.TOOL);
 //        registerMechanic("Bridge", org.enginehub.craftbook.mechanics.area.simple.Bridge.class, MechanicCategory.GENERAL);
 //        registerMechanic("Door", org.enginehub.craftbook.mechanics.area.simple.Door.class, MechanicCategory.GENERAL);
 //        registerMechanic("Elevator", org.enginehub.craftbook.mechanics.Elevator.class, MechanicCategory.GENERAL);
@@ -125,6 +124,15 @@ public class BukkitMechanicManager extends MechanicManager {
             .name("LightStone")
             .description(TranslatableComponent.of("craftbook.lightstone.description"))
             .className("org.enginehub.craftbook.mechanics.LightStone")
+            .category(MechanicCategory.TOOL)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("sign_copier")
+            .name("SignCopier")
+            .description(TranslatableComponent.of("craftbook.signcopier.description"))
+            .className("org.enginehub.craftbook.mechanics.signcopier.SignCopier")
             .category(MechanicCategory.TOOL)
             .buildAndRegister();
 

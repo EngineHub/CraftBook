@@ -24,12 +24,8 @@ import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 /**
- * Decorates bukkit's directional block power queries with a three-valued logic that differenciates
- * between the
- * wiring that is unpowered and the
- * absense of wiring.
- *
- * @author hash
+ * Decorates bukkit's directional block power queries with a three-valued logic that differentiates
+ * between the wiring that is unpowered and the absence of wiring.
  */
 public final class RedstoneUtil {
 
@@ -58,63 +54,50 @@ public final class RedstoneUtil {
     }
 
     /**
-     * @param mech
-     * @param face
-     * @return Power.ON if the block on mech's face is a potential power source and is powered;
-     *     Power.Off if the
-     *     block on mech's face is a potential
-     *     power source but it is not providing power; Power.NA if there is no potential power
-     *     source at the
-     *     given face.
+     * Gets whether this block is powered by this face.
+     *
+     * @param mechanicBlock The mechanic block
+     * @param face The block face to check
+     * @return The power state at the given face
      */
-    public static Power isPowered(Block mech, BlockFace face) {
+    public static Power isPowered(Block mechanicBlock, BlockFace face) {
+        Block pow = mechanicBlock.getRelative(face);
 
-        Block pow = mech.getRelative(face);
-
-        if (CraftBookPlugin.isDebugFlagEnabled("redstone"))
-            debug(pow);
+        if (CraftBookPlugin.isDebugFlagEnabled("redstone")) {
+            CraftBook.logger.info("block " + pow + " power debug:");
+            CraftBook.logger.info("\tblock.isBlockPowered() : " + pow.isBlockPowered());
+            CraftBook.logger.info("\tblock.isBlockIndirectlyPowered() : " + pow.isBlockIndirectlyPowered());
+            for (BlockFace bf : BlockFace.values()) {
+                CraftBook.logger.info("\tblock.isBlockFacePowered(" + bf + ") : " + pow.isBlockFacePowered(bf));
+                CraftBook.logger.info("\tblock.getFace(" + bf + ").isBlockPowered() : " + pow.getRelative(bf)
+                    .isBlockPowered());
+                CraftBook.logger.info("\tblock.isBlockFaceIndirectlyPowered(" + bf + ") : " + pow
+                    .isBlockFaceIndirectlyPowered(bf));
+                CraftBook.logger.info("\tblock.getFace(" + bf + ").isBlockIndirectlyPowered(" + bf + ") : "
+                    + pow.getRelative(bf).isBlockIndirectlyPowered());
+            }
+            CraftBook.logger.info("");
+        }
 
         if (isPotentialPowerSource(pow.getType())) {
-            if (pow.isBlockPowered() || pow.isBlockIndirectlyPowered()) return Power.ON;
-            return Power.OFF;
+            return (pow.isBlockPowered() || pow.isBlockIndirectlyPowered()) ? Power.ON : Power.OFF;
         }
         return Power.NA;
     }
 
     /**
-     * @return true if the pow block is a power conductor (in CraftBook, at this time we only
-     *     consider this to be
-     *     wires).
+     * Gets whether this block is a potential power source.
+     *
+     * @return if this block is a potential power source
      */
     public static boolean isPotentialPowerSource(Material typeId) {
-
         return typeId == Material.REDSTONE_WIRE
             || typeId == Material.REPEATER
             || typeId == Material.LEVER
             || typeId == Material.REDSTONE_TORCH
             || typeId == Material.REDSTONE_WALL_TORCH
-            || Tag.WOODEN_PRESSURE_PLATES.isTagged(typeId)
-            || typeId == Material.STONE_PRESSURE_PLATE
-            || typeId == Material.HEAVY_WEIGHTED_PRESSURE_PLATE
-            || typeId == Material.LIGHT_WEIGHTED_PRESSURE_PLATE
+            || Tag.PRESSURE_PLATES.isTagged(typeId)
             || typeId == Material.COMPARATOR
             || typeId == Material.REDSTONE_BLOCK;
-    }
-
-    public static void debug(Block block) {
-
-        CraftBook.logger.info("block " + block + " power debug:");
-        CraftBook.logger.info("\tblock.isBlockPowered() : " + block.isBlockPowered());
-        CraftBook.logger.info("\tblock.isBlockIndirectlyPowered() : " + block.isBlockIndirectlyPowered());
-        for (BlockFace bf : BlockFace.values()) {
-            CraftBook.logger.info("\tblock.isBlockFacePowered(" + bf + ") : " + block.isBlockFacePowered(bf));
-            CraftBook.logger.info("\tblock.getFace(" + bf + ").isBlockPowered() : " + block.getRelative(bf)
-                .isBlockPowered());
-            CraftBook.logger.info("\tblock.isBlockFaceIndirectlyPowered(" + bf + ") : " + block
-                .isBlockFaceIndirectlyPowered(bf));
-            CraftBook.logger.info("\tblock.getFace(" + bf + ").isBlockIndirectlyPowered(" + bf + ") : "
-                + block.getRelative(bf).isBlockIndirectlyPowered());
-        }
-        CraftBook.logger.info("");
     }
 }

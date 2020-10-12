@@ -70,8 +70,9 @@ public final class RailUtil {
     public static boolean isTrack(Material id) {
 
         if (MoreRails.instance != null && MoreRails.instance.pressurePlate) {
-            if (id == Material.STONE_PRESSURE_PLATE || Tag.WOODEN_PRESSURE_PLATES.isTagged(id) || id == Material.HEAVY_WEIGHTED_PRESSURE_PLATE || id == Material.LIGHT_WEIGHTED_PRESSURE_PLATE)
+            if (Tag.PRESSURE_PLATES.isTagged(id)) {
                 return true;
+            }
         }
         if (MoreRails.instance != null && MoreRails.instance.ladder) {
             if (id == Material.LADDER || id == Material.VINE) {

@@ -19,6 +19,8 @@ package org.enginehub.craftbook.mechanics.signcopier;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
 import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.exception.CraftBookException;
 import org.enginehub.piston.CommandManager;
@@ -29,34 +31,51 @@ import org.enginehub.piston.annotation.param.Arg;
 @CommandContainer(superTypes = CommandPermissionsConditionGenerator.Registration.class)
 public class SignEditCommands {
 
-    public static void register(CommandManager commandManager, CommandRegistrationHandler registration) {
+    public static void register(CommandManager commandManager, CommandRegistrationHandler registration, SignCopier signCopier) {
         registration.register(
             commandManager,
             SignEditCommandsRegistration.builder(),
-            new SignEditCommands()
+            new SignEditCommands(signCopier)
         );
     }
 
-    public SignEditCommands() {
+    private final SignCopier signCopier;
+
+    public SignEditCommands(SignCopier signCopier) {
+        this.signCopier = signCopier;
     }
 
     @Command(name = "edit", desc = "Edits the copied sign.")
-    @CommandPermissions({ "craftbook.mech.signcopy.edit" })
+    @CommandPermissions({ "craftbook.signcopier.edit" })
     public void editSign(CraftBookPlayer player,
                          @Arg(desc = "The line to edit") int line,
                          @Arg(desc = "The text to use", variable = true) String text) throws CraftBookException {
-
-        if (!SignCopier.signs.containsKey(player.getName()))
-            throw new CraftBookException("You haven't copied a sign!");
-
-        if (line < 1 || line > 4) {
-            throw new CraftBookException("Line out of bounds. Must be between 1 and 4.");
+        if (!signCopier.hasSign(player.getUniqueId())) {
+            throw new CraftBookException(TranslatableComponent.of("craftbook.signcopier.no-copy"));
         }
 
-        String[] signCache = SignCopier.signs.get(player.getName());
-        signCache[line - 1] = text;
-        SignCopier.signs.put(player.getName(), signCache);
+        if (line < 1 || line > 4) {
+            throw new CraftBookException(TranslatableComponent.of("craftbook.signcopier.invalid-line"));
+        }
 
-        player.print("Edited line " + line + ". Text is now: " + text);
+        // TODO Integrate MiniMessage
+
+        signCopier.setSignLine(player.getUniqueId(), line - 1, text);
+        player.printInfo(TranslatableComponent.of(
+            "craftbook.signcopier.edited",
+            TextComponent.of(line),
+            TextComponent.of(text)
+        ));
+    }
+
+    @Command(name = "clear", desc = "Clears the copied sign.")
+    @CommandPermissions({ "craftbook.signcopier.clear" })
+    public void clear(CraftBookPlayer player) throws CraftBookException {
+        if (!signCopier.hasSign(player.getUniqueId())) {
+            throw new CraftBookException(TranslatableComponent.of("craftbook.signcopier.no-copy"));
+        }
+
+        signCopier.clearSign(player.getUniqueId());
+        player.printInfo(TranslatableComponent.of("craftbook.signcopier.cleared"));
     }
 }

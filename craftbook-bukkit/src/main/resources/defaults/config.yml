@@ -26,6 +26,7 @@ mechanics:
     tool:
         ammeter: false
         lightstone: false
+        sign_copier: false
 
 # WARNING! Changing this can result in all ST mechanics acting very weirdly, only change this if you know what you are doing!
 st-think-ticks: 2

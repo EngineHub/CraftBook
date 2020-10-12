@@ -232,7 +232,7 @@ public class Bridge extends CuboidToggleMechanic {
         if (distance <= 2 * 2) {
             throw new InvalidMechanismException("Bridge too short!");
         }
-        CuboidRegion toggle = new CuboidRegion(CraftBookBukkitUtil.toVector(proximalBaseCenter), CraftBookBukkitUtil.toVector(distalBaseCenter));
+        CuboidRegion toggle = new CuboidRegion(BukkitAdapter.asBlockVector(proximalBaseCenter.getLocation()), BukkitAdapter.asBlockVector(distalBaseCenter.getLocation()));
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(trigger);
         int left, right;
         try {
