@@ -1,5 +1,6 @@
-![CraftBook](craftbook-logo.png)
-===========
+<h1>
+    <img src="craftbook-logo.svg" alt="CraftBook" width="400" /> 
+</h1>
 
 CraftBook is a heavily customizable plugin adding exciting new gameplay elements and advanced redstone functions!
 
