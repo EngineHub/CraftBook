@@ -35,6 +35,7 @@ import com.sk89q.worldedit.world.block.BlockType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Tag;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
@@ -55,6 +56,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
@@ -76,6 +78,8 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 public class Chairs extends AbstractCraftBookMechanic {
+
+    private static final double ARMOR_STAND_MOUNT_Y = 2.2;
 
     private final Map<UUID, ChairData> chairs = new HashMap<>();
     private NamespacedKey chairDataKey;
@@ -112,8 +116,19 @@ public class Chairs extends AbstractCraftBookMechanic {
         packetManager.unregisterAsyncHandler(vehicleSteerHandler);
     }
 
-    private Entity createChairEntity(Block block) {
-        ArmorStand chairEntity = block.getWorld().spawn(BlockUtil.getBlockCentre(block).subtract(0, 1.5, 0), ArmorStand.class);
+    private Entity createChairEntity(Block block, @Nullable Vector direction) {
+        double height = block.getBoundingBox().getHeight();
+        if (Tag.STAIRS.isTagged(block.getType())) {
+            // Override this to provide correct heights for stairs.
+            height = 0.5;
+        }
+
+        Location location = BlockUtil.getBlockCentre(block).subtract(0, ARMOR_STAND_MOUNT_Y - height, 0);
+        if (direction != null) {
+            location.setDirection(direction);
+        }
+
+        ArmorStand chairEntity = block.getWorld().spawn(location, ArmorStand.class);
 
         chairEntity.getPersistentDataContainer().set(chairDataKey, PersistentDataType.BYTE, (byte) 1);
 
@@ -134,12 +149,12 @@ public class Chairs extends AbstractCraftBookMechanic {
         }
 
         if (ar == null || ar.isDead() || !ar.isValid()) {
-            ar = createChairEntity(block);
+            ar = createChairEntity(block, chairLoc == null ? null : chairLoc.getDirection());
             isNew = true;
         }
 
         if (chairLoc != null) {
-            ar.getLocation().setYaw(chairLoc.getYaw());
+            ar.setRotation(chairLoc.getYaw(), chairLoc.getPitch());
         }
 
         Entity far = ar;
