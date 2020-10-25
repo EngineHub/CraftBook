@@ -515,7 +515,10 @@ public final class ItemUtil {
             case EMERALD_ORE:
                 return new ItemStack(Material.EMERALD);
             case GOLD_ORE:
+            case NETHER_GOLD_ORE:
                 return new ItemStack(Material.GOLD_INGOT);
+            case ANCIENT_DEBRIS:
+                return new ItemStack(Material.NETHERITE_SCRAP);
             case DIAMOND_ORE:
                 return new ItemStack(Material.DIAMOND);
             case SAND:

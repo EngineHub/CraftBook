@@ -13,6 +13,7 @@ import com.sk89q.craftbook.util.events.*;
 import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
@@ -116,7 +117,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
         Block cb = b.getRelative(0, 2, 0);
         if (cb.getType() == Material.CHEST) {
             Block fire = b.getRelative(0, 1, 0);
-            if (fire.getType() == Material.FIRE) {
+            if (Tag.FIRE.isTagged(fire.getType())) {
                 Chest chest = (Chest) cb.getState();
                 Inventory inventory = chest.getInventory();
 
