@@ -27,7 +27,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.BukkitCraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
@@ -41,16 +40,37 @@ public final class LocationUtil {
     }
 
     /**
-     * Gets whether l2 is within a spherical radius of l1.
+     * Gets whether checked is within a spherical radius of base.
      *
-     * @param l1 The first location
-     * @param l2 The second location
-     * @param radius The radius
-     * @return If they are within the radius
+     * <p>
+     *     Note: This checks <em>real</em> distance, not block distance.
+     *     For block distance {@link LocationUtil#isWithinSphericalRadius(Block, Block, double)}.
+     * </p>
+     *
+     * @param base The base location
+     * @param checked The checked location
+     * @param radius The radius around base to check within
+     * @return If checked is within the radius
      */
-    public static boolean isWithinSphericalRadius(Location l1, Location l2, double radius) {
-        return l1.getWorld().equals(l2.getWorld())
-            && Math.floor(getDistanceSquared(l1, l2)) <= radius * radius; // Floor for more accurate readings
+    public static boolean isWithinSphericalRadius(Location base, Location checked, double radius) {
+        return getDistanceSquared(base, checked) <= radius * radius;
+    }
+
+    /**
+     * Gets whether checked is within a spherical radius of base.
+     *
+     * <p>
+     *     Note: This checks <em>block</em> distance, not real distance.
+     *     For block distance {@link LocationUtil#isWithinSphericalRadius(Location, Location, double)}.
+     * </p>
+     *
+     * @param base The base location
+     * @param checked The checked location
+     * @param radius The radius around base to check within
+     * @return If checked is within the radius
+     */
+    public static boolean isWithinSphericalRadius(Block base, Block checked, double radius) {
+        return isWithinSphericalRadius(base.getLocation(), checked.getLocation(), radius + 0.5);
     }
 
     public static boolean isWithinRadiusPolygon(Location l1, Location l2, Vector3 radius) {
@@ -105,38 +125,15 @@ public final class LocationUtil {
      * @return
      */
     public static double getDistance(Location l1, Location l2) {
-
         return Math.sqrt(getDistanceSquared(l1, l2));
     }
 
     public static double getDistanceSquared(Location l1, Location l2) {
+        if (!l1.getWorld().equals(l2.getWorld())) {
+            return Integer.MAX_VALUE;
+        }
 
-        if (!l1.getWorld().equals(l2.getWorld())) return Integer.MAX_VALUE;
-
-        if (CraftBook.getInstance().getPlatform().getConfiguration().useBlockDistance)
-            return getBlockDistance(l1, l2) * getBlockDistance(l1, l2);
         else return l1.distanceSquared(l2);
-    }
-
-    /**
-     * Gets the greatest distance between two locations. Only takes int locations and does not check
-     * a round radius.
-     *
-     * @param l1 to compare
-     * @param l2 to compare
-     * @return greatest distance
-     */
-    public static int getBlockDistance(Location l1, Location l2) {
-
-        if (!l1.getWorld().equals(l2.getWorld())) return Integer.MAX_VALUE;
-
-        int x = Math.abs(l1.getBlockX() - l2.getBlockX());
-        int y = Math.abs(l1.getBlockY() - l2.getBlockY());
-        int z = Math.abs(l1.getBlockZ() - l2.getBlockZ());
-        if (x >= y && x >= z) return x;
-        else if (y >= z) // Since x is not the largest, either y or z must be
-            return y;
-        else return z;
     }
 
     public static Block getRelativeOffset(ChangedSign sign, int offsetX, int offsetY, int offsetZ) {

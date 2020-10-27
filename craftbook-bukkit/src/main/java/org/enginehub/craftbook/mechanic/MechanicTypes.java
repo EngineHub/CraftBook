@@ -41,7 +41,7 @@ import org.enginehub.craftbook.mechanics.Payment;
 import org.enginehub.craftbook.mechanics.RedstoneFire;
 import org.enginehub.craftbook.mechanics.RedstoneJukebox;
 import org.enginehub.craftbook.mechanics.Snow;
-import org.enginehub.craftbook.mechanics.Sponge;
+import org.enginehub.craftbook.mechanics.BetterSponge;
 import org.enginehub.craftbook.mechanics.Teleporter;
 import org.enginehub.craftbook.mechanics.TreeLopper;
 import org.enginehub.craftbook.mechanics.XPStorer;
@@ -105,6 +105,8 @@ public class MechanicTypes {
     public static final MechanicType<BetterPistons> BETTER_PISTONS = get("better_pistons");
     @Nullable
     public static final MechanicType<BetterPlants> BETTER_PLANTS = get("better_plants");
+    @Nullable
+    public static final MechanicType<BetterSponge> BETTER_SPONGE = get("better_sponge");
     @Nullable
     public static final MechanicType<EmptyDecay> BOAT_DECAY = get("boat_decay");
     @Nullable
@@ -231,8 +233,6 @@ public class MechanicTypes {
     public static final MechanicType<SignCopier> SIGN_COPIER = get("sign_copier");
     @Nullable
     public static final MechanicType<Snow> SNOW = get("snow");
-    @Nullable
-    public static final MechanicType<Sponge> SPONGE = get("sponge");
     @Nullable
     public static final MechanicType<Teleporter> TELEPORTER = get("teleporter");
     @Nullable

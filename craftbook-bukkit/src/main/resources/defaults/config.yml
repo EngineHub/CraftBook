@@ -17,6 +17,7 @@ mechanics:
     general:
         better_physics: false
         better_plants: false
+        better_sponge: false
         chairs: false
         marquee: false
         painting_switcher: false
@@ -39,9 +40,6 @@ no-op-permissions: false
 
 # Allows redstone not directly facing a mechanism to trigger said mechanism.
 indirect-redstone: false
-
-# Rounds all distance equations to the block grid.
-use-block-distance: false
 
 # Whether WorldGuard flags should be checked when performing CraftBook actions.
 obey-worldguard-flags: true

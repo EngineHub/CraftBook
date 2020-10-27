@@ -6,6 +6,8 @@
 
     "craftbook.betterplants.description":"Enhances plants in the game, such as allowing ferns to be farmed",
 
+    "craftbook.bettersponge.description": "Enhances the water removal capabilities of sponges",
+
     "craftbook.bounceblocks.create": "BounceBlock Created!",
     "craftbook.bounceblocks.invalid-velocity": "You need to enter a valid velocity on the 3rd line!",
 

@@ -30,7 +30,6 @@ public abstract class YamlConfiguration {
 
     public boolean noOpPermissions;
     public boolean indirectRedstone;
-    public boolean useBlockDistance;
     public boolean safeDestruction;
     public int stThinkRate;
     public boolean obeyWorldGuard;

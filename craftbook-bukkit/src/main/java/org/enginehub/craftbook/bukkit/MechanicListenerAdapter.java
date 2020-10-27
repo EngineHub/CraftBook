@@ -328,7 +328,7 @@ final class MechanicListenerAdapter implements Listener {
                 cmb.setFromBlock(event.getFrom().getBlock());
                 Location from = event.getFrom();
                 Location to = event.getTo();
-                if (LocationUtil.getDistanceSquared(from, to) > 2 * 2) {//Further than max distance
+                if (!LocationUtil.isWithinSphericalRadius(from, to, 2)) {//Further than max distance
                     return;
                 }
                 boolean minor = from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY() && from.getBlockZ() == to.getBlockZ();

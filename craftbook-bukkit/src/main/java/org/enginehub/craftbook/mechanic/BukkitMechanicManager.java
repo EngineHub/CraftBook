@@ -228,6 +228,15 @@ public class BukkitMechanicManager extends MechanicManager {
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
+        MechanicType.Builder
+            .create()
+            .id("better_sponge")
+            .name("BetterSponge")
+            .description(TranslatableComponent.of("craftbook.bettersponge.description"))
+            .className("org.enginehub.craftbook.mechanics.BetterSponge")
+            .category(MechanicCategory.GENERAL)
+            .buildAndRegister();
+
         // TODO CommandItems needs to load early (after variables).
     }
 

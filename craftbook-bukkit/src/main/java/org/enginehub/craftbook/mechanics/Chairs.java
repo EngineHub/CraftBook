@@ -217,7 +217,7 @@ public class Chairs extends AbstractCraftBookMechanic {
                 break;
             }
 
-            if (block.getLocation().distanceSquared(original.getLocation()) > Math.pow(maxSignDistance, 2)) {
+            if (!LocationUtil.isWithinSphericalRadius(block, original, maxSignDistance)) {
                 continue;
             }
 
@@ -327,7 +327,7 @@ public class Chairs extends AbstractCraftBookMechanic {
         // At this point they probably intend to use the chair
         event.setCancelled(true);
 
-        if (event.getPlayer().getLocation().distanceSquared(event.getClickedBlock().getLocation().add(0.5, 0.5, 0.5)) > Math.pow(maxClickRadius, 2)) {
+        if (!LocationUtil.isWithinSphericalRadius(event.getPlayer().getLocation(), event.getClickedBlock().getLocation().toCenterLocation(), maxClickRadius)) {
             player.printError(TranslatableComponent.of("craftbook.chairs.too-far-away"));
             return;
         }
@@ -391,7 +391,7 @@ public class Chairs extends AbstractCraftBookMechanic {
 
                 if (!Blocks.containsFuzzy(allowedBlocks, BukkitAdapter.adapt(pl.getValue().location.getBlockData()))
                     || !p.getWorld().equals(pl.getValue().location.getWorld())
-                    || LocationUtil.getDistanceSquared(p.getLocation(), pl.getValue().location.getLocation()) > 2) {
+                    || !LocationUtil.isWithinSphericalRadius(p.getLocation(), pl.getValue().location.getLocation(), 2)) {
                     removeChair(p);
                 } else {
                     addChair(p, pl.getValue().location, null); // For any new players.

@@ -93,9 +93,6 @@ public class BukkitConfiguration extends YamlConfiguration {
         config.setComment("indirect-redstone", "Allows redstone not directly facing a mechanism to trigger said mechanism.");
         indirectRedstone = config.getBoolean("indirect-redstone", false);
 
-        config.setComment("use-block-distance", "Rounds all distance equations to the block grid.");
-        useBlockDistance = config.getBoolean("use-block-distance", false);
-
         config.setComment("obey-worldguard-flags", "Whether WorldGuard flags should be checked when performing CraftBook actions.");
         obeyWorldGuard = config.getBoolean("obey-worldguard-flags", true);
 
