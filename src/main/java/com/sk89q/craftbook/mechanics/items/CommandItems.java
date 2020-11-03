@@ -615,8 +615,8 @@ public class CommandItems extends AbstractCraftBookMechanic {
             command = StringUtils.replace(command, "@b.w", ((PlayerInteractEvent) event).getClickedBlock().getWorld().getName());
             command = StringUtils.replace(command, "@b.l", ((PlayerInteractEvent) event).getClickedBlock().getLocation().toString());
             command = StringUtils.replace(command, "@b.d", String.valueOf(((PlayerInteractEvent) event).getClickedBlock().getData()));
-            command = StringUtils.replace(command, "@b.t", ((PlayerInteractEvent) event).getClickedBlock().getType().name());
-            command = StringUtils.replace(command, "@b", ((PlayerInteractEvent) event).getClickedBlock().getType().name() + (((PlayerInteractEvent) event).getClickedBlock().getData() == 0 ? "" : ":") + ((PlayerInteractEvent) event).getClickedBlock().getData());
+            command = StringUtils.replace(command, "@b.t", ((PlayerInteractEvent) event).getClickedBlock().getType().getKey().toString());
+            command = StringUtils.replace(command, "@b", ((PlayerInteractEvent) event).getClickedBlock().getType().name());
         }
         if(event instanceof EntityEvent && ((EntityEvent) event).getEntityType() != null && command.contains("@e")) {
             command = StringUtils.replace(command, "@e.x", String.valueOf(((EntityEvent) event).getEntity().getLocation().getX()));
