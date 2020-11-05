@@ -1,10 +1,14 @@
 package org.enginehub.craftbook.internal.util;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.sk89q.worldedit.command.util.PermissionCondition;
 import com.sk89q.worldedit.internal.command.CommandUtil;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.PlatformCommandManager;
+import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.mechanics.headdrops.HeadDropsCommands;
 import org.enginehub.piston.Command;
 import org.enginehub.piston.config.TextConfig;
 import org.enginehub.piston.part.SubCommandPart;
@@ -29,8 +33,21 @@ import java.util.stream.Stream;
 public class CommandUtils {
 
     private static final Pattern nameRegex = Pattern.compile("name = \"(.+?)\"");
-    private static final Map<String, Command> commands = CraftBookPlugin.inst().getCommandManager().getCommandManager().getAllCommands()
-        .collect(Collectors.toMap(Command::getName, command -> command));
+
+    private static final Map<String, Command> commands = Maps.newHashMap();
+    private static final PlatformCommandManager commandManager = new PlatformCommandManager();
+
+    static {
+        MechanicCommandRegistrar registrar = commandManager.getMechanicRegistrar();
+        registrar.registerTopLevelWithSubCommands(
+            "headdrops",
+            Lists.newArrayList(),
+            "CraftBook HeadDrops Commands",
+            (commandManager1, registration) -> HeadDropsCommands.register(commandManager1, registration, null)
+        );
+
+        commands.putAll(commandManager.getCommandManager().getAllCommands().collect(Collectors.toMap(Command::getName, command -> command)));
+    }
 
     public static List<String> getAllCommandsIn(Class<?> commandClass) {
         Path sourceFile = Paths.get("craftbook-bukkit/src/main/java/" + commandClass.getName().replace('.', '/') + ".java");
@@ -174,7 +191,7 @@ public class CommandUtils {
         }
 
         Map<String, String> entries = new HashMap<>();
-        entries.put("**Description", ComponentRstRenderer.reduceToRst(description));
+        entries.put("**Description**", ComponentRstRenderer.reduceToRst(description));
 
         Command.Condition cond = command.getCondition();
         if (cond instanceof PermissionCondition && !((PermissionCondition) cond).getPermissions().isEmpty()) {

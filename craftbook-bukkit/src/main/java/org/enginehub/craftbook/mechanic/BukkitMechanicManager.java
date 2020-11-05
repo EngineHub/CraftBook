@@ -237,6 +237,15 @@ public class BukkitMechanicManager extends MechanicManager {
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
+        MechanicType.Builder
+            .create()
+            .id("head_drops")
+            .name("HeadDrops")
+            .description(TranslatableComponent.of("craftbook.headdrops.description"))
+            .className("org.enginehub.craftbook.mechanics.headdrops.HeadDrops")
+            .category(MechanicCategory.GENERAL)
+            .buildAndRegister();
+
         // TODO CommandItems needs to load early (after variables).
     }
 

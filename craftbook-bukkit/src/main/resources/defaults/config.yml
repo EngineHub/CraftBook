@@ -19,6 +19,7 @@ mechanics:
         better_plants: false
         better_sponge: false
         chairs: false
+        head_drops: false
         marquee: false
         painting_switcher: false
         readable_bookshelf: false

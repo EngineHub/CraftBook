@@ -57,7 +57,7 @@ public class DocumentationPrinter {
 
         craftBookPlatform = new DocumentationPlatform();
         CraftBook.getInstance().setPlatform(craftBookPlatform);
-        craftBookPlatform.load();
+        CraftBook.getInstance().setup();
     }
 
     public static void main(String[] args) {
@@ -65,7 +65,7 @@ public class DocumentationPrinter {
 
         ConfigurationGenerator.generateDefaultConfiguration();
         MechanicTypesGenerator.generateMechanicTypes();
-//        CommandDocumentationGenerator.generateCommandDocumentation();
+        CommandDocumentationGenerator.generateCommandDocumentation();
         MechanicConfigurationGenerator.generateMechanicConfiguration();
 
         worldEdit.onStopped();

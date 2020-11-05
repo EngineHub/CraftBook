@@ -27,7 +27,7 @@ import org.enginehub.piston.util.TextHelper;
 import java.util.Locale;
 
 public class TextUtil {
-
+    private static final ConfigRenderer RENDERER = ConfigRenderer.getInstance();
     public static final ConfigHolder CONFIG_HOLDER = ConfigHolder.create();
 
     static {
@@ -36,7 +36,7 @@ public class TextUtil {
 
     public static Component format(Component component, Locale locale) {
         return WorldEditText.format(CraftBook.getInstance().getTranslationManager().convertText(
-            ConfigRenderer.getInstance().render(component, CONFIG_HOLDER),
+            RENDERER.render(component, CONFIG_HOLDER),
             locale
         ), locale);
     }

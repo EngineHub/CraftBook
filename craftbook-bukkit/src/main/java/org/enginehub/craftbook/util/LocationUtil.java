@@ -17,10 +17,8 @@
 package org.enginehub.craftbook.util;
 
 import com.sk89q.worldedit.math.Vector3;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -278,21 +276,6 @@ public final class LocationUtil {
             }
         }
         return radiusEntities.toArray(new Player[radiusEntities.size()]);
-    }
-
-    public static boolean isBorderChunk(Chunk chunk) {
-        World world = chunk.getWorld();
-
-        for (int x = -1; x < 2; x++) {
-            for (int z = -1; z < 2; z++) {
-                if (x == 0 && z == 0) continue;
-                if (!world.isChunkLoaded(chunk.getX() + x, chunk.getZ() + z)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     /**

@@ -16,350 +16,322 @@
 
 package org.enginehub.craftbook.mechanics.headdrops;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import io.papermc.lib.PaperLib;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
+import org.bukkit.block.Block;
 import org.bukkit.block.Skull;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
 import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.ItemUtil;
-import org.enginehub.craftbook.util.ProtectionUtil;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
+import javax.annotation.Nullable;
 
 public class HeadDrops extends AbstractCraftBookMechanic {
 
-    protected static HeadDrops instance;
+    private static final Map<EntityType, PlayerProfile> TEXTURE_MAP = Maps.newEnumMap(EntityType.class);
+
+    static {
+        SkinData.addDefaultSkinData(TEXTURE_MAP);
+    }
+
+    private NamespacedKey headDropsEntityKey;
 
     @Override
     public void enable() {
-
-        instance = this;
+        this.headDropsEntityKey = new NamespacedKey(CraftBookPlugin.inst(), "head_drops_entity");
 
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
         registrar.registerTopLevelWithSubCommands(
             "headdrops",
             Lists.newArrayList(),
             "CraftBook HeadDrops Commands",
-            HeadDropsCommands::register
+            (commandManager, registration) -> HeadDropsCommands.register(commandManager, registration, this)
         );
     }
 
     @Override
     public void disable() {
-        super.disable();
-
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
         registrar.unregisterTopLevel("headdrops");
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityDeath(EntityDeathEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
-
-        if (playerKillsOnly && event.getEntity().getKiller() == null) return;
-        if (event.getEntityType() == null) return;
-
-        if (event.getEntity().getKiller() != null && !event.getEntity().getKiller().hasPermission("craftbook.mech.headdrops.kill"))
+        if (!EventUtil.passesFilter(event)) {
             return;
+        }
 
-        String typeName = event.getEntityType().getName();
-        if (typeName == null && event.getEntityType() == EntityType.PLAYER)
-            typeName = "PLAYER";
-        else if (typeName == null)
-            return; //Invalid type.
-        else
-            typeName = typeName.toUpperCase();
+        if (playerKillsOnly && event.getEntity().getKiller() == null) {
+            return;
+        }
+
+        if (event.getEntity().getKiller() != null && !event.getEntity().getKiller().hasPermission("craftbook.headdrops.drops")) {
+            return;
+        }
+
+        //noinspection deprecation
+        if (event.getEntityType().getName() == null) {
+            return;
+        }
+        NamespacedKey typeName = event.getEntityType().getKey();
 
         double chance = Math.min(1, dropRate);
-        if (customDropRates.containsKey(typeName))
+        if (customDropRates.containsKey(typeName)) {
             chance = Math.min(1, customDropRates.get(typeName));
+        }
 
-        if (event.getEntity().getKiller() != null && event.getEntity().getKiller().getItemInHand() != null && event.getEntity().getKiller().getItemInHand().containsEnchantment(Enchantment.LOOT_BONUS_MOBS))
-            chance = Math.min(1, chance + rateModifier * event.getEntity().getKiller().getItemInHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS));
+        if (event.getEntity().getKiller() != null && event.getEntity().getKiller().getInventory().getItemInMainHand().containsEnchantment(Enchantment.LOOT_BONUS_MOBS)) {
+            chance = Math.min(1, chance + lootingModifier * event.getEntity().getKiller().getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS));
+        }
 
-        if (ThreadLocalRandom.current().nextDouble() > chance)
+        if (ThreadLocalRandom.current().nextDouble() > chance) {
             return;
+        }
 
         ItemStack toDrop = null;
 
-        switch (event.getEntityType()) {
-
-            case PLAYER:
-                if (!enablePlayers)
-                    return;
-                String playerName = event.getEntity().getName();
-                if (ignoredNames.contains(playerName)) {
-                    return;
+        if (event.getEntityType() == EntityType.PLAYER && enablePlayers) {
+            PlayerProfile playerProfile = ((Player) event.getEntity()).getPlayerProfile();
+            toDrop = new ItemStack(Material.PLAYER_HEAD, 1);
+            SkullMeta meta = (SkullMeta) toDrop.getItemMeta();
+            meta.setPlayerProfile(playerProfile);
+            meta.setDisplayName(ChatColor.RESET + playerProfile.getName() + "'s Head");
+            toDrop.setItemMeta(meta);
+        } else if (enableMobs) {
+            if (overrideNatural) {
+                switch (event.getEntityType()) {
+                    case ZOMBIE:
+                    case GIANT:
+                        toDrop = new ItemStack(Material.ZOMBIE_HEAD, 1);
+                        break;
+                    case CREEPER:
+                        toDrop = new ItemStack(Material.CREEPER_HEAD, 1);
+                        break;
+                    case SKELETON:
+                        toDrop = new ItemStack(Material.SKELETON_SKULL, 1);
+                        break;
+                    case WITHER_SKELETON:
+                        toDrop = new ItemStack(Material.WITHER_SKELETON_SKULL, 1);
+                        break;
+                    case ENDER_DRAGON:
+                        toDrop = new ItemStack(Material.DRAGON_HEAD, 1);
+                        break;
                 }
-                toDrop = new ItemStack(Material.PLAYER_HEAD, 1);
-                SkullMeta meta = (SkullMeta) toDrop.getItemMeta();
-                meta.setOwner(playerName);
-                meta.setDisplayName(ChatColor.RESET + playerName + "'s Head");
-                toDrop.setItemMeta(meta);
-                break;
-            case ZOMBIE:
-                if (!enableMobs)
-                    return;
-                toDrop = new ItemStack(Material.ZOMBIE_HEAD, 1);
-                break;
-            case CREEPER:
-                if (!enableMobs)
-                    return;
-                toDrop = new ItemStack(Material.CREEPER_HEAD, 1);
-                break;
-            case SKELETON:
-                if (!enableMobs)
-                    return;
-                toDrop = new ItemStack(Material.SKELETON_SKULL, 1);
-                break;
-            case WITHER_SKELETON:
-                if (!enableMobs || !overrideNatural)
-                    return;
-                toDrop = new ItemStack(Material.WITHER_SKELETON_SKULL, 1);
-                break;
-            case ENDER_DRAGON:
-                if (!enableMobs)
-                    return;
-                toDrop = new ItemStack(Material.DRAGON_HEAD, 1);
-                break;
-            default:
-                if (!enableMobs)
-                    return;
-                MobSkullType type = MobSkullType.getFromEntityType(event.getEntityType());
-                String mobName = null;
-                if (type != null)
-                    mobName = type.getPlayerName();
-                if (customSkins.containsKey(typeName))
-                    mobName = customSkins.get(typeName);
-                if (mobName == null || mobName.isEmpty())
-                    break;
-                toDrop = new ItemStack(Material.PLAYER_HEAD, 1);
-                ItemMeta metaD = toDrop.getItemMeta();
-                if (metaD instanceof SkullMeta) {
-                    SkullMeta itemMeta = (SkullMeta) metaD;
-                    itemMeta.setDisplayName(ChatColor.RESET + WordUtils.capitalize(typeName.replace("_", " ")) + " Head");
-                    itemMeta.setOwner(mobName);
-                    toDrop.setItemMeta(itemMeta);
-                } else
-                    CraftBook.logger.warn("Bukkit has failed to set a HeadDrop item to a head!");
-                break;
+
+                // Fall through here, as we still allow custom overrides.
+            }
+
+            ItemStack newStack = createFromEntityType(event.getEntityType());
+            if (newStack != null) {
+                toDrop = newStack;
+            }
+        } else {
+            return;
         }
 
-        if (ItemUtil.isStackValid(toDrop)) {
+        if (toDrop != null) {
             event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), toDrop);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
+        if (!nameOnClick || !EventUtil.passesFilter(event)) {
+            return;
+        }
 
-        if (!EventUtil.passesFilter(event) || event.getHand() != EquipmentSlot.HAND) return;
+        if (event.getHand() != EquipmentSlot.HAND || event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
 
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        Block clicked = event.getClickedBlock();
+        if (clicked == null) {
+            // This should not be possible.
+            return;
+        }
 
-        if (event.getClickedBlock().getType() == Material.PLAYER_HEAD || event.getClickedBlock().getType() == Material.PLAYER_WALL_HEAD) {
+        Material clickedType = clicked.getType();
 
-            Skull skull = (Skull) event.getClickedBlock().getState();
-            if (skull == null || !skull.hasOwner())
-                return;
+        if (clickedType == Material.PLAYER_HEAD || clickedType == Material.PLAYER_WALL_HEAD) {
+            Skull skull = (Skull) PaperLib.getBlockState(clicked, false).getState();
 
             CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-            if (showNameClick && MobSkullType.getEntityType(skull.getOwner()) == null && skull.getOwner() != null) {
-                player.printRaw(ChatColor.YELLOW + player.translate("mech.headdrops.click-message") + ' ' + skull.getOwner());
-            } else if (MobSkullType.getEntityType(skull.getOwner()) != null) {
-                skull.setOwner(MobSkullType.getFromEntityType(MobSkullType.getEntityType(skull.getOwner())).getPlayerName());
-                skull.update();
+            if (skull.getPersistentDataContainer().has(headDropsEntityKey, PersistentDataType.STRING)) {
+                String entityTypeId = skull.getPersistentDataContainer().get(headDropsEntityKey, PersistentDataType.STRING);
+                EntityType entityType = Registry.ENTITY_TYPE.get(parseKey(Objects.requireNonNull(entityTypeId)));
+                //noinspection deprecation
+                if (entityType == null || entityType.getName() == null) {
+                    return;
+                }
+
+                player.print(TranslatableComponent.of("craftbook.headdrops.click-message.mob", TextComponent.of(WordUtils.capitalize(entityType.getKey().getKey().replace("_", " ")))));
+            } else {
+                PlayerProfile profile = skull.getPlayerProfile();
+                if (profile == null || profile.getName() == null || profile.getName().equals(SkinData.HEAD_NAME)) {
+                    return;
+                }
+
+                player.print(TranslatableComponent.of("craftbook.headdrops.click-message.player", TextComponent.of(profile.getName())));
             }
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void onBlockBreak(BlockBreakEvent event) {
-
-        if (!miningDrops) return;
-        if (!EventUtil.passesFilter(event))
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (!EventUtil.passesFilter(event)) {
             return;
-        if (event.getPlayer().getGameMode() == GameMode.CREATIVE) return;
+        }
 
-        if (event.getBlock().getType() == Material.PLAYER_HEAD || event.getBlock().getType() == Material.PLAYER_WALL_HEAD) {
+        if (event.getItemInHand().getType() != Material.PLAYER_HEAD) {
+            return;
+        }
 
-            Skull skull = (Skull) event.getBlock().getState();
-            if (!skull.hasOwner())
-                return;
-            String playerName = ChatColor.stripColor(skull.getOwner());
-            if (playerName == null || ignoredNames.contains(playerName)) {
+        ItemMeta itemMeta = event.getItemInHand().getItemMeta();
+        if (!itemMeta.getPersistentDataContainer().has(headDropsEntityKey, PersistentDataType.STRING)) {
+            // Can't persist data if it doesn't exist.
+            return;
+        }
+
+        String existingData = itemMeta.getPersistentDataContainer().get(headDropsEntityKey, PersistentDataType.STRING);
+
+        Skull state = (Skull) PaperLib.getBlockState(event.getBlockPlaced(), false).getState();
+        state.getPersistentDataContainer().set(
+            headDropsEntityKey,
+            PersistentDataType.STRING,
+            Objects.requireNonNull(existingData)
+        );
+        state.update();
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
+
+        if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+            return;
+        }
+
+        Block block = event.getBlock();
+        Material blockType = block.getType();
+
+        if (blockType == Material.PLAYER_HEAD || blockType == Material.PLAYER_WALL_HEAD) {
+            Skull skull = (Skull) PaperLib.getBlockState(block, false).getState();
+            if (!skull.getPersistentDataContainer().has(headDropsEntityKey, PersistentDataType.STRING)) {
                 return;
             }
-            CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-            EntityType type = MobSkullType.getEntityType(playerName);
+            String entityTypeId = Objects.requireNonNull(skull.getPersistentDataContainer().get(headDropsEntityKey, PersistentDataType.STRING));
+            EntityType type = Registry.ENTITY_TYPE.get(parseKey(entityTypeId));
+
+            //noinspection deprecation
+            if (type == null || type.getName() == null) {
+                return;
+            }
 
             ItemStack stack = new ItemStack(Material.PLAYER_HEAD, 1);
             SkullMeta meta = (SkullMeta) stack.getItemMeta();
-            meta.setOwner(playerName);
-
-            if (type != null && !enableMobs)
-                return;
-            if (type == null && !enablePlayers)
-                return;
-
-            if (!event.getPlayer().hasPermission("craftbook.mech.headdrops.break")) {
-                player.printError("mech.headdrops.break-permission");
-                return;
-            }
-
-            if (type != null)
-                meta.setDisplayName(ChatColor.RESET + WordUtils.capitalize(type.getName().replace("_", " ")) + " Head");
-            else
-                meta.setDisplayName(ChatColor.RESET + playerName + "'s Head");
-
+            meta.getPersistentDataContainer().set(headDropsEntityKey, PersistentDataType.STRING, entityTypeId);
+            meta.setDisplayName(ChatColor.RESET + WordUtils.capitalize(type.getKey().getKey().replace("_", " ")) + " Head");
             stack.setItemMeta(meta);
-
-            if (ProtectionUtil.isBreakingPrevented(event.getPlayer(), event.getBlock()))
-                return;
 
             event.setCancelled(true);
             event.getBlock().setType(Material.AIR);
-            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), stack);
+            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation().toCenterLocation(), stack);
         }
     }
 
-    protected enum MobSkullType {
-
-        //Official
-        BAT("bozzobrain", "coolwhip101"),
-        BLAZE("MHF_Blaze", "Blaze_Head"),
-        CAVE_SPIDER("MHF_CaveSpider"),
-        CHICKEN("MHF_Chicken", "scraftbrothers1"),
-        COW("MHF_Cow", "VerifiedBernard", "CarlosTheCow"),
-        DONKEY("Donkey"),
-        ELDER_GUARDIAN("ElderGuardian"),
-        ENDERMAN("MHF_Enderman", "Violit"),
-        ENDERMITE("MHF_Endermite"),
-        ENDER_DRAGON("MHF_EnderDragon"),
-        EVOKER("MFH_Evoker"),
-        GHAST("MHF_Ghast", "_QuBra_"),
-        GUARDIAN("MHF_Guardian", "Guardian"),
-        HORSE("gavertoso"),
-        IRON_GOLEM("MHF_Golem", "zippie007"),
-        MAGMA_CUBE("MHF_LavaSlime"),
-        MUSHROOM_COW("MHF_MushroomCow", "Mooshroom_Stew"),
-        OCELOT("MHF_Ocelot", "scraftbrothers3"),
-        PARROT("MHF_Parrot"),
-        PIG("MHF_Pig", "XlexerX"),
-        ZOMBIFIED_PIGLIN("MHF_PigZombie", "ManBearPigZombie", "scraftbrothers5"),
-        POLAR_BEAR("Polar_Bear", "ice_bear", "_DmacK_"),
-        RABBIT("MHF_Rabbit", "rabbit2077"),
-        SHEEP("MHF_Sheep", "SGT_KICYORASS", "Eagle_Peak"),
-        SHULKER("MHF_Shulker"),
-        //SILVERFISH("Xzomag", "AlexVMiner"),
-        SLIME("MHF_Slime", "HappyHappyMan"),
-        SNOWMAN("MHF_SnowGolem", "Koebasti", "scraftbrothers2"),
-        SPIDER("MHF_Spider", "Kelevra_V"),
-        STRAY("MHF_Stray"),
-        SQUID("MHF_Squid", "squidette8"),
-        WITCH("MHF_Witch", "scrafbrothers4"),
-        WITHER("MHF_Wither"),
-        WOLF("MHF_Wolf", "Budwolf"),
-        VEX("MHF_Vex"),
-        VILLAGER("MHF_Villager", "Villager", "Kuvase", "scraftbrothers9");
-
-        //Unofficial/Community
-
-        MobSkullType(String playerName, String... oldNames) {
-
-            this.playerName = playerName;
-            this.oldNames = new HashSet<>(Arrays.asList(oldNames));
+    @Nullable
+    protected ItemStack createFromEntityType(EntityType entityType) {
+        PlayerProfile profile = TEXTURE_MAP.get(entityType);
+        NamespacedKey entityKey = entityType.getKey();
+        if (customSkins.containsKey(entityKey)) {
+            profile = customSkins.get(entityKey);
         }
-
-        private String playerName;
-        private Set<String> oldNames;
-
-        public String getPlayerName() {
-
-            return playerName;
-        }
-
-        public boolean isOldName(String name) {
-
-            return oldNames.contains(name);
-        }
-
-        public static MobSkullType getFromEntityType(EntityType entType) {
-
-            try {
-                return MobSkullType.valueOf(entType.name());
-            } catch (Exception e) {
-                return null;
+        if (profile != null) {
+            ItemStack toDrop = new ItemStack(Material.PLAYER_HEAD, 1);
+            ItemMeta itemMeta = toDrop.getItemMeta();
+            if (itemMeta instanceof SkullMeta) {
+                SkullMeta skullMeta = (SkullMeta) itemMeta;
+                skullMeta.setDisplayName(ChatColor.RESET + WordUtils.capitalize(entityKey.getKey().replace("_", " ")) + " Head");
+                skullMeta.setPlayerProfile(profile);
+                skullMeta.getPersistentDataContainer().set(headDropsEntityKey, PersistentDataType.STRING, entityKey.toString());
+                toDrop.setItemMeta(skullMeta);
+            } else {
+                CraftBook.logger.warn("Spigot has failed to set a HeadDrop item to a head!");
             }
-        }
 
-        public static EntityType getEntityType(String name) {
-
-            if (name == null)
-                return null;
-
-            for (MobSkullType type : values())
-                if (type.playerName.equalsIgnoreCase(name) || type.isOldName(name) || name.equalsIgnoreCase(instance.customSkins.get(EntityType.valueOf(type.name()).getName().toUpperCase())))
-                    return EntityType.valueOf(type.name());
-
+            return toDrop;
+        } else {
             return null;
+        }
+    }
+
+    private NamespacedKey parseKey(String name) {
+        if (name.contains(":")) {
+            String[] nameParts = name.split(":");
+            //noinspection deprecation
+            return new NamespacedKey(nameParts[0], nameParts[1]);
+        } else {
+            return NamespacedKey.minecraft(name);
         }
     }
 
     private boolean enableMobs;
     private boolean enablePlayers;
     private boolean playerKillsOnly;
-    private boolean miningDrops;
     private boolean overrideNatural;
     private double dropRate;
-    private double rateModifier;
-    private boolean showNameClick;
-    private HashMap<String, Double> customDropRates;
-    private HashMap<String, String> customSkins;
-    private List<String> ignoredNames;
+    private double lootingModifier;
+    private boolean nameOnClick;
+    private HashMap<NamespacedKey, Double> customDropRates;
+    private HashMap<NamespacedKey, PlayerProfile> customSkins;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
-        config.setComment("drop-mob-heads", "Allow the Head Drops mechanic to drop mob heads.");
+        config.setComment("drop-mob-heads", "Whether mobs should drop their heads when killed.");
         enableMobs = config.getBoolean("drop-mob-heads", true);
 
-        config.setComment("drop-player-heads", "Allow the Head Drops mechanic to drop player heads.");
+        config.setComment("drop-player-heads", "Whether players should drop their heads when killed.");
         enablePlayers = config.getBoolean("drop-player-heads", true);
 
-        config.setComment("require-player-killed", "Only drop heads when killed by a player. Otherwise they will drop heads on any death.");
-        playerKillsOnly = config.getBoolean("require-player-killed", true);
-
-        config.setComment("drop-head-when-mined", "When enabled, heads keep their current skin when mined and are dropped accordingly.");
-        miningDrops = config.getBoolean("drop-head-when-mined", true);
+        config.setComment("require-player-killer", "Only drop heads when killed by a player. (Allows requiring permission)");
+        playerKillsOnly = config.getBoolean("require-player-killer", true);
 
         config.setComment("override-natural-head-drops", "Override natural head drops, this will cause natural head drops to use the chances provided by CraftBook. (Eg, Wither Skeleton Heads)");
         overrideNatural = config.getBoolean("override-natural-head-drops", false);
@@ -368,25 +340,29 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         dropRate = config.getDouble("drop-rate", 0.05);
 
         config.setComment("looting-rate-modifier", "This amount is added to the chance for every looting level on an item. Eg, a chance of 0.05(5%) and a looting mod of 0.05(5%) on a looting 3 sword, would give a 0.20 chance (20%).");
-        rateModifier = config.getDouble("looting-rate-modifier", 0.05);
+        lootingModifier = config.getDouble("looting-rate-modifier", 0.05);
 
-        config.setComment("show-name-right-click", "When enabled, right clicking a placed head will say the owner of the head's skin.");
-        showNameClick = config.getBoolean("show-name-right-click", true);
+        config.setComment("show-name-right-click", "When enabled, right clicking a placed head will say the owner of the head.");
+        nameOnClick = config.getBoolean("show-name-right-click", true);
 
+        config.setComment("drop-rates", "A list of custom drop rates for different mobs");
         customDropRates = new HashMap<>();
         if (config.getKeys("drop-rates") != null) {
-            for (String key : config.getKeys("drop-rates"))
-                customDropRates.put(key.toUpperCase(), config.getDouble("drop-rates." + key));
-        } else
+            for (String key : config.getKeys("drop-rates")) {
+                customDropRates.put(parseKey(key), config.getDouble("drop-rates." + key));
+            }
+        } else {
             config.addNode("drop-rates");
-        customSkins = new HashMap<>();
-        if (config.getKeys("custom-mob-skins") != null) {
-            for (String key : config.getKeys("custom-mob-skins"))
-                customSkins.put(key.toUpperCase(), config.getString("custom-mob-skins." + key));
-        } else
-            config.addNode("custom-mob-skins");
+        }
 
-        config.setComment("ignored-names", "List of usernames to ignore when the head is touched.");
-        ignoredNames = config.getStringList("ignored-names", Lists.newArrayList("cscorelib"));
+        config.setComment("custom-skins", "A list of custom skins for different mobs");
+        customSkins = new HashMap<>();
+        if (config.getKeys("custom-skins") != null) {
+            for (String key : config.getKeys("custom-skins")) {
+                customSkins.put(parseKey(key), SkinData.createProfile(config.getString("custom-skins." + key)));
+            }
+        } else {
+            config.addNode("custom-skins");
+        }
     }
 }

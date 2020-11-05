@@ -85,9 +85,6 @@ public class LanguageManager {
         put("mech.hiddenswitch.key", "The key did not fit!");
         put("mech.hiddenswitch.toggle", "You hear the muffled click of a switch!");
 
-        put("mech.headdrops.click-message", "This is the dismembered head of..");
-        put("mech.headdrops.break-permission", "You don't have permission to break heads!");
-
         put("mech.lift.target-sign-created", "Elevator target sign created.");
         put("mech.lift.down-sign-created", "Elevator down sign created.");
         put("mech.lift.up-sign-created", "Elevator up sign created.");

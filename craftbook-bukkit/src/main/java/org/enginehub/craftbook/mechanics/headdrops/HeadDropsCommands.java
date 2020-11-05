@@ -22,14 +22,13 @@ import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
 import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;
 import com.sk89q.worldedit.util.auth.AuthorizationException;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import com.sk89q.worldedit.util.formatting.text.format.TextColor;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
-import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.BukkitCraftBookPlayer;
 import org.enginehub.craftbook.exception.CraftBookException;
@@ -43,21 +42,27 @@ import org.enginehub.piston.annotation.param.Switch;
 @CommandContainer(superTypes = CommandPermissionsConditionGenerator.Registration.class)
 public class HeadDropsCommands {
 
-    public static void register(CommandManager commandManager, CommandRegistrationHandler registration) {
+    private final HeadDrops headDrops;
+
+    public static void register(CommandManager commandManager, CommandRegistrationHandler registration, HeadDrops headDrops) {
         registration.register(
             commandManager,
             HeadDropsCommandsRegistration.builder(),
-            new HeadDropsCommands()
+            new HeadDropsCommands(headDrops)
         );
     }
 
-    public HeadDropsCommands() {
+    private HeadDropsCommands(HeadDrops headDrops) {
+        this.headDrops = headDrops;
     }
 
-    @Command(name = "give", desc = "Gives the player the headdrops item.")
-    @CommandPermissions({ "craftbook.mech.headdrops.give" })
+    @Command(
+        name = "give",
+        desc = "Gives the player the headdrops item."
+    )
+    @CommandPermissions({ "craftbook.headdrops.give" })
     public void giveItem(Actor actor,
-                         @Arg(desc = "The entity type") com.sk89q.worldedit.world.entity.EntityType entityType,
+                         @Arg(name = "Entity Type", desc = "The entity type to spawn the head of") com.sk89q.worldedit.world.entity.EntityType entityType,
                          @ArgFlag(name = 'p', desc = "The player to target") String otherPlayer,
                          @ArgFlag(name = 'a', desc = "Amount to give", def = "1") int amount,
                          @Switch(name = 's', desc = "Silence output") boolean silent
@@ -65,44 +70,42 @@ public class HeadDropsCommands {
         CraftBookException {
         Player player;
 
-        if (otherPlayer != null)
+        if (otherPlayer != null) {
             player = Bukkit.getPlayer(otherPlayer);
-        else if (!(actor instanceof CraftBookPlayer))
-            throw new CraftBookException("Please provide a player! (-p flag)");
-        else
-            player = ((BukkitCraftBookPlayer) actor).getPlayer();
-
-        if (player == null)
-            throw new CraftBookException("Unknown Player!");
-
-        if (HeadDrops.instance == null)
-            throw new CraftBookException("HeadDrops are not enabled!");
-
-        if (!actor.hasPermission("craftbook.mech.headdrops.give" + (otherPlayer != null ? ".others" : "") + '.' + entityType.getId()))
-            throw new AuthorizationException();
-
-        HeadDrops.MobSkullType skullType = HeadDrops.MobSkullType.getFromEntityType(BukkitAdapter.adapt(entityType));
-        if (skullType == null)
-            throw new CraftBookException("Invalid Skull Type!");
-
-        String mobName = skullType.getPlayerName();
-
-        ItemStack stack = new ItemStack(Material.PLAYER_HEAD, amount);
-        ItemMeta metaD = stack.getItemMeta();
-        if (metaD instanceof SkullMeta) {
-            SkullMeta itemMeta = (SkullMeta) metaD;
-            itemMeta.setDisplayName(ChatColor.RESET + entityType.getName().toUpperCase() + " Head");
-            itemMeta.setOwner(mobName);
-            stack.setItemMeta(itemMeta);
+        } else if (!(actor instanceof CraftBookPlayer)) {
+            throw new CraftBookException(TranslatableComponent.of("craftbook.command.player-required"));
         } else {
-            CraftBook.logger.warn("Bukkit has failed to set a HeadDrop item to a head!");
+            player = ((BukkitCraftBookPlayer) actor).getPlayer();
         }
 
-        if (!player.getInventory().addItem(stack).isEmpty()) {
-            throw new CraftBookException("Failed to add item to inventory!");
+        if (player == null) {
+            throw new CraftBookException(TranslatableComponent.of("craftbook.command.unknown-player"));
         }
 
-        if (!silent)
-            actor.print("Gave HeadDrop for " + ChatColor.BLUE + entityType.getName() + ChatColor.YELLOW + " to " + player.getName());
+        if (!actor.hasPermission("craftbook.headdrops.give" + (otherPlayer != null ? ".others" : "") + '.' + entityType.getId())) {
+            throw new AuthorizationException();
+        }
+
+        ItemStack toDrop = headDrops.createFromEntityType(BukkitAdapter.adapt(entityType));
+        if (toDrop != null) {
+            toDrop.setAmount(amount);
+        }
+
+        if (toDrop == null || !player.getInventory().addItem(toDrop).isEmpty()) {
+            actor.printError(TranslatableComponent.of(
+                "craftbook.headdrops.give.failed",
+                TextComponent.of(player.getName(), TextColor.WHITE),
+                TextComponent.of(WordUtils.capitalize(entityType.getName().replace("_ ", " ")), TextColor.WHITE)
+            ));
+            return;
+        }
+
+        if (!silent) {
+            actor.print(TranslatableComponent.of(
+                "craftbook.headdrops.give",
+                TextComponent.of(WordUtils.capitalize(entityType.getName().replace("_ ", " ")), TextColor.WHITE),
+                TextComponent.of(player.getName(), TextColor.WHITE)
+            ));
+        }
     }
 }

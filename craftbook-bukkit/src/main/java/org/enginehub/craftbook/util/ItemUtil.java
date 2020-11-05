@@ -838,11 +838,6 @@ public final class ItemUtil {
         return isCookable(item) || isSmeltable(item);
     }
 
-    public static boolean isItemEdible(ItemStack item) {
-
-        return item.getType().isEdible();
-    }
-
     public static ItemStack getUsedItem(ItemStack item) {
 
         if (item.getType() == Material.MUSHROOM_STEW) {

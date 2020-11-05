@@ -18,7 +18,9 @@ package org.enginehub.craftbook;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.sk89q.worldedit.util.concurrency.LazyReference;
 import com.sk89q.worldedit.util.io.ResourceLoader;
+import com.sk89q.worldedit.util.io.file.ArchiveUnpacker;
 import com.sk89q.worldedit.util.task.SimpleSupervisor;
 import com.sk89q.worldedit.util.task.Supervisor;
 import com.sk89q.worldedit.util.translation.TranslationManager;
@@ -30,6 +32,7 @@ import org.enginehub.craftbook.util.profile.resolver.ProfileService;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -43,6 +46,13 @@ public class CraftBook {
 
     private CraftBookPlatform platform;
     private final ResourceLoader resourceLoader = new CraftBookResourceLoader();
+    private final LazyReference<ArchiveUnpacker> archiveUnpacker = LazyReference.from(() -> {
+        try {
+            return new ArchiveUnpacker(platform.getWorkingDirectory().resolve(".archive-unpack"));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    });
     private TranslationManager translationManager;
 
     private final Supervisor supervisor = new SimpleSupervisor();
@@ -56,7 +66,7 @@ public class CraftBook {
 
     public void setup() {
         try {
-            translationManager = new TranslationManager(resourceLoader);
+            translationManager = new TranslationManager(archiveUnpacker.getValue(), resourceLoader);
         } catch (IOException e) {
             logger.error("Failed to initialise localisations", e);
         }

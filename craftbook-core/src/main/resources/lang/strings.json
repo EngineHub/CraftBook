@@ -17,6 +17,12 @@
     "craftbook.chairs.obstructed": "That chair is obstructed!",
     "craftbook.chairs.too-far-away": "That chair is too far away!",
 
+    "craftbook.headdrops.description": "Allows the head of players and mobs to be collected",
+    "craftbook.headdrops.click-message.player": "The dismembered head of {0}...",
+    "craftbook.headdrops.click-message.mob": "The dismembered head of a {0}...",
+    "craftbook.headdrops.give": "Gave a {0} head to {1}",
+    "craftbook.headdrops.give.failed": "Failed to give {0} the head of a {1}",
+
     "craftbook.jackolantern.description": "Allows Jack O Lanterns to be turned on and off with redstone",
 
     "craftbook.lightstone.line": "LightStone: {0} {1}L",
@@ -75,5 +81,9 @@
     "craftbook.mechanisms.disable-success": "Disabled mechanic {0}",
     "craftbook.mechanisms.click-to-enable": "Click to enable",
     "craftbook.mechanisms.click-to-disable": "Click to disable",
-    "craftbook.version.version": "CraftBook version {0}"
+
+    "craftbook.version.version": "CraftBook version {0}",
+
+    "craftbook.command.player-required": "A player must be provided.",
+    "craftbook.command.unknown-player": "Unknown player!"
 }
