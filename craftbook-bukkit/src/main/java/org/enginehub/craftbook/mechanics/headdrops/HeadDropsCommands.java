@@ -101,7 +101,7 @@ public class HeadDropsCommands {
         }
 
         if (!silent) {
-            actor.print(TranslatableComponent.of(
+            actor.printInfo(TranslatableComponent.of(
                 "craftbook.headdrops.give",
                 TextComponent.of(WordUtils.capitalize(entityType.getName().replace("_ ", " ")), TextColor.WHITE),
                 TextComponent.of(player.getName(), TextColor.WHITE)

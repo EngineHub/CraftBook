@@ -198,14 +198,14 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                     return;
                 }
 
-                player.print(TranslatableComponent.of("craftbook.headdrops.click-message.mob", TextComponent.of(WordUtils.capitalize(entityType.getKey().getKey().replace("_", " ")))));
+                player.printInfo(TranslatableComponent.of("craftbook.headdrops.click-message.mob", TextComponent.of(WordUtils.capitalize(entityType.getKey().getKey().replace("_", " ")))));
             } else {
                 PlayerProfile profile = skull.getPlayerProfile();
                 if (profile == null || profile.getName() == null || profile.getName().equals(SkinData.HEAD_NAME)) {
                     return;
                 }
 
-                player.print(TranslatableComponent.of("craftbook.headdrops.click-message.player", TextComponent.of(profile.getName())));
+                player.printInfo(TranslatableComponent.of("craftbook.headdrops.click-message.player", TextComponent.of(profile.getName())));
             }
         }
     }
