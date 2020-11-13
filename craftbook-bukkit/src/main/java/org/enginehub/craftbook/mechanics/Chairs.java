@@ -89,7 +89,7 @@ public class Chairs extends AbstractCraftBookMechanic {
 
     @Override
     public void enable() {
-        this.chairDataKey = new NamespacedKey(CraftBookPlugin.inst(), "is_chair");
+        this.chairDataKey = new NamespacedKey("craftbook", "is_chair");
 
         Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new ChairChecker(), 20L, 20L);
 
