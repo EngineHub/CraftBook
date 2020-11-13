@@ -23,6 +23,7 @@ import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.item.ItemTypes;
 import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
@@ -44,9 +45,11 @@ import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class SignCopier extends AbstractCraftBookMechanic {
 
-    private final Map<UUID, String[]> signs = Maps.newHashMap();
+    private final Map<UUID, SignData> signs = Maps.newHashMap();
 
     @Override
     public void enable() {
@@ -80,13 +83,15 @@ public class SignCopier extends AbstractCraftBookMechanic {
     }
 
     /**
-     * Get the lines of the copied sign for the user.
+     * Get the data of the copied sign for the user.
+     *
+     * @see SignData
      *
      * @param uuid The user's UUID
-     * @return The sign lines, or null
+     * @return The sign data, or null
      */
     @Nullable
-    public String[] getSignLines(UUID uuid) {
+    public SignData getSignData(UUID uuid) {
         return signs.get(uuid);
     }
 
@@ -98,7 +103,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
      * @param line The new line value
      */
     public void setSignLine(UUID uuid, int lineNumber, String line) {
-        signs.get(uuid)[lineNumber] = line;
+        signs.get(uuid).lines[lineNumber] = line;
     }
 
     /**
@@ -147,21 +152,24 @@ public class SignCopier extends AbstractCraftBookMechanic {
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             Sign sign = (Sign) PaperLib.getBlockState(block, false).getState();
 
-            signs.put(player.getUniqueId(), sign.getLines());
+            signs.put(player.getUniqueId(), SignData.fromSign(sign));
 
             player.printInfo(TranslatableComponent.of("craftbook.signcopier.copy"));
             event.setCancelled(true);
         } else if (event.getAction().equals(Action.LEFT_CLICK_BLOCK) && signs.containsKey(player.getUniqueId())) {
             Sign sign = (Sign) PaperLib.getBlockState(block, false).getState();
-            String[] lines = signs.get(player.getUniqueId());
+            SignData signData = signs.get(player.getUniqueId());
 
             // Validate that the sign can be placed here and notify plugins.
-            SignChangeEvent sev = new SignChangeEvent(block, event.getPlayer(), lines);
+            SignChangeEvent sev = new SignChangeEvent(block, event.getPlayer(), signData.lines);
             Bukkit.getPluginManager().callEvent(sev);
 
             if (!sev.isCancelled() || !CraftBook.getInstance().getPlatform().getConfiguration().obeyPluginProtections) {
-                for (int i = 0; i < lines.length; i++) {
-                    sign.setLine(i, lines[i]);
+                for (int i = 0; i < signData.lines.length; i++) {
+                    sign.setLine(i, signData.lines[i]);
+                }
+                if (copyColor && signData.color != null) {
+                    sign.setColor(signData.color);
                 }
                 sign.update();
 
@@ -174,11 +182,41 @@ public class SignCopier extends AbstractCraftBookMechanic {
         }
     }
 
+    /**
+     * Stores data about the copied sign.
+     */
+    protected static class SignData {
+        protected String[] lines;
+        @Nullable
+        protected DyeColor color;
+
+        /**
+         * Create a new instance of the SignData class.
+         *
+         * @param lines The sign lines
+         * @param color The dyed color, if present
+         */
+        protected SignData(String[] lines, @Nullable DyeColor color) {
+            checkNotNull(lines);
+
+            this.lines = lines;
+            this.color = color;
+        }
+
+        public static SignData fromSign(Sign sign) {
+            return new SignData(sign.getLines(), sign.getColor());
+        }
+    }
+
     private ItemStack item;
+    private boolean copyColor;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("item", "The item for the sign copy tool.");
         item = ItemSyntax.getItem(config.getString("item", ItemTypes.INK_SAC.getId()));
+
+        config.setComment("copy-color", "If the sign copier should also copy the dyed color of the sign.");
+        copyColor = config.getBoolean("copy-color", true);
     }
 }
