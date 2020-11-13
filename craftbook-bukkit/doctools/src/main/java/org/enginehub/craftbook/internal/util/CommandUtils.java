@@ -9,6 +9,7 @@ import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import org.enginehub.craftbook.PlatformCommandManager;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
 import org.enginehub.craftbook.mechanics.headdrops.HeadDropsCommands;
+import org.enginehub.craftbook.mechanics.signcopier.SignEditCommands;
 import org.enginehub.piston.Command;
 import org.enginehub.piston.config.TextConfig;
 import org.enginehub.piston.part.SubCommandPart;
@@ -44,6 +45,13 @@ public class CommandUtils {
             Lists.newArrayList(),
             "CraftBook HeadDrops Commands",
             (commandManager1, registration) -> HeadDropsCommands.register(commandManager1, registration, null)
+        );
+
+        registrar.registerTopLevelWithSubCommands(
+            "signedit",
+            Lists.newArrayList("edsign", "signcopy"),
+            "CraftBook SignCopier Commands",
+            (commandManager, registration) -> SignEditCommands.register(commandManager, registration, null)
         );
 
         commands.putAll(commandManager.getCommandManager().getAllCommands().collect(Collectors.toMap(Command::getName, command -> command)));

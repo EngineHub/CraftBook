@@ -31,5 +31,11 @@ public class CommandDocumentationGenerator {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        try {
+            generateCommandsFile("signcopier", CommandUtils.dumpSection("SignCopier", Lists.newArrayList("signedit")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
