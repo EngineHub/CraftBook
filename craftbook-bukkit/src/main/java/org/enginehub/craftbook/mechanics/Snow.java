@@ -30,7 +30,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
@@ -105,17 +104,22 @@ public class Snow extends AbstractCraftBookMechanic {
     }
 
     private boolean isReplacable(Block block) {
-        return !(block.getType() == Material.WATER || block.getType() == Material.LAVA)
-            && (BlockUtil.isBlockReplacable(block.getType())
+        Material type = block.getType();
+        return !(type == Material.WATER || type == Material.LAVA)
+            && (BlockUtil.isBlockReplacable(type)
             || Blocks.containsFuzzy(dispersionReplacables, BukkitAdapter.adapt(block.getBlockData())));
     }
 
-    private boolean canLandOn(Block block) {
+    private boolean canPlaceAt(Block block) {
         Material type = block.getType();
         if (freezeWater && type == Material.WATER) {
             return true;
         }
-        return type != Material.ICE && (type == Material.SNOW || block.getPistonMoveReaction() != PistonMoveReaction.BREAK);
+
+        return BukkitAdapter.adapt(block.getWorld()).canPlaceAt(
+            BukkitAdapter.asBlockVector(block.getLocation()),
+            BlockTypes.SNOW.getDefaultState()
+        );
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -153,11 +157,13 @@ public class Snow extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerMove(PlayerMoveEvent event) {
-
-        if (!trample && !slowdown) return;
-
-        if (!EventUtil.passesFilter(event))
+        if (!trample && !slowdown) {
             return;
+        }
+
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
@@ -255,26 +261,24 @@ public class Snow extends AbstractCraftBookMechanic {
                 }
             }
 
-            if (!canLandOn(below)) {
-                // This block is non-solid. The snow will just break due to physics.
+            if (!canPlaceAt(snow) || !isReplacable(snow)) {
+                // Can't place snow here.
                 return false;
             }
 
-            if (isReplacable(snow)) {
-                snow.setType(Material.SNOW, false);
-                if (disperse && belowType == Material.SNOW) {
-                    addToDispersionQueue(snow);
-                }
-                return true;
-            } else {
-                return false;
+            snow.setType(Material.SNOW);
+            if (disperse && belowType == Material.SNOW) {
+                addToDispersionQueue(snow);
             }
+            return true;
         }
 
         org.bukkit.block.data.type.Snow snowData = (org.bukkit.block.data.type.Snow) snow.getBlockData();
         if (snowData.getLayers() + 1 > snowData.getMaximumLayers()) {
             if (pileHigh && below.getRelative(BlockFace.DOWN, maxPileHeight).getType() != Material.SNOW) {
-                snow.setType(Material.SNOW, false);
+                snowData.setLayers(snowData.getMaximumLayers());
+                snow.setBlockData(snowData);
+
                 if (disperse) {
                     addToDispersionQueue(snow);
                 }
@@ -353,7 +357,7 @@ public class Snow extends AbstractCraftBookMechanic {
                     return;
                 }
             }
-        } else if (isReplacable(below) && canLandOn(below.getRelative(BlockFace.DOWN))) {
+        } else if (isReplacable(below) && canPlaceAt(below)) {
             if (decreaseSnow(snow, false)) {
                 increaseSnow(below, true);
                 return;
@@ -373,12 +377,14 @@ public class Snow extends AbstractCraftBookMechanic {
 
         for (BlockFace dir : faces) {
             Block block = snow.getRelative(dir);
-            Material blockType = block.getType();
+            Block relativeBelow = block.getRelative(BlockFace.DOWN);
 
-            if (!isReplacable(block) || !canLandOn(block.getRelative(BlockFace.DOWN))) {
+            // If we can't replace here, don't bother - but if
+            if (!isReplacable(block) || (!canPlaceAt(block) && !isReplacable(relativeBelow))) {
                 continue;
             }
 
+            Material blockType = block.getType();
             int diff;
             if (blockType == Material.SNOW) {
                 org.bukkit.block.data.type.Snow blockData = (org.bukkit.block.data.type.Snow) block.getBlockData();
