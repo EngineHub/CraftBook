@@ -80,6 +80,8 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             "CraftBook HeadDrops Commands",
             (commandManager, registration) -> HeadDropsCommands.register(commandManager, registration, this)
         );
+
+
     }
 
     @Override
@@ -264,8 +266,15 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                 return;
             }
 
+            PlayerProfile profile = TEXTURE_MAP.get(type);
+
+            if (profile == null) {
+                return;
+            }
+
             ItemStack stack = new ItemStack(Material.PLAYER_HEAD, 1);
             SkullMeta meta = (SkullMeta) stack.getItemMeta();
+            meta.setPlayerProfile(profile);
             meta.getPersistentDataContainer().set(headDropsEntityKey, PersistentDataType.STRING, entityTypeId);
             meta.setDisplayName(ChatColor.RESET + WordUtils.capitalize(type.getKey().getKey().replace("_", " ")) + " Head");
             stack.setItemMeta(meta);

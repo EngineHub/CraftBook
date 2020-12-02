@@ -32,7 +32,7 @@ repositories {
 dependencies {
     "compile"(project(":craftbook-core"))
     "compile"(project(":craftbook-libs:bukkit"))
-    "api"("com.destroystokyo.paper:paper-api:1.16.1-R0.1-SNAPSHOT")
+    "api"("com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT")
     "implementation"("io.papermc:paperlib:1.0.4")
     "api"("com.sk89q.worldedit:worldedit-bukkit:${Versions.WORLDEDIT}") {
         exclude(group = "org.spigotmc")
