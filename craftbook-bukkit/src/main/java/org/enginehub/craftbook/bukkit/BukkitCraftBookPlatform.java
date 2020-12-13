@@ -158,12 +158,14 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
     @Override
     public ProfileService createProfileService(ProfileCache profileCache) {
         List<ProfileService> services = new ArrayList<>();
-        if (PaperLib.isPaper()) {
-            // Paper has a shared cache
-            services.add(PaperPlayerService.getInstance());
-        } else {
-            services.add(BukkitPlayerService.getInstance());
-        }
+        try {
+            if (PaperLib.isPaper()) {
+                // Paper has a shared cache
+                services.add(PaperPlayerService.getInstance());
+            } else {
+                services.add(BukkitPlayerService.getInstance());
+            }
+        } catch (Throwable ignored) {}
         services.add(HttpRepositoryService.forMinecraft());
         return new CacheForwardingService(new CombinedProfileService(services), profileCache);
     }

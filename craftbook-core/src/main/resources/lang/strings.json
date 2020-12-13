@@ -17,6 +17,10 @@
     "craftbook.chairs.obstructed": "That chair is obstructed!",
     "craftbook.chairs.too-far-away": "That chair is too far away!",
 
+    "craftbook.chunkanchor.already-anchored": "This chunk is already anchored!",
+    "craftbook.chunkanchor.create": "Chunk Anchor created.",
+    "craftbook.chunkanchor.description": "Anchors a chunk to keep it loaded.",
+
     "craftbook.headdrops.description": "Allows the head of players and mobs to be collected",
     "craftbook.headdrops.click-message.player": "The dismembered head of {0}...",
     "craftbook.headdrops.click-message.mob": "The dismembered head of a {0}...",
@@ -28,6 +32,7 @@
     "craftbook.lightstone.line": "LightStone: {0} {1}L",
     "craftbook.lightstone.description": "Adds a tool that outputs the light level at the clicked block",
 
+    "craftbook.marquee.create": "Marquee created.",
     "craftbook.marquee.description": "Lets players view Variable values by right clicking a sign",
 
     "craftbook.paintingswitcher.now-editing": "You are now editing this painting!",

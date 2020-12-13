@@ -41,7 +41,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("XpStorer", org.enginehub.craftbook.mechanics.XPStorer.class, MechanicCategory.GENERAL);
 //        registerMechanic("CommandSigns", org.enginehub.craftbook.mechanics.CommandSigns.class, MechanicCategory.GENERAL);
 //        registerMechanic("LightSwitch", org.enginehub.craftbook.mechanics.LightSwitch.class, MechanicCategory.GENERAL);
-//        registerMechanic("ChunkAnchor", org.enginehub.craftbook.mechanics.ChunkAnchor.class, MechanicCategory.GENERAL);
 //        registerMechanic("HiddenSwitch", org.enginehub.craftbook.mechanics.HiddenSwitch.class, MechanicCategory.GENERAL);
 //        registerMechanic("Bridge", org.enginehub.craftbook.mechanics.area.simple.Bridge.class, MechanicCategory.GENERAL);
 //        registerMechanic("Door", org.enginehub.craftbook.mechanics.area.simple.Door.class, MechanicCategory.GENERAL);
@@ -243,6 +242,15 @@ public class BukkitMechanicManager extends MechanicManager {
             .name("HeadDrops")
             .description(TranslatableComponent.of("craftbook.headdrops.description"))
             .className("org.enginehub.craftbook.mechanics.headdrops.HeadDrops")
+            .category(MechanicCategory.GENERAL)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("chunk_anchor")
+            .name("ChunkAnchor")
+            .description(TranslatableComponent.of("craftbook.chunkanchor.description"))
+            .className("org.enginehub.craftbook.mechanics.ChunkAnchor")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 

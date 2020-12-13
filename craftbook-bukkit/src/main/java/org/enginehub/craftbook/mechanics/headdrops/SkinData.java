@@ -19,10 +19,15 @@ package org.enginehub.craftbook.mechanics.headdrops;
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EntityType;
+import org.enginehub.craftbook.CraftBook;
 
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SkinData {
 
@@ -234,23 +239,23 @@ public class SkinData {
         ));
     }
 
+    private static final EnumSet<EntityType> IGNORED_ENTITIES = EnumSet.of(
+        EntityType.PLAYER, EntityType.ZOMBIE, EntityType.CREEPER,
+        EntityType.SKELETON, EntityType.WITHER_SKELETON,
+        EntityType.ARMOR_STAND, EntityType.ENDER_DRAGON
+    );
+
     @SuppressWarnings("unused")
     private static void printMissingSkins(Map<EntityType, PlayerProfile> skinMap) {
-        for (EntityType type : EntityType.values()) {
-            if (type.getName() == null
-                || !type.isAlive()
-                || type == EntityType.PLAYER
-                || type == EntityType.ZOMBIE
-                || type == EntityType.CREEPER
-                || type == EntityType.SKELETON
-                || type == EntityType.WITHER_SKELETON
-                || type == EntityType.ARMOR_STAND
-                || type == EntityType.ENDER_DRAGON) {
-                continue;
-            }
-            if (!skinMap.containsKey(type)) {
-                System.out.println(type.getKey().toString());
-            }
+        String missingText = Stream.of(EntityType.values())
+            .filter(type -> type.getName() != null && type.isAlive() && !IGNORED_ENTITIES.contains(type))
+            .filter(type -> !skinMap.containsKey(type))
+            .map(EntityType::getKey)
+            .map(NamespacedKey::toString)
+            .collect(Collectors.joining(", "));
+
+        if (!missingText.isEmpty()) {
+            CraftBook.logger.debug(missingText);
         }
     }
 }

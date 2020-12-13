@@ -139,6 +139,7 @@ public class Marquee extends AbstractCraftBookMechanic {
         }
 
         event.setLine(1, "[Marquee]");
+        lplayer.printInfo(TranslatableComponent.of("craftbook.marquee.create"));
     }
 
 }

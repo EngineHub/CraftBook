@@ -17,12 +17,15 @@
 package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
@@ -39,58 +42,85 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
-        if (!EventUtil.passesFilter(event)) return;
+        if (!event.getLine(1).equalsIgnoreCase("[chunk]")) {
+            return;
+        }
 
-        if (!event.getLine(1).equalsIgnoreCase("[chunk]")) return;
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if (!lplayer.hasPermission("craftbook.mech.chunk")) {
-            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!lplayer.hasPermission("craftbook.chunkanchor.create")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                 lplayer.printError("mech.create-permission");
+            }
             SignUtil.cancelSignChange(event);
             return;
         }
 
-        if (checkChunks) {
-            for (BlockState state : event.getBlock().getChunk().getTileEntities()) {
-                if (state instanceof Sign) {
-                    Sign s = (Sign) state;
-                    if (s.getLine(1).equalsIgnoreCase("[Chunk]")) {
-                        lplayer.printError("mech.anchor.already-anchored");
-                        SignUtil.cancelSignChange(event);
-                        return;
-                    }
+        for (BlockState state : event.getBlock().getChunk().getTileEntities()) {
+            if (state instanceof Sign) {
+                Sign s = (Sign) state;
+                if (s.getLine(1).equals("[Chunk]")) {
+                    lplayer.printError(TranslatableComponent.of("craftbook.chunkanchor.already-anchored"));
+                    SignUtil.cancelSignChange(event);
+                    return;
                 }
             }
         }
 
         event.setLine(1, "[Chunk]");
-        lplayer.print("mech.anchor.create");
+        lplayer.printInfo(TranslatableComponent.of("craftbook.chunkanchor.create"));
     }
 
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
-        if (!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
         updateChunkTicket(event.getChunk());
     }
 
     @EventHandler
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
+        if (!useRedstone || event.isMinor() || !EventUtil.passesFilter(event)) {
+            return;
+        }
 
-        if (!EventUtil.passesFilter(event)) return;
-
-        if (!allowRedstone) return;
         Block block = event.getBlock();
         if (SignUtil.isSign(block)) {
             ChangedSign sign = CraftBookBukkitUtil.toChangedSign(block);
 
-            if (!sign.getLine(1).equals("[Chunk]")) return;
+            if (!sign.getLine(1).equals("[Chunk]")) {
+                return;
+            }
 
-            sign.setLine(3, event.getNewCurrent() > event.getOldCurrent() ? "on" : "off");
+            sign.setLine(3, event.isOn() ? "" : "OFF");
             sign.update(false);
 
             updateChunkTicket(event.getBlock().getChunk());
+        }
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
+
+        if (SignUtil.isSign(event.getBlock())) {
+            ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
+
+            if (!sign.getLine(1).equals("[Chunk]")) {
+                return;
+            }
+
+            Bukkit.getScheduler().runTask(
+                CraftBookPlugin.inst(),
+                () -> updateChunkTicket(event.getBlock().getChunk())
+            );
         }
     }
 
@@ -98,10 +128,13 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
         boolean shouldAnchor = false;
 
         for (BlockState state : chunk.getTileEntities()) {
-            if (state == null) continue;
+            if (state == null) {
+                continue;
+            }
             if (state instanceof Sign) {
-                if (((Sign) state).getLine(1).equals("[Chunk]")) {
-                    if (!allowRedstone || !((Sign) state).getLine(3).equalsIgnoreCase("off")) {
+                Sign sign = (Sign) state;
+                if (sign.getLine(1).equals("[Chunk]")) {
+                    if (!useRedstone || !sign.getLine(3).equals("OFF")) {
                         shouldAnchor = true;
                         break;
                     }
@@ -116,16 +149,11 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
         }
     }
 
-    private boolean allowRedstone;
-    private boolean checkChunks;
+    private boolean useRedstone;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
-        config.setComment("enable-redstone", "Enable toggling with redstone.");
-        allowRedstone = config.getBoolean("enable-redstone", true);
-
-        config.setComment("check-chunks", "On creation, check the chunk for already existing chunk anchors.");
-        checkChunks = config.getBoolean("check-chunks", true);
+        config.setComment("redstone-toggle", "Allow Chunk Anchors to be turned on and off with redstone.");
+        useRedstone = config.getBoolean("redstone-toggle", true);
     }
 }
