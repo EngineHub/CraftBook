@@ -59,7 +59,7 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
             return;
         }
 
-        for (BlockState state : event.getBlock().getChunk().getTileEntities()) {
+        for (BlockState state : event.getBlock().getChunk().getTileEntities(false)) {
             if (state instanceof Sign) {
                 Sign s = (Sign) state;
                 if (s.getLine(1).equals("[Chunk]")) {
@@ -127,7 +127,7 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
     private void updateChunkTicket(Chunk chunk) {
         boolean shouldAnchor = false;
 
-        for (BlockState state : chunk.getTileEntities()) {
+        for (BlockState state : chunk.getTileEntities(false)) {
             if (state == null) {
                 continue;
             }

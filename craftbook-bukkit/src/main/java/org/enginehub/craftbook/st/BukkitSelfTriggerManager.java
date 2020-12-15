@@ -122,7 +122,7 @@ public class BukkitSelfTriggerManager implements SelfTriggerManager, Listener {
 
     private void registerSelfTrigger(Chunk chunk) {
         try {
-            for (BlockState state : chunk.getTileEntities()) {
+            for (BlockState state : chunk.getTileEntities(false)) {
                 if (!(state instanceof Sign)) {
                     continue;
                 }

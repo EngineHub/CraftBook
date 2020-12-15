@@ -50,8 +50,9 @@ public class PerformanceReport extends DataReport {
             // Collect tile entities
             int teCount = 0;
             for (Chunk chunk : world.getLoadedChunks()) {
-                teCount += chunk.getTileEntities().length;
-                for (BlockState state : chunk.getTileEntities()) {
+                BlockState[] tileEntities = chunk.getTileEntities(false);
+                teCount += tileEntities.length;
+                for (BlockState state : tileEntities) {
                     Class<? extends BlockState> cls = state.getClass();
 
                     if (tileEntityCounts.containsKey(cls)) {
