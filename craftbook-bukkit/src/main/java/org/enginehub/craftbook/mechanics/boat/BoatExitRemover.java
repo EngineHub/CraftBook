@@ -21,55 +21,66 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.util.EntityUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ItemUtil;
 
-public class ExitRemover extends AbstractCraftBookMechanic {
+public class BoatExitRemover extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleExit(VehicleExitEvent event) {
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
-        if (!EventUtil.passesFilter(event)) return;
+        Vehicle vehicle = event.getVehicle();
 
-        if (!(event.getVehicle() instanceof Boat)) return;
+        if (!(vehicle instanceof Boat)) {
+            return;
+        }
 
-        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new BoatRemover(event.getExited(), (Boat) event.getVehicle()), 2L);
+        Bukkit.getScheduler().runTask(
+            CraftBookPlugin.inst(),
+            new BoatRemover(event.getExited(), (Boat) vehicle)
+        );
     }
 
-    class BoatRemover implements Runnable {
+    private class BoatRemover implements Runnable {
+        private final LivingEntity passenger;
+        private final Boat boat;
 
-        LivingEntity player;
-        Boat boat;
-
-        BoatRemover(LivingEntity player, Boat boat) {
-            this.player = player;
+        private BoatRemover(LivingEntity passenger, Boat boat) {
+            this.passenger = passenger;
             this.boat = boat;
         }
 
         @Override
         public void run() {
-
-            if (!boat.isValid() || boat.isDead() || !boat.isEmpty()) return;
+            if (!boat.isValid() || boat.isDead() || !boat.isEmpty()) {
+                return;
+            }
 
             if (giveItem) {
                 ItemStack stack = new ItemStack(ItemUtil.getBoatFromTree(boat.getWoodType()), 1);
 
-                if (player instanceof Player) {
-                    if (!((Player) player).getInventory().addItem(stack).isEmpty())
-                        player.getLocation().getWorld().dropItemNaturally(player.getLocation(), stack);
-                } else if (player != null)
-                    player.getLocation().getWorld().dropItemNaturally(player.getLocation(), stack);
-                else
+                if (passenger instanceof Player) {
+                    if (!((Player) passenger).getInventory().addItem(stack).isEmpty()) {
+                        passenger.getLocation().getWorld().dropItemNaturally(passenger.getLocation(), stack);
+                    }
+                } else if (passenger != null) {
+                    passenger.getLocation().getWorld().dropItemNaturally(passenger.getLocation(), stack);
+                } else {
                     boat.getLocation().getWorld().dropItemNaturally(boat.getLocation(), stack);
+                }
             }
-            EntityUtil.killEntity(boat);
+
+            boat.remove();
         }
     }
 
@@ -77,8 +88,7 @@ public class ExitRemover extends AbstractCraftBookMechanic {
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
         config.setComment("give-item", "Sets whether to give the player the item back or not.");
-        giveItem = config.getBoolean("give-item", false);
+        giveItem = config.getBoolean("give-item", true);
     }
 }

@@ -9,6 +9,10 @@
 
 # List of mechanics and whether they are enabled or not
 mechanics:
+    boat:
+        boat_empty_decay: false
+        boat_exit_remover: false
+        boat_impact_damage: false
     circuit:
         jack_o_lantern: false
         redstone_fire: false

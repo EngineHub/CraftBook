@@ -8,6 +8,12 @@
 
     "craftbook.bettersponge.description": "Enhances the water removal capabilities of sponges",
 
+    "craftbook.boatemptydecay.description": "Causes boats to break after time when empty.",
+
+    "craftbook.boatexitremover.description": "Breaks boats after they're exited",
+
+    "craftbook.boatimpactdamage.description": "Cause boats to damage and knockback entities on collision",
+
     "craftbook.bounceblocks.create": "BounceBlock Created!",
     "craftbook.bounceblocks.invalid-velocity": "You need to enter a valid velocity on the 3rd line!",
 

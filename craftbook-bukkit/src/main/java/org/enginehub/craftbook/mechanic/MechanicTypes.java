@@ -49,7 +49,9 @@ import org.enginehub.craftbook.mechanics.area.Area;
 import org.enginehub.craftbook.mechanics.area.simple.Bridge;
 import org.enginehub.craftbook.mechanics.area.simple.Door;
 import org.enginehub.craftbook.mechanics.area.simple.Gate;
-import org.enginehub.craftbook.mechanics.boat.LandBoats;
+import org.enginehub.craftbook.mechanics.boat.BoatEmptyDecay;
+import org.enginehub.craftbook.mechanics.boat.BoatExitRemover;
+import org.enginehub.craftbook.mechanics.boat.BoatImpactDamage;
 import org.enginehub.craftbook.mechanics.cauldron.ImprovedCauldron;
 import org.enginehub.craftbook.mechanics.crafting.CustomCrafting;
 import org.enginehub.craftbook.mechanics.dispenser.DispenserRecipes;
@@ -108,13 +110,11 @@ public class MechanicTypes {
     @Nullable
     public static final MechanicType<BetterSponge> BETTER_SPONGE = get("better_sponge");
     @Nullable
-    public static final MechanicType<EmptyDecay> BOAT_DECAY = get("boat_decay");
+    public static final MechanicType<BoatEmptyDecay> BOAT_EMPTY_DECAY = get("boat_empty_decay");
     @Nullable
-    public static final MechanicType<ExitRemover> BOAT_EXIT_REMOVER = get("boat_exit_remover");
+    public static final MechanicType<BoatExitRemover> BOAT_EXIT_REMOVER = get("boat_exit_remover");
     @Nullable
-    public static final MechanicType<RemoveEntities> BOAT_REMOVE_ENTITIES = get("boat_remove_entities");
-    @Nullable
-    public static final MechanicType<SpeedModifiers> BOAT_SPEED_MODIFIERS = get("boat_speed_modifiers");
+    public static final MechanicType<BoatImpactDamage> BOAT_IMPACT_DAMAGE = get("boat_impact_damage");
     @Nullable
     public static final MechanicType<BounceBlocks> BOUNCE_BLOCKS = get("bounce_blocks");
     @Nullable
@@ -151,8 +151,6 @@ public class MechanicTypes {
     public static final MechanicType<ICMechanic> INTEGRATED_CIRCUITS = get("integrated_circuits");
     @Nullable
     public static final MechanicType<JackOLantern> JACK_O_LANTERN = get("jack_o_lantern");
-    @Nullable
-    public static final MechanicType<LandBoats> LAND_BOATS = get("land_boats");
     @Nullable
     public static final MechanicType<LightSwitch> LIGHT_SWITCH = get("light_switch");
     @Nullable

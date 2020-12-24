@@ -17,6 +17,7 @@
 package org.enginehub.craftbook.mechanics.boat;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Vehicle;
@@ -28,59 +29,74 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.util.EventUtil;
 
-public class EmptyDecay extends AbstractCraftBookMechanic {
+public class BoatEmptyDecay extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleExit(VehicleExitEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
         Vehicle vehicle = event.getVehicle();
 
-        if (!(vehicle instanceof Boat)) return;
+        if (!(vehicle instanceof Boat)) {
+            return;
+        }
 
-        CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Decay((Boat) vehicle), delay);
+        Bukkit.getServer().getScheduler().runTaskLater(
+            CraftBookPlugin.inst(),
+            new Decay((Boat) vehicle),
+            decayDelay
+        );
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onChunkLoad(ChunkLoadEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
         for (Entity ent : event.getChunk().getEntities()) {
-            if (ent == null || !ent.isValid())
+            if (ent == null || !ent.isValid()) {
                 continue;
-            if (!(ent instanceof Boat))
+            }
+            if (!(ent instanceof Boat)) {
                 continue;
-            if (!ent.isEmpty())
+            }
+            if (!ent.isEmpty()) {
                 continue;
-            CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Decay((Boat) ent), delay);
+            }
+
+            Bukkit.getServer().getScheduler().runTaskLater(
+                CraftBookPlugin.inst(),
+                new Decay((Boat) ent),
+                decayDelay
+            );
         }
     }
 
     private static class Decay implements Runnable {
-
-        Boat cart;
+        private final Boat cart;
 
         public Decay(Boat cart) {
-
             this.cart = cart;
         }
 
         @Override
         public void run() {
+            if (cart == null || !cart.isValid() || !cart.isEmpty()) {
+                return;
+            }
 
-            if (cart == null || !cart.isValid() || !cart.isEmpty()) return;
             cart.remove();
         }
     }
 
-    private int delay;
+    private int decayDelay;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
-        config.setComment("time-in-ticks", "The time in ticks that the boat will wait before decaying.");
-        delay = config.getInt("time-in-ticks", 20);
+        config.setComment("decay-delay", "The time in ticks that the boat will wait before decaying.");
+        decayDelay = config.getInt("decay-delay", 200);
     }
 }

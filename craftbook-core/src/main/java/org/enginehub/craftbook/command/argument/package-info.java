@@ -14,30 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.boat;
+@NonnullByDefault
+package org.enginehub.craftbook.command.argument;
 
-import com.sk89q.util.yaml.YAMLProcessor;
-import org.bukkit.entity.Boat;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.vehicle.VehicleCreateEvent;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.util.EventUtil;
-
-public class LandBoats extends AbstractCraftBookMechanic {
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onVehicleCreate(VehicleCreateEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
-
-        if (!(event.getVehicle() instanceof Boat)) return;
-
-        ((Boat) event.getVehicle()).setWorkOnLand(true);
-    }
-
-    @Override
-    public void loadFromConfiguration(YAMLProcessor config) {
-
-    }
-}
+import org.enginehub.piston.util.NonnullByDefault;

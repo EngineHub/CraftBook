@@ -19,7 +19,6 @@ package org.enginehub.craftbook;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.event.Listener;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 
@@ -59,10 +58,10 @@ public abstract class AbstractCraftBookMechanic implements CraftBookMechanic, Li
 
         mechanicConfig.setHeader(
             "# CraftBook " + mechName + " Configuration",
-            "# -- Generated for version: " + CraftBookPlugin.getVersion(),
+            "# -- Generated for version: " + CraftBook.getInstance().getPlatform().getPlatformVersion(),
             "# ",
             "# More information about these features are available at...",
-            "# " + CraftBookPlugin.getDocsDomain(),
+            "# " + CraftBook.getDocsDomain(),
             "#",
             "# NOTE! Make sure to enable this in the config.yml file if you wish to use it.",
             "");

@@ -156,4 +156,7 @@ public class CraftBook {
         return this.translationManager;
     }
 
+    public static String getDocsDomain() {
+        return "https://craftbook.enginehub.org/en/latest/";
+    }
 }

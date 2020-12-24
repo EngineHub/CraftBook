@@ -26,6 +26,7 @@ import com.sk89q.worldedit.util.report.ReportList;
 import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.CraftBookManifest;
 import org.enginehub.craftbook.CraftBookPlatform;
 import org.enginehub.craftbook.YamlConfiguration;
 import org.enginehub.craftbook.mechanic.BukkitMechanicManager;
@@ -53,6 +54,7 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
 
     private final MechanicManager mechanicManager = new BukkitMechanicManager();
     private YamlConfiguration config;
+    private String version;
 
     /**
      * The manager for SelfTriggering components.
@@ -66,7 +68,13 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
 
     @Override
     public String getPlatformVersion() {
-        return null;
+        if (version != null) {
+            return version;
+        }
+
+        CraftBookManifest manifest = CraftBookManifest.load();
+
+        return version = manifest.getCraftBookVersion();
     }
 
     @Override

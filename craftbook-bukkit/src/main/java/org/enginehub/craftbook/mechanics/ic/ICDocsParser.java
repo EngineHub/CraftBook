@@ -19,7 +19,7 @@ package org.enginehub.craftbook.mechanics.ic;
 import com.sk89q.worldedit.extension.platform.Actor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.CraftBook;
 
 import java.util.Locale;
 
@@ -61,7 +61,7 @@ public class ICDocsParser {
             } else {
                 player.printDebug("Line 4: Blank.");
             }
-            player.print(ChatColor.AQUA + "Wiki: " + CraftBookPlugin.getDocsDomain() + "/" + ric.getId().toUpperCase(Locale.ENGLISH));
+            player.print(ChatColor.AQUA + "Wiki: " + CraftBook.getDocsDomain() + "/" + ric.getId().toUpperCase(Locale.ENGLISH));
         } catch (Exception ignored) {
         }
     }

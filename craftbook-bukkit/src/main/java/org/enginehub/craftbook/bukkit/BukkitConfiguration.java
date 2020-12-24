@@ -63,7 +63,7 @@ public class BukkitConfiguration extends YamlConfiguration {
             "# This configuration will automatically add new configuration options for you,",
             "# So there is no need to regenerate this configuration unless you want to.",
             "# More information about these features are available at:",
-            "# " + CraftBookPlugin.getDocsDomain() + "mechanics/",
+            "# " + CraftBook.getDocsDomain() + "mechanics/",
             "#",
             "# NOTE! NOTHING IS ENABLED BY DEFAULT! ENABLE FEATURES TO USE THEM!",
             "");

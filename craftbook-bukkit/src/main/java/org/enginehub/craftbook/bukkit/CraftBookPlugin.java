@@ -71,7 +71,6 @@ public class CraftBookPlugin extends JavaPlugin {
      * The instance for CraftBook
      */
     private static CraftBookPlugin instance;
-    private static String version;
     private static CraftBookPlatform platform;
 
     /**
@@ -507,22 +506,4 @@ public class CraftBookPlugin extends JavaPlugin {
         }
     }
 
-    public static String getDocsDomain() {
-        return "https://craftbook.enginehub.org/en/latest/";
-    }
-
-    /**
-     * Get the version.
-     *
-     * @return the version of CraftBook
-     */
-    public static String getVersion() {
-        if (version != null) {
-            return version;
-        }
-
-        CraftBookManifest manifest = CraftBookManifest.load();
-
-        return version = manifest.getCraftBookVersion();
-    }
 }

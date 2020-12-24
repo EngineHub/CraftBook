@@ -98,7 +98,7 @@ public class CraftBookCommands {
 
     @Command(name = "version", aliases = { "ver" }, desc = "Get CraftBook version.")
     public void version(Actor actor) {
-        actor.printInfo(TranslatableComponent.of("craftbook.version.version", TextComponent.of(CraftBookPlugin.getVersion())));
+        actor.printInfo(TranslatableComponent.of("craftbook.version.version", TextComponent.of(CraftBook.getInstance().getPlatform().getPlatformName())));
         actor.printInfo(
             TextComponent.of("https://github.com/EngineHub/CraftBook/")
                 .clickEvent(ClickEvent.openUrl("https://github.com/EngineHub/CraftBook/"))

@@ -83,11 +83,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("MinecartNoCollide", org.enginehub.craftbook.mechanics.minecart.NoCollide.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartPlaceAnywhere", org.enginehub.craftbook.mechanics.minecart.PlaceAnywhere.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartTemporaryCart", org.enginehub.craftbook.mechanics.minecart.TemporaryCart.class, MechanicCategory.MINECART);
-//        registerMechanic("BoatRemoveEntities", org.enginehub.craftbook.mechanics.boat.RemoveEntities.class, MechanicCategory.BOAT);
-//        registerMechanic("BoatDecay", org.enginehub.craftbook.mechanics.boat.EmptyDecay.class, MechanicCategory.BOAT);
-//        registerMechanic("BoatSpeedModifiers", org.enginehub.craftbook.mechanics.boat.SpeedModifiers.class, MechanicCategory.BOAT);
-//        registerMechanic("LandBoats", org.enginehub.craftbook.mechanics.boat.LandBoats.class, MechanicCategory.BOAT);
-//        registerMechanic("BoatExitRemover", org.enginehub.craftbook.mechanics.boat.ExitRemover.class, MechanicCategory.BOAT);
 
         MechanicType.Builder
             .create()
@@ -252,6 +247,33 @@ public class BukkitMechanicManager extends MechanicManager {
             .description(TranslatableComponent.of("craftbook.chunkanchor.description"))
             .className("org.enginehub.craftbook.mechanics.ChunkAnchor")
             .category(MechanicCategory.GENERAL)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("boat_empty_decay")
+            .name("BoatEmptyDecay")
+            .description(TranslatableComponent.of("craftbook.boatemptydecay.description"))
+            .className("org.enginehub.craftbook.mechanics.boat.BoatEmptyDecay")
+            .category(MechanicCategory.BOAT)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("boat_exit_remover")
+            .name("BoatExitRemover")
+            .description(TranslatableComponent.of("craftbook.boatexitremover.description"))
+            .className("org.enginehub.craftbook.mechanics.boat.BoatExitRemover")
+            .category(MechanicCategory.BOAT)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("boat_impact_damage")
+            .name("BoatImpactDamage")
+            .description(TranslatableComponent.of("craftbook.boatimpactdamage.description"))
+            .className("org.enginehub.craftbook.mechanics.boat.BoatImpactDamage")
+            .category(MechanicCategory.BOAT)
             .buildAndRegister();
 
         // TODO CommandItems needs to load early (after variables).

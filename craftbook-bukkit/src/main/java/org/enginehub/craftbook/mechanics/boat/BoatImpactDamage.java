@@ -19,7 +19,6 @@ package org.enginehub.craftbook.mechanics.boat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
@@ -27,40 +26,38 @@ import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.util.EventUtil;
 
-public class RemoveEntities extends AbstractCraftBookMechanic {
+public class BoatImpactDamage extends AbstractCraftBookMechanic {
 
     private static final Vector HALF_BLOCK_UP = new Vector(0, 0.5, 0);
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
-
-        if (!(event.getVehicle() instanceof Boat))
+        if (!EventUtil.passesFilter(event)) {
             return;
-        if (!removeOtherBoats && (event.getEntity() instanceof Boat || event.getEntity().isInsideVehicle()))
-            return;
+        }
 
-        if (event.getVehicle().isEmpty())
+        if (!(event.getVehicle() instanceof Boat) || event.getVehicle().isEmpty()) {
             return;
+        }
 
         if (event.getEntity() instanceof LivingEntity) {
-            if (event.getEntity().isInsideVehicle())
+            if (event.getEntity().isInsideVehicle()) {
                 return;
-            ((LivingEntity) event.getEntity()).damage(10);
+            }
+
+            // It's impossible to determine the velocity, so just deal constant damage
+            ((LivingEntity) event.getEntity()).damage(5);
+
             try {
-                event.getEntity().setVelocity(event.getVehicle().getVelocity().normalize().multiply(1.8).add(HALF_BLOCK_UP));
+                event.getEntity().setVelocity(event.getVehicle().getLocation().getDirection().normalize().multiply(1.2).add(HALF_BLOCK_UP));
             } catch (IllegalArgumentException e) {
                 event.getEntity().setVelocity(HALF_BLOCK_UP);
             }
-        } else if (event.getEntity() instanceof Vehicle) {
-
-            if (!event.getEntity().isEmpty())
-                return;
-            else
-                event.getEntity().remove();
-        } else
+        } else if (removeOtherBoats && event.getEntity() instanceof Boat && event.getEntity().isEmpty()) {
             event.getEntity().remove();
+        } else {
+            return;
+        }
 
         event.setCancelled(true);
         event.setPickupCancelled(true);
@@ -71,8 +68,7 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
-        config.setComment("remove-other-boats", "Allows the remove entities boats to remove other boats.");
+        config.setComment("remove-other-boats", "Allows boats to remove other boats on impact.");
         removeOtherBoats = config.getBoolean("remove-other-boats", false);
     }
 }
