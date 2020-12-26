@@ -22,7 +22,6 @@ import com.google.common.collect.Maps;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
-import io.papermc.lib.PaperLib;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -188,7 +187,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         Material clickedType = clicked.getType();
 
         if (clickedType == Material.PLAYER_HEAD || clickedType == Material.PLAYER_WALL_HEAD) {
-            Skull skull = (Skull) PaperLib.getBlockState(clicked, false).getState();
+            Skull skull = (Skull) clicked.getState(false);
 
             CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
@@ -230,7 +229,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
 
         String existingData = itemMeta.getPersistentDataContainer().get(headDropsEntityKey, PersistentDataType.STRING);
 
-        Skull state = (Skull) PaperLib.getBlockState(event.getBlockPlaced(), false).getState();
+        Skull state = (Skull) event.getBlockPlaced().getState(false);
         state.getPersistentDataContainer().set(
             headDropsEntityKey,
             PersistentDataType.STRING,
@@ -253,7 +252,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         Material blockType = block.getType();
 
         if (blockType == Material.PLAYER_HEAD || blockType == Material.PLAYER_WALL_HEAD) {
-            Skull skull = (Skull) PaperLib.getBlockState(block, false).getState();
+            Skull skull = (Skull) block.getState(false);
             if (!skull.getPersistentDataContainer().has(headDropsEntityKey, PersistentDataType.STRING)) {
                 return;
             }

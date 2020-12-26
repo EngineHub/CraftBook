@@ -21,7 +21,6 @@ import com.google.common.collect.Maps;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.item.ItemTypes;
-import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.block.Block;
@@ -150,14 +149,14 @@ public class SignCopier extends AbstractCraftBookMechanic {
         }
 
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            Sign sign = (Sign) PaperLib.getBlockState(block, false).getState();
+            Sign sign = (Sign) block.getState(false);
 
             signs.put(player.getUniqueId(), SignData.fromSign(sign));
 
             player.printInfo(TranslatableComponent.of("craftbook.signcopier.copy"));
             event.setCancelled(true);
         } else if (event.getAction().equals(Action.LEFT_CLICK_BLOCK) && signs.containsKey(player.getUniqueId())) {
-            Sign sign = (Sign) PaperLib.getBlockState(block, false).getState();
+            Sign sign = (Sign) block.getState(false);
             SignData signData = signs.get(player.getUniqueId());
 
             // Validate that the sign can be placed here and notify plugins.

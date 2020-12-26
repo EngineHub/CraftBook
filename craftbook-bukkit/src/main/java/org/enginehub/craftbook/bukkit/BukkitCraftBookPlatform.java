@@ -23,7 +23,6 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.command.util.PermissionCondition;
 import com.sk89q.worldedit.util.report.ReportList;
-import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookManifest;
@@ -34,7 +33,6 @@ import org.enginehub.craftbook.mechanic.MechanicManager;
 import org.enginehub.craftbook.st.BukkitSelfTriggerManager;
 import org.enginehub.craftbook.st.SelfTriggerManager;
 import org.enginehub.craftbook.util.profile.cache.ProfileCache;
-import org.enginehub.craftbook.util.profile.resolver.BukkitPlayerService;
 import org.enginehub.craftbook.util.profile.resolver.CacheForwardingService;
 import org.enginehub.craftbook.util.profile.resolver.CombinedProfileService;
 import org.enginehub.craftbook.util.profile.resolver.HttpRepositoryService;
@@ -167,12 +165,7 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
     public ProfileService createProfileService(ProfileCache profileCache) {
         List<ProfileService> services = new ArrayList<>();
         try {
-            if (PaperLib.isPaper()) {
-                // Paper has a shared cache
-                services.add(PaperPlayerService.getInstance());
-            } else {
-                services.add(BukkitPlayerService.getInstance());
-            }
+            services.add(PaperPlayerService.getInstance());
         } catch (Throwable ignored) {}
         services.add(HttpRepositoryService.forMinecraft());
         return new CacheForwardingService(new CombinedProfileService(services), profileCache);

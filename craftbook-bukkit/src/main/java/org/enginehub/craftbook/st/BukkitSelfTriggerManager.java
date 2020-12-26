@@ -33,6 +33,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.events.SelfTriggerPingEvent;
 import org.enginehub.craftbook.util.events.SelfTriggerThinkEvent;
 import org.enginehub.craftbook.util.events.SelfTriggerUnregisterEvent;
@@ -122,7 +123,7 @@ public class BukkitSelfTriggerManager implements SelfTriggerManager, Listener {
 
     private void registerSelfTrigger(Chunk chunk) {
         try {
-            for (BlockState state : chunk.getTileEntities(false)) {
+            for (BlockState state : chunk.getTileEntities(SignUtil::isSign, false)) {
                 if (!(state instanceof Sign)) {
                     continue;
                 }

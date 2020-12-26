@@ -3,7 +3,7 @@ object Versions {
     const val JINGLENOTE = "1.0.0-SNAPSHOT"
     const val JUNIT = "4.11"
     const val POWERMOCK = "1.6.1"
-    const val WORLDEDIT = "7.2.0-SNAPSHOT"
+    const val WORLDEDIT = "7.3.0-SNAPSHOT"
     const val WORLDGUARD = "7.0.4-SNAPSHOT"
     const val SQUIRRELID = "0.3.0"
     const val FAST_UTIL = "8.2.1"

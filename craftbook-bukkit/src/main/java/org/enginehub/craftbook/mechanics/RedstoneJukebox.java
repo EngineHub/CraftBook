@@ -16,7 +16,6 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Jukebox;
 import org.bukkit.event.EventHandler;
@@ -40,7 +39,7 @@ public class RedstoneJukebox extends AbstractCraftBookMechanic {
             return;
         }
 
-        Jukebox jukebox = (Jukebox) event.getBlock().getState();
+        Jukebox jukebox = (Jukebox) event.getBlock().getState(false);
 
         if (jukebox.getRecord().getType() == Material.AIR) {
             // We only care if the jukebox has a record.
@@ -48,7 +47,7 @@ public class RedstoneJukebox extends AbstractCraftBookMechanic {
         }
 
         if (!event.isOn()) {
-            event.getBlock().getWorld().playEffect(event.getBlock().getLocation(), Effect.RECORD_PLAY, Material.AIR);
+            jukebox.stopPlaying();
         } else {
             jukebox.setRecord(jukebox.getRecord());
             jukebox.update();

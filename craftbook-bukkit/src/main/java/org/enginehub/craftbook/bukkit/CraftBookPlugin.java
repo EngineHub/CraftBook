@@ -39,7 +39,6 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookManifest;
 import org.enginehub.craftbook.CraftBookPlatform;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.PlatformCommandManager;

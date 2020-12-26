@@ -16,7 +16,6 @@
 
 package org.enginehub.craftbook;
 
-import io.papermc.lib.PaperLib;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -76,7 +75,7 @@ public class ChangedSign {
 
     public Sign getSign() {
         if (this.sign == null) {
-            this.sign = (Sign) PaperLib.getBlockState(this.block, false).getState();
+            this.sign = (Sign) this.block.getState(false);
         }
         return sign;
     }
