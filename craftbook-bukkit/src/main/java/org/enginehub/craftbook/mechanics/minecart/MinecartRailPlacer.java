@@ -18,34 +18,46 @@ package org.enginehub.craftbook.mechanics.minecart;
 
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Material;
-import org.bukkit.entity.minecart.StorageMinecart;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.util.EventUtil;
 
-public class RailPlacer extends AbstractCraftBookMechanic {
+public class MinecartRailPlacer extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleMove(VehicleMoveEvent event) {
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
-        if (!EventUtil.passesFilter(event)) return;
+        Vehicle vehicle = event.getVehicle();
 
-        if (!(event.getVehicle() instanceof StorageMinecart)) return;
+        if (!(vehicle instanceof InventoryHolder) || !(vehicle instanceof Minecart)) {
+            return;
+        }
 
-        if (event.getTo().getBlock().getType() == Material.AIR
-            && event.getTo().getBlock().getRelative(0, -1, 0).getType().isSolid()
-            && ((StorageMinecart) event.getVehicle()).getInventory().contains(Material.RAIL)) {
+        Block toBlock = event.getTo().getBlock();
+        Block belowBlock = toBlock.getRelative(BlockFace.DOWN);
 
-            if (((StorageMinecart) event.getVehicle()).getInventory().removeItem(new ItemStack(Material.RAIL, 1)).isEmpty())
-                event.getTo().getBlock().setType(Material.RAIL);
+        if (toBlock.getType().isAir() && belowBlock.getType().isSolid()) {
+            Inventory inventory = ((InventoryHolder) event.getVehicle()).getInventory();
+
+            if (inventory.removeItem(new ItemStack(Material.RAIL, 1)).isEmpty()) {
+                toBlock.setType(Material.RAIL);
+            }
         }
     }
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
     }
 }

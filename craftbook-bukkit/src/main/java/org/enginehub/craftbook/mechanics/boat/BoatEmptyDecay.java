@@ -43,7 +43,7 @@ public class BoatEmptyDecay extends AbstractCraftBookMechanic {
             return;
         }
 
-        Bukkit.getServer().getScheduler().runTaskLater(
+        Bukkit.getScheduler().runTaskLater(
             CraftBookPlugin.inst(),
             new Decay((Boat) vehicle),
             decayDelay
@@ -67,7 +67,7 @@ public class BoatEmptyDecay extends AbstractCraftBookMechanic {
                 continue;
             }
 
-            Bukkit.getServer().getScheduler().runTaskLater(
+            Bukkit.getScheduler().runTaskLater(
                 CraftBookPlugin.inst(),
                 new Decay((Boat) ent),
                 decayDelay
@@ -76,19 +76,19 @@ public class BoatEmptyDecay extends AbstractCraftBookMechanic {
     }
 
     private static class Decay implements Runnable {
-        private final Boat cart;
+        private final Boat boat;
 
-        public Decay(Boat cart) {
-            this.cart = cart;
+        public Decay(Boat boat) {
+            this.boat = boat;
         }
 
         @Override
         public void run() {
-            if (cart == null || !cart.isValid() || !cart.isEmpty()) {
+            if (boat == null || !boat.isValid() || !boat.isEmpty()) {
                 return;
             }
 
-            cart.remove();
+            boat.remove();
         }
     }
 

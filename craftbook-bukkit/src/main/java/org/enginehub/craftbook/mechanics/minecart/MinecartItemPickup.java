@@ -17,46 +17,58 @@
 package org.enginehub.craftbook.mechanics.minecart;
 
 import com.sk89q.util.yaml.YAMLProcessor;
-import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
-import org.bukkit.util.Vector;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.RailUtil;
 
-public class ConstantSpeed extends AbstractCraftBookMechanic {
+import java.util.Collection;
+
+public class MinecartItemPickup extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleMove(VehicleMoveEvent event) {
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
-        if (!EventUtil.passesFilter(event)) return;
+        if (event.getFrom().toBlockKey() == event.getTo().toBlockKey()) {
+            return;
+        }
 
-        if (!(event.getVehicle() instanceof Minecart)) return;
+        Vehicle vehicle = event.getVehicle();
 
-        if (RailUtil.isTrack(event.getTo().getBlock().getType()) && event.getVehicle().getVelocity().lengthSquared() > 0) {
-            if (event.getTo().getBlock().getType() == Material.POWERED_RAIL && !ignorePoweredRail) {
-                if ((event.getTo().getBlock().getData() & 8) == 0) {
-                    return;
+        if (vehicle instanceof Minecart
+            && vehicle instanceof InventoryHolder) {
+            Inventory inventory = ((InventoryHolder) vehicle).getInventory();
+
+            for (Entity entity : vehicle.getNearbyEntities(1, 1, 1)) {
+                if (entity instanceof Item) {
+                    Item item = (Item) entity;
+
+                    // Safer to do this per-item. Shouldn't be an issue as carts will not hit millions
+                    // of items at a time
+                    Collection<ItemStack> leftovers = inventory.addItem(item.getItemStack()).values();
+
+                    if (leftovers.isEmpty()) {
+                        item.remove();
+                    } else {
+                        item.setItemStack(leftovers.toArray(new ItemStack[0])[0]);
+                    }
                 }
             }
-            Vector vel = event.getVehicle().getVelocity();
-            event.getVehicle().setVelocity(vel.normalize().multiply(speed));
         }
     }
 
-    private double speed;
-    private boolean ignorePoweredRail;
-
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
-        config.setComment("speed", "Sets the speed to move at constantly.");
-        speed = config.getDouble("speed", 0.5);
-
-        config.setComment("ignore-powered-rail", "Whether or not powered rails should be ignored.");
-        ignorePoweredRail = config.getBoolean("ignore-powered-rail", false);
     }
 }

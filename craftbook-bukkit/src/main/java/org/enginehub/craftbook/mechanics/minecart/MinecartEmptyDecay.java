@@ -17,6 +17,7 @@
 package org.enginehub.craftbook.mechanics.minecart;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.entity.minecart.RideableMinecart;
@@ -28,59 +29,74 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.util.EventUtil;
 
-public class EmptyDecay extends AbstractCraftBookMechanic {
+public class MinecartEmptyDecay extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleExit(VehicleExitEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
         Vehicle vehicle = event.getVehicle();
 
-        if (!(vehicle instanceof RideableMinecart)) return;
+        if (!(vehicle instanceof RideableMinecart)) {
+            return;
+        }
 
-        CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Decay((RideableMinecart) vehicle), delay);
+        Bukkit.getScheduler().runTaskLater(
+            CraftBookPlugin.inst(),
+            new Decay((RideableMinecart) vehicle),
+            decayDelay
+        );
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onChunkLoad(ChunkLoadEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
         for (Entity ent : event.getChunk().getEntities()) {
-            if (ent == null || !ent.isValid())
+            if (ent == null || !ent.isValid()) {
                 continue;
-            if (!(ent instanceof RideableMinecart))
+            }
+            if (!(ent instanceof RideableMinecart)) {
                 continue;
-            if (!ent.isEmpty())
+            }
+            if (!ent.isEmpty()) {
                 continue;
-            CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Decay((RideableMinecart) ent), delay);
+            }
+
+            Bukkit.getScheduler().runTaskLater(
+                CraftBookPlugin.inst(),
+                new Decay((RideableMinecart) ent),
+                decayDelay
+            );
         }
     }
 
     private static class Decay implements Runnable {
+        private final RideableMinecart cart;
 
-        RideableMinecart cart;
-
-        Decay(RideableMinecart cart) {
-
+        public Decay(RideableMinecart cart) {
             this.cart = cart;
         }
 
         @Override
         public void run() {
+            if (cart == null || !cart.isValid() || !cart.isEmpty()) {
+                return;
+            }
 
-            if (cart == null || !cart.isValid() || !cart.isEmpty()) return;
             cart.remove();
         }
     }
 
-    private int delay;
+    private int decayDelay;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
-        config.setComment("time-in-ticks", "The time in ticks that the cart will wait before decaying.");
-        delay = config.getInt("time-in-ticks", 20);
+        config.setComment("decay-delay", "The time in ticks that the cart will wait before decaying.");
+        decayDelay = config.getInt("decay-delay", 200);
     }
 }

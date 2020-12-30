@@ -17,39 +17,37 @@
 package org.enginehub.craftbook.mechanics.minecart;
 
 import com.sk89q.util.yaml.YAMLProcessor;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.minecart.StorageMinecart;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
-import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.util.EventUtil;
 
-import java.util.Collection;
-
-public class ItemPickup extends AbstractCraftBookMechanic {
+public class MinecartCollisionEntry extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
-        if (!EventUtil.passesFilter(event)) return;
+        if (event.getVehicle() instanceof RideableMinecart) {
+            if (!event.getVehicle().isEmpty()) {
+                return;
+            }
+            if (!(event.getEntity() instanceof HumanEntity)) {
+                return;
+            }
 
-        if (event.getVehicle() instanceof StorageMinecart && event.getEntity() instanceof Item) {
-
-            StorageMinecart cart = (StorageMinecart) event.getVehicle();
-            Collection<ItemStack> leftovers = cart.getInventory().addItem(((Item) event.getEntity()).getItemStack()).values();
-            if (leftovers.isEmpty())
-                event.getEntity().remove();
-            else
-                ((Item) event.getEntity()).setItemStack(leftovers.toArray(new ItemStack[1])[0]);
-
+            event.getVehicle().addPassenger(event.getEntity());
             event.setCollisionCancelled(true);
+            event.setCancelled(true);
         }
     }
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
     }
 }

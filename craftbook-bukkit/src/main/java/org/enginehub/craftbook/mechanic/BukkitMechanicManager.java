@@ -71,13 +71,9 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("MinecartRemoveEntities", org.enginehub.craftbook.mechanics.minecart.RemoveEntities.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartVisionSteering", org.enginehub.craftbook.mechanics.minecart.VisionSteering.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartDecay", org.enginehub.craftbook.mechanics.minecart.EmptyDecay.class, MechanicCategory.MINECART);
-//        registerMechanic("MinecartMobBlocker", org.enginehub.craftbook.mechanics.minecart.MobBlocker.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartExitRemover", org.enginehub.craftbook.mechanics.minecart.ExitRemover.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartCollisionEntry", org.enginehub.craftbook.mechanics.minecart.CollisionEntry.class, MechanicCategory.MINECART);
-//        registerMechanic("MinecartItemPickup", org.enginehub.craftbook.mechanics.minecart.ItemPickup.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartFallModifier", org.enginehub.craftbook.mechanics.minecart.FallModifier.class, MechanicCategory.MINECART);
-//        registerMechanic("MinecartConstantSpeed", org.enginehub.craftbook.mechanics.minecart.ConstantSpeed.class, MechanicCategory.MINECART);
-//        registerMechanic("MinecartRailPlacer", org.enginehub.craftbook.mechanics.minecart.RailPlacer.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartSpeedModifiers", org.enginehub.craftbook.mechanics.minecart.SpeedModifiers.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartEmptySlowdown", org.enginehub.craftbook.mechanics.minecart.EmptySlowdown.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartNoCollide", org.enginehub.craftbook.mechanics.minecart.NoCollide.class, MechanicCategory.MINECART);
@@ -274,6 +270,42 @@ public class BukkitMechanicManager extends MechanicManager {
             .description(TranslatableComponent.of("craftbook.boatimpactdamage.description"))
             .className("org.enginehub.craftbook.mechanics.boat.BoatImpactDamage")
             .category(MechanicCategory.BOAT)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("minecart_collision_entry")
+            .name("MinecartCollisionEntry")
+            .description(TranslatableComponent.of("craftbook.minecartcollisionentry.description"))
+            .className("org.enginehub.craftbook.mechanics.minecart.MinecartCollisionEntry")
+            .category(MechanicCategory.MINECART)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("minecart_empty_decay")
+            .name("MinecartEmptyDecay")
+            .description(TranslatableComponent.of("craftbook.minecartemptydecay.description"))
+            .className("org.enginehub.craftbook.mechanics.minecart.MinecartEmptyDecay")
+            .category(MechanicCategory.MINECART)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("minecart_rail_placer")
+            .name("MinecartRailPlacer")
+            .description(TranslatableComponent.of("craftbook.minecartrailplacer.description"))
+            .className("org.enginehub.craftbook.mechanics.minecart.MinecartRailPlacer")
+            .category(MechanicCategory.MINECART)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("minecart_item_pickup")
+            .name("MinecartItemPickup")
+            .description(TranslatableComponent.of("craftbook.minecartitempickup.description"))
+            .className("org.enginehub.craftbook.mechanics.minecart.MinecartItemPickup")
+            .category(MechanicCategory.MINECART)
             .buildAndRegister();
 
         // TODO CommandItems needs to load early (after variables).
