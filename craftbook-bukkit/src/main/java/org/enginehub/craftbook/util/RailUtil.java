@@ -20,6 +20,8 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.mechanic.MechanicTypes;
 import org.enginehub.craftbook.mechanics.minecart.MoreRails;
 
 import java.util.ArrayList;
@@ -68,16 +70,13 @@ public final class RailUtil {
     }
 
     public static boolean isTrack(Material id) {
-
-        if (MoreRails.instance != null && MoreRails.instance.pressurePlate) {
-            if (Tag.PRESSURE_PLATES.isTagged(id)) {
-                return true;
-            }
-        }
-        if (MoreRails.instance != null && MoreRails.instance.ladder) {
-            if (id == Material.LADDER || id == Material.VINE) {
-                return true;
-            }
+        if (CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(MechanicTypes.MINECART_MORE_RAILS)
+            .map(moreRails ->
+                moreRails.pressurePlate && Tag.PRESSURE_PLATES.isTagged(id)
+                    || moreRails.ladder && (id == Material.LADDER || id == Material.VINE)
+            )
+            .orElse(false)) {
+            return true;
         }
 
         return Tag.RAILS.isTagged(id);

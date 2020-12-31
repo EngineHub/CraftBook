@@ -62,7 +62,7 @@ import org.enginehub.craftbook.mechanics.items.CommandItems;
 import org.enginehub.craftbook.mechanics.minecart.MinecartCollisionEntry;
 import org.enginehub.craftbook.mechanics.minecart.MinecartEmptyDecay;
 import org.enginehub.craftbook.mechanics.minecart.EmptySlowdown;
-import org.enginehub.craftbook.mechanics.minecart.ExitRemover;
+import org.enginehub.craftbook.mechanics.minecart.MinecartExitRemover;
 import org.enginehub.craftbook.mechanics.minecart.FallModifier;
 import org.enginehub.craftbook.mechanics.minecart.MinecartItemPickup;
 import org.enginehub.craftbook.mechanics.minecart.MoreRails;
@@ -174,7 +174,7 @@ public class MechanicTypes {
     @Nullable
     public static final MechanicType<EmptySlowdown> MINECART_EMPTY_SLOWDOWN = get("minecart_empty_slowdown");
     @Nullable
-    public static final MechanicType<ExitRemover> MINECART_EXIT_REMOVER = get("minecart_exit_remover");
+    public static final MechanicType<MinecartExitRemover> MINECART_EXIT_REMOVER = get("minecart_exit_remover");
     @Nullable
     public static final MechanicType<FallModifier> MINECART_FALL_MODIFIER = get("minecart_fall_modifier");
     @Nullable
@@ -204,7 +204,7 @@ public class MechanicTypes {
     @Nullable
     public static final MechanicType<CartTeleporter> MINECART_TELEPORTER = get("minecart_teleporter");
     @Nullable
-    public static final MechanicType<TemporaryCart> MINECART_TEMPORARY_CART = get("minecart_temporary_cart");
+    public static final MechanicType<TemporaryCart> TEMPORARY_CART = get("temporary_cart");
     @Nullable
     public static final MechanicType<VisionSteering> MINECART_VISION_STEERING = get("minecart_vision_steering");
     @Nullable

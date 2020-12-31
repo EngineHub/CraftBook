@@ -31,7 +31,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -88,7 +87,7 @@ public class BetterPlants extends AbstractCraftBookMechanic {
         }
 
         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
-            block.getWorld().dropItemNaturally(BlockUtil.getBlockCentre(block), new ItemStack(Material.FERN));
+            block.getWorld().dropItemNaturally(block.getLocation().toCenterLocation(), new ItemStack(Material.FERN));
             below.setType(Material.FERN);
         }, 2L);
     }

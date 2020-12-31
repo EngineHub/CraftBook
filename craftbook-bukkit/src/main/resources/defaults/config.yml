@@ -33,8 +33,10 @@ mechanics:
     minecart:
         minecart_collision_entry: false
         minecart_empty_decay: false
+        minecart_exit_remover: false
         minecart_item_pickup: false
         minecart_rail_placer: false
+        temporary_cart: false
     tool:
         ammeter: false
         lightstone: false

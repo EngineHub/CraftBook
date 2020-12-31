@@ -45,6 +45,8 @@
 
     "craftbook.minecartemptydecay.description": "Causes minecarts to break after time when empty",
 
+    "craftbook.minecartexitremover.description": "Breaks minecarts after they're exited",
+
     "craftbook.minecartitempickup.description": "Causes minecarts to pickup items they collide with",
 
     "craftbook.minecartrailplacer.description": "Causes storage carts to place rails in front of them",
@@ -75,6 +77,8 @@
     "craftbook.signcopier.cleared": "Cleared the copied sign.",
 
     "craftbook.snow.description": "Enhances snow, allowing it to build up and realistically spread",
+
+    "craftbook.temporarycart.description": "Allows creating Minecarts that disappear on exit, by right clicking rails.",
 
     "craftbook.variables.unknown-variable": "Unknown variable: \"{0}\"",
     "craftbook.variables.already-exists": "Variable already exists: \"{0}\"",

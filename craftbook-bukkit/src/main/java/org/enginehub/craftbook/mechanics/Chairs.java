@@ -123,7 +123,7 @@ public class Chairs extends AbstractCraftBookMechanic {
             height = 0.5;
         }
 
-        Location location = BlockUtil.getBlockCentre(block).subtract(0, ARMOR_STAND_MOUNT_Y - height, 0);
+        Location location = block.getLocation().toCenterLocation().subtract(0, ARMOR_STAND_MOUNT_Y - height, 0);
         if (direction != null) {
             location.setDirection(direction);
         }

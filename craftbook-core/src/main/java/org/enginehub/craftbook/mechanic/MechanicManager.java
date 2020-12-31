@@ -64,7 +64,12 @@ public abstract class MechanicManager {
 
     @SuppressWarnings("unchecked")
     public <T extends CraftBookMechanic> MechanicType<T> getMechanicType(T mechanic) {
-        return (MechanicType<T>) MechanicType.REGISTRY.values().stream().filter(type -> type.isInstance(mechanic)).findAny().orElse(null);
+        for (MechanicType<? extends CraftBookMechanic> type : MechanicType.REGISTRY.values()) {
+            if (type.isInstance(mechanic)) {
+                return (MechanicType<T>) type;
+            }
+        }
+        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -72,7 +77,12 @@ public abstract class MechanicManager {
         if (mechanicType == null) {
             return Optional.empty();
         }
-        return (Optional<T>) this.loadedMechanics.stream().filter(mechanicType::isInstance).findAny();
+        for (CraftBookMechanic loadedMechanic : this.loadedMechanics) {
+            if (mechanicType.isInstance(loadedMechanic)) {
+                return (Optional<T>) Optional.of(loadedMechanic);
+            }
+        }
+        return (Optional<T>) Optional.<CraftBookMechanic>empty();
     }
 
     /**
