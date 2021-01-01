@@ -49,6 +49,8 @@
 
     "craftbook.minecartitempickup.description": "Causes minecarts to pickup items they collide with",
 
+    "craftbook.minecartphysicscontrol.description": "Allows fine-grained control over Minecart physics",
+
     "craftbook.minecartrailplacer.description": "Causes storage carts to place rails in front of them",
 
     "craftbook.paintingswitcher.now-editing": "You are now editing this painting!",

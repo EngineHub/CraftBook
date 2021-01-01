@@ -57,7 +57,8 @@ public class MechanicCommands {
                 new MechanicCommands()
             );
 
-            builder.addPart(SubCommandPart.builder(TranslatableComponent.of("worldedit.argument.action"), TextComponent.of("Sub-command to run."))
+            builder.addPart(SubCommandPart
+                .builder(TranslatableComponent.of("worldedit.argument.action"), TextComponent.of("Sub-command to run."))
                 .withCommands(innerManager.getAllCommands().collect(Collectors.toList()))
                 .required()
                 .build());

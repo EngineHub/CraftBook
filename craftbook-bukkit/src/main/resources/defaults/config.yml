@@ -35,6 +35,7 @@ mechanics:
         minecart_empty_decay: false
         minecart_exit_remover: false
         minecart_item_pickup: false
+        minecart_physics_control: false
         minecart_rail_placer: false
         temporary_cart: false
     tool:

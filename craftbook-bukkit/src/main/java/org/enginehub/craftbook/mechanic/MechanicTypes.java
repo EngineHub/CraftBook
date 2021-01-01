@@ -61,18 +61,14 @@ import org.enginehub.craftbook.mechanics.ic.ICMechanic;
 import org.enginehub.craftbook.mechanics.items.CommandItems;
 import org.enginehub.craftbook.mechanics.minecart.MinecartCollisionEntry;
 import org.enginehub.craftbook.mechanics.minecart.MinecartEmptyDecay;
-import org.enginehub.craftbook.mechanics.minecart.EmptySlowdown;
 import org.enginehub.craftbook.mechanics.minecart.MinecartExitRemover;
-import org.enginehub.craftbook.mechanics.minecart.FallModifier;
 import org.enginehub.craftbook.mechanics.minecart.MinecartItemPickup;
+import org.enginehub.craftbook.mechanics.minecart.MinecartPhysicsControl;
 import org.enginehub.craftbook.mechanics.minecart.MoreRails;
 import org.enginehub.craftbook.mechanics.minecart.NoCollide;
-import org.enginehub.craftbook.mechanics.minecart.PlaceAnywhere;
 import org.enginehub.craftbook.mechanics.minecart.MinecartRailPlacer;
 import org.enginehub.craftbook.mechanics.minecart.RemoveEntities;
-import org.enginehub.craftbook.mechanics.minecart.SpeedModifiers;
 import org.enginehub.craftbook.mechanics.minecart.TemporaryCart;
-import org.enginehub.craftbook.mechanics.minecart.VisionSteering;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartBooster;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartDeposit;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartDispenser;
@@ -172,11 +168,7 @@ public class MechanicTypes {
     @Nullable
     public static final MechanicType<CartLift> MINECART_ELEVATOR = get("minecart_elevator");
     @Nullable
-    public static final MechanicType<EmptySlowdown> MINECART_EMPTY_SLOWDOWN = get("minecart_empty_slowdown");
-    @Nullable
     public static final MechanicType<MinecartExitRemover> MINECART_EXIT_REMOVER = get("minecart_exit_remover");
-    @Nullable
-    public static final MechanicType<FallModifier> MINECART_FALL_MODIFIER = get("minecart_fall_modifier");
     @Nullable
     public static final MechanicType<MinecartItemPickup> MINECART_ITEM_PICKUP = get("minecart_item_pickup");
     @Nullable
@@ -188,7 +180,7 @@ public class MechanicTypes {
     @Nullable
     public static final MechanicType<NoCollide> MINECART_NO_COLLIDE = get("minecart_no_collide");
     @Nullable
-    public static final MechanicType<PlaceAnywhere> MINECART_PLACE_ANYWHERE = get("minecart_place_anywhere");
+    public static final MechanicType<MinecartPhysicsControl> MINECART_PHYSICS_CONTROL = get("minecart_physics_control");
     @Nullable
     public static final MechanicType<MinecartRailPlacer> MINECART_RAIL_PLACER = get("minecart_rail_placer");
     @Nullable
@@ -198,15 +190,11 @@ public class MechanicTypes {
     @Nullable
     public static final MechanicType<CartSorter> MINECART_SORTER = get("minecart_sorter");
     @Nullable
-    public static final MechanicType<SpeedModifiers> MINECART_SPEED_MODIFIERS = get("minecart_speed_modifiers");
-    @Nullable
     public static final MechanicType<CartStation> MINECART_STATION = get("minecart_station");
     @Nullable
     public static final MechanicType<CartTeleporter> MINECART_TELEPORTER = get("minecart_teleporter");
     @Nullable
     public static final MechanicType<TemporaryCart> TEMPORARY_CART = get("temporary_cart");
-    @Nullable
-    public static final MechanicType<VisionSteering> MINECART_VISION_STEERING = get("minecart_vision_steering");
     @Nullable
     public static final MechanicType<PaintingSwitcher> PAINTING_SWITCHER = get("painting_switcher");
     @Nullable
