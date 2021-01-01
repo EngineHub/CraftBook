@@ -24,31 +24,36 @@ import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.util.EventUtil;
 
-public class NoCollide extends AbstractCraftBookMechanic {
+public class MinecartNoCollide extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onCartCollision(VehicleEntityCollisionEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
         if (event.getVehicle() instanceof Minecart) {
-            if (event.getVehicle().isEmpty() && !empty) return;
-            if (!event.getVehicle().isEmpty() && !full) return;
+            boolean isEmpty = event.getVehicle().isEmpty();
+            if (isEmpty && !emptyCarts) {
+                return;
+            }
+            if (!isEmpty && !fullCarts) {
+                return;
+            }
 
             event.setCollisionCancelled(true);
         }
     }
 
-    private boolean empty;
-    private boolean full;
+    private boolean emptyCarts;
+    private boolean fullCarts;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
         config.setComment("empty-carts", "Enable No Collide for empty carts.");
-        empty = config.getBoolean("empty-carts", true);
+        emptyCarts = config.getBoolean("empty-carts", true);
 
         config.setComment("full-carts", "Enable No Collide for occupied carts.");
-        full = config.getBoolean("full-carts", false);
+        fullCarts = config.getBoolean("full-carts", false);
     }
 }

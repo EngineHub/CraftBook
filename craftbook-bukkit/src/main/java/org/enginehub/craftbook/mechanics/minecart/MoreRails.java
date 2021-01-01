@@ -19,6 +19,7 @@ package org.enginehub.craftbook.mechanics.minecart;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Material;
 import org.bukkit.Tag;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.MultipleFacing;
@@ -33,62 +34,64 @@ import org.enginehub.craftbook.util.EventUtil;
 
 public class MoreRails extends AbstractCraftBookMechanic {
 
-    public static MoreRails instance;
-
-    @Override
-    public void enable() {
-
-        instance = this;
-    }
-
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleMove(VehicleMoveEvent event) {
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
-        if (!EventUtil.passesFilter(event)) return;
+        if (!(event.getVehicle() instanceof Minecart)) {
+            return;
+        }
 
-        if (!(event.getVehicle() instanceof Minecart)) return;
+        Block toBlock = event.getTo().getBlock();
+        Material toType = toBlock.getType();
 
-        if (pressurePlate)
-            if (event.getTo().getBlock().getType() == Material.STONE_PRESSURE_PLATE
-                || Tag.WOODEN_PRESSURE_PLATES.isTagged(event.getTo().getBlock().getType())
-                || event.getTo().getBlock().getType() == Material.HEAVY_WEIGHTED_PRESSURE_PLATE
-                || event.getTo().getBlock().getType() == Material.LIGHT_WEIGHTED_PRESSURE_PLATE)
-                event.getVehicle().setVelocity(event.getVehicle().getVelocity().normalize().multiply(4));
-
-        if (ladder) {
+        if (pressurePlate && Tag.PRESSURE_PLATES.isTagged(toType)) {
+            event.getVehicle().setVelocity(event.getVehicle().getVelocity().normalize());
+        } else if (ladder) {
             double maxSpeed = ((Minecart) event.getVehicle()).getMaxSpeed();
-            if (event.getTo().getBlock().getType() == Material.LADDER) {
-                BlockFace face = ((Directional) event.getTo().getBlock().getBlockData()).getFacing().getOppositeFace();
-                Vector velocity = new Vector(0, ladderVerticalVelocity, face.getModZ());
-                if (velocity.length() > maxSpeed) {
-                    double length = velocity.length() / maxSpeed;
-                    velocity.setX(velocity.getX() / length);
-                    velocity.setY(velocity.getY() / length);
-                    velocity.setZ(velocity.getZ() / length);
-                }
-                velocity.add(new Vector(face.getModX(), 0, face.getModZ()));
-                event.getVehicle().setVelocity(event.getVehicle().getVelocity().add(velocity));
-            } else if (event.getTo().getBlock().getType() == Material.VINE) {
-                BlockFace movementFace = BlockFace.SELF;
-                MultipleFacing vine = (MultipleFacing) event.getTo().getBlock().getBlockData();
-                for (BlockFace test : vine.getAllowedFaces())
+
+            Vector velocity = new Vector(0, ladderVerticalVelocity, 0);
+
+            if (velocity.lengthSquared() > maxSpeed * maxSpeed) {
+                // Normalize to maxSpeed
+                double length = velocity.length() / maxSpeed;
+                velocity.setX(velocity.getX() / length);
+                velocity.setY(velocity.getY() / length);
+                velocity.setZ(velocity.getZ() / length);
+            }
+
+            BlockFace face = null;
+
+            if (toType == Material.LADDER) {
+                face = ((Directional) toBlock.getBlockData()).getFacing().getOppositeFace();
+            } else if (toType == Material.VINE) {
+                MultipleFacing vine = (MultipleFacing) toBlock.getBlockData();
+                for (BlockFace test : vine.getAllowedFaces()) {
                     if (vine.hasFace(test)) {
-                        movementFace = test;
+                        face = test;
                         break;
                     }
-                if (movementFace == BlockFace.SELF)
-                    return;
-                Vector velocity = new Vector(0, ladderVerticalVelocity, 0);
-                if (velocity.length() > maxSpeed) {
-                    double length = velocity.length() / maxSpeed;
-                    velocity.setX(velocity.getX() / length);
-                    velocity.setY(velocity.getY() / length);
-                    velocity.setZ(velocity.getZ() / length);
                 }
-                velocity.add(new Vector(movementFace.getModX(), 0, movementFace.getModZ()));
+            }
+
+            if (face != null) {
+                velocity.add(new Vector(face.getModX(), 0, face.getModZ()));
                 event.getVehicle().setVelocity(event.getVehicle().getVelocity().add(velocity));
             }
         }
+    }
+
+    /**
+     * Gets whether this block is a valid "MoreRails" rail block.
+     *
+     * @param material The material
+     * @return if it's valid
+     */
+    public boolean isValidRail(Material material) {
+        return ladder && (material == Material.LADDER || material == Material.VINE)
+            || pressurePlate && Tag.PRESSURE_PLATES.isTagged(material);
     }
 
     public boolean ladder;
@@ -97,14 +100,13 @@ public class MoreRails extends AbstractCraftBookMechanic {
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
+        config.setComment("pressure-plate-intersection", "Allows use of pressure plates as rail intersections.");
+        pressurePlate = config.getBoolean("pressure-plate-intersection", true);
 
-        config.setComment("pressure-plate-intersection", "Enables the pressure plate as an intersection.");
-        pressurePlate = config.getBoolean("pressure-plate-intersection", false);
-
-        config.setComment("ladder-vertical-rail", "Enables the ladder as a vertical rail.");
-        ladder = config.getBoolean("ladder-vertical-rail", false);
+        config.setComment("ladder-vertical-rail", "Allows use of ladders and vines as a vertical rail.");
+        ladder = config.getBoolean("ladder-vertical-rail", true);
 
         config.setComment("ladder-vertical-rail-velocity", "Sets the velocity applied to the minecart on vertical rails.");
-        ladderVerticalVelocity = config.getDouble("ladder-vertical-rail-velocity", 0.5D);
+        ladderVerticalVelocity = config.getDouble("ladder-vertical-rail-velocity", 0.1D);
     }
 }

@@ -67,9 +67,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("MinecartDispenser", org.enginehub.craftbook.mechanics.minecart.blocks.CartDispenser.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartMessenger", org.enginehub.craftbook.mechanics.minecart.blocks.CartMessenger.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartMaxSpeed", org.enginehub.craftbook.mechanics.minecart.blocks.CartMaxSpeed.class, MechanicCategory.MINECART);
-//        registerMechanic("MinecartMoreRails", org.enginehub.craftbook.mechanics.minecart.MoreRails.class, MechanicCategory.MINECART);
-//        registerMechanic("MinecartRemoveEntities", org.enginehub.craftbook.mechanics.minecart.RemoveEntities.class, MechanicCategory.MINECART);
-//        registerMechanic("MinecartNoCollide", org.enginehub.craftbook.mechanics.minecart.NoCollide.class, MechanicCategory.MINECART);
 
         MechanicType.Builder
             .create()
@@ -323,6 +320,33 @@ public class BukkitMechanicManager extends MechanicManager {
             .name("MinecartPhysicsControl")
             .description(TranslatableComponent.of("craftbook.minecartphysicscontrol.description"))
             .className("org.enginehub.craftbook.mechanics.minecart.MinecartPhysicsControl")
+            .category(MechanicCategory.MINECART)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("minecart_no_collide")
+            .name("MinecartNoCollide")
+            .description(TranslatableComponent.of("craftbook.minecartnocollide.description"))
+            .className("org.enginehub.craftbook.mechanics.minecart.MinecartNoCollide")
+            .category(MechanicCategory.MINECART)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("minecart_impact_damage")
+            .name("MinecartImpactDamage")
+            .description(TranslatableComponent.of("craftbook.minecartimpactdamage.description"))
+            .className("org.enginehub.craftbook.mechanics.minecart.MinecartImpactDamage")
+            .category(MechanicCategory.MINECART)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("more_rails")
+            .name("MoreRails")
+            .description(TranslatableComponent.of("craftbook.morerails.description"))
+            .className("org.enginehub.craftbook.mechanics.minecart.MoreRails")
             .category(MechanicCategory.MINECART)
             .buildAndRegister();
 

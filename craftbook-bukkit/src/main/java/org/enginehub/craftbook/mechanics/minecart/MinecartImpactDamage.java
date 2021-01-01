@@ -20,7 +20,6 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -29,62 +28,68 @@ import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.util.EventUtil;
 
-public class RemoveEntities extends AbstractCraftBookMechanic {
+public class MinecartImpactDamage extends AbstractCraftBookMechanic {
+
+    private static final Vector HALF_BLOCK_UP = new Vector(0, 0.5, 0);
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
-
-        if (!(event.getVehicle() instanceof Minecart))
-            return;
-
-        if (!otherCarts && (event.getEntity() instanceof Minecart || event.getEntity().isInsideVehicle()))
-            return;
-
-        if (!players && event.getEntity() instanceof Player) {
+        if (!EventUtil.passesFilter(event)) {
             return;
         }
 
-        if (event.getVehicle() instanceof RideableMinecart && event.getVehicle().isEmpty() && !empty)
+        if (!(event.getVehicle() instanceof Minecart)) {
             return;
+        }
+
+        if (!removeOtherCarts && (event.getEntity() instanceof Minecart)) {
+            return;
+        }
+
+        if (!damagePlayers && event.getEntity() instanceof Player) {
+            return;
+        }
+
+        if (!emptyCartsImpact && event.getVehicle() instanceof RideableMinecart && event.getVehicle().isEmpty()) {
+            return;
+        }
 
         if (event.getEntity() instanceof LivingEntity) {
-            if (event.getEntity().isInsideVehicle())
+            if (event.getEntity().isInsideVehicle()) {
                 return;
-            ((LivingEntity) event.getEntity()).damage(10);
-            Vector newVelocity = event.getVehicle().getVelocity().normalize().multiply(1.8).add(new Vector(0, 0.5, 0));
-            if (Double.isFinite(newVelocity.getX()) && Double.isFinite(newVelocity.getY()) && Double.isFinite(newVelocity.getZ())) {
-                event.getEntity().setVelocity(newVelocity);
             }
-        } else if (event.getEntity() instanceof Vehicle) {
 
-            if (!event.getEntity().isEmpty())
-                return;
-            else
-                event.getEntity().remove();
-        } else
+            ((LivingEntity) event.getEntity()).damage(5);
+
+            try {
+                event.getEntity().setVelocity(event.getVehicle().getVelocity().normalize().multiply(1.2).add(HALF_BLOCK_UP));
+            } catch (IllegalArgumentException e) {
+                event.getEntity().setVelocity(HALF_BLOCK_UP);
+            }
+        } else if (removeOtherCarts && event.getEntity() instanceof Minecart && event.getEntity().isEmpty()) {
             event.getEntity().remove();
+        } else {
+            return;
+        }
 
         event.setCancelled(true);
         event.setPickupCancelled(true);
         event.setCollisionCancelled(true);
     }
 
-    private boolean otherCarts;
-    private boolean empty;
-    private boolean players;
+    private boolean removeOtherCarts;
+    private boolean emptyCartsImpact;
+    private boolean damagePlayers;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
-        config.setComment("remove-other-minecarts", "Allows the remove entities mechanic to remove other minecarts.");
-        otherCarts = config.getBoolean("remove-other-minecarts", false);
+        config.setComment("remove-other-minecarts", "Allow minecarts to remove other minecarts on impact.");
+        removeOtherCarts = config.getBoolean("remove-other-minecarts", false);
 
         config.setComment("allow-empty-carts", "Allows the cart to be empty.");
-        empty = config.getBoolean("allow-empty-carts", false);
+        emptyCartsImpact = config.getBoolean("allow-empty-carts", false);
 
         config.setComment("damage-players", "Allows the cart to damage and kill players.");
-        players = config.getBoolean("damage-players", true);
+        damagePlayers = config.getBoolean("damage-players", true);
     }
 }

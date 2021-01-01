@@ -65,9 +65,9 @@ import org.enginehub.craftbook.mechanics.minecart.MinecartExitRemover;
 import org.enginehub.craftbook.mechanics.minecart.MinecartItemPickup;
 import org.enginehub.craftbook.mechanics.minecart.MinecartPhysicsControl;
 import org.enginehub.craftbook.mechanics.minecart.MoreRails;
-import org.enginehub.craftbook.mechanics.minecart.NoCollide;
+import org.enginehub.craftbook.mechanics.minecart.MinecartNoCollide;
 import org.enginehub.craftbook.mechanics.minecart.MinecartRailPlacer;
-import org.enginehub.craftbook.mechanics.minecart.RemoveEntities;
+import org.enginehub.craftbook.mechanics.minecart.MinecartImpactDamage;
 import org.enginehub.craftbook.mechanics.minecart.TemporaryCart;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartBooster;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartDeposit;
@@ -178,13 +178,13 @@ public class MechanicTypes {
     @Nullable
     public static final MechanicType<MoreRails> MINECART_MORE_RAILS = get("minecart_more_rails");
     @Nullable
-    public static final MechanicType<NoCollide> MINECART_NO_COLLIDE = get("minecart_no_collide");
+    public static final MechanicType<MinecartNoCollide> MINECART_NO_COLLIDE = get("minecart_no_collide");
     @Nullable
     public static final MechanicType<MinecartPhysicsControl> MINECART_PHYSICS_CONTROL = get("minecart_physics_control");
     @Nullable
     public static final MechanicType<MinecartRailPlacer> MINECART_RAIL_PLACER = get("minecart_rail_placer");
     @Nullable
-    public static final MechanicType<RemoveEntities> MINECART_REMOVE_ENTITIES = get("minecart_remove_entities");
+    public static final MechanicType<MinecartImpactDamage> MINECART_REMOVE_ENTITIES = get("minecart_remove_entities");
     @Nullable
     public static final MechanicType<CartReverser> MINECART_REVERSER = get("minecart_reverser");
     @Nullable

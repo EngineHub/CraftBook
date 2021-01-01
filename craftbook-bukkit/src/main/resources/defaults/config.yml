@@ -34,9 +34,12 @@ mechanics:
         minecart_collision_entry: false
         minecart_empty_decay: false
         minecart_exit_remover: false
+        minecart_impact_damage: false
         minecart_item_pickup: false
+        minecart_no_collide: false
         minecart_physics_control: false
         minecart_rail_placer: false
+        more_rails: false
         temporary_cart: false
     tool:
         ammeter: false

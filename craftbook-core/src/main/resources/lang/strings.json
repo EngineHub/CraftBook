@@ -47,7 +47,13 @@
 
     "craftbook.minecartexitremover.description": "Breaks minecarts after they're exited",
 
+    "craftbook.minecartimpactdamage.description": "Cause minecarts to damage and knockback entities on collision",
+
     "craftbook.minecartitempickup.description": "Causes minecarts to pickup items they collide with",
+
+    "craftbook.morerails.description": "Adds more types of rails for Minecarts",
+
+    "craftbook.minecartnocollide.description": "Cause minecarts to not collide with each other",
 
     "craftbook.minecartphysicscontrol.description": "Allows fine-grained control over Minecart physics",
 

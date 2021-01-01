@@ -19,6 +19,8 @@ package org.enginehub.craftbook.mechanics.minecart;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO Move into the station mechanic
+@Deprecated
 public class StationManager {
 
     private StationManager() {
