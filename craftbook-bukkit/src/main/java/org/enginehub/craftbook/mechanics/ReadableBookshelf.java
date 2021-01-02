@@ -75,6 +75,11 @@ public class ReadableBookshelf extends AbstractCraftBookMechanic {
     }
 
     @Override
+    public void reload() throws MechanicInitializationException {
+        enable();
+    }
+
+    @Override
     public void disable() {
         this.lines = null;
     }

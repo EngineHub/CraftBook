@@ -47,6 +47,13 @@ public class BetterPlants extends AbstractCraftBookMechanic {
     }
 
     @Override
+    public void reload() {
+        // Clean-up existing tasks, and re-schedule them if necessary.
+        disable();
+        enable();
+    }
+
+    @Override
     public void disable() {
         if (growthTask != null) {
             growthTask.cancel();

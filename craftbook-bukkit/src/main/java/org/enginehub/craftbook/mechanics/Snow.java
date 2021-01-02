@@ -45,6 +45,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.util.BlockSyntax;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
@@ -85,6 +86,12 @@ public class Snow extends AbstractCraftBookMechanic {
                 dispersionTickSpeed
             );
         }
+    }
+
+    @Override
+    public void reload() {
+        disable();
+        enable();
     }
 
     @Override

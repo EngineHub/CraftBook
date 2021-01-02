@@ -31,9 +31,14 @@ public class MinecartPhysicsControl extends AbstractCraftBookMechanic {
     private Vector derailedVelocityMod;
 
     @Override
-    public void enable() throws MechanicInitializationException {
+    public void enable() {
         this.fallSpeed = new Vector(horizontalFallSpeed, verticalFallSpeed, horizontalFallSpeed);
         this.derailedVelocityMod = new Vector(offRailSpeed, offRailSpeed, offRailSpeed);
+    }
+
+    @Override
+    public void reload() {
+        enable();
     }
 
     @EventHandler(priority = EventPriority.HIGH)

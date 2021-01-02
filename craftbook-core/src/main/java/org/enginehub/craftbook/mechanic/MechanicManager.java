@@ -185,4 +185,27 @@ public abstract class MechanicManager {
     }
 
     protected abstract void disableMechanicPlatformListeners(CraftBookMechanic mechanic);
+
+
+    /**
+     * Reload the mechanic's configuration.
+     *
+     * @param mechanic The mechanic.
+     * @throws MechanicInitializationException If the mechanic could not be reloaded.
+     */
+    public void reloadMechanic(CraftBookMechanic mechanic) throws MechanicInitializationException {
+        MechanicType<?> mechanicType = mechanic.getMechanicType();
+        try {
+            mechanic.loadConfiguration(new File(CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("mechanics").toFile(), mechanicType.getName() + ".yml"));
+            mechanic.reload();
+        } catch (MechanicInitializationException e) {
+            // Re-throw
+            throw e;
+        } catch (Throwable t) {
+            throw new MechanicInitializationException(mechanicType, TranslatableComponent.of(
+                "craftbook.mechanisms.reload-failed",
+                TextComponent.of(mechanicType.getId())
+            ), t);
+        }
+    }
 }

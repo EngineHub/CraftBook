@@ -27,6 +27,13 @@ import java.io.File;
 public interface CraftBookMechanic {
 
     /**
+     * Get the {@link MechanicType} instance that represents this mechanic.
+     *
+     * @return The mechanic type instance
+     */
+    MechanicType<? extends CraftBookMechanic> getMechanicType();
+
+    /**
      * Called when a mechanic should be initialized. This includes creating of any maps, lists or
      * singleton instances.
      *
@@ -38,6 +45,11 @@ public interface CraftBookMechanic {
      * Called when the mechanic should be disabled. This should make sure all memory is released.
      */
     default void disable() {}
+
+    /**
+     * Called when a mechanic's configuration has been re-loaded.
+     */
+    default void reload() throws MechanicInitializationException {}
 
     /**
      * Load the configuration from file, and delegate

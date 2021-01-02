@@ -110,6 +110,8 @@
     "craftbook.mechanisms.enable-success": "Enabled mechanic {0}",
     "craftbook.mechanisms.enable-failed": "An error occurred while enabling {0}: {1}",
     "craftbook.mechanisms.disable-success": "Disabled mechanic {0}",
+    "craftbook.mechanisms.reload-success": "Reloaded mechanic {0}",
+    "craftbook.mechanisms.reload-failed": "An error occurred while reloading {0}: {1}",
     "craftbook.mechanisms.click-to-enable": "Click to enable",
     "craftbook.mechanisms.click-to-disable": "Click to disable",
 

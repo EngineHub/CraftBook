@@ -137,6 +137,37 @@ public class MechanicCommands {
         }
     }
 
+    @Command(name = "reload", desc = "Reload a mechanic's configuration")
+    @CommandPermissions({ "craftbook.mechanic.reload" })
+    public void reload(Actor actor,
+                       @Arg(desc = "The mechanic to reload")
+                           MechanicType<?> mechanicType) {
+        try {
+            MechanicManager mechanicManager = CraftBook.getInstance().getPlatform().getMechanicManager();
+            Optional<? extends CraftBookMechanic> mechanic = mechanicManager.getMechanic(mechanicType);
+            if (!mechanic.isPresent()) {
+                actor.printError(TranslatableComponent.of(
+                    "craftbook.mechanisms.not-enabled",
+                    TextComponent.of(mechanicType.getName(), TextColor.WHITE)
+                ));
+                return;
+            }
+
+            mechanicManager.reloadMechanic(mechanic.get());
+
+            actor.printInfo(TranslatableComponent.of(
+                "craftbook.mechanisms.reload-success",
+                TextComponent.of(mechanicType.getName(), TextColor.WHITE)
+            ));
+        } catch (MechanicInitializationException e) {
+            actor.printError(TranslatableComponent.of(
+                "craftbook.mechanisms.reload-failed",
+                TextComponent.of(mechanicType.getName(), TextColor.WHITE),
+                e.getRichMessage()
+            ));
+        }
+    }
+
     @Command(name = "list", desc = "List mechanics")
     @CommandPermissions({ "craftbook.mechanic.list" })
     public void list(Actor actor, @ArgFlag(name = 'p', desc = "The page number", def = "1") int page) throws InvalidComponentException {
