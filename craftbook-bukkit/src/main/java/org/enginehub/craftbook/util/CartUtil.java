@@ -29,7 +29,6 @@ import org.bukkit.entity.minecart.PoweredMinecart;
 import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.entity.minecart.SpawnerMinecart;
 import org.bukkit.entity.minecart.StorageMinecart;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
@@ -88,26 +87,6 @@ public final class CartUtil {
         toCart.getLocation().setPitch(cart.getLocation().getPitch());
         toCart.setVelocity(cart.getVelocity()); // speedy thing goes in, speedy thing comes out
         cart.remove();
-    }
-
-    public static ItemStack getCartStack(Minecart cart) {
-
-        if (cart instanceof RideableMinecart)
-            return new ItemStack(Material.MINECART, 1);
-        else if (cart instanceof StorageMinecart)
-            return new ItemStack(Material.CHEST_MINECART, 1);
-        else if (cart instanceof PoweredMinecart)
-            return new ItemStack(Material.FURNACE_MINECART, 1);
-        else if (cart instanceof ExplosiveMinecart)
-            return new ItemStack(Material.TNT_MINECART, 1);
-        else if (cart instanceof HopperMinecart)
-            return new ItemStack(Material.HOPPER_MINECART, 1);
-        else if (cart instanceof CommandMinecart)
-            return new ItemStack(Material.COMMAND_BLOCK_MINECART, 1);
-        else if (cart instanceof SpawnerMinecart)
-            return new ItemStack(Material.MINECART, 1);
-
-        return null;
     }
 
     public static boolean isMinecart(Material material) {

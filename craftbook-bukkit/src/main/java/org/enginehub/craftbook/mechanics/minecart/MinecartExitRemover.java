@@ -85,7 +85,7 @@ public class MinecartExitRemover extends AbstractCraftBookMechanic {
             }
 
             if (giveItem) {
-                ItemStack stack = CartUtil.getCartStack(minecart);
+                ItemStack stack = new ItemStack(minecart.getMinecartMaterial(), 1);
 
                 if (passenger instanceof Player) {
                     if (!((Player) passenger).getInventory().addItem(stack).isEmpty()) {

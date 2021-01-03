@@ -67,7 +67,7 @@ public class BoatExitRemover extends AbstractCraftBookMechanic {
             }
 
             if (giveItem) {
-                ItemStack stack = new ItemStack(ItemUtil.getBoatFromTree(boat.getWoodType()), 1);
+                ItemStack stack = new ItemStack(boat.getBoatMaterial(), 1);
 
                 if (passenger instanceof Player) {
                     if (!((Player) passenger).getInventory().addItem(stack).isEmpty()) {

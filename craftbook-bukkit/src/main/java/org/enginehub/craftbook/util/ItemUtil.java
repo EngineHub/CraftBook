@@ -655,23 +655,6 @@ public final class ItemUtil {
         }
     }
 
-    public static Material getBoatFromTree(TreeSpecies treeSpecies) {
-        switch (treeSpecies) {
-            case REDWOOD:
-                return Material.SPRUCE_BOAT;
-            case BIRCH:
-                return Material.BIRCH_BOAT;
-            case JUNGLE:
-                return Material.JUNGLE_BOAT;
-            case ACACIA:
-                return Material.ACACIA_BOAT;
-            case DARK_OAK:
-                return Material.DARK_OAK_BOAT;
-            default:
-                return Material.OAK_BOAT;
-        }
-    }
-
     /**
      * Checks whether the item is usable as a fuel in a furnace.
      *
