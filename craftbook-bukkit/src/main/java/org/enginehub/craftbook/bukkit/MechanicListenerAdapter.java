@@ -98,7 +98,7 @@ final class MechanicListenerAdapter implements Listener {
                     signClickTimer.put(event.getPlayer().getUniqueId(), System.currentTimeMillis());
                 }
             }
-            SignClickEvent ev = new SignClickEvent(event.getPlayer(), action, event.getItem(), block, event.getBlockFace());
+            SignClickEvent ev = new SignClickEvent(event.getPlayer(), action, event.getItem(), block, event.getBlockFace(), event.getHand(), event.getInteractionPoint());
             CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
             if (ev.isCancelled()) {
                 event.setCancelled(true);

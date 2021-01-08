@@ -85,19 +85,6 @@ public class LanguageManager {
         put("mech.hiddenswitch.key", "The key did not fit!");
         put("mech.hiddenswitch.toggle", "You hear the muffled click of a switch!");
 
-        put("mech.lift.target-sign-created", "Elevator target sign created.");
-        put("mech.lift.down-sign-created", "Elevator down sign created.");
-        put("mech.lift.up-sign-created", "Elevator up sign created.");
-        put("mech.lift.obstruct", "Your destination is obstructed!");
-        put("mech.lift.no-floor", "There is no floor at your destination!");
-        put("mech.lift.floor", "Floor");
-        put("mech.lift.up", "You went up a floor!");
-        put("mech.lift.down", "You went down a floor!");
-        put("mech.lift.leave", "You have left the elevator!");
-        put("mech.lift.no-destination", "This lift has no destination.");
-        put("mech.lift.no-depart", "Cannot depart from this lift (can only arrive).");
-        put("mech.lift.busy", "Elevator Busy!");
-
         put("mech.lightswitch.create", "Light Switch Created!");
 
         put("mech.map.create", "Map Changer Created!");

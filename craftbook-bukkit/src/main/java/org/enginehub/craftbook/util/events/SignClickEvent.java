@@ -16,12 +16,14 @@
 
 package org.enginehub.craftbook.util.events;
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
@@ -36,8 +38,8 @@ public class SignClickEvent extends PlayerInteractEvent {
     private final ChangedSign sign;
     private final CraftBookPlayer player;
 
-    public SignClickEvent(Player who, Action action, ItemStack item, Block clickedBlock, BlockFace clickedFace) {
-        super(who, action, item, clickedBlock, clickedFace);
+    public SignClickEvent(Player who, Action action, ItemStack item, Block clickedBlock, BlockFace clickedFace, EquipmentSlot equipmentSlot, Location interactionPoint) {
+        super(who, action, item, clickedBlock, clickedFace, equipmentSlot, interactionPoint);
 
         this.player = CraftBookPlugin.inst().wrapPlayer(who);
         this.sign = new ChangedSign(clickedBlock, null, this.player);

@@ -18,10 +18,12 @@ package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import com.sk89q.worldedit.util.formatting.text.format.TextColor;
+import com.sk89q.worldedit.world.block.BlockCategories;
+import com.sk89q.worldedit.world.block.BlockState;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -32,18 +34,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.BukkitCraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.util.EventUtil;
@@ -54,268 +50,240 @@ import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.events.SignClickEvent;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Locale;
-import java.util.UUID;
+import javax.annotation.Nullable;
 
 /**
  * The default elevator mechanism -- wall signs in a vertical column that teleport the player
  * vertically when triggered.
- *
- * @author sk89q
- * @author hash
  */
 public class Elevator extends AbstractCraftBookMechanic {
 
-    private HashSet<UUID> flyingPlayers;
-    private HashMap<UUID, Entity> playerVehicles;
+    private enum LiftType {
+        UP("[Lift Up]"),
+        DOWN("[Lift Down]"),
+        BOTH("[Lift UpDown]"),
+        RECV("[Lift]");
 
-    @Override
-    public void enable() {
-        if (elevatorSlowMove) {
-            flyingPlayers = new HashSet<>();
-            playerVehicles = new HashMap<>();
+        private final String label;
+
+        LiftType(String label) {
+            this.label = label;
         }
-    }
 
-    @Override
-    public void disable() {
+        /**
+         * Get the label of this lift type.
+         *
+         * @return The label
+         */
+        public String getLabel() {
+            return this.label;
+        }
 
-        if (flyingPlayers != null) {
-            Iterator<UUID> it = flyingPlayers.iterator();
-            while (it.hasNext()) {
-                OfflinePlayer op = Bukkit.getOfflinePlayer(it.next());
-                if (!op.isOnline()) {
-                    it.remove();
-                    continue;
+        /**
+         * Get the lift type from this label.
+         *
+         * @param label The label
+         * @return The lift type, or null
+         */
+        public static LiftType fromLabel(String label) {
+            for (LiftType liftType : values()) {
+                if (liftType.getLabel().equalsIgnoreCase(label)) {
+                    return liftType;
                 }
-                op.getPlayer().setFlying(false);
-                op.getPlayer().setAllowFlight(op.getPlayer().getGameMode() == GameMode.CREATIVE);
-                it.remove();
             }
 
-            flyingPlayers = null;
-        }
-    }
-
-    @EventHandler
-    public void onPlayerDamage(EntityDamageEvent event) {
-
-        if (!elevatorSlowMove) return;
-        if (!(event.getEntity() instanceof Player)) return;
-        if (!flyingPlayers.contains(event.getEntity().getUniqueId())) return;
-        if (event instanceof EntityDamageByEntityEvent) return;
-
-        event.setCancelled(true);
-    }
-
-    @EventHandler
-    public void onPlayerLeave(PlayerQuitEvent event) {
-
-        if (!elevatorSlowMove) return;
-        //Clean up mechanics that store players that we don't want anymore.
-        Iterator<UUID> it = flyingPlayers.iterator();
-        while (it.hasNext()) {
-            UUID p = it.next();
-            if (event.getPlayer().getUniqueId().equals(p)) {
-                event.getPlayer().setFlying(false);
-                event.getPlayer().setAllowFlight(event.getPlayer().getGameMode() == GameMode.CREATIVE);
-                it.remove();
-                break;
-            }
+            return null;
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
-        if (!EventUtil.passesFilter(event)) return;
+        LiftType dir = LiftType.fromLabel(event.getLine(1));
+        if (dir == null) {
+            return;
+        }
 
-        Direction dir = Direction.NONE;
-        if (event.getLine(1).equalsIgnoreCase("[lift down]")) dir = Direction.DOWN;
-        if (event.getLine(1).equalsIgnoreCase("[lift up]")) dir = Direction.UP;
-        if (event.getLine(1).equalsIgnoreCase("[lift]")) dir = Direction.RECV;
-
-        if (dir == Direction.NONE) return;
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if (!player.hasPermission("craftbook.mech.elevator")) {
-            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!player.hasPermission("craftbook.elevator.create")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                 player.printError("mech.create-permission");
+            }
+
             SignUtil.cancelSignChange(event);
             return;
         }
 
-        switch (dir) {
-            case UP:
-                player.print("mech.lift.up-sign-created");
-                event.setLine(1, "[Lift Up]");
-                break;
-            case DOWN:
-                player.print("mech.lift.down-sign-created");
-                event.setLine(1, "[Lift Down]");
-                break;
-            case RECV:
-                player.print("mech.lift.target-sign-created");
-                event.setLine(1, "[Lift]");
-                break;
-            default:
-                SignUtil.cancelSignChange(event);
-        }
-    }
-
-    private enum Direction {
-        NONE, UP, DOWN, RECV
+        player.printInfo(TranslatableComponent.of("craftbook.elevator.create." + dir.name().toLowerCase(Locale.ROOT)));
+        event.setLine(1, dir.getLabel());
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
-
-        if (!elevatorAllowRedstone || event.isMinor() || !event.isOn())
+        if (!elevatorAllowRedstone || event.isMinor() || !event.isOn()) {
             return;
-
-        if (!EventUtil.passesFilter(event))
-            return;
-
-        Direction dir = isLift(event.getBlock());
-        switch (dir) {
-            case UP:
-            case DOWN:
-                break;
-            case RECV:
-                return;
-            default:
-                return;
         }
 
-        BlockFace shift = dir == Direction.UP ? BlockFace.UP : BlockFace.DOWN;
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
+
+        LiftType dir = findLift(event.getBlock());
+        if (dir != LiftType.UP && dir != LiftType.DOWN) {
+            // Redstone elevators can only operate on up and down.
+            return;
+        }
+
+        BlockFace shift = dir == LiftType.UP ? BlockFace.UP : BlockFace.DOWN;
         Block destination = findDestination(dir, shift, event.getBlock());
 
-        if (destination == null) return;
+        if (destination == null) {
+            return;
+        }
 
         for (Player player : LocationUtil.getNearbyPlayers(event.getBlock().getLocation(), elevatorRedstoneRadius)) {
-
             CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(player);
-            if (flyingPlayers != null && flyingPlayers.contains(localPlayer.getUniqueId())) {
-                localPlayer.printError("mech.lift.busy");
-                continue;
-            }
 
-            if (!localPlayer.hasPermission("craftbook.mech.elevator.use")) {
-                if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+            if (!localPlayer.hasPermission("craftbook.elevator.use")) {
+                if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                     localPlayer.printError("mech.use-permission");
+                }
                 continue;
             }
 
-            makeItSo(localPlayer, destination, shift);
+            activateElevator(localPlayer, destination, shift);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
+        if (!elevatorButtonEnabled
+            || event.getHand() != EquipmentSlot.HAND
+            || event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
 
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (!elevatorButtonEnabled) return;
-        if (SignUtil.isSign(event.getClickedBlock())) return;
+        if (!Tag.BUTTONS.isTagged(event.getClickedBlock().getType())) {
+            return;
+        }
 
         onCommonClick(event);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
-
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         onCommonClick(event);
     }
 
     public void onCommonClick(PlayerInteractEvent event) {
-
-        if (!EventUtil.passesFilter(event) || event.getHand() != EquipmentSlot.HAND)
+        if (!EventUtil.passesFilter(event)
+            || event.getHand() != EquipmentSlot.HAND
+            || event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
+        }
 
         CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        Block block = event.getClickedBlock();
 
         // check if this looks at all like something we're interested in first
-        Direction dir = isLift(event.getClickedBlock());
+        LiftType dir = findLift(block);
+
+        if (dir == null) {
+            return;
+        }
+
+        BlockFace shift;
         switch (dir) {
             case UP:
-            case DOWN:
+                shift = BlockFace.UP;
                 break;
+            case DOWN:
+                shift = BlockFace.DOWN;
+                break;
+            case BOTH:
+                if (event.getInteractionPoint() != null) {
+                    double relativeHeight = event.getInteractionPoint().getY();
+                    relativeHeight -= (int) relativeHeight;
+                    shift = relativeHeight >= 0.5 ? BlockFace.UP : BlockFace.DOWN;
+                    break;
+                }
+                return;
             case RECV:
-                localPlayer.printError("mech.lift.no-depart");
+                localPlayer.printError(TranslatableComponent.of("craftbook.elevator.no-depart"));
                 return;
             default:
                 return;
         }
 
-        BlockFace shift = dir == Direction.UP ? BlockFace.UP : BlockFace.DOWN;
-        Block destination = findDestination(dir, shift, event.getClickedBlock());
+        Block destination = findDestination(dir, shift, block);
 
         if (destination == null) {
-            localPlayer.printError("mech.lift.no-destination");
+            localPlayer.printError(TranslatableComponent.of("craftbook.elevator.no-destination"));
             return;
         }
 
-        if (flyingPlayers != null && flyingPlayers.contains(localPlayer.getUniqueId())) {
-            localPlayer.printError("mech.lift.busy");
-            return;
-        }
-
-        if (!localPlayer.hasPermission("craftbook.mech.elevator.use")) {
+        if (!localPlayer.hasPermission("craftbook.elevator.use")) {
             event.setCancelled(true);
-            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                 localPlayer.printError("mech.use-permission");
+            }
             return;
         }
 
-        if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canUse(event.getPlayer(), block.getLocation(), event.getBlockFace(), event.getAction())) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                 localPlayer.printError("area.use-permissions");
+            }
             return;
         }
 
-        makeItSo(localPlayer, destination, shift);
+        activateElevator(localPlayer, destination, shift);
 
+        // At this point, even if it failed, the user intended to use an elevator. So we'll cancel the event.
         event.setCancelled(true);
     }
 
-    public Block findDestination(Direction dir, BlockFace shift, Block clickedBlock) {
-
-        // find destination sign
-        int f = dir == Direction.UP ? clickedBlock.getWorld().getMaxHeight() : 0;
+    /**
+     * Finds the destination based on the given lift sign.
+     *
+     * @param liftType The lift type
+     * @param shift The direction
+     * @param clickedBlock The lift block
+     * @return The destination, or null if none found
+     */
+    public Block findDestination(LiftType liftType, BlockFace shift, Block clickedBlock) {
+        // TODO use min height in 1.17
+        int maximumSearchPoint = liftType == LiftType.UP ? clickedBlock.getWorld().getMaxHeight() : 0;
         Block destination = clickedBlock;
         // heading up from top or down from bottom
-        if (destination.getY() == f) {
+        if (destination.getY() == maximumSearchPoint) {
             return null;
         }
-        boolean loopd = false;
+
         while (true) {
             destination = destination.getRelative(shift);
-            Direction derp = isLift(destination);
-            if (derp != Direction.NONE && isValidLift(CraftBookBukkitUtil.toChangedSign(clickedBlock), CraftBookBukkitUtil.toChangedSign(destination)))
+            LiftType destinationLiftType = findLift(destination);
+            if (destinationLiftType != null
+                && isValidLift(CraftBookBukkitUtil.toChangedSign(clickedBlock), CraftBookBukkitUtil.toChangedSign(destination))) {
                 break; // found it!
+            }
 
+            // We're back to the start point, no elevator to find here.
             if (destination.getY() == clickedBlock.getY()) {
                 return null;
             }
-            if (elevatorLoop && !loopd) {
-                if (destination.getY() == clickedBlock.getWorld().getMaxHeight()) { // hit the top of the world
-                    org.bukkit.Location low = destination.getLocation();
-                    low.setY(0);
-                    destination = destination.getWorld().getBlockAt(low);
-                    loopd = true;
-                } else if (destination.getY() == 0) { // hit the bottom of the world
-                    org.bukkit.Location low = destination.getLocation();
-                    low.setY(clickedBlock.getWorld().getMaxHeight());
-                    destination = destination.getWorld().getBlockAt(low);
-                    loopd = true;
-                }
-            } else {
-                if (destination.getY() == clickedBlock.getWorld().getMaxHeight()) {
-                    return null;
-                } else if (destination.getY() == 0) {
+
+            if (destination.getY() == maximumSearchPoint) {
+                if (elevatorLoop) {
+                    Location temporaryLocation = destination.getLocation();
+                    temporaryLocation.setY(liftType == LiftType.UP ? 0 : clickedBlock.getWorld().getMaxHeight());
+                    destination = temporaryLocation.getBlock();
+                } else {
                     return null;
                 }
             }
@@ -324,14 +292,13 @@ public class Elevator extends AbstractCraftBookMechanic {
         return destination;
     }
 
-    private void makeItSo(CraftBookPlayer player, Block destination, BlockFace shift) {
-        // start with the block shifted vertically from the player
-        // to the destination sign's height (plus one).
-        Block floor = destination.getWorld().getBlockAt((int) Math.floor(player.getLocation().getX()), destination.getY() + 1,
-            (int) Math.floor(player.getLocation().getZ()));
+    private void activateElevator(CraftBookPlayer player, Block destination, BlockFace shift) {
+        com.sk89q.worldedit.util.Location floor = player.getLocation().setY(destination.getY() + 1);
+        BlockState floorBlock = player.getWorld().getBlock(floor.toVector().toBlockPoint());
         // well, unless that's already a ceiling.
-        if (floor.getType().isSolid()) {
-            floor = floor.getRelative(BlockFace.DOWN);
+        if (floorBlock.getBlockType().getMaterial().isMovementBlocker() && !BlockCategories.SIGNS.contains(floorBlock)) {
+            floor = floor.setY(floor.getY() - 1);
+            floorBlock = player.getWorld().getBlock(floor.toVector().toBlockPoint());
         }
 
         // now iterate down until we find enough open space to stand in
@@ -339,258 +306,115 @@ public class Elevator extends AbstractCraftBookMechanic {
         int foundFree = 0;
         boolean foundGround = false;
         for (int i = 0; i < 5; i++) {
-            if (!floor.getType().isSolid() || SignUtil.isSign(floor)) {
+            if (!floorBlock.getBlockType().getMaterial().isMovementBlocker() || BlockCategories.SIGNS.contains(floorBlock)) {
                 foundFree++;
             } else {
                 foundGround = true;
                 break;
             }
-            if (floor.getY() == 0x0) {
+            if (floor.getY() == 0) {
                 break;
             }
-            floor = floor.getRelative(BlockFace.DOWN);
+            floor = floor.setY(floor.getY() - 1);
+            floorBlock = player.getWorld().getBlock(floor.toVector().toBlockPoint());
         }
         if (!foundGround) {
-            player.printError("mech.lift.no-floor");
+            player.printError(TranslatableComponent.of("craftbook.elevator.no-floor"));
             return;
         }
         if (foundFree < 2) {
-            player.printError("mech.lift.obstruct");
+            player.printError(TranslatableComponent.of("craftbook.elevator.obstructed"));
             return;
         }
 
-        teleportPlayer(player, floor, destination, shift);
+        teleportPlayer(player, floor.getBlockY(), destination, shift);
     }
 
-    public void teleportPlayer(final CraftBookPlayer player, final Block floor, final Block destination, final BlockFace shift) {
-
+    private void teleportPlayer(final CraftBookPlayer player, final int height, final Block destination, final BlockFace shift) {
         final Location newLocation = BukkitAdapter.adapt(player.getLocation());
-        newLocation.setY(floor.getY() + 1);
+        newLocation.setY(height + 1);
 
-        if (elevatorSlowMove) {
-
-            final Location lastLocation = BukkitAdapter.adapt(player.getLocation());
-
-            if (player.isInsideVehicle()) {
-                Player bukkitPlayer = ((BukkitCraftBookPlayer) player).getPlayer();
-                playerVehicles.put(player.getUniqueId(), bukkitPlayer.getVehicle());
-
-                LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
-
-                // Ejecting the player out of the vehicle will move
-                // the player to the side, so we have to correct this.
-                bukkitPlayer.teleport(lastLocation);
-            }
-
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-
-                    OfflinePlayer offlinePlayer = ((BukkitCraftBookPlayer) player).getPlayer();
-                    if (!offlinePlayer.isOnline()) {
-                        cancel();
-                        return;
-                    }
-                    Player p = offlinePlayer.getPlayer();
-                    if (!flyingPlayers.contains(p.getUniqueId()) && !p.getAllowFlight())
-                        flyingPlayers.add(p.getUniqueId());
-
-                    enableFlightMode(p);
-
-                    newLocation.setPitch(p.getLocation().getPitch());
-                    newLocation.setYaw(p.getLocation().getYaw());
-
-                    boolean isPlayerAlmostAtDestination = Math.abs(floor.getY() - p.getLocation().getY()) < 0.7;
-
-                    if (isPlayerAlmostAtDestination) {
-                        finishElevatingPlayer(p);
-                        return;
-                    }
-
-                    boolean didPlayerLeaveElevator =
-                        lastLocation.getBlockX() != p.getLocation().getBlockX() ||
-                            lastLocation.getBlockZ() != p.getLocation().getBlockZ();
-
-                    if (didPlayerLeaveElevator) {
-                        player.print("mech.lift.leave");
-                        disableFlightMode(p);
-                        playerVehicles.remove(p.getUniqueId());
-                        cancel();
-                        return;
-                    }
-
-                    Direction playerVerticalMovement = getVerticalDirection(p.getLocation(), newLocation);
-
-                    switch (playerVerticalMovement) {
-                        case UP:
-                            // Teleporting the player up inside solid blocks will not execute
-                            // the teleport but rather cause the player to "swim" in mid air.
-                            // See https://dev.enginehub.org/youtrack/issue/CRAFTBOOK-3464
-                            // Thus we'll simply teleport the player to the ceiling in that case.
-                            if (isSolidBlockOccludingMovement(p, playerVerticalMovement)) {
-                                finishElevatingPlayer(p);
-                                return;
-                            } else {
-                                p.setVelocity(new Vector(0, elevatorMoveSpeed, 0));
-                            }
-                            break;
-                        case DOWN:
-                            // Contrary to moving the player up,
-                            // moving down into solid blocks works just fine.
-                            p.setVelocity(new Vector(0, -elevatorMoveSpeed, 0));
-                            if (isSolidBlockOccludingMovement(p, playerVerticalMovement))
-                                p.teleport(p.getLocation().add(0, -elevatorMoveSpeed, 0));
-                            break;
-                        default:
-                            // Player is not moving
-                            finishElevatingPlayer(p);
-                            return;
-                    }
-
-                    lastLocation.setY(p.getLocation().getY());
-                }
-
-                private void finishElevatingPlayer(Player p) {
-                    p.teleport(newLocation);
-                    teleportFinish(player, destination, shift);
-                    disableFlightMode(p);
-                    setPassengerIfPlayerWasInVehicle(player);
-                    cancel();
-                }
-
-            }.runTaskTimer(CraftBookPlugin.inst(), 1, 1);
+        // Teleport!
+        if (player.isInsideVehicle()) {
+            Entity teleportedVehicle = LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
+            player.trySetPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
+            LocationUtil.addVehiclePassengerDelayed(teleportedVehicle, player);
         } else {
-            // Teleport!
-            if (player.isInsideVehicle()) {
-                Entity teleportedVehicle = LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
-
-                player.setPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
-
-                LocationUtil.addVehiclePassengerDelayed(teleportedVehicle, player);
-            } else {
-                player.setPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
-            }
-
-            teleportFinish(player, destination, shift);
+            player.trySetPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
         }
-    }
 
-    private void enableFlightMode(Player p) {
-        p.setAllowFlight(true);
-        p.setFlying(true);
-        p.setFallDistance(0f);
-        p.setNoDamageTicks(2);
-    }
-
-    private void disableFlightMode(Player p) {
-        if (!flyingPlayers.contains(p.getUniqueId())) {
-            return;
-        }
-        p.setFlying(false);
-        p.setAllowFlight(p.getGameMode() == GameMode.CREATIVE);
-        flyingPlayers.remove(p.getUniqueId());
-    }
-
-    private Direction getVerticalDirection(Location from, Location to) {
-        if (from.getY() < to.getY())
-            return Direction.UP;
-        else if (from.getY() > to.getY())
-            return Direction.DOWN;
-        else
-            return Direction.NONE;
-    }
-
-    private boolean isSolidBlockOccludingMovement(Player p, Direction direction) {
-        int verticalDistance = direction == Direction.UP ? 2 : -1;
-        return p.getLocation().clone().add(0, verticalDistance, 0).getBlock().getType().isSolid();
-    }
-
-    private void setPassengerIfPlayerWasInVehicle(CraftBookPlayer player) {
-
-        boolean wasPlayerInVehicle = playerVehicles.containsKey(player.getUniqueId());
-
-        if (wasPlayerInVehicle) {
-            Entity vehicle = playerVehicles.get(player.getUniqueId());
-            LocationUtil.addVehiclePassengerDelayed(vehicle, player);
-            playerVehicles.remove(player.getUniqueId());
-        }
+        teleportFinish(player, destination, shift);
     }
 
     public static void teleportFinish(CraftBookPlayer player, Block destination, BlockFace shift) {
-        // Now, we want to read the sign so we can tell the player
-        // his or her floor, but as that may not be avilable, we can
-        // just print a generic message
-        ChangedSign info = null;
+        ChangedSign destinationSign = null;
         if (!SignUtil.isSign(destination)) {
             if (Tag.BUTTONS.isTagged(destination.getType())) {
                 Switch attachable = (Switch) destination.getBlockData();
-                if (SignUtil.isSign(destination.getRelative(attachable.getFacing().getOppositeFace(), 2)))
-                    info = CraftBookBukkitUtil.toChangedSign(destination.getRelative(attachable.getFacing().getOppositeFace(), 2));
+                if (SignUtil.isSign(destination.getRelative(attachable.getFacing().getOppositeFace(), 2))) {
+                    destinationSign = CraftBookBukkitUtil.toChangedSign(destination.getRelative(attachable.getFacing().getOppositeFace(), 2));
+                }
             }
-            if (info == null)
+            if (destinationSign == null) {
                 return;
-        } else
-            info = CraftBookBukkitUtil.toChangedSign(destination);
-        String title = info.getLines()[0];
-        if (!title.isEmpty()) {
-            player.print(player.translate("mech.lift.floor") + ": " + title);
+            }
         } else {
-            player.print(shift.getModY() > 0 ? "mech.lift.up" : "mech.lift.down");
+            destinationSign = CraftBookBukkitUtil.toChangedSign(destination);
+        }
+
+        String title = destinationSign.getLine(0);
+        if (!title.isEmpty()) {
+            player.printInfo(TranslatableComponent.of("craftbook.elevator.floor-notice", TextComponent.of(title, TextColor.WHITE)));
+        } else {
+            player.printInfo(TranslatableComponent.of(shift.getModY() > 0
+                ? "craftbook.elevator.moved-up"
+                : "craftbook.elevator.moved-down"
+            ));
         }
     }
 
     public static boolean isValidLift(ChangedSign start, ChangedSign stop) {
+        if (start == null || stop == null) {
+            return true;
+        }
 
-        if (start == null || stop == null) return true;
-        if (start.getLine(2).toLowerCase(Locale.ENGLISH).startsWith("to:")) {
+        if (start.getLine(2).toLowerCase(Locale.ROOT).startsWith("to:")) {
             try {
                 return stop.getLine(0).equalsIgnoreCase(RegexUtil.COLON_PATTERN.split(start.getLine(2))[0].trim());
             } catch (Exception e) {
                 start.setLine(2, "");
                 return false;
             }
-        } else return true;
+        } else {
+            return true;
+        }
     }
 
-    private Elevator.Direction isLift(Block block) {
-
+    @Nullable
+    private LiftType findLift(Block block) {
         if (!SignUtil.isSign(block)) {
             if (elevatorButtonEnabled && Tag.BUTTONS.isTagged(block.getType())) {
                 Switch b = (Switch) block.getBlockData();
-                if (b == null || b.getFacing() == null)
-                    return Direction.NONE;
-                Block sign = block.getRelative(b.getFacing().getOppositeFace(), 2);
-                if (SignUtil.isSign(sign))
-                    return isLift(CraftBookBukkitUtil.toChangedSign(sign));
+                Block opposite = block.getRelative(b.getFacing().getOppositeFace(), 2);
+                if (SignUtil.isSign(opposite)) {
+                    ChangedSign sign = new ChangedSign(opposite, null);
+                    return LiftType.fromLabel(sign.getLine(1));
+                }
             }
-            return Direction.NONE;
+            return null;
         }
 
-        return isLift(CraftBookBukkitUtil.toChangedSign(block));
-    }
-
-    private static Elevator.Direction isLift(ChangedSign sign) {
-        // if you were really feeling frisky this could definitely
-        // be optomized by converting the string to a char[] and then
-        // doing work
-
-        if (sign.getLine(1).equalsIgnoreCase("[Lift Up]")) return Direction.UP;
-        if (sign.getLine(1).equalsIgnoreCase("[Lift Down]")) return Direction.DOWN;
-        if (sign.getLine(1).equalsIgnoreCase("[Lift]")) return Direction.RECV;
-        return Direction.NONE;
+        ChangedSign sign = new ChangedSign(block, null);
+        return LiftType.fromLabel(sign.getLine(1));
     }
 
     private boolean elevatorAllowRedstone;
     private int elevatorRedstoneRadius;
     private boolean elevatorButtonEnabled;
     private boolean elevatorLoop;
-    private boolean elevatorSlowMove;
-    private double elevatorMoveSpeed;
-
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
         config.setComment("allow-redstone", "Allows elevators to be triggered by redstone, which will move all players in a radius.");
         elevatorAllowRedstone = config.getBoolean("allow-redstone", false);
 
@@ -602,11 +426,5 @@ public class Elevator extends AbstractCraftBookMechanic {
 
         config.setComment("allow-looping", "Allows elevators to loop the world height. The heighest lift up will go to the next lift on the bottom of the world and vice versa.");
         elevatorLoop = config.getBoolean("allow-looping", false);
-
-        config.setComment("smooth-movement", "Causes the elevator to slowly move the player between floors instead of instantly.");
-        elevatorSlowMove = config.getBoolean("smooth-movement", false);
-
-        config.setComment("smooth-movement-speed", "The speed at which players move from floor to floor when smooth movement is enabled.");
-        elevatorMoveSpeed = config.getDouble("smooth-movement-speed", 0.5);
     }
 }

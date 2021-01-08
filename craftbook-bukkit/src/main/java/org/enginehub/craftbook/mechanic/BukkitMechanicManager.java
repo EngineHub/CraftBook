@@ -350,6 +350,15 @@ public class BukkitMechanicManager extends MechanicManager {
             .category(MechanicCategory.MINECART)
             .buildAndRegister();
 
+        MechanicType.Builder
+            .create()
+            .id("elevator")
+            .name("Elevator")
+            .description(TranslatableComponent.of("craftbook.elevator.description"))
+            .className("org.enginehub.craftbook.mechanics.Elevator")
+            .category(MechanicCategory.GENERAL)
+            .buildAndRegister();
+
         // TODO CommandItems needs to load early (after variables).
     }
 
