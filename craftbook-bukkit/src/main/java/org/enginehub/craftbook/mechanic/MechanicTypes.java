@@ -34,7 +34,6 @@ import org.enginehub.craftbook.mechanics.HiddenSwitch;
 import org.enginehub.craftbook.mechanics.JackOLantern;
 import org.enginehub.craftbook.mechanics.LightStone;
 import org.enginehub.craftbook.mechanics.LightSwitch;
-import org.enginehub.craftbook.mechanics.MapChanger;
 import org.enginehub.craftbook.mechanics.Marquee;
 import org.enginehub.craftbook.mechanics.PaintingSwitcher;
 import org.enginehub.craftbook.mechanics.Payment;
@@ -149,8 +148,6 @@ public class MechanicTypes {
     public static final MechanicType<LightSwitch> LIGHT_SWITCH = get("light_switch");
     @Nullable
     public static final MechanicType<LightStone> LIGHTSTONE = get("lightstone");
-    @Nullable
-    public static final MechanicType<MapChanger> MAP_CHANGER = get("map_changer");
     @Nullable
     public static final MechanicType<Marquee> MARQUEE = get("marquee");
     @Nullable
