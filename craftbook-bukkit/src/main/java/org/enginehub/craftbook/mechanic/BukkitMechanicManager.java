@@ -31,7 +31,6 @@ public class BukkitMechanicManager extends MechanicManager {
     public void setup() {
 //        registerMechanic("CommandItems", org.enginehub.craftbook.mechanics.items.CommandItems.class, MechanicCategory.CUSTOMISATION);
 //        registerMechanic("CustomCrafting", org.enginehub.craftbook.mechanics.crafting.CustomCrafting.class, MechanicCategory.CUSTOMISATION);
-//        registerMechanic("DispenserRecipes", org.enginehub.craftbook.mechanics.dispenser.DispenserRecipes.class, MechanicCategory.GENERAL);
 //        registerMechanic("CustomDrops", org.enginehub.craftbook.mechanics.drops.CustomDrops.class, MechanicCategory.CUSTOMISATION);
 //        registerMechanic("BetterAi", org.enginehub.craftbook.mechanics.AIMechanic.class, MechanicCategory.GENERAL);
 //        registerMechanic("HeadDrops", org.enginehub.craftbook.mechanics.headdrops.HeadDrops.class, MechanicCategory.GENERAL);
@@ -355,6 +354,15 @@ public class BukkitMechanicManager extends MechanicManager {
             .name("Elevator")
             .description(TranslatableComponent.of("craftbook.elevator.description"))
             .className("org.enginehub.craftbook.mechanics.Elevator")
+            .category(MechanicCategory.GENERAL)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("dispenser_recipes")
+            .name("DispenserRecipes")
+            .description(TranslatableComponent.of("craftbook.dispenserrecipes.description"))
+            .className("org.enginehub.craftbook.mechanics.dispenser.DispenserRecipes")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 

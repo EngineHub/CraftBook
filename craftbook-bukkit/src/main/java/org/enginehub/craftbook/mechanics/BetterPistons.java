@@ -41,6 +41,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
@@ -250,10 +251,9 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         //piston.setPowered(false);
 
         if (pistonsCrusherInstaKill) {
-            for (Entity ent : trigger.getRelative(piston.getFacing()).getChunk().getEntities()) {
-                if (EntityUtil.isEntityInBlock(ent, trigger.getRelative(piston.getFacing()))) {
-                    EntityUtil.killEntity(ent);
-                }
+            BoundingBox box = BoundingBox.of(trigger.getRelative(piston.getFacing()));
+            for (Entity ent : trigger.getWorld().getNearbyEntities(box)) {
+                EntityUtil.killEntity(ent);
             }
         }
 
@@ -284,10 +284,8 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             || trigger.getRelative(piston.getFacing()).getType() == Material.MOVING_PISTON
             || trigger.getRelative(piston.getFacing()).getType() == Material.PISTON_HEAD
             || Blocks.containsFuzzy(pistonsBounceBlacklist, BukkitAdapter.adapt(trigger.getRelative(piston.getFacing()).getBlockData()))) {
-            for (Entity ent : trigger.getRelative(piston.getFacing()).getChunk().getEntities()) {
-                if (EntityUtil.isEntityInBlock(ent, trigger.getRelative(piston.getFacing()))) {
-                    ent.setVelocity(ent.getVelocity().add(vel));
-                }
+            for (Entity ent : trigger.getWorld().getNearbyEntities(BoundingBox.of(trigger.getRelative(piston.getFacing())))) {
+                ent.setVelocity(ent.getVelocity().add(vel));
             }
         } else {
             FallingBlock fall = trigger.getWorld().spawnFallingBlock(trigger.getRelative(piston.getFacing()).getLocation().add(vel), trigger.getRelative(piston.getFacing()).getBlockData());
@@ -331,10 +329,8 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                             trigger.getRelative(piston.getFacing(), i).setType(Material.AIR);
                             break;
                         }
-                        for (Entity ent : trigger.getRelative(piston.getFacing(), i).getChunk().getEntities()) {
-                            if (EntityUtil.isEntityInBlock(ent, trigger.getRelative(piston.getFacing(), i))) {
-                                ent.teleport(ent.getLocation().subtract(piston.getFacing().getModX() * movemod, piston.getFacing().getModY() * movemod, piston.getFacing().getModZ() * movemod));
-                            }
+                        for (Entity ent : trigger.getWorld().getNearbyEntities(BoundingBox.of(trigger.getRelative(piston.getFacing(), i)))) {
+                            ent.teleport(ent.getLocation().subtract(piston.getFacing().getModX() * movemod, piston.getFacing().getModY() * movemod, piston.getFacing().getModZ() * movemod));
                         }
                         copyData(trigger.getRelative(piston.getFacing(), i + 1), trigger.getRelative(piston.getFacing(), i));
                     }
@@ -367,10 +363,8 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                         if (trigger.equals(offset) || offset.getType() == Material.MOVING_PISTON || offset.getType() == Material.PISTON_HEAD || !canPistonPushBlock(offset))
                             continue;
                         if (next.getType() == Material.AIR) {
-                            for (Entity ent : next.getChunk().getEntities()) {
-                                if (EntityUtil.isEntityInBlock(ent, offset)) {
-                                    ent.teleport(ent.getLocation().add(piston.getFacing().getModX() * movemod, piston.getFacing().getModY() * movemod, piston.getFacing().getModZ() * movemod));
-                                }
+                            for (Entity ent : next.getWorld().getNearbyEntities(BoundingBox.of(offset))) {
+                                ent.teleport(ent.getLocation().add(piston.getFacing().getModX() * movemod, piston.getFacing().getModY() * movemod, piston.getFacing().getModZ() * movemod));
                             }
                             if (copyData(offset, next))
                                 offset.setType(Material.AIR);

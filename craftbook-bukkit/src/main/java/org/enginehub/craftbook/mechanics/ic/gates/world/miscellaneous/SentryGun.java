@@ -26,6 +26,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.util.BoundingBox;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -130,8 +131,8 @@ public class SentryGun extends AbstractSelfTriggeredIC {
     public Player getShootingPlayer() {
 
         Block b = getBackBlock().getRelative(0, 1, 0);
-        for (Entity ent : LocationUtil.getNearbyEntities(BlockUtil.getBlockCentre(b), Vector3.at(2, 2, 2))) {
-            if (EntityUtil.isEntityInBlock(ent, b) && ent instanceof Player)
+        for (Entity ent : b.getWorld().getNearbyEntities(BoundingBox.of(b))) {
+            if (ent instanceof Player)
                 return (Player) ent;
         }
 

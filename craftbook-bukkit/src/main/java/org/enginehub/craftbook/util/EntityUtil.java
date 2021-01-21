@@ -23,7 +23,6 @@ import com.sk89q.worldedit.world.block.BlockStateHolder;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
-import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Ageable;
@@ -49,6 +48,7 @@ import org.bukkit.entity.Tameable;
 import org.bukkit.entity.ThrownExpBottle;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
+import org.bukkit.util.BoundingBox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,39 +58,11 @@ public final class EntityUtil {
     private EntityUtil() {
     }
 
-    /**
-     * Checks if an entity is standing in a specific block.
-     *
-     * @param entity The entity to check.
-     * @param block The block to check.
-     * @return Whether the entity is in the block or not.
-     */
-    public static boolean isEntityInBlock(Entity entity, Block block) {
-
-        Location entLoc = entity.getLocation().getBlock().getLocation();
-        int heightOffset = 0;
-
-        if (entity instanceof LivingEntity) {
-            heightOffset = (int) Math.floor(((LivingEntity) entity).getEyeHeight());
-        }
-        while (heightOffset >= 0) {
-            if (entLoc.getBlockX() == block.getLocation().getBlockX())
-                if (entLoc.getBlockY() + heightOffset == block.getLocation().getBlockY())
-                    if (entLoc.getBlockZ() == block.getLocation().getBlockZ())
-                        return true;
-            heightOffset--;
-        }
-
-        return false;
-    }
-
     public static boolean isEntityOfTypeInBlock(Block block, org.bukkit.entity.EntityType type) {
 
-        for (Entity ent : block.getChunk().getEntities()) {
-
+        for (Entity ent : block.getWorld().getNearbyEntities(BoundingBox.of(block))) {
             if (ent.getType() != type) continue;
-            if (isEntityInBlock(ent, block))
-                return true;
+            return true;
         }
 
         return false;

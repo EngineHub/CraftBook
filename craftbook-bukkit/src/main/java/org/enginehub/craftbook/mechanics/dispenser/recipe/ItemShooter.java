@@ -14,27 +14,28 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.dispenser;
+package org.enginehub.craftbook.mechanics.dispenser.recipe;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
+import org.bukkit.inventory.ItemStack;
 
+public class ItemShooter extends DispenserRecipe {
 
-/**
- * @author Me4502
- */
-public class XPShooter extends ItemShooter {
+    private final Material itemId;
 
-    public XPShooter(Material[] recipe) {
-
-        super(Material.EXPERIENCE_BOTTLE, recipe);
+    public ItemShooter(String id, Material item, Material[] materials) {
+        super(id, materials);
+        itemId = item;
     }
 
-    public XPShooter() {
-
-        super(Material.EXPERIENCE_BOTTLE, new Material[] {
-            Material.AIR, Material.REDSTONE, Material.AIR,
-            Material.REDSTONE, Material.GLASS_BOTTLE, Material.REDSTONE,
-            Material.AIR, Material.REDSTONE, Material.AIR
-        });
+    @Override
+    public void apply(Block block, ItemStack item, BlockFace face) {
+        Item itemEntity = (Item) block.getWorld().spawnEntity(generateLocation(block, face), EntityType.DROPPED_ITEM);
+        itemEntity.setItemStack(new ItemStack(itemId, 1));
+        itemEntity.setVelocity(generateVelocity(face));
     }
 }

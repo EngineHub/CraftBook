@@ -17,97 +17,142 @@
 package org.enginehub.craftbook.mechanics.dispenser;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.registry.NamespacedRegistry;
+import com.sk89q.worldedit.registry.Registry;
+import io.papermc.paper.event.block.BlockPreDispenseEvent;
+import org.bukkit.Effect;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dispenser;
+import org.bukkit.block.data.Directional;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.BlockDispenseEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.mechanics.dispenser.recipe.Cannon;
+import org.enginehub.craftbook.mechanics.dispenser.recipe.DispenserRecipe;
+import org.enginehub.craftbook.mechanics.dispenser.recipe.EntityMover;
+import org.enginehub.craftbook.mechanics.dispenser.recipe.FireArrows;
+import org.enginehub.craftbook.mechanics.dispenser.recipe.ItemShooter;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ItemUtil;
 
-import java.util.HashSet;
-import java.util.Set;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * @author Me4502
- */
 public class DispenserRecipes extends AbstractCraftBookMechanic {
 
-    private Set<Recipe> recipes;
-
-    private static DispenserRecipes instance;
+    public static final Registry<DispenserRecipe> REGISTRY = new NamespacedRegistry<>("dispenser recipe", "craftbook");
 
     @Override
     public void enable() {
-
-        instance = this;
-        recipes = new HashSet<>();
-        if (xpShooterEnable) addRecipe(new XPShooter());
-        if (snowShooterEnable) addRecipe(new SnowShooter());
-        if (fireArrowsEnable) addRecipe(new FireArrows());
-        if (fanEnable) addRecipe(new Fan());
-        if (cannonEnable) addRecipe(new Cannon());
-    }
-
-    /**
-     * Unloads the instanceof DispenserRecipes.
-     */
-    @Override
-    public void disable() {
-
-        recipes.clear();
-        instance = null;
-    }
-
-    /**
-     * Gets the instance of this DispenserRecipe manager.
-     *
-     * @return The instance
-     */
-    public static DispenserRecipes inst() {
-
-        return instance;
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onBlockDispense(BlockDispenseEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
-
-        if (event.getBlock().getType() != Material.DISPENSER) return;
-        if (dispenseNew(event.getBlock(), event.getItem(), event.getVelocity(), event)) {
-            event.setCancelled(true);
+        if (xpShooterEnable) {
+            addRecipe(new ItemShooter(
+                "craftbook:xp_shooter",
+                Material.EXPERIENCE_BOTTLE,
+                new Material[] {
+                    Material.AIR, Material.REDSTONE, Material.AIR,
+                    Material.REDSTONE, Material.GLASS_BOTTLE, Material.REDSTONE,
+                    Material.AIR, Material.REDSTONE, Material.AIR
+                }
+            ));
+        }
+        if (snowShooterEnable) {
+            addRecipe(new ItemShooter(
+                "craftbook:snow_shooter",
+                Material.SNOWBALL,
+                new Material[] {
+                    Material.AIR, Material.SNOW_BLOCK, Material.AIR,
+                    Material.SNOW_BLOCK, Material.POTION, Material.SNOW_BLOCK,
+                    Material.AIR, Material.SNOW_BLOCK, Material.AIR
+                }
+            ));
+        }
+        if (fireArrowsEnable) {
+            addRecipe(new FireArrows(
+                "craftbook:fire_arrows",
+                new Material[] {
+                    Material.AIR, Material.FIRE_CHARGE, Material.AIR,
+                    Material.FIRE_CHARGE, Material.ARROW, Material.FIRE_CHARGE,
+                    Material.AIR, Material.FIRE_CHARGE, Material.AIR
+                }
+            ));
+        }
+        if (fanEnable) {
+            addRecipe(new EntityMover(
+                "craftbook:fan",
+                10,
+                new Material[] {
+                    Material.COBWEB, Material.OAK_LEAVES, Material.COBWEB,
+                    Material.OAK_LEAVES, Material.PISTON, Material.OAK_LEAVES,
+                    Material.COBWEB, Material.OAK_LEAVES, Material.COBWEB
+                }
+            ));
+        }
+        if (vacuumEnable) {
+            addRecipe(new EntityMover(
+                "craftbook:vacuum",
+                -5,
+                new Material[] {
+                    Material.COBWEB, Material.OAK_LEAVES, Material.COBWEB,
+                    Material.OAK_LEAVES, Material.STICKY_PISTON, Material.OAK_LEAVES,
+                    Material.COBWEB, Material.OAK_LEAVES, Material.COBWEB
+                }
+            ));
+        }
+        if (cannonEnable) {
+            addRecipe(new Cannon(
+                "craftbook:cannon",
+                new Material[] {
+                    Material.FIRE_CHARGE, Material.GUNPOWDER, Material.FIRE_CHARGE,
+                    Material.GUNPOWDER, Material.TNT, Material.GUNPOWDER,
+                    Material.FIRE_CHARGE, Material.GUNPOWDER, Material.FIRE_CHARGE
+                }
+            ));
         }
     }
 
-    private boolean dispenseNew(Block block, ItemStack item, Vector velocity, BlockDispenseEvent event) {
+    @Override
+    public void disable() {
+    }
 
-        Dispenser dis = (Dispenser) block.getState();
-        if (dis == null || dis.getInventory() == null || dis.getInventory().getContents() == null)
-            return false;
-        ItemStack[] stacks = dis.getInventory().getContents();
-        for (Recipe r : recipes) {
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onBlockDispense(BlockPreDispenseEvent event) {
+        if (!EventUtil.passesFilter(event) || event.getBlock().getType() != Material.DISPENSER) {
+            return;
+        }
+
+        Block block = event.getBlock();
+        Dispenser dispenser = (Dispenser) block.getState(false);
+        Directional dispenserData = (Directional) block.getBlockData();
+        BlockFace direction = dispenserData.getFacing();
+
+        Inventory inventory = dispenser.getInventory();
+        ItemStack[] stacks = inventory.getContents();
+
+        for (DispenserRecipe r : REGISTRY.values()) {
             Material[] recipe = r.getRecipe();
             if (checkRecipe(stacks, recipe)) {
-                boolean toReturn = r.doAction(block, item, velocity, event);
+                r.apply(block, event.getItemStack(), direction);
                 for (int i = 0; i < stacks.length; i++) {
                     if (recipe[i] != Material.AIR) {
                         stacks[i] = ItemUtil.getUsedItem(stacks[i]);
                     }
                 }
-                dis.getInventory().setContents(stacks);
-                return toReturn;
+                inventory.setContents(stacks);
+
+                block.getWorld().playSound(block.getLocation().toCenterLocation(), Sound.BLOCK_DISPENSER_LAUNCH, SoundCategory.BLOCKS, 1.0f, 1.0f);
+                block.getWorld().playEffect(block.getLocation().toCenterLocation(), Effect.SMOKE, direction);
+                event.setCancelled(true);
+                return;
             }
         }
-        return false;
     }
 
     private static boolean checkRecipe(ItemStack[] stacks, Material[] recipe) {
-
         for (int i = 0; i < stacks.length; i++) {
             ItemStack stack = stacks[i];
             Material id = stack == null ? Material.AIR : stack.getType();
@@ -115,6 +160,7 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
                 return false;
             }
         }
+
         return true;
     }
 
@@ -123,28 +169,28 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
      *
      * @param recipe the recipe to add
      */
-    public boolean addRecipe(Recipe recipe) {
-
-        if (recipe == null) throw new NullPointerException("Dispenser recipe must not be null.");
-        if (recipes.contains(recipe)) return false;
-        recipes.add(recipe);
-        return true;
+    public void addRecipe(DispenserRecipe recipe) {
+        checkNotNull(recipe, "Recipe must not be null");
+        REGISTRY.register(recipe.getId(), recipe);
     }
 
     private boolean cannonEnable;
     private boolean fanEnable;
+    private boolean vacuumEnable;
     private boolean fireArrowsEnable;
     private boolean snowShooterEnable;
     private boolean xpShooterEnable;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
         config.setComment("cannon-enable", "Enables Cannon Dispenser Recipe.");
         cannonEnable = config.getBoolean("cannon-enable", true);
 
         config.setComment("fan-enable", "Enables Fan Dispenser Recipe.");
         fanEnable = config.getBoolean("fan-enable", true);
+
+        config.setComment("vacuum-enable", "Enables Vacuum Dispenser Recipe.");
+        vacuumEnable = config.getBoolean("vacuum-enable", true);
 
         config.setComment("fire-arrows-enable", "Enables Fire Arrows Dispenser Recipe.");
         fireArrowsEnable = config.getBoolean("fire-arrows-enable", true);

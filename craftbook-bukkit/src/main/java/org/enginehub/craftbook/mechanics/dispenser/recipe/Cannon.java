@@ -14,27 +14,24 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.dispenser;
+package org.enginehub.craftbook.mechanics.dispenser.recipe;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.event.block.BlockDispenseEvent;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
 
-public class ItemShooter extends Recipe {
+public class Cannon extends DispenserRecipe {
 
-    private final Material itemId;
-
-    public ItemShooter(Material id, Material[] materials) {
-
-        super(materials);
-        itemId = id;
+    public Cannon(String id, Material[] materials) {
+        super(id, materials);
     }
 
     @Override
-    public boolean doAction(Block block, ItemStack item, Vector velocity, BlockDispenseEvent event) {
-        event.setItem(new ItemStack(itemId, 1));
-        return false;
+    public void apply(Block block, ItemStack item, BlockFace face) {
+        TNTPrimed a = (TNTPrimed) block.getWorld().spawnEntity(generateLocation(block, face), EntityType.PRIMED_TNT);
+        a.setVelocity(generateVelocity(face).normalize().multiply(2));
     }
 }

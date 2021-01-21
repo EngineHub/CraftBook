@@ -27,6 +27,8 @@
     "craftbook.chunkanchor.create": "Chunk Anchor created.",
     "craftbook.chunkanchor.description": "Anchors a chunk to keep it loaded.",
 
+    "craftbook.dispenserrecipes.description": "Adds recipes that can be used inside a dispenser to make things happen",
+
     "craftbook.elevator.create.up": "Lift Up created.",
     "craftbook.elevator.create.down": "Lift Down created.",
     "craftbook.elevator.create.recv": "Lift Receiver created.",

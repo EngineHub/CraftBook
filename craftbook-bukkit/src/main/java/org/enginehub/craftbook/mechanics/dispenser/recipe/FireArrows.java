@@ -14,44 +14,33 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.dispenser;
+package org.enginehub.craftbook.mechanics.dispenser.recipe;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.type.Dispenser;
 import org.bukkit.entity.Arrow;
-import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-/**
- * @author Me4502
- */
-public class FireArrows extends Recipe {
+import java.util.concurrent.ThreadLocalRandom;
 
-    public FireArrows(Material[] recipe) {
+public class FireArrows extends DispenserRecipe {
 
-        super(recipe);
-    }
-
-    public FireArrows() {
-
-        super(new Material[] {
-            Material.AIR, Material.FIRE_CHARGE, Material.AIR,
-            Material.FIRE_CHARGE, Material.ARROW, Material.FIRE_CHARGE,
-            Material.AIR, Material.FIRE_CHARGE, Material.AIR
-        });
+    public FireArrows(String id, Material[] materials) {
+        super(id, materials);
     }
 
     @Override
-    public boolean doAction(Block block, ItemStack item, Vector velocity, BlockDispenseEvent event) {
-        Dispenser disp = (Dispenser) block.getBlockData();
-        BlockFace face = disp.getFacing();
-        Location location = block.getRelative(face).getLocation().add(0.5, 0.5, 0.5);
-        Arrow a = block.getWorld().spawnArrow(location, velocity, 1.0f, 0.0f);
-        a.setFireTicks(5000);
-        return true;
+    public void apply(Block block, ItemStack item, BlockFace face) {
+        // Use an alternate velocity algorithm with less spread and more speed. Plus Y-axis shots.
+        double speed = ThreadLocalRandom.current().nextDouble() * 0.2 + 0.4;
+        double x = ThreadLocalRandom.current().nextGaussian() * 0.01 + face.getModX() * speed;
+        double y = ThreadLocalRandom.current().nextGaussian() * 0.01 + face.getModY() * speed;
+        double z = ThreadLocalRandom.current().nextGaussian() * 0.01 + face.getModZ() * speed;
+        Vector velocity = new Vector(x, y, z);
+
+        Arrow arrow = block.getWorld().spawnArrow(generateLocation(block, face), velocity, 1.0f, 0.0f);
+        arrow.setFireTicks(5000);
     }
 }

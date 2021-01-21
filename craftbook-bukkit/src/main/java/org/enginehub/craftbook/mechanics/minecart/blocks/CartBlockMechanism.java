@@ -25,6 +25,7 @@ import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.util.BoundingBox;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
@@ -143,7 +144,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
         for (Entity ent : rail.getChunk().getEntities()) {
             if (!(ent instanceof Minecart))
                 continue;
-            if (EntityUtil.isEntityInBlock(ent, rail))
+            if (BoundingBox.of(rail).contains(ent.getBoundingBox()))
                 return (Minecart) ent;
         }
         return null;

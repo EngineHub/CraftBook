@@ -38,6 +38,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
@@ -338,11 +339,10 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
     private static Collection<Item> getItems(Block block) {
 
         List<Item> items = new ArrayList<>();
-        for (Entity entity : block.getChunk().getEntities()) {
+        BoundingBox box = BoundingBox.of(block).expand(BlockFace.UP, 1);
+        for (Entity entity : block.getWorld().getNearbyEntities(box)) {
             if (entity instanceof Item) {
-                if (EntityUtil.isEntityInBlock(entity, block) || EntityUtil.isEntityInBlock(entity, block.getRelative(BlockFace.UP))) {
-                    items.add((Item) entity);
-                }
+                items.add((Item) entity);
             }
         }
         return items;

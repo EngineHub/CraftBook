@@ -35,6 +35,7 @@ import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.BoundingBox;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 import java.util.ArrayList;
@@ -822,7 +823,6 @@ public final class ItemUtil {
     }
 
     public static ItemStack getUsedItem(ItemStack item) {
-
         if (item.getType() == Material.MUSHROOM_STEW) {
             item.setType(Material.BOWL); // Get your bowl back
         } else if (item.getType() == Material.POTION) {
@@ -884,7 +884,7 @@ public final class ItemUtil {
 
         List<Item> items = new ArrayList<>();
 
-        for (Entity en : block.getChunk().getEntities()) {
+        for (Entity en : block.getWorld().getNearbyEntities(BoundingBox.of(block))) {
             if (!(en instanceof Item)) {
                 continue;
             }
@@ -892,10 +892,7 @@ public final class ItemUtil {
             if (item.isDead() || !item.isValid())
                 continue;
 
-            if (EntityUtil.isEntityInBlock(en, block)) {
-
-                items.add(item);
-            }
+            items.add(item);
         }
 
         return items;
