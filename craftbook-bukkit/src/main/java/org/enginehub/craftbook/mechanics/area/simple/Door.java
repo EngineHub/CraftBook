@@ -43,7 +43,7 @@ import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
@@ -137,7 +137,7 @@ public class Door extends CuboidToggleMechanic {
 
                         if (enforceType) {
                             BlockType blockType = player.getItemInHand(HandSide.MAIN_HAND).getType().getBlockType();
-                            sign.setLine(0, sign.getLine(0) + ',' + BlockSyntax.toMinifiedId(blockType.getFuzzyMatcher()));
+                            sign.setLine(0, sign.getLine(0) + ',' + BlockParser.toMinifiedId(blockType.getFuzzyMatcher()));
                             sign.update(false);
                         }
 
@@ -367,7 +367,7 @@ public class Door extends CuboidToggleMechanic {
         maxWidth = config.getInt("max-width", 5);
 
         config.setComment("blocks", "A list of blocks that a door can be made out of.");
-        blocks = BlockSyntax.getBlocks(config.getStringList("blocks",
+        blocks = BlockParser.getBlocks(config.getStringList("blocks",
             getDefaultBlocks().stream().sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
     }
 }

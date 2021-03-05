@@ -27,6 +27,7 @@ mechanics:
         dispenser_recipes: false
         elevator: false
         head_drops: false
+        light_switch: false
         marquee: false
         painting_switcher: false
         readable_bookshelf: false

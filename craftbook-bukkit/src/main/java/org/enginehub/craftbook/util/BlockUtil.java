@@ -33,20 +33,12 @@ public final class BlockUtil {
     private BlockUtil() {
     }
 
-    public static boolean areBlocksSimilar(Block block, Block block2) {
-        return block.getType() == block2.getType();
-    }
-
     public static boolean areBlocksIdentical(Block block, Block block2) {
         return block.getType() == block2.getType() && block.getBlockData().matches(block2.getBlockData());
     }
 
     public static boolean areBlocksIdentical(Block block, BlockData block2) {
         return block.getType() == block2.getMaterial() && block.getBlockData().matches(block2);
-    }
-
-    public static boolean isBlockSimilarTo(Block block, Material type) {
-        return block.getType() == type;
     }
 
     public static boolean isBlockReplacable(Material id) {

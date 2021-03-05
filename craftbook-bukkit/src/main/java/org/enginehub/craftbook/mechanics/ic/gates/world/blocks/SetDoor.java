@@ -28,7 +28,7 @@ import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.RegexUtil;
@@ -66,10 +66,10 @@ public class SetDoor extends AbstractIC {
             String[] split = RegexUtil.MINUS_PATTERN.split(line);
             // parse the material data
             if (split.length > 1) {
-                offBlock = BlockSyntax.getBukkitBlock(split[1]);
+                offBlock = BlockParser.getBukkitBlock(split[1]);
             }
             // parse the material and data for toggle on
-            onBlock = BlockSyntax.getBukkitBlock(split[0]);
+            onBlock = BlockParser.getBukkitBlock(split[0]);
         }
         // parse the coordinates
         line = getSign().getLine(3);

@@ -37,7 +37,7 @@ import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
 import org.enginehub.craftbook.mechanics.pipe.PipeFinishEvent;
 import org.enginehub.craftbook.mechanics.pipe.PipePutEvent;
 import org.enginehub.craftbook.mechanics.pipe.PipeSuckEvent;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.SignUtil;
@@ -281,7 +281,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
     public static BlockData getStoredType(ChangedSign sign) {
         if (sign.getLine(0).contains(",")) {
-            return BlockSyntax.getBukkitBlock(sign.getLine(0).split(",")[1]);
+            return BlockParser.getBukkitBlock(sign.getLine(0).split(",")[1]);
         }
         return null;
     }
@@ -298,7 +298,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
             ChangedSign sign = CraftBookBukkitUtil.toChangedSign(block);
             BlockData type = null;
             if (sign.getLine(0).contains(",")) {
-                type = BlockSyntax.getBukkitBlock(sign.getLine(0).split(",")[1]);
+                type = BlockParser.getBukkitBlock(sign.getLine(0).split(",")[1]);
                 BlockData realType = this.getBlockBase(block).getBlockData();
                 if (type != null && realType.getMaterial() == type.getMaterial()) {
                     return realType;
@@ -306,7 +306,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
             }
             if (type == null) {
                 type = this.getBlockBase(block).getBlockData();
-                sign.setLine(0, sign.getLine(0) + ',' + BlockSyntax.toMinifiedId(BukkitAdapter.adapt(type).getBlockType().getFuzzyMatcher()));
+                sign.setLine(0, sign.getLine(0) + ',' + BlockParser.toMinifiedId(BukkitAdapter.adapt(type).getBlockType().getFuzzyMatcher()));
                 sign.update(false);
             }
             return type;

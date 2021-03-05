@@ -45,8 +45,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
@@ -535,7 +534,7 @@ public class Snow extends AbstractCraftBookMechanic {
         maxPileHeight = config.getInt("max-pile-height", 3);
 
         config.setComment("replaceable-blocks", "A list of blocks that can be replaced by snow dispersion.");
-        dispersionReplacables = BlockSyntax.getBlocks(config.getStringList("replaceable-blocks", getDefaultReplacables()), true);
+        dispersionReplacables = BlockParser.getBlocks(config.getStringList("replaceable-blocks", getDefaultReplacables()), true);
 
         config.setComment("dispersion-tick-speed", "The speed at which dispersion actions are run");
         dispersionTickSpeed = config.getInt("dispersion-tick-speed", 20);

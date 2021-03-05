@@ -35,7 +35,7 @@ import org.enginehub.craftbook.mechanics.ic.ConfigurableIC;
 import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.ICUtil;
 
@@ -79,7 +79,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
 
     @Override
     public void load() {
-        item = BlockSyntax.getBlock(getLine(2), true);
+        item = BlockParser.getBlock(getLine(2), true);
     }
 
     public boolean breakBlock() {
@@ -132,7 +132,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             if (!sign.getLine(2).trim().isEmpty()) {
-                BaseBlock item = BlockSyntax.getBlock(sign.getLine(2), true);
+                BaseBlock item = BlockParser.getBlock(sign.getLine(2), true);
                 if (item == null)
                     throw new ICVerificationException("An invalid block was provided on line 2!");
                 if (Blocks.containsFuzzy(blockBlacklist, item))
@@ -156,7 +156,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         public void addConfiguration(YAMLProcessor config, String path) {
 
             config.setComment("blacklist", "Stops the IC from breaking the listed blocks.");
-            blockBlacklist = BlockSyntax.getBlocks(config.getStringList("blacklist", Lists.newArrayList(BlockTypes.BEDROCK.getId())), true);
+            blockBlacklist = BlockParser.getBlocks(config.getStringList("blacklist", Lists.newArrayList(BlockTypes.BEDROCK.getId())), true);
         }
     }
 }

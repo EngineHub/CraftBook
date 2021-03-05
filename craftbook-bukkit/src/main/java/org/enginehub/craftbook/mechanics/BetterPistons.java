@@ -49,7 +49,7 @@ import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.EntityUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.InventoryUtil;
@@ -484,7 +484,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         pistonsCrusherInstaKill = config.getBoolean("crushers-kill-mobs", false);
 
         config.setComment("crusher-blacklist", "A list of blocks that the Crusher piston can not break.");
-        pistonsCrusherBlacklist = BlockSyntax.getBlocks(config.getStringList("crusher-blacklist", getDefaultBlacklist()), true);
+        pistonsCrusherBlacklist = BlockParser.getBlocks(config.getStringList("crusher-blacklist", getDefaultBlacklist()), true);
 
         config.setComment("super-sticky", "Enables BetterPistons SuperSticky Mechanic.");
         pistonsSuperSticky = config.getBoolean("super-sticky", true);
@@ -493,13 +493,13 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         pistonsSuperPush = config.getBoolean("super-push", true);
 
         config.setComment("movement-blacklist", "A list of blocks that the movement related BetterPistons can not interact with.");
-        pistonsMovementBlacklist = BlockSyntax.getBlocks(config.getStringList("movement-blacklist", getDefaultBlacklist()), true);
+        pistonsMovementBlacklist = BlockParser.getBlocks(config.getStringList("movement-blacklist", getDefaultBlacklist()), true);
 
         config.setComment("bounce", "Enables BetterPistons Bounce Mechanic.");
         pistonsBounce = config.getBoolean("bounce", true);
 
         config.setComment("bounce-blacklist", "A list of blocks that the Bounce piston can not bounce.");
-        pistonsBounceBlacklist = BlockSyntax.getBlocks(config.getStringList("bounce-blacklist", getDefaultBlacklist()), true);
+        pistonsBounceBlacklist = BlockParser.getBlocks(config.getStringList("bounce-blacklist", getDefaultBlacklist()), true);
 
         config.setComment("max-distance", "The maximum distance a BetterPiston can interact with blocks from.");
         pistonMaxDistance = config.getInt("max-distance", 12);

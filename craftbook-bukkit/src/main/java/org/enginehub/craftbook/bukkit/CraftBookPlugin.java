@@ -241,7 +241,7 @@ public class CraftBookPlugin extends JavaPlugin {
             logDebugMessage("Initializing Metrics!", "startup");
             org.bstats.bukkit.Metrics metrics = new org.bstats.bukkit.Metrics(this, BSTATS_ID);
 
-            metrics.addCustomChart(new org.bstats.bukkit.Metrics.SimpleBarChart("enabled_mechanics",
+            metrics.addCustomChart(new org.bstats.charts.SimpleBarChart("enabled_mechanics",
                 () -> platform.getMechanicManager().getLoadedMechanics().stream().collect(Collectors.toMap(mech -> mech.getClass().getSimpleName(), o -> 1))));
         } catch (Throwable e) {
             e.printStackTrace();

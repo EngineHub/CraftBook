@@ -34,7 +34,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.EntityUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.RailUtil;
@@ -268,7 +268,7 @@ public class CartDispenser extends CartBlockMechanism {
     public void loadFromConfiguration(YAMLProcessor config) {
 
         config.setComment("block", "Sets the block that is the base of the dispenser mechanic.");
-        material = BlockSyntax.getBlock(config.getString("block", BlockTypes.EMERALD_ORE.getId()), true);
+        material = BlockParser.getBlock(config.getString("block", BlockTypes.EMERALD_ORE.getId()), true);
 
         config.setComment("spawn-infront", "Sets whether the minecarts should spawn infront of the mechanic instead of directly above.");
         minecartDispenserLegacy = config.getBoolean("spawn-infront", false);

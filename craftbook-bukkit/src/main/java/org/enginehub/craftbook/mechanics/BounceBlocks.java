@@ -36,7 +36,7 @@ import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SignUtil;
@@ -57,7 +57,7 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
     public void loadFromConfiguration(YAMLProcessor config) {
 
         config.setComment("blocks", "A list of blocks that can be jumped on.");
-        blocks = BlockSyntax.getBlocks(config.getStringList("blocks", Collections.singletonList(BlockTypes.DIAMOND_BLOCK.getId())), true);
+        blocks = BlockParser.getBlocks(config.getStringList("blocks", Collections.singletonList(BlockTypes.DIAMOND_BLOCK.getId())), true);
 
         config.setComment("sensitivity", "The sensitivity of jumping.");
         sensitivity = config.getDouble("sensitivity", 0.1);
@@ -85,7 +85,7 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
                 z = Double.parseDouble(bits[2]);
             }
 
-            BaseBlock block = BlockSyntax.getBlock(key, true);
+            BaseBlock block = BlockParser.getBlock(key, true);
 
             autoBouncers.put(block, new Vector(x, y, z));
         }

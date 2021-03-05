@@ -33,7 +33,7 @@ dependencies {
     "compile"(project(":craftbook-core"))
     "compile"(project(":craftbook-libs:bukkit"))
     "api"("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
-    "implementation"("io.papermc:paperlib:1.0.4")
+    "implementation"("io.papermc:paperlib:1.0.6")
     "api"("com.sk89q.worldedit:worldedit-bukkit:${Versions.WORLDEDIT}") {
         exclude(group = "org.spigotmc")
     }
@@ -42,7 +42,7 @@ dependencies {
     }
     "implementation"("net.milkbowl.vault:VaultAPI:1.7") { isTransitive = false }
     "implementation"("com.comphenix.protocol:ProtocolLib:4.5.1") { isTransitive = false }
-    "implementation"("org.bstats:bstats-bukkit:1.7")
+    "implementation"("org.bstats:bstats-bukkit:2.2.1")
 
     "compileOnly"("com.sk89q.worldedit.worldedit-libs:ap:${Versions.WORLDEDIT}")
     "annotationProcessor"("com.sk89q.worldedit.worldedit-libs:ap:${Versions.WORLDEDIT}")
@@ -81,10 +81,11 @@ tasks.named<Jar>("jar") {
 tasks.named<ShadowJar>("shadowJar") {
     dependencies {
         relocate("org.bstats", "org.enginehub.craftbook.bukkit.bstats") {
-            include(dependency("org.bstats:bstats-bukkit:1.7"))
+            include(dependency("org.bstats:bstats-bukkit:2.2.1"))
+            include(dependency("org.bstats:bstats-base:2.2.1"))
         }
         relocate("io.papermc.lib", "org.enginehub.craftbook.bukkit.paperlib") {
-            include(dependency("io.papermc:paperlib:1.0.4"))
+            include(dependency("io.papermc:paperlib:1.0.6"))
         }
     }
 }

@@ -34,7 +34,7 @@ import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
 import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 
 import java.util.List;
 
@@ -93,7 +93,7 @@ public class SetBlockAdmin extends SetBlock {
 
             if (sign.getLine(2) == null || sign.getLine(2).isEmpty())
                 throw new ICVerificationException("A block must be provided on line 2!");
-            BlockStateHolder item = BlockSyntax.getBlock(sign.getLine(2), true);
+            BlockStateHolder item = BlockParser.getBlock(sign.getLine(2), true);
             if (item == null)
                 throw new ICVerificationException("An invalid block was provided on line 2!");
             if (Blocks.containsFuzzy(blockBlacklist, item))
@@ -116,7 +116,7 @@ public class SetBlockAdmin extends SetBlock {
         public void addConfiguration(YAMLProcessor config, String path) {
 
             config.setComment("blacklist", "Stops the IC from placing the listed blocks.");
-            blockBlacklist = BlockSyntax.getBlocks(config.getStringList("blacklist", Lists.newArrayList(BlockTypes.BEDROCK.getId())), true);
+            blockBlacklist = BlockParser.getBlocks(config.getStringList("blacklist", Lists.newArrayList(BlockTypes.BEDROCK.getId())), true);
         }
     }
 }

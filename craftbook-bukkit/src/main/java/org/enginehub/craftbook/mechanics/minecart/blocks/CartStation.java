@@ -29,7 +29,7 @@ import org.bukkit.util.Vector;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.ItemSyntax;
 import org.enginehub.craftbook.util.ItemUtil;
 import org.enginehub.craftbook.util.SignUtil;
@@ -151,6 +151,6 @@ public class CartStation extends CartBlockMechanism {
     public void loadFromConfiguration(YAMLProcessor config) {
 
         config.setComment("block", "Sets the block that is the base of the station mechanic.");
-        material = BlockSyntax.getBlock(config.getString("block", BlockTypes.OBSIDIAN.getId()), true);
+        material = BlockParser.getBlock(config.getString("block", BlockTypes.OBSIDIAN.getId()), true);
     }
 }

@@ -35,7 +35,7 @@ import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.minecart.StationManager;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.ItemSyntax;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SignUtil;
@@ -248,6 +248,6 @@ public class CartSorter extends CartBlockMechanism {
     public void loadFromConfiguration(YAMLProcessor config) {
 
         config.setComment("block", "Sets the block that is the base of the sorter mechanic.");
-        material = BlockSyntax.getBlock(config.getString("block", BlockTypes.NETHERRACK.getId()), true);
+        material = BlockParser.getBlock(config.getString("block", BlockTypes.NETHERRACK.getId()), true);
     }
 }

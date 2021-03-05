@@ -27,7 +27,7 @@ import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.RegexUtil;
 
 import java.util.Locale;
@@ -65,9 +65,9 @@ public class MultipleSetBlock extends AbstractIC {
 
         String[] blocks = RegexUtil.MINUS_PATTERN.split(coords[3]);
 
-        onBlock = BlockSyntax.getBukkitBlock(blocks[0]);
+        onBlock = BlockParser.getBukkitBlock(blocks[0]);
 
-        offblock = (blocks.length > 1) ? BlockSyntax.getBukkitBlock(blocks[1]) : Material.AIR.createBlockData();
+        offblock = (blocks.length > 1) ? BlockParser.getBukkitBlock(blocks[1]) : Material.AIR.createBlockData();
 
         x += Integer.parseInt(coords[0]);
         y += Integer.parseInt(coords[1]);

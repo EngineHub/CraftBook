@@ -26,7 +26,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
@@ -87,7 +87,7 @@ public class RedstoneGlowstone extends AbstractCraftBookMechanic {
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("off-block", "Sets the block that the glowstone turns into when turned off.");
-        offBlock = BlockSyntax.getBlock(config.getString("off-block", BlockTypes.SOUL_SAND.getId()), true);
+        offBlock = BlockParser.getBlock(config.getString("off-block", BlockTypes.SOUL_SAND.getId()), true);
 
         config.setComment("prevent-breaking", "Whether powered Glowstone should be unbreakable.");
         preventBreaking = config.getBoolean("prevent-breaking", false);

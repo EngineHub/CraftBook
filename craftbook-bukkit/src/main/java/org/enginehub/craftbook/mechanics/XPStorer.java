@@ -43,7 +43,7 @@ import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.st.BukkitSelfTriggerManager;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.InventoryUtil;
 import org.enginehub.craftbook.util.ItemUtil;
@@ -320,7 +320,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         xpPerBottle = config.getInt("xp-per-bottle", 16);
 
         config.setComment("block", "The block that is an XP Storer.");
-        block = BlockSyntax.getBlock(config.getString("block", BlockTypes.SPAWNER.getId()), true);
+        block = BlockParser.getBlock(config.getString("block", BlockTypes.SPAWNER.getId()), true);
 
         config.setComment("require-sneaking-state", "Sets how the player must be sneaking in order to use the XP Storer.");
         sneakingState = TernaryState.parseTernaryState(config.getString("require-sneaking-state", "no"));

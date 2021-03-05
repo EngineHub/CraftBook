@@ -24,7 +24,7 @@ import org.bukkit.event.EventHandler;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.CartUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.RegexUtil;
@@ -104,6 +104,6 @@ public class CartTeleporter extends CartBlockMechanism {
     public void loadFromConfiguration(YAMLProcessor config) {
 
         config.setComment("block", "Sets the block that is the base of the teleport mechanic.");
-        material = BlockSyntax.getBlock(config.getString("block", BlockTypes.EMERALD_BLOCK.getId()), true);
+        material = BlockParser.getBlock(config.getString("block", BlockTypes.EMERALD_BLOCK.getId()), true);
     }
 }

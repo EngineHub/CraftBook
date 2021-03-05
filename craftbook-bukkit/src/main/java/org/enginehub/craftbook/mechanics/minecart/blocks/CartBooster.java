@@ -22,7 +22,7 @@ import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
 
 public class CartBooster extends CartBlockMechanism {
@@ -74,15 +74,15 @@ public class CartBooster extends CartBlockMechanism {
     public void loadFromConfiguration(YAMLProcessor config) {
 
         config.setComment("max-boost-block", "Sets the block that is the base of the max boost block.");
-        minecartSpeedModMaxBoostBlock = BlockSyntax.getBlock(config.getString("max-boost-block", BlockTypes.GOLD_BLOCK.getId()), true);
+        minecartSpeedModMaxBoostBlock = BlockParser.getBlock(config.getString("max-boost-block", BlockTypes.GOLD_BLOCK.getId()), true);
 
         config.setComment("25x-boost-block", "Sets the block that is the base of the 25x boost block.");
-        minecartSpeedMod25xBoostBlock = BlockSyntax.getBlock(config.getString("25x-boost-block", BlockTypes.GOLD_ORE.getId()), true);
+        minecartSpeedMod25xBoostBlock = BlockParser.getBlock(config.getString("25x-boost-block", BlockTypes.GOLD_ORE.getId()), true);
 
         config.setComment("50x-slow-block", "Sets the block that is the base of the 50x slower block.");
-        minecartSpeedMod50xSlowBlock = BlockSyntax.getBlock(config.getString("50x-slow-block", BlockTypes.SOUL_SAND.getId()), true);
+        minecartSpeedMod50xSlowBlock = BlockParser.getBlock(config.getString("50x-slow-block", BlockTypes.SOUL_SAND.getId()), true);
 
         config.setComment("20x-slow-block", "Sets the block that is the base of the 20x slower block.");
-        minecartSpeedMod20xSlowBlock = BlockSyntax.getBlock(config.getString("20x-slow-block", BlockTypes.GRAVEL.getId()), true);
+        minecartSpeedMod20xSlowBlock = BlockParser.getBlock(config.getString("20x-slow-block", BlockTypes.GRAVEL.getId()), true);
     }
 }

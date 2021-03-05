@@ -37,33 +37,6 @@ import static org.mockito.Mockito.when;
 public class BlockUtilTest {
 
     @Test
-    public void testAreBlocksSimilar() {
-
-        Block mockBlock1 = mock(Block.class);
-        when(mockBlock1.getType()).thenReturn(Material.SAND);
-
-        Block mockBlock2 = mock(Block.class);
-        when(mockBlock2.getType()).thenReturn(Material.STONE);
-
-        assertFalse(BlockUtil.areBlocksSimilar(mockBlock1, mockBlock2));
-
-        when(mockBlock2.getType()).thenReturn(Material.SAND);
-
-        assertTrue(BlockUtil.areBlocksSimilar(mockBlock1, mockBlock2));
-    }
-
-    @Test
-    public void testIsBlockSimilarTo() {
-
-        Block mockBlock1 = mock(Block.class);
-        when(mockBlock1.getType()).thenReturn(Material.OAK_WOOD);
-
-        assertFalse(BlockUtil.isBlockSimilarTo(mockBlock1, Material.COBBLESTONE));
-
-        assertTrue(BlockUtil.isBlockSimilarTo(mockBlock1, Material.OAK_WOOD));
-    }
-
-    @Test
     public void testIsBlockReplacable() {
 
         assertFalse(BlockUtil.isBlockReplacable(Material.STONE));

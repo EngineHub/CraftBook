@@ -23,7 +23,7 @@ import org.bukkit.event.EventHandler;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
 
 public class CartMaxSpeed extends CartBlockMechanism {
@@ -76,6 +76,6 @@ public class CartMaxSpeed extends CartBlockMechanism {
     public void loadFromConfiguration(YAMLProcessor config) {
 
         config.setComment("block", "Sets the block that is the base of the max speed mechanic.");
-        material = BlockSyntax.getBlock(config.getString("block", BlockTypes.COAL_BLOCK.getId()), true);
+        material = BlockParser.getBlock(config.getString("block", BlockTypes.COAL_BLOCK.getId()), true);
     }
 }

@@ -39,7 +39,7 @@ import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.drops.rewards.DropReward;
 import org.enginehub.craftbook.mechanics.drops.rewards.MonetaryDropReward;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ItemSyntax;
@@ -139,7 +139,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
                 def = new EntityCustomDropDefinition(key, drops, rewards, silkTouch, ent);
             } else if (type.equalsIgnoreCase("block")) {
-                BlockStateHolder data = BlockSyntax.getBlock(config.getString("custom-drops." + key + ".block"), true);
+                BlockStateHolder data = BlockParser.getBlock(config.getString("custom-drops." + key + ".block"), true);
 
                 def = new BlockCustomDropDefinition(key, drops, rewards, silkTouch, data);
             }

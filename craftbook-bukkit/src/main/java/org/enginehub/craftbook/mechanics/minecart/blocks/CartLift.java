@@ -26,7 +26,7 @@ import org.bukkit.event.EventHandler;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.CartUtil;
 import org.enginehub.craftbook.util.SignUtil;
 
@@ -92,6 +92,6 @@ public class CartLift extends CartBlockMechanism {
     public void loadFromConfiguration(YAMLProcessor config) {
 
         config.setComment("block", "Sets the block that is the base of the elevator mechanic.");
-        material = BlockSyntax.getBlock(config.getString("block", BlockTypes.NETHER_BRICKS.getId()), true);
+        material = BlockParser.getBlock(config.getString("block", BlockTypes.NETHER_BRICKS.getId()), true);
     }
 }

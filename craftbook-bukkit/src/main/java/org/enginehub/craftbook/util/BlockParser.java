@@ -23,10 +23,7 @@ import com.sk89q.worldedit.extension.input.ParserContext;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockType;
-import com.sk89q.worldedit.world.registry.LegacyMapper;
-import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
-import org.enginehub.craftbook.CraftBook;
 
 import java.util.HashSet;
 import java.util.List;
@@ -34,16 +31,15 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class BlockSyntax {
-    private static ParserContext BLOCK_CONTEXT = new ParserContext();
+public class BlockParser {
+    private static final ParserContext BLOCK_CONTEXT = new ParserContext();
+    private static final Set<String> knownBadLines = new HashSet<>();
 
-    private static Set<String> knownBadLines = new HashSet<>();
-
-    private BlockSyntax() {
+    private BlockParser() {
     }
 
     static {
-        BLOCK_CONTEXT.setPreferringWildcard(true);
+        BLOCK_CONTEXT.setTryLegacy(true);
         BLOCK_CONTEXT.setRestricted(false);
     }
 
@@ -62,26 +58,9 @@ public class BlockSyntax {
         try {
             blockState = WorldEdit.getInstance().getBlockFactory().parseFromInput(line, BLOCK_CONTEXT);
         } catch (InputParseException e) {
+            knownBadLines.add(line);
         }
 
-        if (blockState == null) {
-            String[] dataSplit = RegexUtil.COLON_PATTERN.split(line.replace("\\:", ":"), 2);
-            Material material = Material.getMaterial(dataSplit[0], true);
-            if (material != null) {
-                int data = 0;
-                if (dataSplit.length > 1) {
-                    data = Integer.parseInt(dataSplit[1]);
-                    if (data < 0 || data > 15) {
-                        data = 0;
-                    }
-                }
-                blockState = LegacyMapper.getInstance().getBlockFromLegacy(BukkitAdapter.asBlockType(material).getLegacyId(), data).toBaseBlock();
-            }
-            if (material == null) {
-                CraftBook.logger.warn("Invalid block format: " + line);
-                knownBadLines.add(line);
-            }
-        }
         return blockState;
     }
 
@@ -108,7 +87,7 @@ public class BlockSyntax {
         return output;
     }
 
-    public static String toMinifiedId(BlockStateHolder holder) {
+    public static String toMinifiedId(BlockStateHolder<?> holder) {
         String output = holder.getAsString();
         if (output.startsWith("minecraft:")) {
             output = output.substring(10);

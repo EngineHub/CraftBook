@@ -29,7 +29,7 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 
 import java.util.Locale;
 
@@ -48,7 +48,7 @@ public abstract class SetBlock extends AbstractSelfTriggeredIC {
 
         force = getSign().getLine(3).toUpperCase(Locale.ENGLISH).trim();
 
-        item = BlockSyntax.getBlock(getLine(2));
+        item = BlockParser.getBlock(getLine(2));
     }
 
     public void onTrigger() {

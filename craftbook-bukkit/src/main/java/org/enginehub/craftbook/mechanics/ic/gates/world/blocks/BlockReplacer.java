@@ -33,7 +33,7 @@ import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
 import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 
@@ -64,8 +64,8 @@ public class BlockReplacer extends AbstractIC {
 
         String[] ids = RegexUtil.MINUS_PATTERN.split(getLine(2));
 
-        onBlock = BlockSyntax.getBlock(ids[0], true);
-        offBlock = BlockSyntax.getBlock(ids[1], true);
+        onBlock = BlockParser.getBlock(ids[0], true);
+        offBlock = BlockParser.getBlock(ids[1], true);
 
         String[] data = RegexUtil.COLON_PATTERN.split(getLine(3));
         delay = Integer.parseInt(data[0]);

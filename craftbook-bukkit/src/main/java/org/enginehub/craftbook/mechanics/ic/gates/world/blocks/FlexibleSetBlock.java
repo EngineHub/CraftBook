@@ -28,7 +28,7 @@ import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
 import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.RegexUtil;
 
 import java.util.Locale;
@@ -89,7 +89,7 @@ public class FlexibleSetBlock extends AbstractIC {
         }
 
         try {
-            block = BlockSyntax.getBukkitBlock(params[1]);
+            block = BlockParser.getBukkitBlock(params[1]);
         } catch (Exception e) {
             return;
         }
@@ -189,7 +189,7 @@ public class FlexibleSetBlock extends AbstractIC {
             }
 
             try {
-                checkNotNull(BlockSyntax.getBlock(params[1]));
+                checkNotNull(BlockParser.getBlock(params[1]));
             } catch (Exception e) {
                 throw new ICVerificationException("Invalid block!");
             }

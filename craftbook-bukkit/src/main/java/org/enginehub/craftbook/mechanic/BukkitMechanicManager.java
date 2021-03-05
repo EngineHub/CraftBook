@@ -38,7 +38,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("TreeLopper", org.enginehub.craftbook.mechanics.TreeLopper.class, MechanicCategory.GENERAL);
 //        registerMechanic("XpStorer", org.enginehub.craftbook.mechanics.XPStorer.class, MechanicCategory.GENERAL);
 //        registerMechanic("CommandSigns", org.enginehub.craftbook.mechanics.CommandSigns.class, MechanicCategory.GENERAL);
-//        registerMechanic("LightSwitch", org.enginehub.craftbook.mechanics.LightSwitch.class, MechanicCategory.GENERAL);
 //        registerMechanic("HiddenSwitch", org.enginehub.craftbook.mechanics.HiddenSwitch.class, MechanicCategory.GENERAL);
 //        registerMechanic("Bridge", org.enginehub.craftbook.mechanics.area.simple.Bridge.class, MechanicCategory.GENERAL);
 //        registerMechanic("Door", org.enginehub.craftbook.mechanics.area.simple.Door.class, MechanicCategory.GENERAL);
@@ -363,6 +362,15 @@ public class BukkitMechanicManager extends MechanicManager {
             .name("DispenserRecipes")
             .description(TranslatableComponent.of("craftbook.dispenserrecipes.description"))
             .className("org.enginehub.craftbook.mechanics.dispenser.DispenserRecipes")
+            .category(MechanicCategory.GENERAL)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("light_switch")
+            .name("LightSwitch")
+            .description(TranslatableComponent.of("craftbook.lightswitch.description"))
+            .className("org.enginehub.craftbook.mechanics.LightSwitch")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 

@@ -29,7 +29,7 @@ import org.enginehub.craftbook.mechanics.ic.ConfigurableIC;
 import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.ICUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 
@@ -47,7 +47,7 @@ public class BlockSensor extends AbstractSelfTriggeredIC {
     public void load() {
 
         center = ICUtil.parseBlockLocation(getSign());
-        item = BlockSyntax.getBlock(getLine(3), true);
+        item = BlockParser.getBlock(getLine(3), true);
     }
 
     @Override

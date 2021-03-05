@@ -53,6 +53,9 @@
     "craftbook.lightstone.line": "LightStone: {0} {1}L",
     "craftbook.lightstone.description": "Adds a tool that outputs the light level at the clicked block",
 
+    "craftbook.lightswitch.create": "Light Switch created.",
+    "craftbook.lightswitch.description": "Toggles torches and redstone torches",
+
     "craftbook.marquee.create": "Marquee created.",
     "craftbook.marquee.description": "Lets players view Variable values by right clicking a sign",
 

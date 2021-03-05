@@ -61,7 +61,7 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.LocationUtil;
@@ -495,7 +495,7 @@ public class Chairs extends AbstractCraftBookMechanic {
 
         config.setComment("blocks", "A list of blocks that can be sat on.");
         allowedBlocks =
-            BlockSyntax.getBlocks(config.getStringList("blocks", BlockCategories.STAIRS.getAll()
+            BlockParser.getBlocks(config.getStringList("blocks", BlockCategories.STAIRS.getAll()
                 .stream()
                 .map(BlockType::getId)
                 .sorted(String::compareToIgnoreCase)

@@ -43,7 +43,7 @@ import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
@@ -288,7 +288,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
                     if (enforceType) {
                         BlockType blockType = player.getItemInHand(HandSide.MAIN_HAND).getType().getBlockType();
-                        sign.setLine(0, BlockSyntax.toMinifiedId(blockType));
+                        sign.setLine(0, BlockParser.toMinifiedId(blockType));
                         sign.update(false);
                     }
 
@@ -363,7 +363,7 @@ public class Gate extends AbstractCraftBookMechanic {
             // get the material that this gate should toggle and verify it
             String line0 = event.getLine(0).trim();
             if (!line0.isEmpty()) {
-                if (!isValidGateBlock(BlockSyntax.getBlock(line0, true))) {
+                if (!isValidGateBlock(BlockParser.getBlock(line0, true))) {
                     player.printError("Line 1 needs to be a valid block id.");
                     SignUtil.cancelSignChange(event);
                     return;
@@ -385,7 +385,7 @@ public class Gate extends AbstractCraftBookMechanic {
             // get the material that this gate should toggle and verify it
             String line0 = event.getLine(0).trim();
             if (!line0.isEmpty()) {
-                if (!isValidGateBlock(BlockSyntax.getBlock(line0, true))) {
+                if (!isValidGateBlock(BlockParser.getBlock(line0, true))) {
                     player.printError("mech.gate.valid-item");
                     SignUtil.cancelSignChange(event);
                     return;
@@ -418,7 +418,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
         if (sign != null && !sign.getLine(0).isEmpty()) {
             try {
-                BlockStateHolder<?> def = BlockSyntax.getBlock(sign.getLine(0), true);
+                BlockStateHolder<?> def = BlockParser.getBlock(sign.getLine(0), true);
                 return block.equalsFuzzy(def);
             } catch (Exception e) {
                 if (check) {
@@ -477,7 +477,7 @@ public class Gate extends AbstractCraftBookMechanic {
         if (sign != null) {
             if (!sign.getLine(0).isEmpty()) {
                 try {
-                    return BlockSyntax.getBlock(sign.getLine(0), true).toImmutableState();
+                    return BlockParser.getBlock(sign.getLine(0), true).toImmutableState();
                 } catch (Exception ignored) {
                 }
             }
@@ -511,7 +511,7 @@ public class Gate extends AbstractCraftBookMechanic {
             }
 
             if (enforceType && gateBlock != null && !gateBlock.getBlockType().getMaterial().isAir()) {
-                sign.setLine(0, BlockSyntax.toMinifiedId(gateBlock.getBlockType()));
+                sign.setLine(0, BlockParser.toMinifiedId(gateBlock.getBlockType()));
                 sign.update(false);
             }
         }
@@ -718,7 +718,7 @@ public class Gate extends AbstractCraftBookMechanic {
         columnLimit = config.getInt("max-columns", 14);
 
         config.setComment("blocks", "The list of blocks that a gate can use.");
-        blocks = BlockSyntax.getBlocks(config.getStringList("blocks", getDefaultBlocks()), true);
+        blocks = BlockParser.getBlocks(config.getStringList("blocks", getDefaultBlocks()), true);
 
         config.setComment("enforce-type", "Make sure gates are only able to toggle a specific material type. This prevents transmutation.");
         enforceType = config.getBoolean("enforce-type", true);

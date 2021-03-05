@@ -25,7 +25,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.ItemInfo;
 import org.enginehub.craftbook.util.ItemUtil;
 import org.enginehub.craftbook.util.RailUtil;
@@ -250,6 +250,6 @@ public class CartDeposit extends CartBlockMechanism {
     public void loadFromConfiguration(YAMLProcessor config) {
 
         config.setComment("block", "Sets the block that is the base of the deposit mechanic.");
-        material = BlockSyntax.getBlock(config.getString("block", BlockTypes.IRON_ORE.getId()), true);
+        material = BlockParser.getBlock(config.getString("block", BlockTypes.IRON_ORE.getId()), true);
     }
 }

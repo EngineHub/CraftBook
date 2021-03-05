@@ -46,7 +46,7 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ItemSyntax;
@@ -197,7 +197,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
     public void loadFromConfiguration(YAMLProcessor config) {
 
         config.setComment("block-list", "A list of log blocks. This can be modified to include more logs. (for mod support etc)");
-        enabledBlocks = BlockSyntax.getBlocks(config.getStringList("block-list", BlockCategories.LOGS.getAll().stream().map(BlockType::getId).sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
+        enabledBlocks = BlockParser.getBlocks(config.getStringList("block-list", BlockCategories.LOGS.getAll().stream().map(BlockType::getId).sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
 
         config.setComment("tool-list", "A list of tools that can trigger the TreeLopper mechanic.");
         enabledItems = config.getStringList("tool-list", Arrays.asList(ItemTypes.IRON_AXE.getId(), ItemTypes.WOODEN_AXE.getId(),

@@ -17,7 +17,7 @@
 package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
-import org.bukkit.Location;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Directional;
@@ -30,9 +30,7 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.HistoryHashMap;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.events.SignClickEvent;
@@ -42,68 +40,60 @@ import org.enginehub.craftbook.util.events.SignClickEvent;
  * torches. This is done
  * every time a sign with [|] or [I]
  * is right clicked by a player.
- *
- * @author fullwall
  */
 public class LightSwitch extends AbstractCraftBookMechanic {
 
-    @Override
-    public void enable() {
-
-        recentLightToggles = new HistoryHashMap<>(20);
-    }
-
-    /**
-     * Store a list of recent light toggles to prevent spamming. Someone clever can just use two
-     * signs though.
-     */
-    private HistoryHashMap<Location, Long> recentLightToggles;
-
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
-
-        if (!event.getLine(1).equalsIgnoreCase("[i]") && !event.getLine(1).equalsIgnoreCase("[|]"))
+        if (!EventUtil.passesFilter(event)) {
             return;
+        }
+
+        if (!event.getLine(1).equalsIgnoreCase("[i]") && !event.getLine(1).equalsIgnoreCase("[|]")) {
+            return;
+        }
+
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if (!lplayer.hasPermission("craftbook.mech.light-switch")) {
-            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
-                lplayer.printError("You don't have permission for this.");
+        if (!lplayer.hasPermission("craftbook.lightswitch.create")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
+                lplayer.printError("mech.create-permission");
+            }
             SignUtil.cancelSignChange(event);
             return;
         }
 
         event.setLine(1, "[I]");
-        lplayer.print("mech.lightswitch.create");
+        lplayer.printInfo(TranslatableComponent.of("craftbook.lightswitch.create"));
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
-
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || !EventUtil.passesFilter(event)) {
+            return;
+        }
 
         ChangedSign sign = event.getSign();
-        if (!sign.getLine(1).equalsIgnoreCase("[I]") && !sign.getLine(1).equalsIgnoreCase("[|]"))
-            return;
 
-        if (!EventUtil.passesFilter(event))
+        if (!sign.getLine(1).equals("[I]")) {
             return;
+        }
 
         CraftBookPlayer player = event.getWrappedPlayer();
-        if (!player.hasPermission("craftbook.mech.light-switch.use")) {
-            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!player.hasPermission("craftbook.lightswitch.use")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                 player.printError("mech.use-permission");
+            }
             return;
         }
 
         if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                 player.printError("area.use-permissions");
+            }
             return;
         }
 
-        toggleLights(event.getClickedBlock(), player);
+        toggleLights(sign);
         event.setCancelled(true);
     }
 
@@ -111,54 +101,49 @@ public class LightSwitch extends AbstractCraftBookMechanic {
      * Toggle lights in the immediate area.
      *
      * @param block
-     * @return true if the block was recogized as a lightswitch; this may or may not mean that any
-     *     lights were
-     *     actually toggled.
      */
-    private boolean toggleLights(Block block, CraftBookPlayer player) {
+    private void toggleLights(ChangedSign sign) {
+        int radius, maximum;
 
-        // check if this looks at all like something we're interested in first
-        if (!SignUtil.isSign(block)) return false;
-        int radius = Math.min(10, maxRange);
-        int maximum = Math.min(maxLights, 20);
-        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(block);
         try {
             radius = Math.min(Integer.parseInt(sign.getLine(2)), maxRange);
         } catch (Exception ignored) {
+            radius = Math.min(10, maxRange);
         }
+
         try {
             maximum = Math.min(Integer.parseInt(sign.getLine(3)), maxLights);
         } catch (Exception ignored) {
+            maximum = Math.min(maxLights, 20);
         }
 
-        int wx = block.getX();
-        int wy = block.getY();
-        int wz = block.getZ();
-        Material aboveID = block.getRelative(0, 1, 0).getType();
+        int wx = sign.getX();
+        int wy = sign.getY();
+        int wz = sign.getZ();
+        Material aboveID = sign.getBlock().getRelative(0, 1, 0).getType();
 
         if (aboveID == Material.WALL_TORCH || aboveID == Material.REDSTONE_WALL_TORCH) {
             // Check if block above is a redstone torch.
             // Used to get what to change torches to.
             boolean on = aboveID != Material.WALL_TORCH;
-            // Prevent spam
-            Long lastUse = recentLightToggles.remove(block.getLocation());
-            long currTime = System.currentTimeMillis();
 
-            if (lastUse != null && currTime - lastUse < 100) {
-                recentLightToggles.put(block.getLocation(), lastUse);
-                return true;
-            }
-
-            recentLightToggles.put(block.getLocation(), currTime);
             int changed = 0;
-            for (int x = -radius + wx; x <= radius + wx; x++) {
-                for (int y = -radius + wy; y <= radius + wy; y++) {
-                    for (int z = -radius + wz; z <= radius + wz; z++) {
-                        Block relBlock = block.getWorld().getBlockAt(x, y, z);
+            for (int x = -radius; x <= radius; x++) {
+                for (int y = -radius; y <= radius; y++) {
+                    for (int z = -radius; z <= radius; z++) {
+                        if (x == 0 && y == 0 && z == 0) {
+                            // Skip the sign itself
+                            continue;
+                        }
+
+                        Block relBlock = sign.getBlock().getWorld().getBlockAt(x + wx, y + wy, z + wz);
                         Material id = relBlock.getType();
+
                         if (id == Material.TORCH || id == Material.WALL_TORCH || id == Material.REDSTONE_TORCH || id == Material.REDSTONE_WALL_TORCH) {
                             // Limit the maximum number of changed lights
-                            if (changed >= maximum) return true;
+                            if (changed >= maximum) {
+                                return;
+                            }
 
                             if (id == Material.WALL_TORCH || id == Material.REDSTONE_WALL_TORCH) {
                                 Directional currentData = (Directional) relBlock.getBlockData();
@@ -174,9 +159,7 @@ public class LightSwitch extends AbstractCraftBookMechanic {
                     }
                 }
             }
-            return true;
         }
-        return false;
     }
 
     private int maxRange;
@@ -184,11 +167,10 @@ public class LightSwitch extends AbstractCraftBookMechanic {
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
         config.setComment("max-range", "The maximum range that the mechanic searches for lights in.");
         maxRange = config.getInt("max-range", 10);
 
-        config.setComment("max-lights", "The maximum amount of lights that a Light Switch can toggle per usage.");
+        config.setComment("max-lights", "The maximum amount of lights that a light switch can toggle per usage.");
         maxLights = config.getInt("max-lights", 20);
     }
 }

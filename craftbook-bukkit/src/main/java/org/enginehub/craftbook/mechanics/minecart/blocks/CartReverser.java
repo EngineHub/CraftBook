@@ -23,7 +23,7 @@ import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import org.enginehub.craftbook.util.BlockSyntax;
+import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
 import org.enginehub.craftbook.util.SignUtil;
 
@@ -94,6 +94,6 @@ public class CartReverser extends CartBlockMechanism {
     public void loadFromConfiguration(YAMLProcessor config) {
 
         config.setComment("block", "Sets the block that is the base of the reverse mechanic.");
-        material = BlockSyntax.getBlock(config.getString("block", BlockTypes.WHITE_WOOL.getId()), true);
+        material = BlockParser.getBlock(config.getString("block", BlockTypes.WHITE_WOOL.getId()), true);
     }
 }
