@@ -17,12 +17,13 @@
 package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.entity.EntityTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LeashHitch;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
@@ -32,7 +33,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.bukkit.inventory.ItemStack;
@@ -41,101 +41,109 @@ import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.InventoryUtil;
-import org.enginehub.craftbook.util.ItemUtil;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class BetterLeads extends AbstractCraftBookMechanic {
 
+    private final static int MAX_LEASH_DISTANCE = 10;
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerClick(final PlayerInteractEntityEvent event) {
-        if (!ItemUtil.isStackValid(event.getPlayer().getInventory().getItem(event.getHand())))
+        if (!(event.getRightClicked() instanceof LivingEntity) || !EventUtil.passesFilter(event)) {
             return;
-        if (!(event.getRightClicked() instanceof LivingEntity)) return;
-        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if (event.getPlayer().getInventory().getItem(event.getHand()).getType() != Material.LEAD)
-            return;
+        }
 
-        if (!EventUtil.passesFilter(event)) return;
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        if (event.getPlayer().getInventory().getItem(event.getHand()).getType() != Material.LEAD) {
+            return;
+        }
 
         CraftBookPlugin.logDebugMessage("A player has right clicked an entity with a lead!", "betterleads.allowed-mobs");
 
-        String typeName = event.getRightClicked().getType().getName();
-        if (typeName == null && event.getRightClicked().getType() == EntityType.PLAYER)
-            typeName = "PLAYER";
-        else if (typeName == null)
+        String typeName = BukkitAdapter.adapt(event.getRightClicked().getType()).getId();
+        if (typeName == null) {
             return; //Invalid type.
+        }
 
         CraftBookPlugin.logDebugMessage("It is of type: " + typeName, "betterleads.allowed-mobs");
 
         boolean found = false;
-        for (String type : leadsAllowedMobs) {
+        for (String type : allowedMobs) {
             if (type.equalsIgnoreCase(typeName)) {
                 found = true;
                 break;
             }
         }
 
-        if (!found)
+        if (!found) {
             return;
+        }
 
         CraftBookPlugin.logDebugMessage(typeName + " is allowed in the configuration.", "betterleads.allowed-mobs");
 
-        if (!player.hasPermission("craftbook.mech.leads") && !player.hasPermission("craftbook.mech.leads.mobs." + typeName.toLowerCase())) {
-            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!player.hasPermission("craftbook.betterleads.leash") && !player.hasPermission("craftbook.betterleads.leash." + typeName.replace(":", "."))) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                 player.printError("mech.use-permission");
+            }
             return;
         }
 
         CraftBookPlugin.logDebugMessage("Leashing entity!", "betterleads.allowed-mobs");
-        if (event.getRightClicked() instanceof Creature && ((Creature) event.getRightClicked()).getTarget() != null && ((Creature) event.getRightClicked()).getTarget().equals(event.getPlayer()))
+        if (event.getRightClicked() instanceof Creature && ((Creature) event.getRightClicked()).getTarget() != null && ((Creature) event.getRightClicked()).getTarget().equals(event.getPlayer())) {
             ((Creature) event.getRightClicked()).setTarget(null); //Rescan for a new target.
+        }
+
         event.setCancelled(true);
+
         Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), () -> {
             if (!((LivingEntity) event.getRightClicked()).setLeashHolder(event.getPlayer())) {
                 CraftBookPlugin.logDebugMessage("Failed to leash entity!", "betterleads.allowed-mobs");
+                return;
+            }
+
+            // Don't take items in creative mode.
+            if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+                return;
+            }
+
+            if (event.getPlayer().getInventory().getItem(event.getHand()).getAmount() == 1) {
+                event.getPlayer().getInventory().setItem(event.getHand(), null);
+            } else {
+                ItemStack newStack = event.getPlayer().getInventory().getItem(event.getHand());
+                newStack.setAmount(newStack.getAmount() - 1);
+                event.getPlayer().getInventory().setItem(event.getHand(), newStack);
             }
         });
-        if (event.getPlayer().getGameMode() == GameMode.CREATIVE)
-            return;
-        if (event.getPlayer().getInventory().getItem(event.getHand()).getAmount() == 1)
-            event.getPlayer().getInventory().setItem(event.getHand(), null);
-        else {
-            ItemStack newStack = event.getPlayer().getInventory().getItem(event.getHand());
-            newStack.setAmount(newStack.getAmount() - 1);
-            event.getPlayer().getInventory().setItem(event.getHand(), newStack);
-        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityTarget(EntityTargetEvent event) {
-
-        if (!leadsStopTarget && !leadsMobRepellant) return;
-        if (!(event.getEntity() instanceof Monster)) return;
-        if (!((LivingEntity) event.getEntity()).isLeashed()) return;
-        if (!(event.getTarget() instanceof Player)) return;
-
-        if (!EventUtil.passesFilter(event)) return;
+        if (!stopTargetting && !mobRepellant
+            || !(event.getEntity() instanceof Monster) || !(event.getTarget() instanceof Player)
+            || !EventUtil.passesFilter(event)) {
+            return;
+        }
+        Monster monster = (Monster) event.getEntity();
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer((Player) event.getTarget());
 
-        if (leadsStopTarget && player.hasPermission("craftbook.mech.leads.ignore-target")) {
-            if (((LivingEntity) event.getEntity()).getLeashHolder().equals(event.getTarget())) {
+        if (stopTargetting && player.hasPermission("craftbook.betterleads.ignore-target") && monster.isLeashed()) {
+            if (monster.getLeashHolder() == event.getTarget()) {
                 event.setTarget(null);
                 event.setCancelled(true);
                 return;
             }
         }
 
-        if (leadsMobRepellant && player.hasPermission("craftbook.mech.leads.mob-repel")) {
-            for (Entity ent : event.getTarget().getNearbyEntities(5, 5, 5)) {
-                if (ent == null || !ent.isValid()) continue;
-                if (ent.getType() != event.getEntity().getType())
+        if (mobRepellant && player.hasPermission("craftbook.betterleads.repel-mobs")) {
+            for (Entity ent : event.getTarget().getNearbyEntities(MAX_LEASH_DISTANCE, MAX_LEASH_DISTANCE, MAX_LEASH_DISTANCE)) {
+                if (ent == null || !ent.isValid() || ent.getType() != event.getEntity().getType()) {
                     continue;
-                if (((LivingEntity) ent).getLeashHolder().equals(event.getTarget())) {
+                }
+
+                if (monster.isLeashed() && monster.getLeashHolder() == event.getTarget()) {
                     event.setTarget(null);
                     event.setCancelled(true);
                     return;
@@ -145,102 +153,96 @@ public class BetterLeads extends AbstractCraftBookMechanic {
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void onHitchBreakRandomly(final HangingBreakEvent event) {
-
-        if (!leadsHitchPersists) return;
-        if (!(event.getEntity() instanceof LeashHitch)) return;
-
-        if (!EventUtil.passesFilter(event)) return;
-
-        int amountConnected = 0;
-
-        for (Entity ent : event.getEntity().getNearbyEntities(10, 10, 10)) {
-            if (!(ent instanceof LivingEntity)) continue;
-            if (!((LivingEntity) ent).isLeashed() || !((LivingEntity) ent).getLeashHolder().equals(event.getEntity()))
-                continue;
-            amountConnected++;
-        }
-
-        if (amountConnected == 0) {
-            //Still needs to be used by further plugins in the event. We wouldn't want bukkit complaining now, would we?
-            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), event.getEntity()::remove);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
     public void onHitchBreak(final HangingBreakByEntityEvent event) {
-
-        if (!leadsHitchPersists && !leadsOwnerBreakOnly) return;
-        if (!(event.getEntity() instanceof LeashHitch)) return;
-        if (!(event.getRemover() instanceof Player)) return;
-
-        if (!EventUtil.passesFilter(event)) return;
+        if (!persistentHitch && !ownerBreakOnly) {
+            return;
+        }
+        if (!(event.getEntity() instanceof LeashHitch)) {
+            return;
+        }
+        if (!(event.getRemover() instanceof Player)) {
+            return;
+        }
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
         event.setCancelled(true);
 
         int amountConnected = 0;
 
-        for (Entity ent : event.getEntity().getNearbyEntities(10, 10, 10)) {
-            if (!(ent instanceof LivingEntity)) continue;
-            if (!((LivingEntity) ent).isLeashed() || !((LivingEntity) ent).getLeashHolder().equals(event.getEntity()))
+        for (Entity ent : event.getEntity().getNearbyEntities(MAX_LEASH_DISTANCE, MAX_LEASH_DISTANCE, MAX_LEASH_DISTANCE)) {
+            if (!(ent instanceof LivingEntity)) {
                 continue;
-            boolean isOwner = false;
-            if (ent instanceof Tameable)
-                if (!((Tameable) ent).isTamed() || ((Tameable) ent).getOwner().equals(event.getRemover()))
-                    isOwner = true;
-            if (isOwner || !(ent instanceof Tameable) || !leadsOwnerBreakOnly || event.getRemover().hasPermission("craftbook.mech.leads.owner-break-only.bypass")) {
-                ((LivingEntity) ent).setLeashHolder(null);
+            }
+            LivingEntity entity = (LivingEntity) ent;
+
+            if (!entity.isLeashed() || entity.getLeashHolder() != event.getEntity()) {
+                continue;
+            }
+
+            boolean canBreak = !ownerBreakOnly || !(ent instanceof Tameable);
+            if (!canBreak) {
+                // If we still can't break, check if it's the owner.
+                if (!((Tameable) ent).isTamed() || ((Tameable) ent).getOwner() == event.getRemover()) {
+                    canBreak = true;
+                }
+            }
+
+            if (canBreak || event.getRemover().hasPermission("craftbook.betterleads.owner-break.bypass")) {
+                entity.setLeashHolder(null);
                 event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), new ItemStack(Material.LEAD, 1));
             } else {
                 amountConnected++;
             }
         }
 
-        if (!leadsHitchPersists && amountConnected == 0) {
-            //Still needs to be used by further plugins in the event. We wouldn't want bukkit complaining now, would we?
+        if (!persistentHitch && amountConnected == 0) {
+            //Still needs to be used by further plugins in the event.
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), event.getEntity()::remove);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onUnleash(PlayerUnleashEntityEvent event) {
-
-        if (!leadsOwnerBreakOnly) return;
-        if (!(event.getEntity() instanceof LivingEntity)) return;
-        if (!((LivingEntity) event.getEntity()).isLeashed() || !(((LivingEntity) event.getEntity()).getLeashHolder() instanceof LeashHitch))
+        if (!ownerBreakOnly || !(event.getEntity() instanceof Tameable) || !EventUtil.passesFilter(event)) {
             return;
-        if (!(event.getEntity() instanceof Tameable)) return;
-        if (!((Tameable) event.getEntity()).isTamed()) return;
+        }
 
-        if (!EventUtil.passesFilter(event)) return;
+        Tameable entity = (Tameable) event.getEntity();
 
-        if (!Objects.equals(((Tameable) event.getEntity()).getOwner(), event.getPlayer())) {
+        if (!entity.isLeashed() || !(entity.getLeashHolder() instanceof LeashHitch) || !entity.isTamed()) {
+            return;
+        }
+
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+
+        if (entity.getOwner() != event.getPlayer() && !player.hasPermission("craftbook.betterleads.owner-break.bypass")) {
             event.setCancelled(true);
         }
     }
 
-    private boolean leadsStopTarget;
-    private boolean leadsOwnerBreakOnly;
-    private boolean leadsHitchPersists;
-    private boolean leadsMobRepellant;
-    private List<String> leadsAllowedMobs;
+    private boolean stopTargetting;
+    private boolean ownerBreakOnly;
+    private boolean persistentHitch;
+    private boolean mobRepellant;
+    private List<String> allowedMobs;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
         config.setComment("stop-mob-target", "Stop hostile mobs targeting you if you are holding them on a leash.");
-        leadsStopTarget = config.getBoolean("stop-mob-target", false);
+        stopTargetting = config.getBoolean("stop-mob-target", false);
 
         config.setComment("owner-unleash-only", "Only allow the owner of tameable entities to unleash them from a leash hitch.");
-        leadsOwnerBreakOnly = config.getBoolean("owner-unleash-only", false);
+        ownerBreakOnly = config.getBoolean("owner-unleash-only", false);
 
-        config.setComment("hitch-persists", "Stop leash hitches breaking when clicked no entities are attached. This allows for a public horse hitch or similar.");
-        leadsHitchPersists = config.getBoolean("hitch-persists", false);
+        config.setComment("hitch-persists", "Stop leash hitches breaking when no entities are attached. This allows for a public horse hitch or similar.");
+        persistentHitch = config.getBoolean("hitch-persists", false);
 
         config.setComment("mob-repel", "If you have a mob tethered to you, mobs of that type will not target you.");
-        leadsMobRepellant = config.getBoolean("mob-repel", false);
+        mobRepellant = config.getBoolean("mob-repel", false);
 
         config.setComment("allowed-mobs", "The list of mobs that can be tethered with a lead.");
-        leadsAllowedMobs = config.getStringList("allowed-mobs", Arrays.asList("ZOMBIE", "SPIDER"));
+        allowedMobs = config.getStringList("allowed-mobs", Arrays.asList(EntityTypes.ZOMBIE.getId(), EntityTypes.SPIDER.getId()));
     }
 }

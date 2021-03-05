@@ -19,6 +19,7 @@ mechanics:
         redstone_glowstone: false
         redstone_jukebox: false
     general:
+        better_leads: false
         better_physics: false
         better_plants: false
         better_sponge: false

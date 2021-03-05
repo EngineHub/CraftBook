@@ -33,8 +33,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("CustomCrafting", org.enginehub.craftbook.mechanics.crafting.CustomCrafting.class, MechanicCategory.CUSTOMISATION);
 //        registerMechanic("CustomDrops", org.enginehub.craftbook.mechanics.drops.CustomDrops.class, MechanicCategory.CUSTOMISATION);
 //        registerMechanic("BetterAi", org.enginehub.craftbook.mechanics.AIMechanic.class, MechanicCategory.GENERAL);
-//        registerMechanic("HeadDrops", org.enginehub.craftbook.mechanics.headdrops.HeadDrops.class, MechanicCategory.GENERAL);
-//        registerMechanic("BetterLeads", org.enginehub.craftbook.mechanics.BetterLeads.class, MechanicCategory.GENERAL);
 //        registerMechanic("TreeLopper", org.enginehub.craftbook.mechanics.TreeLopper.class, MechanicCategory.GENERAL);
 //        registerMechanic("XpStorer", org.enginehub.craftbook.mechanics.XPStorer.class, MechanicCategory.GENERAL);
 //        registerMechanic("CommandSigns", org.enginehub.craftbook.mechanics.CommandSigns.class, MechanicCategory.GENERAL);
@@ -371,6 +369,15 @@ public class BukkitMechanicManager extends MechanicManager {
             .name("LightSwitch")
             .description(TranslatableComponent.of("craftbook.lightswitch.description"))
             .className("org.enginehub.craftbook.mechanics.LightSwitch")
+            .category(MechanicCategory.GENERAL)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("better_leads")
+            .name("BetterLeads")
+            .description(TranslatableComponent.of("craftbook.betterleads.description"))
+            .className("org.enginehub.craftbook.mechanics.BetterLeads")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 

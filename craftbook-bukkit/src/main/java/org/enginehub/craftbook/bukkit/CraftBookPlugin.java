@@ -24,7 +24,6 @@ import com.sk89q.worldedit.bukkit.BukkitCommandSender;
 import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.internal.command.CommandUtil;
 import com.sk89q.worldedit.util.auth.AuthorizationException;
-import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -206,8 +205,6 @@ public class CraftBookPlugin extends JavaPlugin {
             Bukkit.getScheduler().runTaskTimer(this,
                 () -> getLogger().warning(ChatColor.RED + "Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!"), 20L, 20 * 60 * 5);
         }
-
-        PaperLib.suggestPaper(this);
     }
 
     /**
