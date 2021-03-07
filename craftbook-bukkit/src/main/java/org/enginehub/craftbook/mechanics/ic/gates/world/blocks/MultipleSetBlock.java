@@ -16,6 +16,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -65,9 +66,9 @@ public class MultipleSetBlock extends AbstractIC {
 
         String[] blocks = RegexUtil.MINUS_PATTERN.split(coords[3]);
 
-        onBlock = BlockParser.getBukkitBlock(blocks[0]);
+        onBlock = BukkitAdapter.adapt(BlockParser.getBlock(blocks[0]));
 
-        offblock = (blocks.length > 1) ? BlockParser.getBukkitBlock(blocks[1]) : Material.AIR.createBlockData();
+        offblock = (blocks.length > 1) ? BukkitAdapter.adapt(BlockParser.getBlock(blocks[1])) : Material.AIR.createBlockData();
 
         x += Integer.parseInt(coords[0]);
         y += Integer.parseInt(coords[1]);

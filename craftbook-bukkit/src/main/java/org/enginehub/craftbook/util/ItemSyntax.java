@@ -57,6 +57,7 @@ import java.util.regex.Pattern;
  * The Standard Item Syntax. This class is built to be able to survive on its own, without
  * CraftBook.
  */
+@Deprecated
 public final class ItemSyntax {
 
     private ItemSyntax() {

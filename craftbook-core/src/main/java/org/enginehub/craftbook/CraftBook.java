@@ -157,6 +157,6 @@ public class CraftBook {
     }
 
     public static String getDocsDomain() {
-        return "https://craftbook.enginehub.org/en/latest/";
+        return "https://craftbook.enginehub.org/en/5.0.0/";
     }
 }

@@ -97,15 +97,6 @@ public final class EntityUtil {
             ent.remove();
     }
 
-    public static org.bukkit.entity.EntityType[] parseEntityList(List<String> list) {
-
-        List<org.bukkit.entity.EntityType> ents = new ArrayList<>();
-        for (String s : list)
-            ents.add(org.bukkit.entity.EntityType.fromName(s));
-
-        return ents.toArray(new org.bukkit.entity.EntityType[ents.size()]);
-    }
-
     public static void setEntityData(Entity ent, String bit) {
 
         String[] data = RegexUtil.COLON_PATTERN.split(bit);

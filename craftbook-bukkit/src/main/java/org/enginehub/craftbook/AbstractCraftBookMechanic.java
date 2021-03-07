@@ -54,14 +54,14 @@ public abstract class AbstractCraftBookMechanic implements CraftBookMechanic, Li
 
         mechanicConfig.setWriteDefaults(true);
 
-        String mechName = configFile.getName().substring(0, configFile.getName().length() - 4);
+        MechanicType<? extends CraftBookMechanic> mechType = getMechanicType();
 
         mechanicConfig.setHeader(
-            "# CraftBook " + mechName + " Configuration",
+            "# CraftBook " + mechType.getName() + " Configuration",
             "# -- Generated for version: " + CraftBook.getInstance().getPlatform().getPlatformVersion(),
             "# ",
-            "# More information about these features are available at...",
-            "# " + CraftBook.getDocsDomain(),
+            "# More information about this mechanic is available at...",
+            "# " + CraftBook.getDocsDomain() + "mechanics/" + mechType.getId() + "/",
             "#",
             "# NOTE! Make sure to enable this in the config.yml file if you wish to use it.",
             "");

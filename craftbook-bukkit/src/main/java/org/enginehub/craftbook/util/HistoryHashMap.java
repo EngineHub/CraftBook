@@ -20,9 +20,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * @param <K>
- * @param <V>
- * @author sk89q
+ * A size-limited hashmap that removes the oldest entry upon hitting the limit.
+ *
+ * @param <K> The key
+ * @param <V> The value
  */
 public final class HistoryHashMap<K, V> extends LinkedHashMap<K, V> {
 

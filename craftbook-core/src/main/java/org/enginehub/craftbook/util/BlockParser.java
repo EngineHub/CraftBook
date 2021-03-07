@@ -17,13 +17,11 @@
 package org.enginehub.craftbook.util;
 
 import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.blocks.BaseItem;
-import com.sk89q.worldedit.blocks.BaseItemStack;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extension.input.InputParseException;
 import com.sk89q.worldedit.extension.input.ParserContext;
-import com.sk89q.worldedit.world.item.ItemType;
-import org.bukkit.inventory.ItemStack;
+import com.sk89q.worldedit.world.block.BaseBlock;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BlockType;
 
 import java.util.HashSet;
 import java.util.List;
@@ -31,56 +29,51 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ItemParser {
-    private static final ParserContext ITEM_CONTEXT = new ParserContext();
+public class BlockParser {
+    private static final ParserContext BLOCK_CONTEXT = new ParserContext();
     private static final Set<String> knownBadLines = new HashSet<>();
 
-    private ItemParser() {
+    private BlockParser() {
     }
 
     static {
-        ITEM_CONTEXT.setTryLegacy(true);
-        ITEM_CONTEXT.setRestricted(false);
+        BLOCK_CONTEXT.setTryLegacy(true);
+        BLOCK_CONTEXT.setRestricted(false);
     }
 
-    public static BaseItem getItem(String line) {
-        return getItem(line, false);
+    public static BaseBlock getBlock(String line) {
+        return getBlock(line, false);
     }
 
-    public static BaseItem getItem(String line, boolean wild) {
+    public static BaseBlock getBlock(String line, boolean wild) {
         if (line == null || line.trim().isEmpty() || knownBadLines.contains(line)) {
             return null;
         }
 
-        ITEM_CONTEXT.setPreferringWildcard(wild);
+        BLOCK_CONTEXT.setPreferringWildcard(wild);
 
-        BaseItem baseItem = null;
+        BaseBlock blockState = null;
         try {
-            baseItem = WorldEdit.getInstance().getItemFactory().parseFromInput(line, ITEM_CONTEXT);
+            blockState = WorldEdit.getInstance().getBlockFactory().parseFromInput(line, BLOCK_CONTEXT);
         } catch (InputParseException e) {
             knownBadLines.add(line);
         }
 
-        return baseItem;
+        return blockState;
     }
 
-    public static List<BaseItem> getItems(List<String> lines) {
-        return getItems(lines, false);
+    public static List<BaseBlock> getBlocks(List<String> lines) {
+        return getBlocks(lines, false);
     }
 
-    public static List<BaseItem> getItems(List<String> lines, boolean wild) {
+    public static List<BaseBlock> getBlocks(List<String> lines, boolean wild) {
         return lines.stream()
-            .map(line -> getItem(line, wild))
+            .map(line -> getBlock(line, wild))
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
     }
 
-    public static ItemStack getBukkitItemStack(String line) {
-        BaseItem item = getItem(line);
-        return BukkitAdapter.adapt(new BaseItemStack(item.getType(), item.getNbtReference(), 1));
-    }
-
-    public static String toMinifiedId(ItemType holder) {
+    public static String toMinifiedId(BlockType holder) {
         String output = holder.getId();
         if (output.startsWith("minecraft:")) {
             output = output.substring(10);
@@ -88,8 +81,8 @@ public class ItemParser {
         return output;
     }
 
-    public static String toMinifiedId(BaseItem holder) {
-        String output = holder.toString();
+    public static String toMinifiedId(BlockStateHolder<?> holder) {
+        String output = holder.getAsString();
         if (output.startsWith("minecraft:")) {
             output = output.substring(10);
         }

@@ -281,7 +281,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
     public static BlockData getStoredType(ChangedSign sign) {
         if (sign.getLine(0).contains(",")) {
-            return BlockParser.getBukkitBlock(sign.getLine(0).split(",")[1]);
+            return BukkitAdapter.adapt(BlockParser.getBlock(sign.getLine(0).split(",")[1]));
         }
         return null;
     }
@@ -298,7 +298,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
             ChangedSign sign = CraftBookBukkitUtil.toChangedSign(block);
             BlockData type = null;
             if (sign.getLine(0).contains(",")) {
-                type = BlockParser.getBukkitBlock(sign.getLine(0).split(",")[1]);
+                type = BukkitAdapter.adapt(BlockParser.getBlock(sign.getLine(0).split(",")[1]));
                 BlockData realType = this.getBlockBase(block).getBlockData();
                 if (type != null && realType.getMaterial() == type.getMaterial()) {
                     return realType;

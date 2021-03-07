@@ -20,9 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * @author Silthus
- */
 public final class EnumUtil {
 
     private EnumUtil() {

@@ -16,6 +16,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -89,7 +90,7 @@ public class FlexibleSetBlock extends AbstractIC {
         }
 
         try {
-            block = BlockParser.getBukkitBlock(params[1]);
+            block = BukkitAdapter.adapt(BlockParser.getBlock(params[1]));
         } catch (Exception e) {
             return;
         }

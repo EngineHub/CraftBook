@@ -16,6 +16,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -66,10 +67,10 @@ public class SetBridge extends AbstractIC {
             String[] split = RegexUtil.MINUS_PATTERN.split(line);
             // parse the material data
             if (split.length > 1) {
-                offBlock = BlockParser.getBukkitBlock(split[1]);
+                offBlock = BukkitAdapter.adapt(BlockParser.getBlock(split[1]));
             }
             // parse the material and data for toggle on
-            onBlock = BlockParser.getBukkitBlock(split[0]);
+            onBlock = BukkitAdapter.adapt(BlockParser.getBlock(split[0]));
         }
         // parse the coordinates
         line = getSign().getLine(3);
