@@ -138,6 +138,7 @@ public class InventoryUtil {
                     }
                     if (inv.getItem(i) == null) {
                         inv.setItem(i, stack);
+                        stack = null;
                     } else {
                         stack = ItemUtil.addToStack(inv.getItem(i), stack);
                     }
