@@ -32,7 +32,7 @@ public class CartMaxSpeed extends CartBlockMechanism {
     public void onVehicleImpact(CartBlockImpactEvent event) {
 
         // care?
-        if (!event.getBlocks().matches(getMaterial())) return;
+        if (!event.getBlocks().matches(getBlock())) return;
         if (event.isMinor()) return;
 
         double maxSpeed = 0.4D;

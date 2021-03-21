@@ -16,7 +16,7 @@
 
 package org.enginehub.craftbook.mechanic;
 
-import org.enginehub.craftbook.mechanics.AIMechanic;
+import org.enginehub.craftbook.mechanics.betterai.BetterAI;
 import org.enginehub.craftbook.mechanics.Ammeter;
 import org.enginehub.craftbook.mechanics.BetterLeads;
 import org.enginehub.craftbook.mechanics.BetterPhysics;
@@ -91,7 +91,7 @@ public class MechanicTypes {
     @Nullable
     public static final MechanicType<Ammeter> AMMETER = get("ammeter");
     @Nullable
-    public static final MechanicType<AIMechanic> BETTER_AI = get("better_ai");
+    public static final MechanicType<BetterAI> BETTER_AI = get("better_ai");
     @Nullable
     public static final MechanicType<BetterLeads> BETTER_LEADS = get("better_leads");
     @Nullable

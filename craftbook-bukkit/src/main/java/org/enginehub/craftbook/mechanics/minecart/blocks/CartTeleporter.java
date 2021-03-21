@@ -34,7 +34,7 @@ public class CartTeleporter extends CartBlockMechanism {
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
         // validate
-        if (!event.getBlocks().matches(getMaterial())) return;
+        if (!event.getBlocks().matches(getBlock())) return;
         if (!event.getBlocks().hasSign()) return;
         if (event.isMinor()) return;
         if (!event.getBlocks().matches("teleport")) return;

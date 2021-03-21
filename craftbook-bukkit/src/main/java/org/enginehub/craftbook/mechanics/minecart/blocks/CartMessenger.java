@@ -35,7 +35,7 @@ public class CartMessenger extends CartBlockMechanism {
 
         // validate
         if (event.isMinor()) return;
-        if (!event.getBlocks().matches(getMaterial())) return;
+        if (!event.getBlocks().matches(getBlock())) return;
 
         // care?
         if (event.getMinecart().getPassenger() == null) return;

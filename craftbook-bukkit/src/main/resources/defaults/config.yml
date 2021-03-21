@@ -2,7 +2,7 @@
 # This configuration will automatically add new configuration options for you,
 # So there is no need to regenerate this configuration unless you want to.
 # More information about these features are available at:
-# https://craftbook.enginehub.org/en/latest/mechanics/
+# https://craftbook.enginehub.org/en/5.0.0/mechanics/
 #
 # NOTE! NOTHING IS ENABLED BY DEFAULT! ENABLE FEATURES TO USE THEM!
 
@@ -19,6 +19,7 @@ mechanics:
         redstone_glowstone: false
         redstone_jukebox: false
     general:
+        better_ai: false
         better_leads: false
         better_physics: false
         better_plants: false

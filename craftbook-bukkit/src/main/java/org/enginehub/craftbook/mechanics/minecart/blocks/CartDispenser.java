@@ -90,7 +90,7 @@ public class CartDispenser extends CartBlockMechanism {
     public void performMechanic(Minecart cart, CartMechanismBlocks blocks) {
 
         // validate
-        if (!blocks.matches(getMaterial())) return;
+        if (!blocks.matches(getBlock())) return;
         if (!blocks.matches("dispenser")) return;
 
         // detect intentions

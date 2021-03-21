@@ -59,7 +59,7 @@ public class CartStation extends CartBlockMechanism {
     public void stationInteraction(Minecart cart, CartMechanismBlocks blocks) {
 
         // validate
-        if (!blocks.matches(getMaterial())) return;
+        if (!blocks.matches(getBlock())) return;
         if (!blocks.matches("station")) return;
 
         if (cart == null)
@@ -102,7 +102,7 @@ public class CartStation extends CartBlockMechanism {
     public void onVehicleEnter(CartBlockEnterEvent event) {
 
         // validate
-        if (!event.getBlocks().matches(getMaterial())) return;
+        if (!event.getBlocks().matches(getBlock())) return;
         if (!event.getBlocks().matches("station")) return;
 
         if (!event.getBlocks().getSign().getLine(2).equalsIgnoreCase("AUTOSTART")) return;

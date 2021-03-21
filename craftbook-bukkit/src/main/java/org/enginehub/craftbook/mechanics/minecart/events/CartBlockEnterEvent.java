@@ -29,8 +29,8 @@ public class CartBlockEnterEvent extends VehicleEnterEvent {
 
     protected final CartMechanismBlocks blocks;
 
-    public CartBlockEnterEvent(Vehicle vehicle, Entity entered, CartMechanismBlocks blocks) {
-        super(vehicle, entered);
+    public CartBlockEnterEvent(Minecart minecart, Entity entered, CartMechanismBlocks blocks) {
+        super(minecart, entered);
 
         this.blocks = blocks;
     }
@@ -50,7 +50,6 @@ public class CartBlockEnterEvent extends VehicleEnterEvent {
     }
 
     public Minecart getMinecart() {
-
         return (Minecart) getVehicle();
     }
 }

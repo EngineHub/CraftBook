@@ -17,6 +17,7 @@
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
 import com.sk89q.worldedit.util.auth.AuthorizationException;
+import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -31,7 +32,6 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.util.EntityUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.RedstoneUtil;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
@@ -45,15 +45,13 @@ import java.util.Locale;
  * zero state even in RAM). In order to be effective, configuration loading in MinecartManager must
  * be modified to
  * include an implementer.
- *
- * @author hash
  */
 public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
 
-    protected BlockStateHolder material;
+    protected BaseBlock material;
 
-    public BlockStateHolder getMaterial() {
-        return material;
+    public BaseBlock getBlock() {
+        return this.material;
     }
 
     public static final BlockFace[] powerSupplyOptions = new BlockFace[] {

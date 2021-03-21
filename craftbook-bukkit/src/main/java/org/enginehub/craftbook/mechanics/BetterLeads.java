@@ -16,6 +16,8 @@
 
 package org.enginehub.craftbook.mechanics;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.entity.EntityTypes;
@@ -42,8 +44,7 @@ import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.util.EventUtil;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
 public class BetterLeads extends AbstractCraftBookMechanic {
 
@@ -69,15 +70,9 @@ public class BetterLeads extends AbstractCraftBookMechanic {
 
         CraftBookPlugin.logDebugMessage("It is of type: " + typeName, "betterleads.allowed-mobs");
 
-        boolean found = false;
-        for (String type : allowedMobs) {
-            if (type.equalsIgnoreCase(typeName)) {
-                found = true;
-                break;
-            }
-        }
-
-        if (!found) {
+        if (!allowedMobs.contains(typeName)
+            || !typeName.startsWith("minecraft:")
+            || !allowedMobs.contains(typeName.substring("minecraft:".length()))) {
             return;
         }
 
@@ -226,7 +221,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
     private boolean ownerBreakOnly;
     private boolean persistentHitch;
     private boolean mobRepellant;
-    private List<String> allowedMobs;
+    private Set<String> allowedMobs;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
@@ -243,6 +238,6 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         mobRepellant = config.getBoolean("mob-repel", false);
 
         config.setComment("allowed-mobs", "The list of mobs that can be tethered with a lead.");
-        allowedMobs = config.getStringList("allowed-mobs", Arrays.asList(EntityTypes.ZOMBIE.getId(), EntityTypes.SPIDER.getId()));
+        allowedMobs = ImmutableSet.copyOf(config.getStringList("allowed-mobs", Lists.newArrayList(EntityTypes.ZOMBIE.getId(), EntityTypes.SPIDER.getId())));
     }
 }

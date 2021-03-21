@@ -37,7 +37,7 @@ public class CartReverser extends CartBlockMechanism {
     public void onVehicleImpact(CartBlockImpactEvent event) {
 
         // validate
-        if (!event.getBlocks().matches(getMaterial())) return;
+        if (!event.getBlocks().matches(getBlock())) return;
         if (event.isMinor()) return;
 
         // enabled?

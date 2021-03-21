@@ -2,6 +2,8 @@
     "craftbook.ammeter.line": "Ammeter: {0} {1}A",
     "craftbook.ammeter.description": "Adds a tool that outputs the power level at the clicked block",
 
+    "craftbook.betterai.description": "Enhances the AI and behaviour of hostile mobs",
+
     "craftbook.betterphysics.description": "Enhances physics of aspects of the game, such as allowing ladders to fall",
 
     "craftbook.betterplants.description":"Enhances plants in the game, such as allowing ferns to be farmed",

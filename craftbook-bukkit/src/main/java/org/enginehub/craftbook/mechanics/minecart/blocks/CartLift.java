@@ -36,7 +36,7 @@ public class CartLift extends CartBlockMechanism {
     public void onVehicleImpact(CartBlockImpactEvent event) {
 
         // validate
-        if (!event.getBlocks().matches(getMaterial())) return;
+        if (!event.getBlocks().matches(getBlock())) return;
         if (!event.getBlocks().hasSign()) return;
         if (event.isMinor()) return;
         if (!(event.getBlocks().matches("cartlift up") || event.getBlocks().matches("cartlift down")))

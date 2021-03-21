@@ -20,7 +20,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.util.HandSide;
-import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.sk89q.worldedit.world.item.ItemTypes;
 import org.bukkit.Material;
@@ -305,7 +305,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
     private boolean requireBottle;
     private int xpPerBottle;
-    private BlockStateHolder block;
+    private BaseBlock block;
     private TernaryState sneakingState;
     private boolean autonomousMode;
     private int radius;

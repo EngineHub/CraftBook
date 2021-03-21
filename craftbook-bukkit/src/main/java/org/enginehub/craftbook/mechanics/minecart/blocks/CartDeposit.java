@@ -46,7 +46,7 @@ public class CartDeposit extends CartBlockMechanism {
 
         // care?
         if (event.isMinor()) return;
-        if (!event.getBlocks().matches(getMaterial())) return;
+        if (!event.getBlocks().matches(getBlock())) return;
         if (!(event.getMinecart() instanceof StorageMinecart)) return;
 
         // enabled?

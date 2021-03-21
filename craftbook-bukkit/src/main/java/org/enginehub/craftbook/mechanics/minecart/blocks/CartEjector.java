@@ -35,7 +35,7 @@ public class CartEjector extends CartBlockMechanism {
     public void onVehicleImpact(CartBlockImpactEvent event) {
 
         // care?
-        if (!event.getBlocks().matches(getMaterial())) return;
+        if (!event.getBlocks().matches(getBlock())) return;
         if (event.getMinecart().isEmpty()) return;
 
         // enabled?
