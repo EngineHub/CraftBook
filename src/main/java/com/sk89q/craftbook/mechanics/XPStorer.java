@@ -41,7 +41,7 @@ import java.util.List;
 
 public class XPStorer extends AbstractCraftBookMechanic {
 
-    @EventHandler
+    @EventHandler (ignoreCancelled = true)
     public void onRightClick(PlayerInteractEvent event) {
 
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_AIR) return;
