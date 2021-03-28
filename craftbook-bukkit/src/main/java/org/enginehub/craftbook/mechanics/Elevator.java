@@ -140,7 +140,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         }
 
         BlockFace shift = dir == LiftType.UP ? BlockFace.UP : BlockFace.DOWN;
-        Block destination = findDestination(dir, shift, event.getBlock());
+        Block destination = findDestination(shift, event.getBlock());
 
         if (destination == null) {
             return;
@@ -220,7 +220,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                 return;
         }
 
-        Block destination = findDestination(dir, shift, block);
+        Block destination = findDestination(shift, block);
 
         if (destination == null) {
             localPlayer.printError(TranslatableComponent.of("craftbook.elevator.no-destination"));
@@ -251,14 +251,13 @@ public class Elevator extends AbstractCraftBookMechanic {
     /**
      * Finds the destination based on the given lift sign.
      *
-     * @param liftType The lift type
      * @param shift The direction
      * @param clickedBlock The lift block
      * @return The destination, or null if none found
      */
-    public Block findDestination(LiftType liftType, BlockFace shift, Block clickedBlock) {
+    public Block findDestination(BlockFace shift, Block clickedBlock) {
         // TODO use min height in 1.17
-        int maximumSearchPoint = liftType == LiftType.UP ? clickedBlock.getWorld().getMaxHeight() : 0;
+        int maximumSearchPoint = shift == BlockFace.UP ? clickedBlock.getWorld().getMaxHeight() : 0;
         Block destination = clickedBlock;
         // heading up from top or down from bottom
         if (destination.getY() == maximumSearchPoint) {
@@ -281,7 +280,7 @@ public class Elevator extends AbstractCraftBookMechanic {
             if (destination.getY() == maximumSearchPoint) {
                 if (elevatorLoop) {
                     Location temporaryLocation = destination.getLocation();
-                    temporaryLocation.setY(liftType == LiftType.UP ? 0 : clickedBlock.getWorld().getMaxHeight());
+                    temporaryLocation.setY(shift == BlockFace.UP ? 0 : clickedBlock.getWorld().getMaxHeight());
                     destination = temporaryLocation.getBlock();
                 } else {
                     return null;
