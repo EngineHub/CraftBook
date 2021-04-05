@@ -61,7 +61,7 @@ public abstract class AbstractCraftBookMechanic implements CraftBookMechanic, Li
             "# -- Generated for version: " + CraftBook.getInstance().getPlatform().getPlatformVersion(),
             "# ",
             "# More information about this mechanic is available at...",
-            "# " + CraftBook.getDocsDomain() + "mechanics/" + mechType.getId() + "/",
+            "# " + getDocsUrl(mechType),
             "#",
             "# NOTE! Make sure to enable this in the config.yml file if you wish to use it.",
             "");
@@ -69,5 +69,9 @@ public abstract class AbstractCraftBookMechanic implements CraftBookMechanic, Li
         loadFromConfiguration(mechanicConfig);
 
         mechanicConfig.save();
+    }
+
+    protected String getDocsUrl(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        return CraftBook.getDocsDomain() + "mechanics/" + mechanicType.getId() + "/";
     }
 }
