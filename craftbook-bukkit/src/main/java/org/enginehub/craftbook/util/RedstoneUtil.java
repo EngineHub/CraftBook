@@ -64,24 +64,25 @@ public final class RedstoneUtil {
         Block pow = mechanicBlock.getRelative(face);
 
         if (CraftBookPlugin.isDebugFlagEnabled("redstone")) {
-            CraftBook.logger.info("block " + pow + " power debug:");
-            CraftBook.logger.info("\tblock.isBlockPowered() : " + pow.isBlockPowered());
-            CraftBook.logger.info("\tblock.isBlockIndirectlyPowered() : " + pow.isBlockIndirectlyPowered());
+            CraftBook.LOGGER.info("block " + pow + " power debug:");
+            CraftBook.LOGGER.info("\tblock.isBlockPowered() : " + pow.isBlockPowered());
+            CraftBook.LOGGER.info("\tblock.isBlockIndirectlyPowered() : " + pow.isBlockIndirectlyPowered());
             for (BlockFace bf : BlockFace.values()) {
-                CraftBook.logger.info("\tblock.isBlockFacePowered(" + bf + ") : " + pow.isBlockFacePowered(bf));
-                CraftBook.logger.info("\tblock.getFace(" + bf + ").isBlockPowered() : " + pow.getRelative(bf)
+                CraftBook.LOGGER.info("\tblock.isBlockFacePowered(" + bf + ") : " + pow.isBlockFacePowered(bf));
+                CraftBook.LOGGER.info("\tblock.getFace(" + bf + ").isBlockPowered() : " + pow.getRelative(bf)
                     .isBlockPowered());
-                CraftBook.logger.info("\tblock.isBlockFaceIndirectlyPowered(" + bf + ") : " + pow
+                CraftBook.LOGGER.info("\tblock.isBlockFaceIndirectlyPowered(" + bf + ") : " + pow
                     .isBlockFaceIndirectlyPowered(bf));
-                CraftBook.logger.info("\tblock.getFace(" + bf + ").isBlockIndirectlyPowered(" + bf + ") : "
+                CraftBook.LOGGER.info("\tblock.getFace(" + bf + ").isBlockIndirectlyPowered(" + bf + ") : "
                     + pow.getRelative(bf).isBlockIndirectlyPowered());
             }
-            CraftBook.logger.info("");
+            CraftBook.LOGGER.info("");
         }
 
         if (isPotentialPowerSource(pow.getType())) {
-            return (pow.isBlockPowered() || pow.isBlockIndirectlyPowered()) ? Power.ON : Power.OFF;
+            return pow.isBlockPowered() || pow.isBlockIndirectlyPowered() ? Power.ON : Power.OFF;
         }
+
         return Power.NA;
     }
 

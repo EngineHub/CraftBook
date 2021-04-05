@@ -37,7 +37,7 @@ public class BukkitConfiguration extends YamlConfiguration {
         try {
             config.load();
         } catch (IOException e) {
-            CraftBook.logger.error("Error loading CraftBook configuration", e);
+            CraftBook.LOGGER.error("Error loading CraftBook configuration", e);
             e.printStackTrace();
         }
 

@@ -18,16 +18,17 @@ package org.enginehub.craftbook.mechanics.minecart.events;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 
+/**
+ * Called when a user enters a Minecart.
+ */
 public class CartBlockEnterEvent extends VehicleEnterEvent {
-
     private static final HandlerList handlers = new HandlerList();
 
-    protected final CartMechanismBlocks blocks;
+    private final CartMechanismBlocks blocks;
 
     public CartBlockEnterEvent(Minecart minecart, Entity entered, CartMechanismBlocks blocks) {
         super(minecart, entered);
@@ -45,8 +46,7 @@ public class CartBlockEnterEvent extends VehicleEnterEvent {
     }
 
     public CartMechanismBlocks getBlocks() {
-
-        return blocks;
+        return this.blocks;
     }
 
     public Minecart getMinecart() {

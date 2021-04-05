@@ -17,6 +17,7 @@
 package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -56,7 +57,10 @@ public class LightSwitch extends AbstractCraftBookMechanic {
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if (!lplayer.hasPermission("craftbook.lightswitch.create")) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                lplayer.printError("mech.create-permission");
+                lplayer.printError(TranslatableComponent.of(
+                    "craftbook.mechanisms.create-permission",
+                    TextComponent.of(getMechanicType().getName())
+                ));
             }
             SignUtil.cancelSignChange(event);
             return;

@@ -14,14 +14,13 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.minecart.blocks;
+package org.enginehub.craftbook.mechanics.minecart.blocks.station;
 
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.mechanics.minecart.StationManager;
 
 public class StationCommands {
 

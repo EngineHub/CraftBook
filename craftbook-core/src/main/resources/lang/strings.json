@@ -79,6 +79,8 @@
 
     "craftbook.minecartrailplacer.description": "Causes storage carts to place rails in front of them",
 
+    "craftbook.minecartreverser.description": "Reverses Minecarts when they drive over it",
+
     "craftbook.paintingswitcher.now-editing": "You are now editing this painting!",
     "craftbook.paintingswitcher.no-longer-editing": "You are no longer editing this painting!",
     "craftbook.paintingswitcher.too-far-away": "You are too far away from that painting!",
@@ -134,6 +136,7 @@
     "craftbook.mechanisms.reload-failed": "An error occurred while reloading {0}: {1}",
     "craftbook.mechanisms.click-to-enable": "Click to enable",
     "craftbook.mechanisms.click-to-disable": "Click to disable",
+    "craftbook.mechanisms.create-permission": "You don't have permission to create the {0} mechanic.",
 
     "craftbook.version.version": "CraftBook version {0}",
 

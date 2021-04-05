@@ -22,12 +22,14 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 
+/**
+ * Called when a Minecart crosses a block boundary
+ */
 public class CartBlockImpactEvent extends VehicleMoveEvent {
-
     private static final HandlerList handlers = new HandlerList();
 
-    protected final CartMechanismBlocks blocks;
-    protected final boolean minor;
+    private final CartMechanismBlocks blocks;
+    private final boolean minor;
 
     public CartBlockImpactEvent(Minecart minecart, Location from, Location to, CartMechanismBlocks blocks, boolean minor) {
         super(minecart, from, to);
@@ -46,17 +48,20 @@ public class CartBlockImpactEvent extends VehicleMoveEvent {
     }
 
     public CartMechanismBlocks getBlocks() {
-
-        return blocks;
+        // TODO Look into whether lazy loading this is worthwhile
+        return this.blocks;
     }
 
+    /**
+     * Gets whether the movement is within a block or crosses a block boundary.
+     *
+     * @return If it's a minor movement within a block
+     */
     public boolean isMinor() {
-
-        return minor;
+        return this.minor;
     }
 
     public Minecart getMinecart() {
-
         return (Minecart) getVehicle();
     }
 }

@@ -19,6 +19,8 @@ package org.enginehub.craftbook.bukkit;
 import com.sk89q.bukkit.util.CommandInspector;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.extension.platform.Actor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.enginehub.craftbook.util.TextUtil;
@@ -26,15 +28,14 @@ import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.inject.InjectedValueStore;
 import org.enginehub.piston.inject.Key;
 import org.enginehub.piston.inject.MapBackedValueStore;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class BukkitCommandInspector implements CommandInspector {
-    private static final Logger logger = LoggerFactory.getLogger(BukkitCommandInspector.class);
+    private static final Logger LOGGER = LogManager.getLogger();
+
     private final CraftBookPlugin plugin;
     private final CommandManager dispatcher;
 
@@ -51,7 +52,7 @@ public class BukkitCommandInspector implements CommandInspector {
         if (mapping.isPresent()) {
             return TextUtil.reduceToText(mapping.get().getDescription(), WorldEdit.getInstance().getConfiguration().defaultLocale);
         } else {
-            logger.warn("BukkitCommandInspector doesn't know how about the command '" + command + "'");
+            LOGGER.warn("BukkitCommandInspector doesn't know how about the command '" + command + "'");
             return "Help text not available";
         }
     }
@@ -62,7 +63,7 @@ public class BukkitCommandInspector implements CommandInspector {
         if (mapping.isPresent()) {
             return TextUtil.reduceToText(mapping.get().getFullHelp(), WorldEdit.getInstance().getConfiguration().defaultLocale);
         } else {
-            logger.warn("BukkitCommandInspector doesn't know how about the command '" + command + "'");
+            LOGGER.warn("BukkitCommandInspector doesn't know how about the command '" + command + "'");
             return "Help text not available";
         }
     }
@@ -75,7 +76,7 @@ public class BukkitCommandInspector implements CommandInspector {
             store.injectValue(Key.of(Actor.class), context -> Optional.of(plugin.wrapCommandSender(sender)));
             return mapping.get().getCondition().satisfied(store);
         } else {
-            logger.warn("BukkitCommandInspector doesn't know how about the command '" + command + "'");
+            LOGGER.warn("BukkitCommandInspector doesn't know how about the command '" + command + "'");
             return false;
         }
     }

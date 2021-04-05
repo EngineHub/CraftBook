@@ -16,6 +16,7 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
+import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.block.BlockFace;
@@ -27,24 +28,20 @@ import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
 import org.enginehub.craftbook.util.SignUtil;
 
+import java.util.List;
+
 public class CartReverser extends CartBlockMechanism {
 
-    public void reverse(Minecart cart) {
-        cart.setVelocity(cart.getVelocity().normalize().multiply(-1));
-    }
+    private final static List<String> SIGNS = ImmutableList.of("Reverse");
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
-
-        // validate
-        if (!event.getBlocks().matches(getBlock())) return;
-        if (event.isMinor()) return;
-
-        // enabled?
-        if (Power.OFF == isActive(event.getBlocks())) return;
+        if (event.isMinor() || !event.getBlocks().matches(getBlock()) || Power.OFF == isActive(event.getBlocks())) {
+            return;
+        }
 
         if (!event.getBlocks().hasSign() || !event.getBlocks().matches("reverse")) {
-            reverse(event.getMinecart());
+            reverseCart(event.getMinecart());
             return;
         }
 
@@ -55,45 +52,41 @@ public class CartReverser extends CartBlockMechanism {
         switch (dir) {
             case NORTH:
                 if (normalVelocity.getBlockZ() != -1) {
-                    reverse(event.getMinecart());
+                    reverseCart(event.getMinecart());
                 }
                 break;
             case SOUTH:
                 if (normalVelocity.getBlockZ() != 1) {
-                    reverse(event.getMinecart());
+                    reverseCart(event.getMinecart());
                 }
                 break;
             case EAST:
                 if (normalVelocity.getBlockX() != 1) {
-                    reverse(event.getMinecart());
+                    reverseCart(event.getMinecart());
                 }
                 break;
             case WEST:
                 if (normalVelocity.getBlockX() != -1) {
-                    reverse(event.getMinecart());
+                    reverseCart(event.getMinecart());
                 }
                 break;
             default:
-                reverse(event.getMinecart());
+                reverseCart(event.getMinecart());
         }
     }
 
-    @Override
-    public String getName() {
-
-        return "Reverser";
+    private void reverseCart(Minecart cart) {
+        cart.setVelocity(cart.getVelocity().multiply(-1));
     }
 
     @Override
-    public String[] getApplicableSigns() {
-
-        return new String[] { "reverse" };
+    public List<String> getApplicableSigns() {
+        return SIGNS;
     }
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
-        config.setComment("block", "Sets the block that is the base of the reverse mechanic.");
-        material = BlockParser.getBlock(config.getString("block", BlockTypes.WHITE_WOOL.getId()), true);
+        config.setComment("block", "The block the Cart Reverser mechanic uses.");
+        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.WHITE_WOOL.getId()), true));
     }
 }

@@ -31,6 +31,7 @@ fun Project.applyLibrariesConfiguration() {
 
         dependencies {
             exclude(dependency("com.google.code.findbugs:jsr305:1.3.9"))
+            exclude(dependency("org.apache.logging.log4j:log4j-api"))
         }
 
         relocate("org.enginehub.jinglenote", "org.enginehub.craftbook.util.jinglenote")

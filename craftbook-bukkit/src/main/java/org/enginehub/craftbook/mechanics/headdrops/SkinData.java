@@ -255,7 +255,7 @@ public class SkinData {
             .collect(Collectors.joining(", "));
 
         if (!missingText.isEmpty()) {
-            CraftBook.logger.debug(missingText);
+            CraftBook.LOGGER.debug(missingText);
         }
     }
 }

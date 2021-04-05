@@ -16,6 +16,7 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
+import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.block.Block;
@@ -66,21 +67,15 @@ public class CartEjector extends CartBlockMechanism {
     }
 
     @Override
-    public String getName() {
+    public List<String> getApplicableSigns() {
 
-        return "Ejector";
-    }
-
-    @Override
-    public String[] getApplicableSigns() {
-
-        return new String[] { "Eject" };
+        return ImmutableList.copyOf(new String[] { "Eject" });
     }
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
 
         config.setComment("block", "Sets the block that is the base of the ejector mechanic.");
-        material = BlockParser.getBlock(config.getString("block", BlockTypes.IRON_BLOCK.getId()), true);
+        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.IRON_BLOCK.getId()), true));
     }
 }

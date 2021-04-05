@@ -16,6 +16,7 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
+import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.apache.commons.lang.StringUtils;
@@ -27,22 +28,19 @@ import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CartMessenger extends CartBlockMechanism {
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
+        if (event.isMinor() || !event.getBlocks().matches(getBlock()) || event.getMinecart().getPassengers().isEmpty()) {
+            return;
+        }
 
-        // validate
-        if (event.isMinor()) return;
-        if (!event.getBlocks().matches(getBlock())) return;
-
-        // care?
-        if (event.getMinecart().getPassenger() == null) return;
-        if (!event.getBlocks().hasSign()) return;
-
-        // enabled?
-        if (Power.OFF == isActive(event.getBlocks())) return;
+        if (!event.getBlocks().hasSign() || Power.OFF == isActive(event.getBlocks())) {
+            return;
+        }
 
         // go
         if (event.getMinecart().getPassenger() instanceof Player) {
@@ -84,21 +82,13 @@ public class CartMessenger extends CartBlockMechanism {
     }
 
     @Override
-    public String getName() {
-
-        return "Messager";
-    }
-
-    @Override
-    public String[] getApplicableSigns() {
-
-        return new String[] { "Print" };
+    public List<String> getApplicableSigns() {
+        return ImmutableList.copyOf(new String[] { "Print" });
     }
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
         config.setComment("block", "Sets the block that is the base of the messager mechanic.");
-        material = BlockParser.getBlock(config.getString("block", BlockTypes.END_STONE.getId()), true);
+        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.END_STONE.getId()), true));
     }
 }

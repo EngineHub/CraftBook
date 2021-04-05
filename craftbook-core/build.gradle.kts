@@ -38,9 +38,10 @@ dependencies {
     "implementation"("com.google.guava:guava:${Versions.GUAVA}")
     "implementation"("com.google.code.findbugs:jsr305:1.3.9")
     "implementation"("com.google.code.gson:gson:${Versions.GSON}")
-    "implementation"("org.slf4j:slf4j-api:1.7.26")
     "implementation"("it.unimi.dsi:fastutil:${Versions.FAST_UTIL}")
     "languageFiles"("${project.group}:craftbook-lang:${project.version}:43@zip")
+
+    "implementation"("org.apache.logging.log4j:log4j-api:${Versions.LOG4J}")
 
     "compileOnly"("com.google.code.findbugs:jsr305:1.3.9")
     "testImplementation"("org.hamcrest:hamcrest-library:1.2.1")

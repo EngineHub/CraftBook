@@ -58,7 +58,7 @@ public class VariableConfiguration {
                         throw new VariableException(TextComponent.of("Invalid variable " + key.toString() + " with value " + value), key);
                     }
                 } catch (VariableException e) {
-                    CraftBook.logger.error("Invalid variable in variables file", e);
+                    CraftBook.LOGGER.error("Invalid variable in variables file", e);
                 }
             }
         }

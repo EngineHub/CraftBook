@@ -79,7 +79,6 @@ public final class SignUtil {
      *     side of the sign.
      */
     public static BlockFace getFacing(Block sign) {
-
         return getBack(sign);
     }
 

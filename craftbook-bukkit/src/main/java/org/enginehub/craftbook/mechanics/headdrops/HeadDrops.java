@@ -301,7 +301,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                 skullMeta.getPersistentDataContainer().set(headDropsEntityKey, PersistentDataType.STRING, entityKey.toString());
                 toDrop.setItemMeta(skullMeta);
             } else {
-                CraftBook.logger.warn("Spigot has failed to set a HeadDrop item to a head!");
+                CraftBook.LOGGER.warn("Spigot has failed to set a HeadDrop item to a head!");
             }
 
             return toDrop;

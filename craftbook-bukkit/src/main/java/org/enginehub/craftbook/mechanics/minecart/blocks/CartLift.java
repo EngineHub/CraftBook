@@ -16,6 +16,7 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
+import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Location;
@@ -29,6 +30,8 @@ import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.CartUtil;
 import org.enginehub.craftbook.util.SignUtil;
+
+import java.util.List;
 
 public class CartLift extends CartBlockMechanism {
 
@@ -77,21 +80,15 @@ public class CartLift extends CartBlockMechanism {
     }
 
     @Override
-    public String getName() {
+    public List<String> getApplicableSigns() {
 
-        return "CartLift";
-    }
-
-    @Override
-    public String[] getApplicableSigns() {
-
-        return new String[] { "CartLift Up", "CartLift Down", "CartLift" };
+        return ImmutableList.copyOf(new String[] { "CartLift Up", "CartLift Down", "CartLift" });
     }
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
 
         config.setComment("block", "Sets the block that is the base of the elevator mechanic.");
-        material = BlockParser.getBlock(config.getString("block", BlockTypes.NETHER_BRICKS.getId()), true);
+        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.NETHER_BRICKS.getId()), true));
     }
 }

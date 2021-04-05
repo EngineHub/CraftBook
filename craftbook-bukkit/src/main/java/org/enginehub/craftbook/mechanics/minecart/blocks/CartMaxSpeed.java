@@ -16,9 +16,9 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
+import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
@@ -26,56 +26,51 @@ import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
 
+import java.util.List;
+
 public class CartMaxSpeed extends CartBlockMechanism {
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
+        if (event.isMinor() || !event.getBlocks().matches(getBlock())) {
+            return;
+        }
 
-        // care?
-        if (!event.getBlocks().matches(getBlock())) return;
-        if (event.isMinor()) return;
+        if (Power.OFF == isActive(event.getBlocks())) {
+            return;
+        }
 
         double maxSpeed = 0.4D;
         try {
             maxSpeed = Double.parseDouble(event.getBlocks().getSign().getLine(2));
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
-        // enabled?
-        if (Power.OFF == isActive(event.getBlocks())) return;
-
-        ((Minecart) event.getVehicle()).setMaxSpeed(maxSpeed);
+        event.getMinecart().setMaxSpeed(maxSpeed);
     }
 
     @Override
     public boolean verify(ChangedSign sign, CraftBookPlayer player) {
-
         try {
-            if (!sign.getLine(2).isEmpty())
+            if (!sign.getLine(2).isEmpty()) {
                 Double.parseDouble(sign.getLine(2));
+            }
         } catch (NumberFormatException e) {
             player.printError("Line 3 must be a number that represents the max speed!");
             return false;
         }
+
         return true;
     }
 
     @Override
-    public String getName() {
-
-        return "MaxSpeed";
-    }
-
-    @Override
-    public String[] getApplicableSigns() {
-
-        return new String[] { "Max Speed" };
+    public List<String> getApplicableSigns() {
+        return ImmutableList.copyOf(new String[] { "MaxSpeed" });
     }
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
         config.setComment("block", "Sets the block that is the base of the max speed mechanic.");
-        material = BlockParser.getBlock(config.getString("block", BlockTypes.COAL_BLOCK.getId()), true);
+        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.COAL_BLOCK.getId()), true));
     }
 }

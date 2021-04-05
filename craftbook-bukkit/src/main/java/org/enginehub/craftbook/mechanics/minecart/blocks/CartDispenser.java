@@ -16,6 +16,7 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
+import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Location;
@@ -41,6 +42,7 @@ import org.enginehub.craftbook.util.RailUtil;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
 import org.enginehub.craftbook.util.SignUtil;
 
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -249,15 +251,9 @@ public class CartDispenser extends CartBlockMechanism {
     }
 
     @Override
-    public String getName() {
+    public List<String> getApplicableSigns() {
 
-        return "Dispenser";
-    }
-
-    @Override
-    public String[] getApplicableSigns() {
-
-        return new String[] { "Dispenser" };
+        return ImmutableList.copyOf(new String[] { "Dispenser" });
     }
 
     private boolean minecartDispenserLegacy;
@@ -268,7 +264,7 @@ public class CartDispenser extends CartBlockMechanism {
     public void loadFromConfiguration(YAMLProcessor config) {
 
         config.setComment("block", "Sets the block that is the base of the dispenser mechanic.");
-        material = BlockParser.getBlock(config.getString("block", BlockTypes.EMERALD_ORE.getId()), true);
+        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.EMERALD_ORE.getId()), true));
 
         config.setComment("spawn-infront", "Sets whether the minecarts should spawn infront of the mechanic instead of directly above.");
         minecartDispenserLegacy = config.getBoolean("spawn-infront", false);

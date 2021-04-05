@@ -22,18 +22,19 @@ import org.bukkit.event.HandlerList;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
-public class CartBlockRedstoneEvent extends SourcedBlockRedstoneEvent {
+import javax.annotation.Nullable;
 
+public class CartBlockRedstoneEvent extends SourcedBlockRedstoneEvent {
     private static final HandlerList handlers = new HandlerList();
 
-    protected final CartMechanismBlocks blocks;
-    protected final Minecart cart;
+    private final CartMechanismBlocks blocks;
+    private final Minecart minecart;
 
-    public CartBlockRedstoneEvent(Block source, Block block, int old, int n, CartMechanismBlocks blocks, Minecart cart) {
+    public CartBlockRedstoneEvent(Block source, Block block, int old, int n, CartMechanismBlocks blocks, Minecart minecart) {
         super(source, block, old, n);
 
         this.blocks = blocks;
-        this.cart = cart;
+        this.minecart = minecart;
     }
 
     @Override
@@ -46,17 +47,16 @@ public class CartBlockRedstoneEvent extends SourcedBlockRedstoneEvent {
     }
 
     public CartMechanismBlocks getBlocks() {
-
-        return blocks;
+        return this.blocks;
     }
 
     /**
      * The minecart at this mechanic (If there is one)
      *
-     * @return the minecart (Can be null)
+     * @return the minecart, if present
      */
+    @Nullable
     public Minecart getMinecart() {
-
-        return cart;
+        return this.minecart;
     }
 }

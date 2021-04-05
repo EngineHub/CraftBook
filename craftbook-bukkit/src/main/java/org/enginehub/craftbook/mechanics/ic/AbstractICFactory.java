@@ -92,7 +92,7 @@ public abstract class AbstractICFactory implements ICFactory {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
-                CraftBook.logger.error("An invalid ic save file was found!", e);
+                CraftBook.LOGGER.error("An invalid ic save file was found!", e);
             }
         }
     }

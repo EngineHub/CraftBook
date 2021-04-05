@@ -17,7 +17,7 @@
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BaseBlock;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -25,9 +25,10 @@ import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.MultipleFacing;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
 import org.enginehub.craftbook.util.RailUtil;
 import org.enginehub.craftbook.util.SignUtil;
+
+import javax.annotation.Nullable;
 
 /**
  * <p>
@@ -47,10 +48,11 @@ import org.enginehub.craftbook.util.SignUtil;
  * impossible anyway (though yes,
  * it is possible if editing the world directly without physics).
  * </p>
- *
- * @author hash
  */
 public class CartMechanismBlocks {
+    public final Block rail;
+    public final Block base;
+    public final Block sign;
 
     /**
      * Declarative constructor. No arguments are validated in any way.
@@ -63,7 +65,6 @@ public class CartMechanismBlocks {
      *     or null if not interested.
      */
     private CartMechanismBlocks(Block rail, Block base, Block sign) {
-
         this.rail = rail;
         this.base = base;
         this.sign = sign;
@@ -77,12 +78,16 @@ public class CartMechanismBlocks {
      *
      * @param unknown the block to examine.
      */
-    public static CartMechanismBlocks find(Block unknown) throws InvalidMechanismException {
-
+    public static CartMechanismBlocks find(Block unknown) {
         Material ti = unknown.getType();
-        if (SignUtil.isSign(unknown)) return findBySign(unknown);
-        else if (RailUtil.isTrack(ti)) return findByRail(unknown);
-        else return findByBase(unknown);
+
+        if (SignUtil.isSign(unknown)) {
+            return findBySign(unknown);
+        } else if (RailUtil.isTrack(ti)) {
+            return findByRail(unknown);
+        } else {
+            return findByBase(unknown);
+        }
     }
 
     /**
@@ -100,9 +105,12 @@ public class CartMechanismBlocks {
      *
      * @param rail the block containing the rails.
      */
-    public static CartMechanismBlocks findByRail(Block rail) throws InvalidMechanismException {
-        if (!RailUtil.isTrack(rail.getType()))
-            throw new InvalidMechanismException("rail argument must be a rail!");
+    @Nullable
+    public static CartMechanismBlocks findByRail(Block rail) {
+        if (!RailUtil.isTrack(rail.getType())) {
+            return null;
+        }
+
         BlockFace face = BlockFace.DOWN;
 
         if (rail.getType() == Material.LADDER) {
@@ -117,18 +125,20 @@ public class CartMechanismBlocks {
             }
         }
 
-        if (SignUtil.isSign(rail.getRelative(face, 2)))
+        if (SignUtil.isSign(rail.getRelative(face, 2))) {
             return new CartMechanismBlocks(rail, rail.getRelative(face, 1), rail.getRelative(face, 2));
-        else if (SignUtil.isSign(rail.getRelative(face, 3)))
+        } else if (SignUtil.isSign(rail.getRelative(face, 3))) {
             return new CartMechanismBlocks(rail, rail.getRelative(face, 1), rail.getRelative(face, 3));
-        else if (SignUtil.isSign(rail.getRelative(face, 1).getRelative(BlockFace.EAST, 1)))
+        } else if (SignUtil.isSign(rail.getRelative(face, 1).getRelative(BlockFace.EAST, 1))) {
             return new CartMechanismBlocks(rail, rail.getRelative(face, 1), rail.getRelative(face, 1).getRelative(BlockFace.EAST, 1));
-        else if (SignUtil.isSign(rail.getRelative(face, 1).getRelative(BlockFace.WEST, 1)))
+        } else if (SignUtil.isSign(rail.getRelative(face, 1).getRelative(BlockFace.WEST, 1))) {
             return new CartMechanismBlocks(rail, rail.getRelative(face, 1), rail.getRelative(face, 1).getRelative(BlockFace.WEST, 1));
-        else if (SignUtil.isSign(rail.getRelative(face, 1).getRelative(BlockFace.NORTH, 1)))
+        } else if (SignUtil.isSign(rail.getRelative(face, 1).getRelative(BlockFace.NORTH, 1))) {
             return new CartMechanismBlocks(rail, rail.getRelative(face, 1), rail.getRelative(face, 1).getRelative(BlockFace.NORTH, 1));
-        else if (SignUtil.isSign(rail.getRelative(face, 1).getRelative(BlockFace.SOUTH, 1)))
+        } else if (SignUtil.isSign(rail.getRelative(face, 1).getRelative(BlockFace.SOUTH, 1))) {
             return new CartMechanismBlocks(rail, rail.getRelative(face, 1), rail.getRelative(face, 1).getRelative(BlockFace.SOUTH, 1));
+        }
+
         return new CartMechanismBlocks(rail, rail.getRelative(face, 1), null);
     }
 
@@ -142,22 +152,26 @@ public class CartMechanismBlocks {
      * @param base the block on which the rails sit; the type of this block is what determines
      *     the mechanism type.
      */
-    private static CartMechanismBlocks findByBase(Block base) throws InvalidMechanismException {
+    @Nullable
+    private static CartMechanismBlocks findByBase(Block base) {
+        if (!RailUtil.isTrack(base.getRelative(BlockFace.UP, 1).getType())) {
+            return null;
+        }
 
-        if (!RailUtil.isTrack(base.getRelative(BlockFace.UP, 1).getType()))
-            throw new InvalidMechanismException("could not find rails.");
-        if (SignUtil.isSign(base.getRelative(BlockFace.DOWN, 1)))
+        if (SignUtil.isSign(base.getRelative(BlockFace.DOWN, 1))) {
             return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, base.getRelative(BlockFace.DOWN, 1));
-        else if (SignUtil.isSign(base.getRelative(BlockFace.DOWN, 2)))
+        } else if (SignUtil.isSign(base.getRelative(BlockFace.DOWN, 2))) {
             return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, base.getRelative(BlockFace.DOWN, 2));
-        else if (SignUtil.isSign(base.getRelative(BlockFace.EAST, 1)))
+        } else if (SignUtil.isSign(base.getRelative(BlockFace.EAST, 1))) {
             return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, base.getRelative(BlockFace.EAST, 1));
-        else if (SignUtil.isSign(base.getRelative(BlockFace.WEST, 1)))
+        } else if (SignUtil.isSign(base.getRelative(BlockFace.WEST, 1))) {
             return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, base.getRelative(BlockFace.WEST, 1));
-        else if (SignUtil.isSign(base.getRelative(BlockFace.NORTH, 1)))
+        } else if (SignUtil.isSign(base.getRelative(BlockFace.NORTH, 1))) {
             return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, base.getRelative(BlockFace.NORTH, 1));
-        else if (SignUtil.isSign(base.getRelative(BlockFace.SOUTH, 1)))
+        } else if (SignUtil.isSign(base.getRelative(BlockFace.SOUTH, 1))) {
             return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, base.getRelative(BlockFace.SOUTH, 1));
+        }
+
         return new CartMechanismBlocks(base.getRelative(BlockFace.UP, 1), base, null);
     }
 
@@ -170,33 +184,21 @@ public class CartMechanismBlocks {
      * @param sign the block containing the sign that gives additional configuration to the
      *     mechanism.
      */
-    private static CartMechanismBlocks findBySign(Block sign) throws InvalidMechanismException {
+    @Nullable
+    private static CartMechanismBlocks findBySign(Block sign) {
+        if (!SignUtil.isSign(sign)) {
+            return null;
+        }
 
-        if (!SignUtil.isSign(sign))
-            throw new InvalidMechanismException("sign argument must be a sign!");
-        if (RailUtil.isTrack(sign.getRelative(BlockFace.UP, 2).getType()))
+        if (RailUtil.isTrack(sign.getRelative(BlockFace.UP, 2).getType())) {
             return new CartMechanismBlocks(sign.getRelative(BlockFace.UP, 2), sign.getRelative(BlockFace.UP, 1), sign);
-        else if (RailUtil.isTrack(sign.getRelative(BlockFace.UP, 3).getType()))
+        } else if (RailUtil.isTrack(sign.getRelative(BlockFace.UP, 3).getType())) {
             return new CartMechanismBlocks(sign.getRelative(BlockFace.UP, 3), sign.getRelative(BlockFace.UP, 2), sign);
-        else if (RailUtil.isTrack(sign.getRelative(SignUtil.getBack(sign), 1).getRelative(BlockFace.UP, 1).getType()))
+        } else if (RailUtil.isTrack(sign.getRelative(SignUtil.getBack(sign), 1).getRelative(BlockFace.UP, 1).getType())) {
             return new CartMechanismBlocks(sign.getRelative(SignUtil.getBack(sign), 1).getRelative(BlockFace.UP, 1), sign.getRelative(SignUtil.getBack(sign), 1), sign);
-        throw new InvalidMechanismException("could not find rails.");
-    }
+        }
 
-    public final Block rail;
-    public final Block base;
-    public final Block sign;
-    public Block from;
-
-    /**
-     * This is a stupid but necessary thing since hash completely broke the ability to get the from
-     * location of the
-     * move event from a mechanism
-     * itself.
-     */
-    public void setFromBlock(Block block) {
-
-        from = block;
+        return null;
     }
 
     /**
@@ -208,42 +210,37 @@ public class CartMechanismBlocks {
      *     specified for a sign.
      */
     public boolean matches(String mechname) {
-
-        return hasSign() && getSign().getLine(1).equalsIgnoreCase("[" + mechname + "]");
         // the astute will notice there's a problem coming up here with the one dang thing that had to go and break
         // the mold with second line definer.
+        return hasSign() && getSign().getLine(1).equalsIgnoreCase("[" + mechname + "]");
     }
 
     /**
-     * @param mat
-     * @return true if the base block is the same type as the given block.
+     * Gets whether this CartMechanismBlocks instance matches the given block.
+     *
+     * @param mat The {@link BaseBlock} material.
+     * @return if the base block is the same type as the given block.
      */
-    public boolean matches(BlockStateHolder mat) {
+    public boolean matches(BaseBlock mat) {
         return mat.equalsFuzzy(BukkitAdapter.adapt(base.getBlockData()));
     }
 
     /**
      * @return a Sign BlockState, or null if there is no sign block.
-     * @throws ClassCastException if there a sign block is set, but it's not *actually* a sign
-     *     block.
      */
     public ChangedSign getSign() {
-
         return !hasSign() ? null : CraftBookBukkitUtil.toChangedSign(sign);
     }
 
     boolean hasSign() {
-
         return sign != null && SignUtil.isSign(sign);
     }
 
     boolean hasRail() {
-
         return rail != null;
     }
 
     boolean hasBase() {
-
         return base != null;
     }
 }

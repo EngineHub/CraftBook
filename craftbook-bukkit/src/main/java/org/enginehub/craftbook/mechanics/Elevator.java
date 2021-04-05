@@ -112,7 +112,10 @@ public class Elevator extends AbstractCraftBookMechanic {
 
         if (!player.hasPermission("craftbook.elevator.create")) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                player.printError("mech.create-permission");
+                player.printError(TranslatableComponent.of(
+                    "craftbook.mechanisms.create-permission",
+                    TextComponent.of(getMechanicType().getName())
+                ));
             }
 
             SignUtil.cancelSignChange(event);

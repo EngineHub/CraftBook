@@ -24,12 +24,13 @@ import com.sk89q.worldedit.util.io.file.ArchiveUnpacker;
 import com.sk89q.worldedit.util.task.SimpleSupervisor;
 import com.sk89q.worldedit.util.task.Supervisor;
 import com.sk89q.worldedit.util.translation.TranslationManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.enginehub.craftbook.util.concurrent.EvenMoreExecutors;
 import org.enginehub.craftbook.util.profile.cache.HashMapCache;
 import org.enginehub.craftbook.util.profile.cache.ProfileCache;
 import org.enginehub.craftbook.util.profile.cache.SQLiteCache;
 import org.enginehub.craftbook.util.profile.resolver.ProfileService;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -39,8 +40,7 @@ import java.nio.file.Path;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CraftBook {
-
-    public static final org.slf4j.Logger logger = LoggerFactory.getLogger(CraftBook.class);
+    public static final Logger LOGGER = LogManager.getLogger();
 
     private static final CraftBook instance = new CraftBook();
 
@@ -68,7 +68,7 @@ public class CraftBook {
         try {
             translationManager = new TranslationManager(archiveUnpacker.getValue(), resourceLoader);
         } catch (IOException e) {
-            logger.error("Failed to initialise localisations", e);
+            LOGGER.error("Failed to initialise localisations", e);
         }
 
         executorService = MoreExecutors.listeningDecorator(EvenMoreExecutors.newBoundedCachedThreadPool(0, 1, 20,
@@ -86,7 +86,7 @@ public class CraftBook {
         try {
             profileCache = new SQLiteCache(cacheDir.resolve("profiles.sqlite").toFile());
         } catch (IOException | UnsatisfiedLinkError ignored) {
-            logger.warn("Failed to initialize SQLite profile cache. Cache is memory-only.");
+            LOGGER.warn("Failed to initialize SQLite profile cache. Cache is memory-only.");
             profileCache = new HashMapCache();
         }
 

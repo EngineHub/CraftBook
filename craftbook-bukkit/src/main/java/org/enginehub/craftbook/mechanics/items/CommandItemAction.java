@@ -121,7 +121,7 @@ public class CommandItemAction {
                     variable = Double.parseDouble(VariableManager.instance.getVariable(isVariableKey));
                     test = Double.parseDouble(isparts[1]);
                 } catch (NumberFormatException e) {
-                    CraftBook.logger.warn("Variable " + isparts[0] + " is not a number!");
+                    CraftBook.LOGGER.warn("Variable " + isparts[0] + " is not a number!");
                 }
                 return variable > test;
             }
@@ -134,7 +134,7 @@ public class CommandItemAction {
                     variable = Double.parseDouble(VariableManager.instance.getVariable(isVariableKey));
                     test = Double.parseDouble(isparts[1]);
                 } catch (NumberFormatException e) {
-                    CraftBook.logger.warn("Variable " + isparts[0] + " is not a number!");
+                    CraftBook.LOGGER.warn("Variable " + isparts[0] + " is not a number!");
                 }
                 return variable < test;
             }

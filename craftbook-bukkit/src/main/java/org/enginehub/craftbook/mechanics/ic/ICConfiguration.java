@@ -35,7 +35,7 @@ public class ICConfiguration {
         try {
             config.load();
         } catch (IOException e) {
-            CraftBook.logger.error("Error loading CraftBook IC configuration", e);
+            CraftBook.LOGGER.error("Error loading CraftBook IC configuration", e);
         }
 
         for (RegisteredICFactory factory : ICManager.inst().getICList())

@@ -79,7 +79,7 @@ public class IsAtLeast extends AbstractSelfTriggeredIC {
 
             return existing >= amount;
         } catch (VariableException e) {
-            CraftBook.logger.error("Failed to tick IC at " + getBackBlock().getLocation(), e);
+            CraftBook.LOGGER.error("Failed to tick IC at " + getBackBlock().getLocation(), e);
         }
 
         return false;

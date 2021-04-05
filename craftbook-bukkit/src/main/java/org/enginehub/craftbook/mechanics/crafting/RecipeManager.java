@@ -51,14 +51,14 @@ public class RecipeManager {
     public void load() {
         recipes = new LinkedHashSet<>();
         if (config == null) {
-            CraftBook.logger.error("Failure loading recipes! Config is null!");
+            CraftBook.LOGGER.error("Failure loading recipes! Config is null!");
             return; // If the config is null, it can't continue.
         }
 
         try {
             config.load();
         } catch (IOException e) {
-            CraftBook.logger.error("Corrupt Custom Crafting crafting-recipes.yml File! Make sure that the correct syntax has been used, and that there are no tabs!");
+            CraftBook.LOGGER.error("Corrupt Custom Crafting crafting-recipes.yml File! Make sure that the correct syntax has been used, and that there are no tabs!");
             e.printStackTrace();
         }
 
@@ -87,7 +87,7 @@ public class RecipeManager {
 
     public void save() {
         if (config == null) {
-            CraftBook.logger.error("Failure saving recipes! Config is null!");
+            CraftBook.LOGGER.error("Failure saving recipes! Config is null!");
             return; // If the config is null, it can't continue.
         }
 
@@ -358,7 +358,7 @@ public class RecipeManager {
                     }
                 }
             } catch (Exception e) {
-                CraftBook.logger.error("An error occured generating ingredients for recipe: " + id, e);
+                CraftBook.LOGGER.error("An error occured generating ingredients for recipe: " + id, e);
             }
             return items;
         }
@@ -381,7 +381,7 @@ public class RecipeManager {
                     }
                 }
             } catch (Exception e) {
-                CraftBook.logger.error("An error occured generating ingredients for recipe: " + id, e);
+                CraftBook.LOGGER.error("An error occured generating ingredients for recipe: " + id, e);
             }
             return items;
         }
@@ -464,7 +464,7 @@ public class RecipeManager {
 
         public static RecipeType getTypeFromName(String name) {
             if (name.equalsIgnoreCase("Shaped2x2") || name.equalsIgnoreCase("Shaped3x3")) {
-                CraftBook.logger.warn("You are using deprecated recipe type '" + name + "', we recommend you change it to 'shaped'!");
+                CraftBook.LOGGER.warn("You are using deprecated recipe type '" + name + "', we recommend you change it to 'shaped'!");
                 return SHAPED;
             }
 

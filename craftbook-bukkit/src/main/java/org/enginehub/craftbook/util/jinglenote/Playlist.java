@@ -68,7 +68,7 @@ public class Playlist {
         lines.clear();
         File file = new File(new File(ICManager.inst().getMidiFolder(), "playlists"), playlist + ".txt");
         if (!file.exists()) {
-            CraftBook.logger.error("Playlist File Not Found! " + file.getName());
+            CraftBook.LOGGER.error("Playlist File Not Found! " + file.getName());
             return;
         }
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
@@ -203,7 +203,7 @@ public class Playlist {
                 if (sequencer != null) continue; //Don't continue until they've closed.
 
                 if (position >= lines.size()) {
-                    CraftBook.logger.warn("Playlist: " + playlist + " ended unexpectedly! Is your playlist file correct?");
+                    CraftBook.LOGGER.warn("Playlist: " + playlist + " ended unexpectedly! Is your playlist file correct?");
                     break; //He's dead, Jim
                 }
 
@@ -256,7 +256,7 @@ public class Playlist {
                     }
 
                     if (file == null) {
-                        CraftBook.logger.warn("Failed to find midi file: " + midiName + " for playlist file: " + playlist + ". Skipping midi!");
+                        CraftBook.LOGGER.warn("Failed to find midi file: " + midiName + " for playlist file: " + playlist + ". Skipping midi!");
                         continue;
                     }
 

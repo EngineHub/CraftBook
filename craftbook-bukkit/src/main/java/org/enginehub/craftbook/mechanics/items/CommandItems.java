@@ -159,12 +159,12 @@ public class CommandItems extends AbstractCraftBookMechanic {
                 CraftBookPlugin.logDebugMessage("Added CommandItem: " + key, "command-items.initialize");
                 amount++;
             } else
-                CraftBook.logger.warn("Failed to add CommandItem: " + key);
+                CraftBook.LOGGER.warn("Failed to add CommandItem: " + key);
         }
 
         config.save();
 
-        CraftBook.logger.info("Successfully added " + amount + " CommandItems!");
+        CraftBook.LOGGER.info("Successfully added " + amount + " CommandItems!");
 
         if (definitions.size() > 0) {
             Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), () -> {

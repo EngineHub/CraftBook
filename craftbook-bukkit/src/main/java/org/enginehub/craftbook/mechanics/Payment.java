@@ -45,7 +45,7 @@ public class Payment extends AbstractCraftBookMechanic {
     @Override
     public void enable() throws MechanicInitializationException {
         if (CraftBookPlugin.plugins.getEconomy() == null) {
-            CraftBook.logger.warn("An economy plugin and Vault is required for the Payment mechanic!");
+            CraftBook.LOGGER.warn("An economy plugin and Vault is required for the Payment mechanic!");
         }
     }
 

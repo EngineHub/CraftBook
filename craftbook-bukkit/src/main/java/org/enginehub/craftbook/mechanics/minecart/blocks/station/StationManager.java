@@ -14,7 +14,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.minecart;
+package org.enginehub.craftbook.mechanics.minecart.blocks.station;
 
 import java.util.HashMap;
 import java.util.Map;

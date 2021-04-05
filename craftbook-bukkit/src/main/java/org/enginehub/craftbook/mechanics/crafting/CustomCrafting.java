@@ -97,7 +97,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                 recipes++;
             }
         }
-        CraftBook.logger.info("Registered " + recipes + " custom recipes!");
+        CraftBook.LOGGER.info("Registered " + recipes + " custom recipes!");
     }
 
     @Override
@@ -118,7 +118,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
      */
     public boolean addRecipe(RecipeManager.Recipe r) {
         if (registeredNames.contains(r.getId())) {
-            CraftBook.logger.warn("A recipe with name " + r.getId() + " has already been registered by CraftBook. Due to a "
+            CraftBook.LOGGER.warn("A recipe with name " + r.getId() + " has already been registered by CraftBook. Due to a "
                 + "limitation in Bukkit-derivitive servers, this can't be registered again without a restart.");
             return false;
         }
@@ -161,11 +161,11 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
 
             return true;
         } catch (IllegalArgumentException e) {
-            CraftBook.logger.error("Corrupt or invalid recipe!");
-            CraftBook.logger.error("Please either delete custom-crafting.yml, or fix the issues with your recipes file!");
+            CraftBook.LOGGER.error("Corrupt or invalid recipe!");
+            CraftBook.LOGGER.error("Please either delete custom-crafting.yml, or fix the issues with your recipes file!");
             e.printStackTrace();
         } catch (Exception e) {
-            CraftBook.logger.error("Failed to load recipe! Is it incorrectly written?", e);
+            CraftBook.LOGGER.error("Failed to load recipe! Is it incorrectly written?", e);
         }
 
         return false;

@@ -679,8 +679,8 @@ public class ICManager {
                         + (ric.getFactory() instanceof RestrictedIC ? ChatColor.DARK_RED + "R " : ""));
                 }
             } catch (Throwable e) {
-                CraftBook.logger.warn("An error occurred generating the docs for IC: " + ic + ".");
-                CraftBook.logger.warn("Please report this error on: https://discord.gg/enginehub");
+                CraftBook.LOGGER.warn("An error occurred generating the docs for IC: " + ic + ".");
+                CraftBook.LOGGER.warn("Please report this error on: https://discord.gg/enginehub");
             }
         }
 

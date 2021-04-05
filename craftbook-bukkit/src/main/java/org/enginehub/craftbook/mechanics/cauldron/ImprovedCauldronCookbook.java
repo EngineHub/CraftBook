@@ -51,7 +51,7 @@ public class ImprovedCauldronCookbook {
         try {
             config.load();
         } catch (IOException e) {
-            CraftBook.logger.error("Corrupt Cauldron cauldron-recipes.yml File! Make sure that the correct syntax has been used, and that there are no tabs!");
+            CraftBook.LOGGER.error("Corrupt Cauldron cauldron-recipes.yml File! Make sure that the correct syntax has been used, and that there are no tabs!");
             e.printStackTrace();
         }
 
@@ -123,7 +123,7 @@ public class ImprovedCauldronCookbook {
                     }
                 }
             } catch (Exception e) {
-                CraftBook.logger.error("An error occured generating ingredients for cauldron recipe: " + id);
+                CraftBook.LOGGER.error("An error occured generating ingredients for cauldron recipe: " + id);
                 e.printStackTrace();
             }
             return items;

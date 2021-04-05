@@ -16,6 +16,7 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
+import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.block.Chest;
@@ -235,21 +236,14 @@ public class CartDeposit extends CartBlockMechanism {
     }
 
     @Override
-    public String getName() {
+    public List<String> getApplicableSigns() {
 
-        return "Deposit";
-    }
-
-    @Override
-    public String[] getApplicableSigns() {
-
-        return new String[] { "Collect", "Deposit" };
+        return ImmutableList.copyOf(new String[] { "Collect", "Deposit" });
     }
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
         config.setComment("block", "Sets the block that is the base of the deposit mechanic.");
-        material = BlockParser.getBlock(config.getString("block", BlockTypes.IRON_ORE.getId()), true);
+        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.IRON_ORE.getId()), true));
     }
 }

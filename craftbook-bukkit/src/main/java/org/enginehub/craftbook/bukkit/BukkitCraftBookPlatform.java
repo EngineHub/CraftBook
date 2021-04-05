@@ -90,8 +90,8 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
         try {
             config.load();
         } catch (Throwable e) {
-            CraftBook.logger.error("Failed to load CraftBook Configuration File! Is it corrupt?", e);
-            CraftBook.logger.error("Disabling CraftBook due to invalid Configuration File!");
+            CraftBook.LOGGER.error("Failed to load CraftBook Configuration File! Is it corrupt?", e);
+            CraftBook.LOGGER.error("Disabling CraftBook due to invalid Configuration File!");
             Bukkit.getPluginManager().disablePlugin(CraftBookPlugin.inst());
             return;
         }

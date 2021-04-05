@@ -38,7 +38,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("HiddenSwitch", org.enginehub.craftbook.mechanics.HiddenSwitch.class, MechanicCategory.GENERAL);
 //        registerMechanic("Bridge", org.enginehub.craftbook.mechanics.area.simple.Bridge.class, MechanicCategory.GENERAL);
 //        registerMechanic("Door", org.enginehub.craftbook.mechanics.area.simple.Door.class, MechanicCategory.GENERAL);
-//        registerMechanic("Elevator", org.enginehub.craftbook.mechanics.Elevator.class, MechanicCategory.GENERAL);
 //        registerMechanic("Teleporter", org.enginehub.craftbook.mechanics.Teleporter.class, MechanicCategory.GENERAL);
 //        registerMechanic("ToggleArea", org.enginehub.craftbook.mechanics.area.Area.class, MechanicCategory.GENERAL);
 //        registerMechanic("Cauldron", org.enginehub.craftbook.mechanics.cauldron.ImprovedCauldron.class, MechanicCategory.CUSTOMISATION);
@@ -387,6 +386,15 @@ public class BukkitMechanicManager extends MechanicManager {
             .description(TranslatableComponent.of("craftbook.betterai.description"))
             .className("org.enginehub.craftbook.mechanics.betterai.BetterAI")
             .category(MechanicCategory.GENERAL)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("minecart_reverser")
+            .name("MinecartReverser")
+            .description(TranslatableComponent.of("craftbook.minecartreverser.description"))
+            .className("org.enginehub.craftbook.mechanics.minecart.blocks.CartReverser")
+            .category(MechanicCategory.MINECART)
             .buildAndRegister();
 
         // TODO CommandItems needs to load early (after variables).

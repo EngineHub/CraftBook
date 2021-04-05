@@ -17,6 +17,7 @@
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.event.EventHandler;
@@ -53,22 +54,10 @@ public class CartBooster extends CartBlockMechanism {
         event.getVehicle().setVelocity(newVelocity);
     }
 
-    @Override
-    public String getName() {
-
-        return "Booster";
-    }
-
-    @Override
-    public String[] getApplicableSigns() {
-
-        return null;
-    }
-
-    private BlockStateHolder minecartSpeedModMaxBoostBlock;
-    private BlockStateHolder minecartSpeedMod25xBoostBlock;
-    private BlockStateHolder minecartSpeedMod50xSlowBlock;
-    private BlockStateHolder minecartSpeedMod20xSlowBlock;
+    private BaseBlock minecartSpeedModMaxBoostBlock;
+    private BaseBlock minecartSpeedMod25xBoostBlock;
+    private BaseBlock minecartSpeedMod50xSlowBlock;
+    private BaseBlock minecartSpeedMod20xSlowBlock;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {

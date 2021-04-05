@@ -9,4 +9,5 @@ object Versions {
     const val FAST_UTIL = "8.2.1"
     const val GUAVA = "21.0"
     const val GSON = "2.8.0"
+    const val LOG4J = "2.8.1"
 }

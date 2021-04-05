@@ -54,7 +54,7 @@ public class BukkitSelfTriggerManager implements SelfTriggerManager, Listener {
 
     @Override
     public void setup() {
-        CraftBook.logger.info("Enumerating chunks for self-triggered components...");
+        CraftBook.LOGGER.info("Enumerating chunks for self-triggered components...");
 
         long start = System.currentTimeMillis();
         int numChunks = 0;
@@ -67,7 +67,7 @@ public class BukkitSelfTriggerManager implements SelfTriggerManager, Listener {
             numChunks += chunks.length;
         }
 
-        CraftBook.logger.info(numChunks + " chunk(s) for " + Bukkit.getWorlds().size() + " world(s) processed " + "(" + (System.currentTimeMillis() - start) + "ms elapsed)");
+        CraftBook.LOGGER.info(numChunks + " chunk(s) for " + Bukkit.getWorlds().size() + " world(s) processed " + "(" + (System.currentTimeMillis() - start) + "ms elapsed)");
 
         // Set up the clock for self-triggered ICs.
         clockTask = Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), mechanicClock, 0, CraftBook.getInstance().getPlatform().getConfiguration().stThinkRate);
@@ -115,7 +115,7 @@ public class BukkitSelfTriggerManager implements SelfTriggerManager, Listener {
                     unregisterSelfTrigger(location, UnregisterReason.NOT_HANDLED);
                 }
             } catch (Throwable t) { // Mechanic failed to think for some reason
-                CraftBook.logger.warn("CraftBook mechanic: Failed to think for " + location.toString(), t);
+                CraftBook.LOGGER.warn("CraftBook mechanic: Failed to think for " + location.toString(), t);
                 unregisterSelfTrigger(location, UnregisterReason.ERROR);
             }
         }
@@ -139,7 +139,7 @@ public class BukkitSelfTriggerManager implements SelfTriggerManager, Listener {
                 }
             }
         } catch (Throwable e) {
-            CraftBook.logger.warn("A corrupt tile entity was found in the chunk: (world: " + chunk.getWorld().getName() + " x: " + chunk.getX() + " z: " + chunk.getZ() + ") Self-Triggering mechanics may not work here until the issue is resolved.", e);
+            CraftBook.LOGGER.warn("A corrupt tile entity was found in the chunk: (world: " + chunk.getWorld().getName() + " x: " + chunk.getX() + " z: " + chunk.getZ() + ") Self-Triggering mechanics may not work here until the issue is resolved.", e);
         }
     }
 

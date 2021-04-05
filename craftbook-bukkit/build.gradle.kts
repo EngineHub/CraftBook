@@ -32,7 +32,9 @@ repositories {
 dependencies {
     "compile"(project(":craftbook-core"))
     "compile"(project(":craftbook-libs:bukkit"))
-    "api"("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
+    "api"("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT") {
+        exclude(group = "org.slf4j", module = "slf4j-api")
+    }
     "api"("com.sk89q.worldedit:worldedit-bukkit:${Versions.WORLDEDIT}") {
         exclude(group = "org.spigotmc")
     }
@@ -42,6 +44,9 @@ dependencies {
     "implementation"("net.milkbowl.vault:VaultAPI:1.7") { isTransitive = false }
     "implementation"("com.comphenix.protocol:ProtocolLib:4.5.1") { isTransitive = false }
     "implementation"("org.bstats:bstats-bukkit:2.2.1")
+
+    "implementation"(platform("org.apache.logging.log4j:log4j-bom:2.8.1"))
+    "implementation"("org.apache.logging.log4j:log4j-api")
 
     "compileOnly"("com.sk89q.worldedit.worldedit-libs:ap:${Versions.WORLDEDIT}")
     "annotationProcessor"("com.sk89q.worldedit.worldedit-libs:ap:${Versions.WORLDEDIT}")

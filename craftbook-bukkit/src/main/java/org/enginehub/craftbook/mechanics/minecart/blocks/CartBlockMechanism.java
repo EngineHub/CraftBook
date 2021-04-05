@@ -16,9 +16,11 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
+import com.google.common.collect.ImmutableList;
 import com.sk89q.worldedit.util.auth.AuthorizationException;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BaseBlock;
-import com.sk89q.worldedit.world.block.BlockStateHolder;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -36,6 +38,7 @@ import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.RedstoneUtil;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
 
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -48,10 +51,14 @@ import java.util.Locale;
  */
 public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
 
-    protected BaseBlock material;
+    private BaseBlock block;
 
     public BaseBlock getBlock() {
-        return this.material;
+        return this.block;
+    }
+
+    public void setBlock(BaseBlock block) {
+        this.block = block;
     }
 
     public static final BlockFace[] powerSupplyOptions = new BlockFace[] {
@@ -68,7 +75,6 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
      *     members).
      */
     public static Power isActive(CartMechanismBlocks blocks) {
-
         boolean isWired = false;
         if (blocks.hasSign()) {
             switch (isActive(blocks.sign)) {
@@ -80,6 +86,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
                     isWired = true;
             }
         }
+
         if (blocks.hasBase()) {
             switch (isActive(blocks.base)) {
                 case ON:
@@ -90,6 +97,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
                     isWired = true;
             }
         }
+
         if (blocks.hasRail()) {
             switch (isActive(blocks.rail)) {
                 case ON:
@@ -100,19 +108,20 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
                     isWired = true;
             }
         }
+
         return isWired ? Power.OFF : Power.NA;
     }
 
     /**
      * Checks if any of the blocks horizonally adjacent to the given block are powered wires.
      *
-     * @param block
+     * @param block The block to check
      * @return the appropriate Power state (see the documentation for {@link RedstoneUtil.Power}'s
      *     members).
      */
     private static Power isActive(Block block) {
-
         boolean isWired = false;
+
         for (BlockFace face : powerSupplyOptions) {
             Power p = RedstoneUtil.isPowered(block, face);
             switch (p) {
@@ -124,6 +133,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
                     isWired = true;
             }
         }
+
         return isWired ? Power.OFF : Power.NA;
     }
 
@@ -138,62 +148,74 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
      *     returned.)
      */
     public static Minecart getCart(Block rail) {
-
         for (Entity ent : rail.getChunk().getEntities()) {
-            if (!(ent instanceof Minecart))
+            if (!(ent instanceof Minecart)) {
                 continue;
-            if (BoundingBox.of(rail).contains(ent.getBoundingBox()))
+            }
+            if (BoundingBox.of(rail).contains(ent.getBoundingBox())) {
                 return (Minecart) ent;
+            }
         }
+
         return null;
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
+        if (getApplicableSigns().isEmpty() || !EventUtil.passesFilter(event)) {
+            return;
+        }
 
         Block block = event.getBlock();
         String[] lines = event.getLines();
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         try {
-            if (getApplicableSigns() == null || getApplicableSigns().length == 0) return;
             boolean found = false;
             String lineFound = null;
-            int lineNum = 1;
+
             for (String sign : getApplicableSigns()) {
                 if (lines[1].equalsIgnoreCase('[' + sign + ']')) {
                     found = true;
                     lineFound = sign;
-                    lineNum = 1;
-                    break;
-                } else if (this instanceof CartMessenger && lines[0].equalsIgnoreCase('[' + sign + ']')) {
-                    found = true;
-                    lineFound = sign;
-                    lineNum = 0;
                     break;
                 }
             }
-            if (!found) return;
+
+            if (!found) {
+                return;
+            }
             if (!verify(CraftBookBukkitUtil.toChangedSign(event.getBlock(), lines, player), player)) {
                 block.breakNaturally();
                 event.setCancelled(true);
                 return;
             }
-            player.checkPermission("craftbook.vehicles." + getName().toLowerCase(Locale.ENGLISH));
-            event.setLine(lineNum, '[' + lineFound + ']');
-            player.print(getName() + " Created!");
+
+            player.checkPermission("craftbook.vehicles." + getNodeId().toLowerCase(Locale.ENGLISH));
+            event.setLine(1, '[' + lineFound + ']');
+            player.print(getNodeId() + " Created!");
         } catch (AuthorizationException e) {
-            player.printError("vehicles.create-permission");
+            player.printError(TranslatableComponent.of(
+                "craftbook.mechanisms.create-permission",
+                TextComponent.of(getMechanicType().getName())
+            ));
             block.breakNaturally();
             event.setCancelled(true);
         }
     }
 
-    public abstract String getName();
+    /**
+     * Gets the identifier for this mechanic in permission nodes and translation nodes.
+     *
+     * @return The node ID.
+     */
+    protected String getNodeId() {
+        return getMechanicType().getId().replace("_", "");
+    }
 
-    public abstract String[] getApplicableSigns();
+    public List<String> getApplicableSigns() {
+        return ImmutableList.of();
+    }
 
     public boolean verify(ChangedSign sign, CraftBookPlayer player) {
         return true;

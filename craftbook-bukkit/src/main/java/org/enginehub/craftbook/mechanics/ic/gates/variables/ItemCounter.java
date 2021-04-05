@@ -92,7 +92,7 @@ public class ItemCounter extends AbstractIC {
 
                 VariableManager.instance.setVariable(variableKey, val);
             } catch (VariableException e) {
-                CraftBook.logger.error("Failed to tick IC at " + getBackBlock().getLocation(), e);
+                CraftBook.LOGGER.error("Failed to tick IC at " + getBackBlock().getLocation(), e);
             }
         }
     }

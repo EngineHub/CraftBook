@@ -77,7 +77,7 @@ import org.enginehub.craftbook.mechanics.minecart.blocks.CartMaxSpeed;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMessenger;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartReverser;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartSorter;
-import org.enginehub.craftbook.mechanics.minecart.blocks.CartStation;
+import org.enginehub.craftbook.mechanics.minecart.blocks.station.CartStation;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartTeleporter;
 import org.enginehub.craftbook.mechanics.pipe.Pipes;
 import org.enginehub.craftbook.mechanics.signcopier.SignCopier;

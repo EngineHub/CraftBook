@@ -103,7 +103,10 @@ public class Marquee extends AbstractCraftBookMechanic {
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if (!lplayer.hasPermission("craftbook.marquee.create")) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                lplayer.printError("mech.create-permission");
+                lplayer.printError(TranslatableComponent.of(
+                    "craftbook.mechanisms.create-permission",
+                    TextComponent.of(getMechanicType().getName())
+                ));
             }
             SignUtil.cancelSignChange(event);
             return;

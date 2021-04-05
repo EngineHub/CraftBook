@@ -14,8 +14,9 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.minecart.blocks;
+package org.enginehub.craftbook.mechanics.minecart.blocks.station;
 
+import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Location;
@@ -26,6 +27,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import org.enginehub.craftbook.mechanics.minecart.blocks.CartBlockMechanism;
+import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
@@ -33,6 +36,8 @@ import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.ItemSyntax;
 import org.enginehub.craftbook.util.ItemUtil;
 import org.enginehub.craftbook.util.SignUtil;
+
+import java.util.List;
 
 import static org.enginehub.craftbook.util.CartUtil.stop;
 
@@ -136,21 +141,15 @@ public class CartStation extends CartBlockMechanism {
     }
 
     @Override
-    public String getName() {
+    public List<String> getApplicableSigns() {
 
-        return "Station";
-    }
-
-    @Override
-    public String[] getApplicableSigns() {
-
-        return new String[] { "station" };
+        return ImmutableList.copyOf(new String[] { "station" });
     }
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
 
         config.setComment("block", "Sets the block that is the base of the station mechanic.");
-        material = BlockParser.getBlock(config.getString("block", BlockTypes.OBSIDIAN.getId()), true);
+        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.OBSIDIAN.getId()), true));
     }
 }

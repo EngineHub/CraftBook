@@ -42,7 +42,6 @@ import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartBlockMechanism;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
@@ -298,14 +297,11 @@ final class MechanicListenerAdapter implements Listener {
 
         if (CartBlockRedstoneEvent.getHandlerList().getRegisteredListeners().length != 0) {
             Bukkit.getServer().getScheduler().runTask(CraftBookPlugin.inst(), () -> {
-                try {
-                    CartMechanismBlocks cmb = CartMechanismBlocks.find(event.getBlock());
-                    CartBlockRedstoneEvent ev =
-                        new CartBlockRedstoneEvent(event.getBlock(), event.getSource(), event.getOldCurrent(), event.getNewCurrent(), cmb,
-                            CartBlockMechanism.getCart(cmb.rail));
-                    CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
-                } catch (InvalidMechanismException ignored) {
-                }
+                CartMechanismBlocks cmb = CartMechanismBlocks.find(event.getBlock());
+                CartBlockRedstoneEvent ev =
+                    new CartBlockRedstoneEvent(event.getBlock(), event.getSource(), event.getOldCurrent(), event.getNewCurrent(), cmb,
+                        CartBlockMechanism.getCart(cmb.rail));
+                CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
             });
         }
     }
@@ -322,20 +318,18 @@ final class MechanicListenerAdapter implements Listener {
         }
 
         if (event.getVehicle() instanceof Minecart) {
-            try {
-                Minecart cart = (Minecart) event.getVehicle();
-                CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(event.getTo().getBlock());
-                cmb.setFromBlock(event.getFrom().getBlock());
-                Location from = event.getFrom();
-                Location to = event.getTo();
-                if (!LocationUtil.isWithinSphericalRadius(from, to, 2)) {//Further than max distance
-                    return;
-                }
-                boolean minor = from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY() && from.getBlockZ() == to.getBlockZ();
-                CartBlockImpactEvent ev = new CartBlockImpactEvent(cart, from, to, cmb, minor);
-                CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
-            } catch (InvalidMechanismException ignored) {
+            Minecart cart = (Minecart) event.getVehicle();
+            CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(event.getTo().getBlock());
+            Location from = event.getFrom();
+            Location to = event.getTo();
+
+            if (!LocationUtil.isWithinSphericalRadius(from, to, 2)) { //Further than max distance
+                return;
             }
+
+            boolean minor = from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY() && from.getBlockZ() == to.getBlockZ();
+            CartBlockImpactEvent ev = new CartBlockImpactEvent(cart, from, to, cmb, minor);
+            CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
         }
     }
 
@@ -351,16 +345,13 @@ final class MechanicListenerAdapter implements Listener {
         }
 
         if (event.getVehicle() instanceof Minecart) {
-            try {
-                Minecart cart = (Minecart) event.getVehicle();
-                Block block = event.getVehicle().getLocation().getBlock();
-                CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(block);
-                cmb.setFromBlock(block); // WAI
-                CartBlockEnterEvent ev = new CartBlockEnterEvent(cart, event.getEntered(), cmb);
-                CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
-                if (ev.isCancelled())
-                    event.setCancelled(true);
-            } catch (InvalidMechanismException ignored) {
+            Minecart cart = (Minecart) event.getVehicle();
+            Block block = event.getVehicle().getLocation().getBlock();
+            CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(block);
+            CartBlockEnterEvent ev = new CartBlockEnterEvent(cart, event.getEntered(), cmb);
+            CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
+            if (ev.isCancelled()) {
+                event.setCancelled(true);
             }
         }
     }

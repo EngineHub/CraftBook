@@ -16,6 +16,7 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
+import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Location;
@@ -28,6 +29,8 @@ import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.CartUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.RegexUtil;
+
+import java.util.List;
 
 public class CartTeleporter extends CartBlockMechanism {
 
@@ -55,15 +58,10 @@ public class CartTeleporter extends CartBlockMechanism {
             z = Double.parseDouble(pts[2].trim());
         } catch (NumberFormatException e) {
             // incorrect format, just set them still and let them figure it out
-            if (event.getBlocks().from != null) {
-                x = event.getBlocks().from.getX();
-                y = event.getBlocks().from.getY();
-                z = event.getBlocks().from.getZ();
-            } else {
-                x = event.getBlocks().rail.getX();
-                y = event.getBlocks().rail.getY();
-                z = event.getBlocks().rail.getZ();
-            }
+            x = event.getFrom().getX();
+            y = event.getFrom().getY();
+            z = event.getFrom().getZ();
+
             CartUtil.stop(event.getMinecart());
         }
 
@@ -89,21 +87,15 @@ public class CartTeleporter extends CartBlockMechanism {
     }
 
     @Override
-    public String getName() {
+    public List<String> getApplicableSigns() {
 
-        return "Teleporter";
-    }
-
-    @Override
-    public String[] getApplicableSigns() {
-
-        return new String[] { "Teleport" };
+        return ImmutableList.copyOf(new String[] { "Teleport" });
     }
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
 
         config.setComment("block", "Sets the block that is the base of the teleport mechanic.");
-        material = BlockParser.getBlock(config.getString("block", BlockTypes.EMERALD_BLOCK.getId()), true);
+        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.EMERALD_BLOCK.getId()), true));
     }
 }

@@ -111,12 +111,12 @@ public class CraftBookPlugin extends JavaPlugin {
                 }
                 try {
                     Files.copy(stream, actual);
-                    CraftBook.logger.info("Default configuration file written: " + name);
+                    CraftBook.LOGGER.info("Default configuration file written: " + name);
                 } catch (IOException e) {
-                    CraftBook.logger.warn("Failed to write default config file", e);
+                    CraftBook.LOGGER.warn("Failed to write default config file", e);
                 }
             } catch (IOException e) {
-                CraftBook.logger.error("Unable to read default configuration: " + name);
+                CraftBook.LOGGER.error("Unable to read default configuration: " + name);
             }
         }
     }
@@ -495,7 +495,7 @@ public class CraftBookPlugin extends JavaPlugin {
             return;
         }
 
-        CraftBook.logger.info("[Debug][" + code + "] " + message);
+        CraftBook.LOGGER.info("[Debug][" + code + "] " + message);
 
         if (CraftBook.getInstance().getPlatform().getConfiguration().debugLogToFile) {
             debugLogger.println("[" + code + "] " + message);

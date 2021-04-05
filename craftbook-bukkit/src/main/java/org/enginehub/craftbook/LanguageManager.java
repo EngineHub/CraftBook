@@ -85,8 +85,6 @@ public class LanguageManager {
         put("mech.hiddenswitch.key", "The key did not fit!");
         put("mech.hiddenswitch.toggle", "You hear the muffled click of a switch!");
 
-        put("mech.lightswitch.create", "Light Switch Created!");
-
         put("mech.map.create", "Map Changer Created!");
         put("mech.map.invalid", "Invalid Map ID!");
 
@@ -99,9 +97,6 @@ public class LanguageManager {
         put("mech.pistons.supersticky.created", "Piston Super-Sticky Mechanic Created!");
         put("mech.pistons.bounce.created", "Piston Bounce Mechanic Created!");
         put("mech.pistons.superpush.created", "Piston Super-Push Mechanic Created!");
-
-        put("mech.signcopy.copy", "You have copied the sign!");
-        put("mech.signcopy.paste", "You have pasted the sign!");
 
         put("mech.teleport.create", "Teleporter Created!");
         put("mech.teleport.alert", "You Teleported!");
@@ -119,10 +114,6 @@ public class LanguageManager {
 
         put("circuits.pipes.create", "Pipe created!");
         put("circuits.pipes.pipe-not-found", "Failed to find pipe!");
-
-
-        put("vehicles.create-permission", "You don't have permissions to create this vehicle mechanic!");
-
 
         put("worldedit.ic.unsupported", "WorldEdit selection type currently unsupported for IC's!");
         put("worldedit.ic.notfound", "WorldEdit not found!");

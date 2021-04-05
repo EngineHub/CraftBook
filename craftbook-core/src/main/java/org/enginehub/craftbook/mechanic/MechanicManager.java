@@ -99,9 +99,9 @@ public abstract class MechanicManager {
                 try {
                     enableMechanic(mechanicType);
                 } catch (UnsatisfiedLoadDependencyException e) {
-                    CraftBook.logger.warn("Failed to load mechanic: " + e.getMechanicType().getName() + ". " + e.getMessage());
+                    CraftBook.LOGGER.warn("Failed to load mechanic: " + e.getMechanicType().getName() + ". " + e.getMessage());
                 } catch (MechanicInitializationException e) {
-                    CraftBook.logger.warn("Failed to load mechanic: " + e.getMechanicType().getId() + ". " + e.getMessage());
+                    CraftBook.LOGGER.warn("Failed to load mechanic: " + e.getMechanicType().getId() + ". " + e.getMessage());
                     if (e.getCause() != null) {
                         e.getCause().printStackTrace();
                     }
