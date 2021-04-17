@@ -49,7 +49,7 @@ public class BetterAI extends AbstractCraftBookMechanic {
         }
 
         if (isEntityEnabled(event.getEntity(), attackPassive) && event.getEntity() instanceof Monster) {
-            Bukkit.getServer().getMobGoals().addGoal((Monster) event.getEntity(), 1, new AttackPassiveGoal((Monster) event.getEntity()));
+            Bukkit.getServer().getMobGoals().addGoal((Monster) event.getEntity(), 5, new AttackPassiveGoal((Monster) event.getEntity()));
         }
     }
 
