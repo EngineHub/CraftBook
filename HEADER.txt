@@ -1,4 +1,3 @@
-CraftBook Copyright (C) me4502 <https://matthewmiller.dev/>
 CraftBook Copyright (C) EngineHub and Contributors <https://enginehub.org/>
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
