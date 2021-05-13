@@ -158,7 +158,7 @@ final class MechanicListenerAdapter implements Listener {
         }
 
         if (power != 0) {
-            handleRedstoneForBlock(block, build ? 0 : power, build ? power : 0);
+            handleRedstoneForBlock(block, build ? 0 : power, build ? power : 0, 0);
         }
     }
 
@@ -174,10 +174,14 @@ final class MechanicListenerAdapter implements Listener {
             return;
         }
 
-        handleRedstoneForBlock(event.getBlock(), event.getOldCurrent(), event.getNewCurrent());
+        handleRedstoneForBlock(event.getBlock(), event.getOldCurrent(), event.getNewCurrent(), 1);
     }
 
-    private static void handleRedstoneForBlock(Block block, int oldLevel, int newLevel) {
+    private static void handleRedstoneForBlock(Block block, int oldLevel, int newLevel, int depth) {
+        if (depth > 4) {
+            // Ignore recursive redstone.
+            return;
+        }
         boolean wasOn = oldLevel >= 1;
         boolean isOn = newLevel >= 1;
         boolean wasChange = wasOn != isOn;
@@ -239,7 +243,7 @@ final class MechanicListenerAdapter implements Listener {
                 handleDirectWireInput(relativeBlock, block, oldLevel, newLevel);
 
                 if (relativeBlock.getPistonMoveReaction() != PistonMoveReaction.BREAK) {
-                    handleRedstoneForBlock(relativeBlock, oldLevel, newLevel);
+                    handleRedstoneForBlock(relativeBlock, oldLevel, newLevel, depth + 1);
                 }
                 return;
             case ACACIA_BUTTON:
@@ -252,7 +256,7 @@ final class MechanicListenerAdapter implements Listener {
             case LEVER:
                 Directional button = (Directional) block.getBlockData();
                 BlockFace face = button.getFacing().getOppositeFace();
-                handleRedstoneForBlock(block.getRelative(face), oldLevel, newLevel);
+                handleRedstoneForBlock(block.getRelative(face), oldLevel, newLevel, depth + 1);
                 break;
             case POWERED_RAIL:
             case ACTIVATOR_RAIL:
