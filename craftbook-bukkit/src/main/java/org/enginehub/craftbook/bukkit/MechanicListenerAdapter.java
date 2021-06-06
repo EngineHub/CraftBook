@@ -301,10 +301,12 @@ final class MechanicListenerAdapter implements Listener {
         if (CartBlockRedstoneEvent.getHandlerList().getRegisteredListeners().length != 0) {
             Bukkit.getServer().getScheduler().runTask(CraftBookPlugin.inst(), () -> {
                 CartMechanismBlocks cmb = CartMechanismBlocks.find(event.getBlock());
-                CartBlockRedstoneEvent ev =
-                    new CartBlockRedstoneEvent(event.getBlock(), event.getSource(), event.getOldCurrent(), event.getNewCurrent(), cmb,
-                        CartBlockMechanism.getCart(cmb.rail));
-                CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
+                if (cmb != null) {
+                    CartBlockRedstoneEvent ev =
+                        new CartBlockRedstoneEvent(event.getBlock(), event.getSource(), event.getOldCurrent(), event.getNewCurrent(), cmb,
+                            CartBlockMechanism.getCart(cmb.rail));
+                    CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
+                }
             });
         }
     }
