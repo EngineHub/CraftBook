@@ -10,6 +10,7 @@ import com.sk89q.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReas
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
@@ -90,6 +91,33 @@ public class SelfTriggeringManager implements Listener {
     private Location[] registeredLocations;
     private boolean hasChanged = false;
 
+    private boolean areAdjacentChunksLoaded(Location loc) {
+        World world = loc.getWorld();
+
+        final int CX = loc.getBlockX() >> 4;
+        final int CZ = loc.getBlockZ() >> 4;
+
+        for (int x = -1; x <= 1; ++x) {
+            for (int z = -1; z <= 1; ++z) {
+                // Check only cardinal directions
+                if (x != 0 && z != 0) {
+                    continue;
+                }
+
+                // Don't test the current chunk
+                if (x == 0 && z == 0) {
+                    continue;
+                }
+
+                if (!world.isChunkLoaded(CX + x, CZ + z)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     /**
      * Causes all thinking mechanics to think.
      */
@@ -106,6 +134,13 @@ public class SelfTriggeringManager implements Listener {
                 unregisterSelfTrigger(location, UnregisterReason.UNLOAD);
                 continue;
             }
+
+            // If some of the adjacent chunks aren't loaded, don't self trigger the IC yet; effectively "pause" it.
+            // This prevents some occasionally serious chunk thrashing.
+            if (!areAdjacentChunksLoaded(location)) {
+                continue;
+            }
+
             try {
                 SelfTriggerThinkEvent event = new SelfTriggerThinkEvent(location.getBlock());
                 Bukkit.getServer().getPluginManager().callEvent(event);
