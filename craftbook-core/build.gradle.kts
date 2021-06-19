@@ -31,7 +31,7 @@ configurations {
 }
 
 dependencies {
-    "compile"(project(":craftbook-libs:core"))
+    "api"(project(":craftbook-libs:core"))
     "api"("com.sk89q.worldedit:worldedit-core:${Versions.WORLDEDIT}")
     "api"("com.sk89q.worldguard:worldguard-core:${Versions.WORLDGUARD}")
     "implementation"("org.yaml:snakeyaml:1.9")
@@ -68,5 +68,12 @@ tasks.named<Copy>("processResources") {
             "i18n.zip"
         }
         into("lang")
+    }
+}
+
+configure<PublishingExtension> {
+    publications.named<MavenPublication>("maven") {
+        artifactId = the<BasePluginConvention>().archivesBaseName
+        from(components["java"])
     }
 }

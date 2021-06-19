@@ -1,5 +1,8 @@
+import org.cadixdev.gradle.licenser.LicenseExtension
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.repositories
+import org.gradle.kotlin.dsl.configure
 
 fun Project.applyCommonConfiguration() {
     group = rootProject.group
@@ -14,5 +17,12 @@ fun Project.applyCommonConfiguration() {
         resolutionStrategy {
             cacheChangingModulesFor(5, "minutes")
         }
+    }
+
+    apply(plugin = "org.cadixdev.licenser")
+    configure<LicenseExtension> {
+        header(rootProject.file("HEADER.txt"))
+        include("**/*.java")
+        include("**/*.kt")
     }
 }

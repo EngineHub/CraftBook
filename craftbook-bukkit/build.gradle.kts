@@ -3,8 +3,6 @@ import org.gradle.api.internal.HasConvention
 
 plugins {
     id("java-library")
-    id("net.ltgt.apt-eclipse")
-    id("net.ltgt.apt-idea")
 }
 
 applyPlatformAndCoreConfiguration()
@@ -30,8 +28,8 @@ repositories {
 }
 
 dependencies {
-    "compile"(project(":craftbook-core"))
-    "compile"(project(":craftbook-libs:bukkit"))
+    "api"(project(":craftbook-core"))
+    "api"(project(":craftbook-libs:bukkit"))
     "api"("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT") {
         exclude(group = "org.slf4j", module = "slf4j-api")
     }
@@ -53,18 +51,9 @@ dependencies {
     "annotationProcessor"("com.google.guava:guava:21.0")
 }
 
-tasks.named<Upload>("install") {
-    (repositories as HasConvention).convention.getPlugin<MavenRepositoryHandlerConvention>().mavenInstaller {
-        pom.whenConfigured {
-            dependencies.firstOrNull { dep ->
-                dep!!.withGroovyBuilder {
-                    getProperty("groupId") == "com.destroystokyo.paper" && getProperty("artifactId") == "paper-api"
-                }
-            }?.withGroovyBuilder {
-                setProperty("groupId", "org.bukkit")
-                setProperty("artifactId", "bukkit")
-            }
-        }
+configure<PublishingExtension> {
+    publications.named<MavenPublication>("maven") {
+        from(components["java"])
     }
 }
 
