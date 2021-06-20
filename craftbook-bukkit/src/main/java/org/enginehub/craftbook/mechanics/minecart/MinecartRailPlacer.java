@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.minecart;
 
-import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -54,9 +53,5 @@ public class MinecartRailPlacer extends AbstractCraftBookMechanic {
                 toBlock.setType(Material.RAIL);
             }
         }
-    }
-
-    @Override
-    public void loadFromConfiguration(YAMLProcessor config) {
     }
 }

@@ -15,28 +15,24 @@
 
 package org.enginehub.craftbook.util;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.mock;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(VerifyUtil.class)
 public class VerifyUtilTest {
 
     @Test
     public void testVerifyRadius() {
 
         double rad = VerifyUtil.verifyRadius(7, 15);
-        assertTrue(rad == 7);
+        assertEquals(7, rad);
         rad = VerifyUtil.verifyRadius(20, 15);
-        assertTrue(rad == 15);
+        assertEquals(15, rad);
     }
 
     @Test
@@ -54,7 +50,7 @@ public class VerifyUtilTest {
 
         list = (List<Object>) VerifyUtil.withoutNulls(list);
 
-        assertTrue(!list.contains(null));
-        assertTrue(list.size() == 5);
+        assertFalse(list.contains(null));
+        assertEquals(5, list.size());
     }
 }

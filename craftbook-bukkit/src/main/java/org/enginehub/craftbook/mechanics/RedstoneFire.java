@@ -96,16 +96,10 @@ public class RedstoneFire extends AbstractCraftBookMechanic {
     }
 
     private static boolean canReplaceWithFire(Material type) {
-        switch (type) {
-            case SNOW:
-            case GRASS:
-            case VINE:
-            case DEAD_BUSH:
-            case AIR:
-                return true;
-            default:
-                return false;
-        }
+        return switch (type) {
+            case SNOW, GRASS, VINE, DEAD_BUSH, AIR -> true;
+            default -> false;
+        };
     }
 
     private boolean enableNetherrack;

@@ -322,8 +322,7 @@ final class MechanicListenerAdapter implements Listener {
             return;
         }
 
-        if (event.getVehicle() instanceof Minecart) {
-            Minecart cart = (Minecart) event.getVehicle();
+        if (event.getVehicle() instanceof Minecart cart) {
             CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(event.getTo().getBlock());
             Location from = event.getFrom();
             Location to = event.getTo();
@@ -349,8 +348,7 @@ final class MechanicListenerAdapter implements Listener {
             return;
         }
 
-        if (event.getVehicle() instanceof Minecart) {
-            Minecart cart = (Minecart) event.getVehicle();
+        if (event.getVehicle() instanceof Minecart cart) {
             Block block = event.getVehicle().getLocation().getBlock();
             CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(block);
             CartBlockEnterEvent ev = new CartBlockEnterEvent(cart, event.getEntered(), cmb);

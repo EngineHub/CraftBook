@@ -35,17 +35,26 @@ fun Project.applyLibrariesConfiguration() {
 
     group = "${rootProject.group}.craftbook-libs"
 
+    val relocations = mapOf(
+        "org.enginehub.jinglenote" to "org.enginehub.craftbook.util.jinglenote",
+        "org.enginehub.squirrelid" to "org.enginehub.craftbook.util.profile"
+    )
+
     tasks.register<ShadowJar>("jar") {
         configurations = listOf(project.configurations["shade"])
         archiveClassifier.set("")
 
         dependencies {
             exclude(dependency("com.google.code.findbugs:jsr305:1.3.9"))
+            exclude(dependency("com.google.guava:guava"))
+            exclude(dependency("com.google.code.gson:gson"))
+            exclude(dependency("org.checkerframework:checker-qual"))
             exclude(dependency("org.apache.logging.log4j:log4j-api"))
         }
 
-        relocate("org.enginehub.jinglenote", "org.enginehub.craftbook.util.jinglenote")
-        relocate("org.enginehub.squirrelid", "org.enginehub.craftbook.util.profile")
+        relocations.forEach { (from, to) ->
+            relocate(from, to)
+        }
     }
     val altConfigFiles = { artifactType: String ->
         val deps = configurations["shade"].incoming.dependencies
@@ -70,6 +79,16 @@ fun Project.applyLibrariesConfiguration() {
         from({
             altConfigFiles("sources")
         })
+        relocations.forEach { (from, to) ->
+            val filePattern = Regex("(.*)${from.replace('.', '/')}((?:/|$).*)")
+            val textPattern = Regex.fromLiteral(from)
+            eachFile {
+                filter {
+                    it.replaceFirst(textPattern, to)
+                }
+                path = path.replaceFirst(filePattern, "$1${to.replace('.', '/')}$2")
+            }
+        }
         archiveClassifier.set("sources")
     }
 
@@ -91,7 +110,7 @@ fun Project.applyLibrariesConfiguration() {
             attribute(Category.CATEGORY_ATTRIBUTE, project.objects.named(Category.LIBRARY))
             attribute(Bundling.BUNDLING_ATTRIBUTE, project.objects.named(Bundling.SHADOWED))
             attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, project.objects.named(LibraryElements.JAR))
-            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 8)
+            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 16)
         }
         outgoing.artifact(tasks.named("jar"))
     }
@@ -106,7 +125,7 @@ fun Project.applyLibrariesConfiguration() {
             attribute(Category.CATEGORY_ATTRIBUTE, project.objects.named(Category.LIBRARY))
             attribute(Bundling.BUNDLING_ATTRIBUTE, project.objects.named(Bundling.SHADOWED))
             attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, project.objects.named(LibraryElements.JAR))
-            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 8)
+            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 16)
         }
         outgoing.artifact(tasks.named("jar"))
     }

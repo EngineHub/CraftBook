@@ -169,8 +169,7 @@ public class ChangedSign {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof ChangedSign) {
-            ChangedSign other = (ChangedSign) o;
+        if (o instanceof ChangedSign other) {
             return Objects.equals(other.getType(), getType())
                 && other.getX() == getX()
                 && other.getY() == getY()
@@ -184,7 +183,7 @@ public class ChangedSign {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getType(), this.lines, getX(), getY(), getZ(), block.getWorld().getUID());
+        return Objects.hash(getType(), Arrays.hashCode(this.lines), getX(), getY(), getZ(), block.getWorld().getUID());
     }
 
     @Override

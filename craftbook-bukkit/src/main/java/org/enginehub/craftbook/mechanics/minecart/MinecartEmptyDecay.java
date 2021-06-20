@@ -56,7 +56,7 @@ public class MinecartEmptyDecay extends AbstractCraftBookMechanic {
         }
 
         for (Entity ent : event.getChunk().getEntities()) {
-            if (ent == null || !ent.isValid()) {
+            if (!ent.isValid()) {
                 continue;
             }
             if (!(ent instanceof RideableMinecart)) {

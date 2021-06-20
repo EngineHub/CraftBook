@@ -1,5 +1,25 @@
 import org.ajoberstar.grgit.Grgit
 
+if (!project.hasProperty("gitCommitHash")) {
+    apply(plugin = "org.ajoberstar.grgit")
+    ext["gitCommitHash"] = try {
+        extensions.getByName<Grgit>("grgit").head()?.abbreviatedId
+    } catch (e: Exception) {
+        logger.warn("Error getting commit hash", e)
+
+        "no.git.id"
+    }
+}
+
+// Work around https://github.com/gradle/gradle/issues/4823
+subprojects {
+    if (buildscript.sourceFile?.extension?.toLowerCase() == "kts"
+        && parent != rootProject) {
+        generateSequence(parent) { project -> project.parent.takeIf { it != rootProject } }
+            .forEach { evaluationDependsOn(it.path) }
+    }
+}
+
 logger.lifecycle("""
 *******************************************
  You are building CraftBook!
@@ -11,15 +31,5 @@ logger.lifecycle("""
 *******************************************
 """)
 
+applyCommonConfiguration()
 applyRootArtifactoryConfig()
-
-if (!project.hasProperty("gitCommitHash")) {
-    apply(plugin = "org.ajoberstar.grgit")
-    ext["gitCommitHash"] = try {
-        (ext["grgit"] as Grgit?)?.head()?.abbreviatedId
-    } catch (e: Exception) {
-        logger.warn("Error getting commit hash", e)
-
-        "no_git_id"
-    }
-}

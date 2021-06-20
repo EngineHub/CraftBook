@@ -132,24 +132,14 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             toDrop.setItemMeta(meta);
         } else if (enableMobs) {
             if (overrideNatural) {
-                switch (event.getEntityType()) {
-                    case ZOMBIE:
-                    case GIANT:
-                        toDrop = new ItemStack(Material.ZOMBIE_HEAD, 1);
-                        break;
-                    case CREEPER:
-                        toDrop = new ItemStack(Material.CREEPER_HEAD, 1);
-                        break;
-                    case SKELETON:
-                        toDrop = new ItemStack(Material.SKELETON_SKULL, 1);
-                        break;
-                    case WITHER_SKELETON:
-                        toDrop = new ItemStack(Material.WITHER_SKELETON_SKULL, 1);
-                        break;
-                    case ENDER_DRAGON:
-                        toDrop = new ItemStack(Material.DRAGON_HEAD, 1);
-                        break;
-                }
+                toDrop = switch (event.getEntityType()) {
+                    case ZOMBIE, GIANT -> new ItemStack(Material.ZOMBIE_HEAD, 1);
+                    case CREEPER -> new ItemStack(Material.CREEPER_HEAD, 1);
+                    case SKELETON -> new ItemStack(Material.SKELETON_SKULL, 1);
+                    case WITHER_SKELETON -> new ItemStack(Material.WITHER_SKELETON_SKULL, 1);
+                    case ENDER_DRAGON -> new ItemStack(Material.DRAGON_HEAD, 1);
+                    default -> null;
+                };
 
                 // Fall through here, as we still allow custom overrides.
             }
@@ -293,8 +283,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         if (profile != null) {
             ItemStack toDrop = new ItemStack(Material.PLAYER_HEAD, 1);
             ItemMeta itemMeta = toDrop.getItemMeta();
-            if (itemMeta instanceof SkullMeta) {
-                SkullMeta skullMeta = (SkullMeta) itemMeta;
+            if (itemMeta instanceof SkullMeta skullMeta) {
                 skullMeta.setDisplayName(ChatColor.RESET + WordUtils.capitalize(entityKey.getKey().replace("_", " ")) + " Head");
                 skullMeta.setPlayerProfile(profile);
                 skullMeta.getPersistentDataContainer().set(headDropsEntityKey, PersistentDataType.STRING, entityKey.toString());

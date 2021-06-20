@@ -1,11 +1,5 @@
-import com.mendhak.gradlecrowdin.DownloadTranslationsTask
-import com.mendhak.gradlecrowdin.UploadSourceFileTask
-
 plugins {
     id("java-library")
-    id("net.ltgt.apt-eclipse")
-    id("net.ltgt.apt-idea")
-    id("com.mendhak.gradlecrowdin")
 }
 
 applyPlatformAndCoreConfiguration()
@@ -18,15 +12,13 @@ repositories {
             artifact("[organisation]/[module]/[revision]/[artifact]-[revision](+[classifier])(.[ext])")
             setM2compatible(true)
         }
+        metadataSources {
+            artifact()
+        }
     }
 }
 
 configurations {
-    all {
-        resolutionStrategy {
-            force("com.google.guava:guava:21.0")
-        }
-    }
     register("languageFiles")
 }
 
@@ -34,12 +26,12 @@ dependencies {
     "api"(project(":craftbook-libs:core"))
     "api"("com.sk89q.worldedit:worldedit-core:${Versions.WORLDEDIT}")
     "api"("com.sk89q.worldguard:worldguard-core:${Versions.WORLDGUARD}")
-    "implementation"("org.yaml:snakeyaml:1.9")
-    "implementation"("com.google.guava:guava:${Versions.GUAVA}")
+    "implementation"("org.yaml:snakeyaml:1.26")
+    "implementation"("com.google.guava:guava")
     "implementation"("com.google.code.findbugs:jsr305:1.3.9")
-    "implementation"("com.google.code.gson:gson:${Versions.GSON}")
-    "implementation"("it.unimi.dsi:fastutil:${Versions.FAST_UTIL}")
-    "languageFiles"("${project.group}:craftbook-lang:${project.version}:43@zip")
+    "implementation"("com.google.code.gson:gson")
+    "implementation"("it.unimi.dsi:fastutil")
+    "languageFiles"("${project.group}:craftbook-lang:${project.version}:309@zip")
 
     "implementation"("org.apache.logging.log4j:log4j-api:${Versions.LOG4J}")
 
@@ -49,16 +41,12 @@ dependencies {
 
 tasks.withType<JavaCompile>().configureEach {
     dependsOn(":craftbook-libs:build")
+    options.compilerArgs.add("-Aarg.name.key.prefix=")
 }
 
-sourceSets {
-    main {
-        java {
-            srcDir("src/main/java")
-        }
-        resources {
-            srcDir("src/main/resources")
-        }
+configure<org.cadixdev.gradle.licenser.LicenseExtension> {
+    exclude {
+        it.file.startsWith(project.buildDir)
     }
 }
 

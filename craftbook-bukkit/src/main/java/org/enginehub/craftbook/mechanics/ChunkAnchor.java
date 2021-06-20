@@ -63,8 +63,7 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
         }
 
         for (BlockState state : event.getBlock().getChunk().getTileEntities(SignUtil::isSign, false)) {
-            if (state instanceof Sign) {
-                Sign s = (Sign) state;
+            if (state instanceof Sign s) {
                 if (s.getLine(1).equals("[Chunk]")) {
                     lplayer.printError(TranslatableComponent.of("craftbook.chunkanchor.already-anchored"));
                     SignUtil.cancelSignChange(event);
@@ -134,8 +133,7 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
             if (state == null) {
                 continue;
             }
-            if (state instanceof Sign) {
-                Sign sign = (Sign) state;
+            if (state instanceof Sign sign) {
                 if (sign.getLine(1).equals("[Chunk]")) {
                     if (!useRedstone || !sign.getLine(3).equals("OFF")) {
                         shouldAnchor = true;

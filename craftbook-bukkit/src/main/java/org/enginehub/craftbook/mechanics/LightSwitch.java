@@ -103,7 +103,7 @@ public class LightSwitch extends AbstractCraftBookMechanic {
     /**
      * Toggle lights in the immediate area.
      *
-     * @param block
+     * @param sign The sign to toggle based on
      */
     private void toggleLights(ChangedSign sign) {
         int radius, maximum;

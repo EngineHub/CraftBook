@@ -98,21 +98,13 @@ public class MechanicListBox extends PaginationBox {
 
     private static final class FontInfo {
         static int getPxLength(char c) {
-            switch (c) {
-                case 'i':
-                case ':':
-                    return 1;
-                case 'l':
-                    return 2;
-                case '*':
-                case 't':
-                    return 3;
-                case 'f':
-                case 'k':
-                    return 4;
-                default:
-                    return 5;
-            }
+            return switch (c) {
+                case 'i', ':' -> 1;
+                case 'l' -> 2;
+                case '*', 't' -> 3;
+                case 'f', 'k' -> 4;
+                default -> 5;
+            };
         }
 
         static int getPxLength(String string) {

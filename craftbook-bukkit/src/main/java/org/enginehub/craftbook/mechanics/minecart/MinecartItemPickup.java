@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.minecart;
 
-import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Minecart;
@@ -50,9 +49,7 @@ public class MinecartItemPickup extends AbstractCraftBookMechanic {
             Inventory inventory = ((InventoryHolder) vehicle).getInventory();
 
             for (Entity entity : vehicle.getNearbyEntities(1, 1, 1)) {
-                if (entity instanceof Item) {
-                    Item item = (Item) entity;
-
+                if (entity instanceof Item item) {
                     // Safer to do this per-item. Shouldn't be an issue as carts will not hit millions
                     // of items at a time
                     Collection<ItemStack> leftovers = inventory.addItem(item.getItemStack()).values();
@@ -65,9 +62,5 @@ public class MinecartItemPickup extends AbstractCraftBookMechanic {
                 }
             }
         }
-    }
-
-    @Override
-    public void loadFromConfiguration(YAMLProcessor config) {
     }
 }

@@ -147,8 +147,4 @@ public class TemporaryCart extends AbstractCraftBookMechanic {
             }
         }
     }
-
-    @Override
-    public void loadFromConfiguration(YAMLProcessor config) {
-    }
 }

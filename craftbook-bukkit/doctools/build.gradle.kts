@@ -28,12 +28,12 @@ repositories {
     }
     maven {
         name = "ProtocolLib"
-        url = uri("http://repo.dmulloy2.net/content/groups/public/")
+        url = uri("https://repo.dmulloy2.net/content/groups/public/")
     }
 }
 
 dependencies {
     "implementation"(project(":craftbook-bukkit"))
-    "implementation"("com.destroystokyo.paper:paper-api:1.16.1-R0.1-SNAPSHOT")
+    "implementation"("io.papermc.paper:paper-api:1.17-R0.1-SNAPSHOT")
     "implementation"("com.sk89q.worldedit:worldedit-cli:7.2.0-SNAPSHOT")
 }

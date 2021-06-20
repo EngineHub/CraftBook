@@ -115,11 +115,10 @@ public class BetterLeads extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityTarget(EntityTargetEvent event) {
         if (!stopTargetting && !mobRepellant
-            || !(event.getEntity() instanceof Monster) || !(event.getTarget() instanceof Player)
+            || !(event.getEntity() instanceof Monster monster) || !(event.getTarget() instanceof Player)
             || !EventUtil.passesFilter(event)) {
             return;
         }
-        Monster monster = (Monster) event.getEntity();
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer((Player) event.getTarget());
 
@@ -166,10 +165,9 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         int amountConnected = 0;
 
         for (Entity ent : event.getEntity().getNearbyEntities(MAX_LEASH_DISTANCE, MAX_LEASH_DISTANCE, MAX_LEASH_DISTANCE)) {
-            if (!(ent instanceof LivingEntity)) {
+            if (!(ent instanceof LivingEntity entity)) {
                 continue;
             }
-            LivingEntity entity = (LivingEntity) ent;
 
             if (!entity.isLeashed() || entity.getLeashHolder() != event.getEntity()) {
                 continue;
@@ -199,11 +197,9 @@ public class BetterLeads extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onUnleash(PlayerUnleashEntityEvent event) {
-        if (!ownerBreakOnly || !(event.getEntity() instanceof Tameable) || !EventUtil.passesFilter(event)) {
+        if (!ownerBreakOnly || !(event.getEntity() instanceof Tameable entity) || !EventUtil.passesFilter(event)) {
             return;
         }
-
-        Tameable entity = (Tameable) event.getEntity();
 
         if (!entity.isLeashed() || !(entity.getLeashHolder() instanceof LeashHitch) || !entity.isTamed()) {
             return;

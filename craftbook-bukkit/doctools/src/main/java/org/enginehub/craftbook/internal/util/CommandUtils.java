@@ -1,7 +1,20 @@
+/*
+ * CraftBook Copyright (C) EngineHub and Contributors <https://enginehub.org/>
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program. If not,
+ * see <http://www.gnu.org/licenses/>.
+ */
+
 package org.enginehub.craftbook.internal.util;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.sk89q.worldedit.command.util.PermissionCondition;
 import com.sk89q.worldedit.internal.command.CommandUtil;
 import com.sk89q.worldedit.util.formatting.text.Component;
@@ -35,21 +48,21 @@ public class CommandUtils {
 
     private static final Pattern nameRegex = Pattern.compile("name = \"(.+?)\"");
 
-    private static final Map<String, Command> commands = Maps.newHashMap();
+    private static final Map<String, Command> commands = new HashMap<>();
     private static final PlatformCommandManager commandManager = new PlatformCommandManager();
 
     static {
         MechanicCommandRegistrar registrar = commandManager.getMechanicRegistrar();
         registrar.registerTopLevelWithSubCommands(
             "headdrops",
-            Lists.newArrayList(),
+            List.of(),
             "CraftBook HeadDrops Commands",
             (commandManager1, registration) -> HeadDropsCommands.register(commandManager1, registration, null)
         );
 
         registrar.registerTopLevelWithSubCommands(
             "signedit",
-            Lists.newArrayList("edsign", "signcopy"),
+            List.of("edsign", "signcopy"),
             "CraftBook SignCopier Commands",
             (commandManager, registration) -> SignEditCommands.register(commandManager, registration, null)
         );

@@ -144,7 +144,7 @@ public class MechanicCommands {
         try {
             MechanicManager mechanicManager = CraftBook.getInstance().getPlatform().getMechanicManager();
             Optional<? extends CraftBookMechanic> mechanic = mechanicManager.getMechanic(mechanicType);
-            if (!mechanic.isPresent()) {
+            if (mechanic.isEmpty()) {
                 actor.printError(TranslatableComponent.of(
                     "craftbook.mechanisms.not-enabled",
                     TextComponent.of(mechanicType.getName(), TextColor.WHITE)

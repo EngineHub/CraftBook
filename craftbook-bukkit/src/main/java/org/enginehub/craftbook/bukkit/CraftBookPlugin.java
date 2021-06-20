@@ -122,7 +122,6 @@ public class CraftBookPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
         // Need to create the plugins/CraftBook folder
         getDataFolder().mkdirs();
 
@@ -379,8 +378,7 @@ public class CraftBookPlugin extends JavaPlugin {
         }
 
         // Invoke the permissions resolver
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
             return PermissionsResolverManager.getInstance().hasPermission(player.getWorld().getName(), player, perm);
         }
 

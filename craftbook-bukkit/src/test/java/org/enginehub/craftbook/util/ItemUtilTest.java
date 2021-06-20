@@ -18,28 +18,22 @@ package org.enginehub.craftbook.util;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Ignore
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ ItemUtil.class, ItemSyntax.class })
 public class ItemUtilTest {
 
     @Test
@@ -84,9 +78,9 @@ public class ItemUtilTest {
 
         ItemStack test1 = newMockItemStack(Material.OAK_PLANKS, (byte) 4, 1);
         ItemStack test2 = newMockItemStack(Material.OAK_PLANKS, (byte) 8, 1);
-        assertTrue(!ItemUtil.areItemsIdentical(test1, test2));
+        assertFalse(ItemUtil.areItemsIdentical(test1, test2));
         test2 = newMockItemStack(Material.GRASS_BLOCK, (byte) 8, 1);
-        assertTrue(!ItemUtil.areItemsIdentical(test1, test2));
+        assertFalse(ItemUtil.areItemsIdentical(test1, test2));
         test2 = newMockItemStack(Material.OAK_PLANKS, (byte) 4, 1);
         assertTrue(ItemUtil.areItemsIdentical(test1, test2));
     }
@@ -95,13 +89,13 @@ public class ItemUtilTest {
     public void testIsStackValid() {
 
         ItemStack mockStack = newMockItemStack(Material.AIR, (byte) 0, 5);
-        assertTrue(!ItemUtil.isStackValid(mockStack));
+        assertFalse(ItemUtil.isStackValid(mockStack));
         when(mockStack.getType()).thenReturn(Material.BEETROOT);
         when(mockStack.getAmount()).thenReturn(5);
         assertTrue(ItemUtil.isStackValid(mockStack));
         when(mockStack.getAmount()).thenReturn(-60);
-        assertTrue(!ItemUtil.isStackValid(mockStack));
-        assertTrue(!ItemUtil.isStackValid(null));
+        assertFalse(ItemUtil.isStackValid(mockStack));
+        assertFalse(ItemUtil.isStackValid(null));
     }
 
     @Test
@@ -109,11 +103,11 @@ public class ItemUtilTest {
 
         Item entity = mock(Item.class);
         when(entity.isDead()).thenReturn(true);
-        assertTrue(!ItemUtil.takeFromItemEntity(null, 1));
-        assertTrue(!ItemUtil.takeFromItemEntity(entity, 1));
+        assertFalse(ItemUtil.takeFromItemEntity(null, 1));
+        assertFalse(ItemUtil.takeFromItemEntity(entity, 1));
         when(entity.isDead()).thenReturn(false);
         when(entity.getItemStack()).thenReturn(ItemSyntax.getItem("2:0*20"));
-        assertTrue(!ItemUtil.takeFromItemEntity(entity, 21));
+        assertFalse(ItemUtil.takeFromItemEntity(entity, 21));
         assertTrue(ItemUtil.takeFromItemEntity(entity, 2));
         assertTrue(ItemUtil.takeFromItemEntity(entity, 18));
         verify(entity).remove();

@@ -258,8 +258,9 @@ public class Elevator extends AbstractCraftBookMechanic {
      * @return The destination, or null if none found
      */
     public Block findDestination(BlockFace shift, Block clickedBlock) {
-        // TODO use min height in 1.17
-        int maximumSearchPoint = shift == BlockFace.UP ? clickedBlock.getWorld().getMaxHeight() : 0;
+        int maximumSearchPoint = shift == BlockFace.UP
+            ? clickedBlock.getWorld().getMaxHeight()
+            : clickedBlock.getWorld().getMinHeight();
         Block destination = clickedBlock;
         // heading up from top or down from bottom
         if (destination.getY() == maximumSearchPoint) {
@@ -282,7 +283,11 @@ public class Elevator extends AbstractCraftBookMechanic {
             if (destination.getY() == maximumSearchPoint) {
                 if (elevatorLoop) {
                     Location temporaryLocation = destination.getLocation();
-                    temporaryLocation.setY(shift == BlockFace.UP ? 0 : clickedBlock.getWorld().getMaxHeight());
+                    temporaryLocation.setY(
+                        shift == BlockFace.UP
+                        ? clickedBlock.getWorld().getMinHeight()
+                        : clickedBlock.getWorld().getMaxHeight()
+                    );
                     destination = temporaryLocation.getBlock();
                 } else {
                     return null;

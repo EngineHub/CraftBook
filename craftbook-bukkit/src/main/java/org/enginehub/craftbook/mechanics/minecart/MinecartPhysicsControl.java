@@ -46,11 +46,9 @@ public class MinecartPhysicsControl extends AbstractCraftBookMechanic {
             return;
         }
 
-        if (!(event.getVehicle() instanceof Minecart)) {
+        if (!(event.getVehicle() instanceof Minecart cart)) {
             return;
         }
-
-        Minecart cart = (Minecart) event.getVehicle();
 
         cart.setSlowWhenEmpty(slowWhenEmpty);
 
