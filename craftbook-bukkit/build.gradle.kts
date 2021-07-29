@@ -8,7 +8,6 @@ applyPlatformAndCoreConfiguration()
 applyShadowConfiguration()
 
 repositories {
-    mavenLocal()
     maven {
         name = "paper"
         url = uri("https://papermc.io/repo/repository/maven-public/")

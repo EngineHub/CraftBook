@@ -233,11 +233,11 @@ public class Teleporter extends AbstractCraftBookMechanic {
             org.bukkit.Location newLocation = BukkitAdapter.adapt(subspaceRift);
             Entity teleportedVehicle = LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
 
-            player.teleport(subspaceRift);
+            player.setLocation(subspaceRift);
 
             LocationUtil.addVehiclePassengerDelayed(teleportedVehicle, player);
         } else {
-            player.teleport(subspaceRift);
+            player.setLocation(subspaceRift);
         }
 
         player.print("mech.teleport.alert");

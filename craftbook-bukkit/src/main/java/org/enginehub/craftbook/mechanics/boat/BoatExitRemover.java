@@ -28,7 +28,6 @@ import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.ItemUtil;
 
 public class BoatExitRemover extends AbstractCraftBookMechanic {
 
@@ -68,8 +67,8 @@ public class BoatExitRemover extends AbstractCraftBookMechanic {
             if (giveItem) {
                 ItemStack stack = new ItemStack(boat.getBoatMaterial(), 1);
 
-                if (passenger instanceof Player) {
-                    if (!((Player) passenger).getInventory().addItem(stack).isEmpty()) {
+                if (passenger instanceof Player player) {
+                    if (!player.getInventory().addItem(stack).isEmpty()) {
                         passenger.getLocation().getWorld().dropItemNaturally(passenger.getLocation(), stack);
                     }
                 } else if (passenger != null) {

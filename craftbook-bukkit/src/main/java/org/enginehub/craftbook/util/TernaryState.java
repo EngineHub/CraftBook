@@ -35,22 +35,12 @@ public enum TernaryState {
      * @return The parsed value
      */
     public static TernaryState parseTernaryState(String s) {
-        switch (s.toLowerCase()) {
-            case "yes":
-            case "true":
-            case "y":
-            case "t":
-            case "1":
-                return TRUE;
-            case "no":
-            case "false":
-            case "n":
-            case "f":
-            case "0":
-                return FALSE;
-        }
+        return switch (s.toLowerCase()) {
+            case "yes", "true", "y", "t", "1" -> TRUE;
+            case "no", "false", "n", "f", "0" -> FALSE;
+            default -> NONE;
+        };
 
-        return NONE;
     }
 
     /**
@@ -60,16 +50,11 @@ public enum TernaryState {
      * @return Whether it passes
      */
     public boolean doesPass(boolean test) {
-        switch (this) {
-            case TRUE:
-                return test;
-            case FALSE:
-                return !test;
-            case NONE:
-                return true;
-            default:
-                return false;
-        }
+        return switch (this) {
+            case TRUE -> test;
+            case FALSE -> !test;
+            case NONE -> true;
+        };
     }
 
     @Override

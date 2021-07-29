@@ -35,5 +35,5 @@ repositories {
 dependencies {
     "implementation"(project(":craftbook-bukkit"))
     "implementation"("io.papermc.paper:paper-api:1.17-R0.1-SNAPSHOT")
-    "implementation"("com.sk89q.worldedit:worldedit-cli:7.2.0-SNAPSHOT")
+    "implementation"("com.sk89q.worldedit:worldedit-cli:${Versions.WORLDEDIT}")
 }

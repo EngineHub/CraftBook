@@ -63,11 +63,6 @@ public final class BukkitCraftBookPlayer extends BukkitPlayer implements CraftBo
     }
 
     @Override
-    public void teleport(Location location) {
-        player.teleport(BukkitAdapter.adapt(location));
-    }
-
-    @Override
     public boolean isInsideVehicle() {
         return player.isInsideVehicle();
     }
