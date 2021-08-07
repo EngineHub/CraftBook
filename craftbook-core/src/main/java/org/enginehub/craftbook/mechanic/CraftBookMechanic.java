@@ -48,7 +48,10 @@ public interface CraftBookMechanic {
     /**
      * Called when a mechanic's configuration has been re-loaded.
      */
-    default void reload() throws MechanicInitializationException {}
+    default void reload() throws MechanicInitializationException {
+        disable();
+        enable();
+    }
 
     /**
      * Load the configuration from file, and delegate

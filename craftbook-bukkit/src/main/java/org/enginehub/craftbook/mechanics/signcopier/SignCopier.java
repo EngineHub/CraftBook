@@ -185,6 +185,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
      */
     protected static class SignData {
         protected String[] lines;
+        protected boolean glowing;
         @Nullable
         protected DyeColor color;
 
@@ -194,15 +195,16 @@ public class SignCopier extends AbstractCraftBookMechanic {
          * @param lines The sign lines
          * @param color The dyed color, if present
          */
-        protected SignData(String[] lines, @Nullable DyeColor color) {
+        protected SignData(String[] lines, boolean glowing, @Nullable DyeColor color) {
             checkNotNull(lines);
 
             this.lines = lines;
+            this.glowing = glowing;
             this.color = color;
         }
 
         public static SignData fromSign(Sign sign) {
-            return new SignData(sign.getLines(), sign.getColor());
+            return new SignData(sign.getLines(), sign.isGlowingText(), sign.getColor());
         }
     }
 

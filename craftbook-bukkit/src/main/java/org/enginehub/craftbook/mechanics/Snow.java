@@ -87,12 +87,6 @@ public class Snow extends AbstractCraftBookMechanic {
     }
 
     @Override
-    public void reload() {
-        disable();
-        enable();
-    }
-
-    @Override
     public void disable() {
         super.disable();
 

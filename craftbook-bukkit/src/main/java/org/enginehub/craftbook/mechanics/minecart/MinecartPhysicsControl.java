@@ -35,11 +35,6 @@ public class MinecartPhysicsControl extends AbstractCraftBookMechanic {
         this.derailedVelocityMod = new Vector(offRailSpeed, offRailSpeed, offRailSpeed);
     }
 
-    @Override
-    public void reload() {
-        enable();
-    }
-
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleCreate(VehicleCreateEvent event) {
         if (!EventUtil.passesFilter(event)) {
