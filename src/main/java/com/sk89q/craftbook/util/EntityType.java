@@ -26,7 +26,7 @@ public enum EntityType {
             case MOB_PEACEFUL:
                 return entity instanceof Animals && !(entity instanceof HumanEntity);
             case MOB_ANY:
-                return entity instanceof Creature && !(entity instanceof HumanEntity);
+                return entity instanceof Mob && !(entity instanceof HumanEntity);
             case CART:
                 return entity instanceof Minecart;
             case CART_STORAGE:

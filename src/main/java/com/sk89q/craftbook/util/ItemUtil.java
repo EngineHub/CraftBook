@@ -494,10 +494,10 @@ public final class ItemUtil {
 
     public static boolean isSmeltable(ItemStack item) {
 
-        return getSmeletedResult(item) != null;
+        return getSmeltedResult(item) != null;
     }
 
-    public static ItemStack getSmeletedResult(ItemStack item) {
+    public static ItemStack getSmeltedResult(ItemStack item) {
 
         switch (item.getType()) {
             case COBBLESTONE:
