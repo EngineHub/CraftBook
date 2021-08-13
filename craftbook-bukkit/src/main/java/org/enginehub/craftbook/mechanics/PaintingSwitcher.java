@@ -46,6 +46,13 @@ public class PaintingSwitcher extends AbstractCraftBookMechanic {
 
     private final BiMap<UUID, Painting> paintingMap = HashBiMap.create();
 
+    @Override
+    public void disable() {
+        super.disable();
+
+        paintingMap.clear();
+    }
+
     public boolean isBeingEdited(Painting painting) {
         UUID playerUuid = paintingMap.inverse().get(painting);
         if (playerUuid != null && paintingMap.get(playerUuid) != null) {
@@ -175,11 +182,10 @@ public class PaintingSwitcher extends AbstractCraftBookMechanic {
         paintingMap.remove(event.getPlayer().getUniqueId());
     }
 
-    @SuppressWarnings("SuspiciousMethodCalls")
     @EventHandler
     public void onHangingEntityDestroy(HangingBreakByEntityEvent event) {
-        if (event.getEntity() instanceof Painting) {
-            UUID uuid = paintingMap.inverse().remove(event.getEntity());
+        if (event.getEntity() instanceof Painting painting) {
+            UUID uuid = paintingMap.inverse().remove(painting);
 
             if (uuid != null) {
                 Player player = Bukkit.getPlayer(uuid);
@@ -189,11 +195,6 @@ public class PaintingSwitcher extends AbstractCraftBookMechanic {
                 }
             }
         }
-    }
-
-    @Override
-    public void disable() {
-        paintingMap.clear();
     }
 
     private int modifyRange;

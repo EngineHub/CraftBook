@@ -53,17 +53,17 @@ public class MinecartImpactDamage extends AbstractCraftBookMechanic {
             return;
         }
 
-        if (event.getEntity() instanceof LivingEntity) {
-            if (event.getEntity().isInsideVehicle()) {
+        if (event.getEntity() instanceof LivingEntity living) {
+            if (living.isInsideVehicle()) {
                 return;
             }
 
-            ((LivingEntity) event.getEntity()).damage(5);
+            living.damage(5);
 
             try {
-                event.getEntity().setVelocity(event.getVehicle().getVelocity().normalize().multiply(1.2).add(HALF_BLOCK_UP));
+                living.setVelocity(event.getVehicle().getVelocity().normalize().multiply(1.2).add(HALF_BLOCK_UP));
             } catch (IllegalArgumentException e) {
-                event.getEntity().setVelocity(HALF_BLOCK_UP);
+                living.setVelocity(HALF_BLOCK_UP);
             }
         } else if (removeOtherCarts && event.getEntity() instanceof Minecart && event.getEntity().isEmpty()) {
             event.getEntity().remove();

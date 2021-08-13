@@ -15,17 +15,14 @@
 
 package org.enginehub.craftbook.bukkit;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.util.HandSide;
-import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.adapter.bukkit.TextAdapter;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import com.sk89q.worldedit.world.item.ItemType;
 import org.bukkit.entity.Player;
 import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.LanguageManager;
 import org.enginehub.craftbook.util.TextUtil;
 
 public final class BukkitCraftBookPlayer extends BukkitPlayer implements CraftBookPlayer {

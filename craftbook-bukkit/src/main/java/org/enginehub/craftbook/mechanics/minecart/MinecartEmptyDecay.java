@@ -56,30 +56,24 @@ public class MinecartEmptyDecay extends AbstractCraftBookMechanic {
         }
 
         for (Entity ent : event.getChunk().getEntities()) {
-            if (!ent.isValid()) {
-                continue;
-            }
-            if (!(ent instanceof RideableMinecart)) {
-                continue;
-            }
-            if (!ent.isEmpty()) {
-                continue;
-            }
+            if (ent instanceof RideableMinecart cart) {
+                if (!cart.isValid()) {
+                    continue;
+                }
+                if (!cart.isEmpty()) {
+                    continue;
+                }
 
-            Bukkit.getScheduler().runTaskLater(
-                CraftBookPlugin.inst(),
-                new Decay((RideableMinecart) ent),
-                decayDelay
-            );
+                Bukkit.getScheduler().runTaskLater(
+                    CraftBookPlugin.inst(),
+                    new Decay(cart),
+                    decayDelay
+                );
+            }
         }
     }
 
-    private static class Decay implements Runnable {
-        private final RideableMinecart cart;
-
-        public Decay(RideableMinecart cart) {
-            this.cart = cart;
-        }
+    private record Decay(RideableMinecart cart) implements Runnable {
 
         @Override
         public void run() {

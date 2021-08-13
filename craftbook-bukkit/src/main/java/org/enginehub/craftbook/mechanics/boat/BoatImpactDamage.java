@@ -39,18 +39,18 @@ public class BoatImpactDamage extends AbstractCraftBookMechanic {
             return;
         }
 
-        if (event.getEntity() instanceof LivingEntity) {
-            if (event.getEntity().isInsideVehicle()) {
+        if (event.getEntity() instanceof LivingEntity living) {
+            if (living.isInsideVehicle()) {
                 return;
             }
 
             // It's impossible to determine the velocity, so just deal constant damage
-            ((LivingEntity) event.getEntity()).damage(5);
+            living.damage(5);
 
             try {
-                event.getEntity().setVelocity(event.getVehicle().getLocation().getDirection().normalize().multiply(1.2).add(HALF_BLOCK_UP));
+                living.setVelocity(living.getLocation().getDirection().normalize().multiply(1.2).add(HALF_BLOCK_UP));
             } catch (IllegalArgumentException e) {
-                event.getEntity().setVelocity(HALF_BLOCK_UP);
+                living.setVelocity(HALF_BLOCK_UP);
             }
         } else if (removeOtherBoats && event.getEntity() instanceof Boat && event.getEntity().isEmpty()) {
             event.getEntity().remove();

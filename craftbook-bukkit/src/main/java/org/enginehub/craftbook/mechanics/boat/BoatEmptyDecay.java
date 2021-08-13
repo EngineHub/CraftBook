@@ -56,30 +56,24 @@ public class BoatEmptyDecay extends AbstractCraftBookMechanic {
         }
 
         for (Entity ent : event.getChunk().getEntities()) {
-            if (!ent.isValid()) {
-                continue;
-            }
-            if (!(ent instanceof Boat)) {
-                continue;
-            }
-            if (!ent.isEmpty()) {
-                continue;
-            }
+            if (ent instanceof Boat boat) {
+                if (!boat.isValid()) {
+                    continue;
+                }
+                if (!boat.isEmpty()) {
+                    continue;
+                }
 
-            Bukkit.getScheduler().runTaskLater(
-                CraftBookPlugin.inst(),
-                new Decay((Boat) ent),
-                decayDelay
-            );
+                Bukkit.getScheduler().runTaskLater(
+                    CraftBookPlugin.inst(),
+                    new Decay(boat),
+                    decayDelay
+                );
+            }
         }
     }
 
-    private static class Decay implements Runnable {
-        private final Boat boat;
-
-        public Decay(Boat boat) {
-            this.boat = boat;
-        }
+    private record Decay(Boat boat) implements Runnable {
 
         @Override
         public void run() {

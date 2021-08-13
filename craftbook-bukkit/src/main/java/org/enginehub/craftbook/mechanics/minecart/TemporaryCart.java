@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.minecart;
 
-import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.HandSide;
 import org.bukkit.Bukkit;

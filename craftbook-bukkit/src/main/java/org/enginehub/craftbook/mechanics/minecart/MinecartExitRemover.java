@@ -45,33 +45,31 @@ public class MinecartExitRemover extends AbstractCraftBookMechanic {
 
         Vehicle vehicle = event.getVehicle();
 
-        if (!(vehicle instanceof RideableMinecart)) {
-            return;
-        }
-
-        if (vehicle.isDead() || !vehicle.isValid()) {
-            return;
-        }
-
-        // Ignore temporary carts here, we don't want to handle them.
-        Optional<TemporaryCart> temporaryCart = CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(MechanicTypes.TEMPORARY_CART);
-        if (temporaryCart.isPresent()) {
-            if (vehicle.getPersistentDataContainer().has(temporaryCart.get().getTemporaryCartKey(), PersistentDataType.BYTE)) {
+        if (vehicle instanceof RideableMinecart cart) {
+            if (cart.isDead() || !cart.isValid()) {
                 return;
             }
-        }
 
-        Bukkit.getScheduler().runTask(
-            CraftBookPlugin.inst(),
-            new MinecartRemover(event.getExited(), (Minecart) vehicle)
-        );
+            // Ignore temporary carts here, we don't want to handle them.
+            Optional<TemporaryCart> temporaryCart = CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(MechanicTypes.TEMPORARY_CART);
+            if (temporaryCart.isPresent()) {
+                if (cart.getPersistentDataContainer().has(temporaryCart.get().getTemporaryCartKey(), PersistentDataType.BYTE)) {
+                    return;
+                }
+            }
+
+            Bukkit.getScheduler().runTask(
+                CraftBookPlugin.inst(),
+                new MinecartRemover(event.getExited(), cart)
+            );
+        }
     }
 
     private class MinecartRemover implements Runnable {
         private final LivingEntity passenger;
-        private final Minecart minecart;
+        private final RideableMinecart minecart;
 
-        private MinecartRemover(LivingEntity passenger, Minecart minecart) {
+        private MinecartRemover(LivingEntity passenger, RideableMinecart minecart) {
             this.passenger = passenger;
             this.minecart = minecart;
         }
@@ -85,8 +83,8 @@ public class MinecartExitRemover extends AbstractCraftBookMechanic {
             if (giveItem) {
                 ItemStack stack = new ItemStack(minecart.getMinecartMaterial(), 1);
 
-                if (passenger instanceof Player) {
-                    if (!((Player) passenger).getInventory().addItem(stack).isEmpty()) {
+                if (passenger instanceof Player player) {
+                    if (!player.getInventory().addItem(stack).isEmpty()) {
                         passenger.getLocation().getWorld().dropItemNaturally(passenger.getLocation(), stack);
                     }
                 } else if (passenger != null) {

@@ -39,7 +39,7 @@ public class MoreRails extends AbstractCraftBookMechanic {
             return;
         }
 
-        if (!(event.getVehicle() instanceof Minecart)) {
+        if (!(event.getVehicle() instanceof Minecart minecart)) {
             return;
         }
 
@@ -47,9 +47,9 @@ public class MoreRails extends AbstractCraftBookMechanic {
         Material toType = toBlock.getType();
 
         if (pressurePlate && Tag.PRESSURE_PLATES.isTagged(toType)) {
-            event.getVehicle().setVelocity(event.getVehicle().getVelocity().normalize());
+            minecart.setVelocity(minecart.getVelocity().normalize());
         } else if (ladder) {
-            double maxSpeed = ((Minecart) event.getVehicle()).getMaxSpeed();
+            double maxSpeed = minecart.getMaxSpeed();
 
             Vector velocity = new Vector(0, ladderVerticalVelocity, 0);
 
@@ -77,7 +77,7 @@ public class MoreRails extends AbstractCraftBookMechanic {
 
             if (face != null) {
                 velocity.add(new Vector(face.getModX(), 0, face.getModZ()));
-                event.getVehicle().setVelocity(event.getVehicle().getVelocity().add(velocity));
+                minecart.setVelocity(minecart.getVelocity().add(velocity));
             }
         }
     }

@@ -39,14 +39,16 @@ public class BoatExitRemover extends AbstractCraftBookMechanic {
 
         Vehicle vehicle = event.getVehicle();
 
-        if (!(vehicle instanceof Boat)) {
-            return;
-        }
+        if (vehicle instanceof Boat boat) {
+            if (boat.isDead() || !boat.isValid()) {
+                return;
+            }
 
-        Bukkit.getScheduler().runTask(
-            CraftBookPlugin.inst(),
-            new BoatRemover(event.getExited(), (Boat) vehicle)
-        );
+            Bukkit.getScheduler().runTask(
+                CraftBookPlugin.inst(),
+                new BoatRemover(event.getExited(), boat)
+            );
+        }
     }
 
     private class BoatRemover implements Runnable {

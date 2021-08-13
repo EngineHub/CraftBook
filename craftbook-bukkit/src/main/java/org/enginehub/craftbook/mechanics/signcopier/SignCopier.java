@@ -169,6 +169,9 @@ public class SignCopier extends AbstractCraftBookMechanic {
                 if (copyColor && signData.color != null) {
                     sign.setColor(signData.color);
                 }
+                if (copyGlowing) {
+                    sign.setGlowingText(signData.glowing);
+                }
                 sign.update();
 
                 player.printInfo(TranslatableComponent.of("craftbook.signcopier.paste"));
@@ -210,6 +213,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
 
     private ItemStack item;
     private boolean copyColor;
+    private boolean copyGlowing;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
@@ -218,5 +222,8 @@ public class SignCopier extends AbstractCraftBookMechanic {
 
         config.setComment("copy-color", "If the sign copier should also copy the dyed color of the sign.");
         copyColor = config.getBoolean("copy-color", true);
+
+        config.setComment("copy-glowing", "If the sign copier should also copy the glowing status of the sign.");
+        copyGlowing = config.getBoolean("copy-glowing", true);
     }
 }
