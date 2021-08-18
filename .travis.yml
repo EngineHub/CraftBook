@@ -4,3 +4,8 @@ jdk:
   - openjdk8
 notifications:
   email: false
+
+cache:
+  directories:
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
