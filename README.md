@@ -44,3 +44,17 @@ Links
 * [Issue tracker](https://github.com/EngineHub/CraftBook/issues)
 * [Continuous integration](http://builds.enginehub.org) [![Build Status](https://ci.enginehub.org/app/rest/builds/buildType:bt6,branch:master/statusIcon.svg)](http://ci.enginehub.org/viewType.html?buildTypeId=bt6&guest=1)
 * [End-user documentation](https://craftbook.enginehub.org/en/3.x/)
+
+Supporters
+----------
+
+[![BeastNode Logo](https://enginehub.org/images/beastnode.png)](https://www.beastnode.com/portal/aff.php?aff=1004)
+
+BeastNode offers premier hosting for a great price!
+
+[![YourKit Logo](https://www.yourkit.com/images/yklogo.png)](https://www.yourkit.com/)
+
+YourKit supports open source projects with its full-featured Java Profiler.
+YourKit, LLC is the creator of <a href="https://www.yourkit.com/java/profiler/index.jsp">YourKit Java Profiler</a>
+and <a href="https://www.yourkit.com/.net/profiler/index.jsp">YourKit .NET Profiler</a>,
+innovative and intelligent tools for profiling Java and .NET applications.
