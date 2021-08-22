@@ -6,6 +6,13 @@
 
     "craftbook.betterphysics.description": "Enhances physics of aspects of the game, such as allowing ladders to fall",
 
+    "craftbook.betterpistons.description": "Enhances pistons, such as allowing them to pull multiple blocks",
+    "craftbook.betterpistons.invalid-piston-block": "That BetterPistons mechanic cannot be used on this type of piston",
+    "craftbook.betterpistons.bounce.created": "Bounce Piston Created!",
+    "craftbook.betterpistons.crush.created": "Crush Piston Created!",
+    "craftbook.betterpistons.super_push.created": "SuperPush Piston Created!",
+    "craftbook.betterpistons.super_sticky.created": "SuperSticky Piston Created!",
+
     "craftbook.betterplants.description":"Enhances plants in the game, such as allowing ferns to be farmed",
 
     "craftbook.bettersponge.description": "Enhances the water removal capabilities of sponges",

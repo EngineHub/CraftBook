@@ -41,7 +41,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("ToggleArea", org.enginehub.craftbook.mechanics.area.Area.class, MechanicCategory.GENERAL);
 //        registerMechanic("Cauldron", org.enginehub.craftbook.mechanics.cauldron.ImprovedCauldron.class, MechanicCategory.CUSTOMISATION);
 //        registerMechanic("Gate", org.enginehub.craftbook.mechanics.area.simple.Gate.class, MechanicCategory.GENERAL);
-//        registerMechanic("BetterPistons", org.enginehub.craftbook.mechanics.BetterPistons.class, MechanicCategory.GENERAL);
 //        registerMechanic("CookingPot", org.enginehub.craftbook.mechanics.CookingPot.class, MechanicCategory.GENERAL);
 //        registerMechanic("Sponge", org.enginehub.craftbook.mechanics.Sponge.class, MechanicCategory.GENERAL);
 //        registerMechanic("Pay", org.enginehub.craftbook.mechanics.Payment.class, MechanicCategory.CIRCUIT);
@@ -394,6 +393,15 @@ public class BukkitMechanicManager extends MechanicManager {
             .description(TranslatableComponent.of("craftbook.minecartreverser.description"))
             .className("org.enginehub.craftbook.mechanics.minecart.blocks.CartReverser")
             .category(MechanicCategory.MINECART)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("better_pistons")
+            .name("BetterPistons")
+            .description(TranslatableComponent.of("craftbook.betterpistons.description"))
+            .className("org.enginehub.craftbook.mechanics.piston.BetterPistons")
+            .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
         // TODO CommandItems needs to load early (after variables).

@@ -296,7 +296,6 @@ public class InventoryUtil {
      * @return If it has an inventory.
      */
     public static boolean doesBlockHaveInventory(Block block) {
-
         switch (block.getType()) {
             case CHEST:
             case TRAPPED_CHEST:

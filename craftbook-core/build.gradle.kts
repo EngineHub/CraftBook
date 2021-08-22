@@ -35,7 +35,6 @@ dependencies {
 
     "implementation"("org.apache.logging.log4j:log4j-api:${Versions.LOG4J}")
 
-    "compileOnly"("com.google.code.findbugs:jsr305:1.3.9")
     "testImplementation"("org.hamcrest:hamcrest-library:1.2.1")
 }
 

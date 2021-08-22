@@ -19,7 +19,7 @@ import org.enginehub.craftbook.mechanics.betterai.BetterAI;
 import org.enginehub.craftbook.mechanics.Ammeter;
 import org.enginehub.craftbook.mechanics.BetterLeads;
 import org.enginehub.craftbook.mechanics.BetterPhysics;
-import org.enginehub.craftbook.mechanics.BetterPistons;
+import org.enginehub.craftbook.mechanics.piston.BetterPistons;
 import org.enginehub.craftbook.mechanics.BetterPlants;
 import org.enginehub.craftbook.mechanics.ReadableBookshelf;
 import org.enginehub.craftbook.mechanics.BounceBlocks;

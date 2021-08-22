@@ -54,6 +54,7 @@ fun Project.applyPlatformAndCoreConfiguration() {
     }
 
     dependencies {
+        "compileOnly"("com.google.code.findbugs:jsr305:1.3.9")
         "testImplementation"("org.junit.jupiter:junit-jupiter-api:${Versions.JUNIT}")
         "testImplementation"("org.junit.jupiter:junit-jupiter-params:${Versions.JUNIT}")
         "testImplementation"("org.mockito:mockito-core:${Versions.MOCKITO}")
@@ -114,7 +115,7 @@ fun Project.applyShadowConfiguration() {
         exclude(".cache")
         exclude("LICENSE*")
         exclude("META-INF/maven/**")
-        minimize()
+//        minimize()
     }
     val javaComponent = components["java"] as AdhocComponentWithVariants
     // I don't think we want this published (it's the shadow jar)

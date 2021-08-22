@@ -22,6 +22,7 @@ mechanics:
         better_ai: false
         better_leads: false
         better_physics: false
+        better_pistons: false
         better_plants: false
         better_sponge: false
         chairs: false
