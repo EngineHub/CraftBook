@@ -36,6 +36,7 @@ mechanics:
         readable_bookshelf: false
         snow: false
         variables: true
+        xp_storer: false
     minecart:
         minecart_collision_entry: false
         minecart_empty_decay: false

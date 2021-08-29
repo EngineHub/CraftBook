@@ -100,7 +100,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
 
             if (closest == null) closest = e;
             if (area.getCenter() == null) break;
-            else if (LocationUtil.getDistanceSquared(closest.getLocation(), area.getCenter()) >= LocationUtil.getDistanceSquared(e.getLocation(), area.getCenter()))
+            else if (closest.getWorld() == area.getWorld() && closest.getLocation().distanceSquared(area.getCenter()) >= e.getLocation().distanceSquared(area.getCenter()))
                 closest = e;
         }
         if (closest != null && lastKnownLocations.containsKey(band))

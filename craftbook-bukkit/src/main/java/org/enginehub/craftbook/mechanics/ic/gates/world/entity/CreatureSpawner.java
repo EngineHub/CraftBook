@@ -97,7 +97,7 @@ public class CreatureSpawner extends AbstractIC {
             sp.setSpawnedType(type);
             sp.update();
         } else {
-            Location loc = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(center, BlockFace.UP));
+            Location loc = LocationUtil.getBlockCentreTop(LocationUtil.getNextFreeSpace(center, BlockFace.UP));
             // spawn amount of mobs
             for (int i = 0; i < amount; i++) {
                 Entity entity = loc.getWorld().spawn(loc, type.getEntityClass());

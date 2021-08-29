@@ -262,7 +262,7 @@ public class InventoryUtil {
      */
     public static boolean removeItemsFromInventory(InventoryHolder inv, ItemStack... stacks) {
 
-        List<ItemStack> leftovers = new ArrayList<>(inv.getInventory().removeItem(stacks).values());
+        List<ItemStack> leftovers = new ArrayList<>(inv.getInventory().removeItemAnySlot(stacks).values());
 
         if (!leftovers.isEmpty()) {
             List<ItemStack> itemsToAdd = new ArrayList<>(Arrays.asList(stacks));

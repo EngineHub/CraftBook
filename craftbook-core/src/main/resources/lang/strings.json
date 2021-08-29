@@ -133,6 +133,12 @@
     "craftbook.variables.failed-to-load": "Failed to load variables file",
     "craftbook.variables.description": "Allows creation of variables, that can represent other text",
 
+    "craftbook.xpstorer.description": "Allows storing earned XP in bottles.",
+    "craftbook.xpstorer.create": "XP Storer created.",
+    "craftbook.xpstorer.require-bottle": "You need a glass bottle to use the XP Storer.",
+    "craftbook.xpstorer.insufficient-xp": "You don't have enough XP!",
+    "craftbook.xpstorer.success": "You store your XP in a bottle!",
+
     "craftbook.mechanisms.missing-dependency": "Dependency not satisfied: {0}",
     "craftbook.mechanisms.already-enabled": "Mechanic {0} is already enabled",
     "craftbook.mechanisms.not-enabled": "Mechanic {0} is not enabled",

@@ -56,7 +56,7 @@ public class CartEjector extends CartBlockMechanism {
         // the cart also comes to a dead halt at the time of writing, and i have no idea why.
         List<Entity> passengers = event.getMinecart().getPassengers();
         event.getMinecart().eject();
-        passengers.forEach(ent -> ent.teleport(LocationUtil.center(ejectTarget.getLocation())));
+        passengers.forEach(ent -> ent.teleport(ejectTarget.getLocation().toCenterLocation()));
 
         // notice!
         // if a client tries to board a cart immediately before it crosses an ejector,

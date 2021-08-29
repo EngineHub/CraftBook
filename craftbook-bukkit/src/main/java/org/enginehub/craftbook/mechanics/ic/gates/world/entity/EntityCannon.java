@@ -101,7 +101,7 @@ public class EntityCannon extends AbstractSelfTriggeredIC {
 
         boolean resultBoolean = false;
 
-        for (Entity e : LocationUtil.getNearbyEntities(location, Vector3.at(3, 3, 3))) {
+        for (Entity e : location.getNearbyEntities(3, 3, 3)) {
 
             if (e.isDead() || !e.isValid())
                 continue;

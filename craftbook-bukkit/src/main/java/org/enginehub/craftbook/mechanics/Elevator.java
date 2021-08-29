@@ -148,7 +148,7 @@ public class Elevator extends AbstractCraftBookMechanic {
             return;
         }
 
-        for (Player player : LocationUtil.getNearbyPlayers(event.getBlock().getLocation(), elevatorRedstoneRadius)) {
+        for (Player player : event.getBlock().getLocation().getNearbyPlayers(elevatorRedstoneRadius)) {
             CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(player);
 
             if (!localPlayer.hasPermission("craftbook.elevator.use")) {

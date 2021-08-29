@@ -182,8 +182,7 @@ public class CartDispenser extends CartBlockMechanism {
      * @param inv the inventory to remove a cart item from, or null if we don't care.
      */
     private void dispense(CartMechanismBlocks blocks, Inventory inv, CartType type) {
-
-        Location location = LocationUtil.center(blocks.rail.getLocation());
+        Location location = blocks.rail.getLocation().toCenterLocation();
 
         if (minecartDispenserLegacy) {
             BlockFace direction = SignUtil.getFront(blocks.sign).getOppositeFace();

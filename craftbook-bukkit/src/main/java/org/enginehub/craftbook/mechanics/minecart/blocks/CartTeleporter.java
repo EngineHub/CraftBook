@@ -64,8 +64,7 @@ public class CartTeleporter extends CartBlockMechanism {
             CartUtil.stop(event.getMinecart());
         }
 
-        Location loc = LocationUtil
-            .center(new Location(world, x, y, z, event.getMinecart().getLocation().getYaw(), event.getMinecart().getLocation().getPitch()));
+        Location loc = new Location(world, x, y, z, event.getMinecart().getLocation().getYaw(), event.getMinecart().getLocation().getPitch()).toCenterLocation();
         loc.getChunk().load(true);
         CartUtil.teleport(event.getMinecart(), loc);
     }

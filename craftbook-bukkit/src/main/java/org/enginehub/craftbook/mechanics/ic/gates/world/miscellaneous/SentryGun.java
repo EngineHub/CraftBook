@@ -16,7 +16,6 @@
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.math.Vector3;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -36,7 +35,6 @@ import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EntityType;
-import org.enginehub.craftbook.util.EntityUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.SearchArea;
 
@@ -115,7 +113,7 @@ public class SentryGun extends AbstractSelfTriggeredIC {
 
                 if (hasFound) {
                     double yOff = ((LivingEntity) ent).getEyeHeight();
-                    Location k = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(getBackBlock(), BlockFace.UP));
+                    Location k = LocationUtil.getBlockCentreTop(LocationUtil.getNextFreeSpace(getBackBlock(), BlockFace.UP));
                     Arrow ar = area.getWorld().spawnArrow(k, ent.getLocation().add(0, yOff, 0).subtract(k.clone().add(0.5, 0.5, 0.5)).toVector().normalize(), speed, 0);
                     if (!((LivingEntity) ent).hasLineOfSight(ar)) {
                         ar.remove();

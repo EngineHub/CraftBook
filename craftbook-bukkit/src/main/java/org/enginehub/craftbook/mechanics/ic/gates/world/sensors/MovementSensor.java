@@ -107,7 +107,7 @@ public class MovementSensor extends AbstractSelfTriggeredIC {
 
     public boolean check() {
 
-        for (Entity entity : LocationUtil.getNearbyEntities(center.getLocation(), radius)) {
+        for (Entity entity : center.getLocation().getNearbyEntities(radius.getX(), radius.getY(), radius.getZ())) {
             if (entity.isValid()) {
                 for (EntityType type : types) { // Check Type
                     if (type.is(entity)) { // Check Radius

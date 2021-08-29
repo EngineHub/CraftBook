@@ -29,8 +29,6 @@ import org.enginehub.craftbook.bukkit.BukkitCraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 
-import java.util.HashSet;
-
 public final class LocationUtil {
 
     private LocationUtil() {
@@ -50,7 +48,7 @@ public final class LocationUtil {
      * @return If checked is within the radius
      */
     public static boolean isWithinSphericalRadius(Location base, Location checked, double radius) {
-        return getDistanceSquared(base, checked) <= radius * radius;
+        return base.getWorld() == checked.getWorld() && base.distanceSquared(checked) <= radius * radius;
     }
 
     /**
@@ -91,46 +89,6 @@ public final class LocationUtil {
     public static boolean isWithinRadius(Location l1, Location l2, Vector3 radius) {
 
         return radius.getX() == radius.getZ() && radius.getX() == radius.getY() && isWithinSphericalRadius(l1, l2, radius.getX()) || (radius.getX() != radius.getY() || radius.getY() != radius.getZ() || radius.getX() != radius.getZ()) && isWithinRadiusPolygon(l1, l2, radius);
-    }
-
-    public static Entity[] getNearbyEntities(Location l, Vector3 radius) {
-        int chunkRadiusX = (int) radius.getX() < 16 ? 1 : (int) radius.getX() / 16;
-        int chunkRadiusZ = (int) radius.getZ() < 16 ? 1 : (int) radius.getZ() / 16;
-        HashSet<Entity> radiusEntities = new HashSet<>();
-        for (int chX = 0 - chunkRadiusX; chX <= chunkRadiusX; chX++) {
-            for (int chZ = 0 - chunkRadiusZ; chZ <= chunkRadiusZ; chZ++) {
-                int offChunkX = l.getChunk().getX() + chX;
-                int offChunkZ = l.getChunk().getZ() + chZ;
-                if (l.getWorld().isChunkLoaded(offChunkX, offChunkZ)) {
-                    for (Entity e : l.getWorld().getChunkAt(offChunkX, offChunkZ).getEntities()) {
-                        if (e == null || e.isDead() || !e.isValid())
-                            continue;
-                        if (isWithinRadius(l, e.getLocation(), radius))
-                            radiusEntities.add(e);
-                    }
-                }
-            }
-        }
-        return radiusEntities.toArray(new Entity[radiusEntities.size()]);
-    }
-
-    /**
-     * Gets the distance between two points.
-     *
-     * @param l1
-     * @param l2
-     * @return
-     */
-    public static double getDistance(Location l1, Location l2) {
-        return Math.sqrt(getDistanceSquared(l1, l2));
-    }
-
-    public static double getDistanceSquared(Location l1, Location l2) {
-        if (!l1.getWorld().equals(l2.getWorld())) {
-            return Integer.MAX_VALUE;
-        }
-
-        else return l1.distanceSquared(l2);
     }
 
     public static Block getRelativeOffset(ChangedSign sign, int offsetX, int offsetY, int offsetZ) {
@@ -190,40 +148,23 @@ public final class LocationUtil {
 
         // apply left and right offset
         if (offsetX > 0) {
-            block = getRelativeBlock(block, right, offsetX);
+            block = block.getRelative(right, offsetX);
         } else if (offsetX < 0) {
-            block = getRelativeBlock(block, left, offsetX);
+            block = block.getRelative(left, offsetX);
         }
 
         // apply front and back offset
         if (offsetZ > 0) {
-            block = getRelativeBlock(block, front, offsetZ);
+            block = block.getRelative(front, offsetZ);
         } else if (offsetZ < 0) {
-            block = getRelativeBlock(block, back, offsetZ);
+            block = block.getRelative(back, offsetZ);
         }
 
         // apply up and down offset
         if (offsetY > 0) {
-            block = getRelativeBlock(block, BlockFace.UP, offsetY);
+            block = block.getRelative(BlockFace.UP, offsetY);
         } else if (offsetY < 0) {
-            block = getRelativeBlock(block, BlockFace.DOWN, offsetY);
-        }
-        return block;
-    }
-
-    /**
-     * Get relative block X that way.
-     *
-     * @param block
-     * @param facing
-     * @param amount
-     * @return The block
-     */
-    private static Block getRelativeBlock(Block block, BlockFace facing, int amount) {
-
-        amount = Math.abs(amount);
-        for (int i = 0; i < amount; i++) {
-            block = block.getRelative(facing);
+            block = block.getRelative(BlockFace.DOWN, offsetY);
         }
         return block;
     }
@@ -247,34 +188,13 @@ public final class LocationUtil {
     }
 
     /**
-     * Gets centre of passed block.
+     * Gets centre of the top face of the passed block.
      *
-     * @param block
-     * @return Centre location
+     * @param block The given block
+     * @return The centre of the top
      */
-    public static Location getCenterOfBlock(Block block) {
-
+    public static Location getBlockCentreTop(Block block) {
         return block.getLocation().add(0.5, 1, 0.5);
-    }
-
-    public static Player[] getNearbyPlayers(Location l, int radius) {
-
-        int chunkRadius = radius < 16 ? 1 : radius / 16;
-        HashSet<Player> radiusEntities = new HashSet<>();
-        for (int chX = 0 - chunkRadius; chX <= chunkRadius; chX++) {
-            for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
-                int x = (int) l.getX(), y = (int) l.getY(), z = (int) l.getZ();
-                for (Entity e : new Location(l.getWorld(), x + chX * 16, y, z + chZ * 16).getChunk().getEntities()) {
-                    if (!(e instanceof Player))
-                        continue;
-                    if (getDistanceSquared(e.getLocation(), l) <= radius * radius && e.getLocation().getBlock() != l
-                        .getBlock()) {
-                        radiusEntities.add((Player) e);
-                    }
-                }
-            }
-        }
-        return radiusEntities.toArray(new Player[radiusEntities.size()]);
     }
 
     /**
@@ -359,17 +279,6 @@ public final class LocationUtil {
                 vehicle.addPassenger(bukkitPlayer);
             }
         }.runTaskLater(CraftBookPlugin.inst(), runnableDelayInTicks);
-    }
-
-    public static Location center(Location loc) {
-        return new Location(
-            loc.getWorld(),
-            loc.getBlockX() + 0.5,
-            loc.getBlockY() + 0.5,
-            loc.getBlockZ() + 0.5,
-            loc.getPitch(),
-            loc.getYaw()
-        );
     }
 
     public static final double EQUALS_PRECISION = 0.0001;

@@ -92,11 +92,6 @@ public class LanguageManager {
         put("mech.pay.not-enough-money", "Payment Failed! You don't have enough money.");
         put("mech.pay.failed-to-pay", "Payment Failed! The money failed to be exchanged.");
 
-        put("mech.pistons.crush.created", "Piston Crush Mechanic Created!");
-        put("mech.pistons.supersticky.created", "Piston Super-Sticky Mechanic Created!");
-        put("mech.pistons.bounce.created", "Piston Bounce Mechanic Created!");
-        put("mech.pistons.superpush.created", "Piston Super-Push Mechanic Created!");
-
         put("mech.teleport.create", "Teleporter Created!");
         put("mech.teleport.alert", "You Teleported!");
         put("mech.teleport.range", "Out of Range!");
@@ -104,12 +99,6 @@ public class LanguageManager {
         put("mech.teleport.arriveonly", "You can only arrive at this teleporter!");
         put("mech.teleport.invalidcoords", "The entered coordinates are invalid!");
         put("mech.teleport.obstruct", "Your destination is obstructed!");
-
-        put("mech.xp-storer.create", "XP Storer Created!");
-        put("mech.xp-storer.bottle", "You need a bottle to perform this mechanic!");
-        put("mech.xp-storer.success", "You package your experience into a bottle!");
-        put("mech.xp-storer.not-enough-xp", "You do not have enough experience to fill a bottle!");
-
 
         put("circuits.pipes.create", "Pipe created!");
         put("circuits.pipes.pipe-not-found", "Failed to find pipe!");

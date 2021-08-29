@@ -32,7 +32,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("CustomCrafting", org.enginehub.craftbook.mechanics.crafting.CustomCrafting.class, MechanicCategory.CUSTOMISATION);
 //        registerMechanic("CustomDrops", org.enginehub.craftbook.mechanics.drops.CustomDrops.class, MechanicCategory.CUSTOMISATION);
 //        registerMechanic("TreeLopper", org.enginehub.craftbook.mechanics.TreeLopper.class, MechanicCategory.GENERAL);
-//        registerMechanic("XpStorer", org.enginehub.craftbook.mechanics.XPStorer.class, MechanicCategory.GENERAL);
 //        registerMechanic("CommandSigns", org.enginehub.craftbook.mechanics.CommandSigns.class, MechanicCategory.GENERAL);
 //        registerMechanic("HiddenSwitch", org.enginehub.craftbook.mechanics.HiddenSwitch.class, MechanicCategory.GENERAL);
 //        registerMechanic("Bridge", org.enginehub.craftbook.mechanics.area.simple.Bridge.class, MechanicCategory.GENERAL);
@@ -401,6 +400,15 @@ public class BukkitMechanicManager extends MechanicManager {
             .name("BetterPistons")
             .description(TranslatableComponent.of("craftbook.betterpistons.description"))
             .className("org.enginehub.craftbook.mechanics.piston.BetterPistons")
+            .category(MechanicCategory.GENERAL)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("xp_storer")
+            .name("XPStorer")
+            .description(TranslatableComponent.of("craftbook.xpstorer.description"))
+            .className("org.enginehub.craftbook.mechanics.XPStorer")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
