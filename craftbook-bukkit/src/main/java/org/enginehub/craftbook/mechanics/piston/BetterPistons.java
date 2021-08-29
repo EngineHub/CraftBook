@@ -289,7 +289,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         Material pistonHeadType = pistonHead.getType();
         BlockData pistonHeadData = pistonHead.getBlockData();
 
-        if (pistonHeadType == Material.AIR
+        if (pistonHeadType.isAir()
             || pistonHeadType == Material.MOVING_PISTON
             || pistonHeadType == Material.PISTON_HEAD
             || InventoryUtil.doesBlockHaveInventory(pistonHead)
@@ -340,7 +340,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                         Material fromType = from.getType();
 
                         if (x >= fblock + 2
-                            || fromType == Material.AIR && !air
+                            || fromType.isAir() && !air
                             || fromType == Material.MOVING_PISTON
                             || fromType == Material.PISTON_HEAD
                             || isImmovableBlock(from)) {
@@ -348,7 +348,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                             break;
                         }
 
-                        if (to.getType() == Material.AIR) {
+                        if (to.getType().isAir()) {
                             for (Entity ent : trigger.getWorld().getNearbyEntities(BoundingBox.of(from))) {
                                 ent.teleport(ent.getLocation().subtract(piston.getFacing().getDirection()));
                             }
@@ -396,7 +396,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                             continue;
                         }
 
-                        if (to.getType() == Material.AIR) {
+                        if (to.getType().isAir()) {
                             for (Entity ent : trigger.getWorld().getNearbyEntities(BoundingBox.of(from))) {
                                 ent.teleport(ent.getLocation().add(piston.getFacing().getDirection()));
                             }
@@ -429,17 +429,23 @@ public class BetterPistons extends AbstractCraftBookMechanic {
 
     private boolean isImmovableBlock(Block block) {
         BlockData blockData = block.getBlockData();
-        if (blockData instanceof Chest && ((Chest) blockData).getType() != Chest.Type.SINGLE) {
+        if (blockData instanceof Chest chest && chest.getType() != Chest.Type.SINGLE) {
             return true;
         }
 
-        if (Blocks.containsFuzzy(movementBlacklist, adapt(block.getBlockData()))) {
+        if (Blocks.containsFuzzy(movementBlacklist, adapt(blockData))) {
             return true;
         }
 
-        return block.getType() == Material.MOVING_PISTON;
+        return blockData.getMaterial() == Material.MOVING_PISTON;
     }
 
+    /**
+     * Checks if the given {@link PistonType} is enabled by the user.
+     *
+     * @param type The piston type
+     * @return Whether it's enabled
+     */
     public boolean isEnabled(PistonType type) {
         return switch (type) {
             case CRUSH -> enableCrush;
@@ -448,8 +454,6 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             case SUPER_PUSH -> enableSuperPush;
         };
     }
-
-    private int maxDistance;
 
     // Crush
     private boolean enableCrush;
@@ -460,6 +464,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
     private boolean enableSuperPush;
     private boolean enableSuperSticky;
     private List<BaseBlock> movementBlacklist;
+    private int maxDistance;
 
     // Bounce
     private boolean enableBounce;

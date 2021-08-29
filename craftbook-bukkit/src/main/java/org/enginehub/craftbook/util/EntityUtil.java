@@ -49,9 +49,6 @@ import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
 import org.bukkit.util.BoundingBox;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public final class EntityUtil {
 
     private EntityUtil() {
@@ -68,32 +65,37 @@ public final class EntityUtil {
     }
 
     /**
-     * Kills an entity using the proper way for it's entity type.
+     * Kills an entity using standard death logic.
      *
-     * @param ent The entity to kill.
+     * <p>
+     * Compared to just calling .remove, this function will attempt to make the entity behave as if it was killed by
+     * natural causes.
+     * </p>
+     *
+     * @param entity The entity to kill.
      */
-    public static void killEntity(Entity ent) {
-
-        if (ent instanceof Damageable)
-            ((Damageable) ent).damage(((Damageable) ent).getHealth());
-        else
-            ent.remove();
+    public static void killEntity(Entity entity) {
+        if (entity instanceof Damageable damageable) {
+            damageable.damage(damageable.getHealth());
+        } else {
+            entity.remove();
+        }
     }
 
     /**
-     * Damages an entity using the proper way for it's entity type.
+     * Damages an entity using the proper way for its entity type.
      *
-     * @param ent The entity to damage.
+     * @param entity The entity to damage.
      * @param damage The amount to damage it by.
      */
-    public static void damageEntity(Entity ent, double damage) {
-
-        if (ent instanceof Damageable)
-            ((Damageable) ent).damage(damage);
-        else if (ent instanceof Minecart)
-            ((Minecart) ent).setDamage(((Minecart) ent).getDamage() + damage);
-        else
-            ent.remove();
+    public static void damageEntity(Entity entity, double damage) {
+        if (entity instanceof Damageable damageable) {
+            damageable.damage(damage);
+        } else if (entity instanceof Minecart cart) {
+            cart.setDamage(cart.getDamage() + damage);
+        } else {
+            entity.remove();
+        }
     }
 
     public static void setEntityData(Entity ent, String bit) {
