@@ -162,7 +162,11 @@ public class XPStorer extends AbstractCraftBookMechanic {
         int bottleCount = (int) Math.min(maxBottleCount, Math.floor(xp / (double) bottleXpRequirement));
 
         if (requireBottle) {
-            event.getPlayer().getInventory().removeItemAnySlot(new ItemStack(Material.GLASS_BOTTLE, bottleCount));
+            if (event.getItem().getAmount() - bottleCount <= 0) {
+                event.getPlayer().getInventory().setItem(event.getHand(), null);
+            } else {
+                event.getItem().setAmount(event.getItem().getAmount() - bottleCount);
+            }
         }
 
         int tempBottles = bottleCount;
@@ -309,7 +313,25 @@ public class XPStorer extends AbstractCraftBookMechanic {
         }
 
         if (requireBottle && inventory != null) {
-            inventory.removeItem(new ItemStack(Material.GLASS_BOTTLE, bottleCount));
+            var leftovers = inventory.removeItem(new ItemStack(Material.GLASS_BOTTLE, bottleCount));
+            for (ItemStack stack : leftovers.values()) {
+                int amount = stack.getAmount();
+                for (int i = 0; i < inventory.getContents().length; i++) {
+                    if (amount <= 0) {
+                        break;
+                    }
+                    ItemStack content = inventory.getContents()[i];
+                    if (ItemUtil.isStackValid(content) && content.getType() == stack.getType()) {
+                        if (content.getAmount() - amount <= 0) {
+                            amount -= content.getAmount();
+                            inventory.setItem(i, null);
+                        } else {
+                            content.setAmount(content.getAmount() - amount);
+                            amount = 0;
+                        }
+                    }
+                }
+            }
         }
 
         int remainingXP = xp - bottleCount * bottleXpRequirement;
