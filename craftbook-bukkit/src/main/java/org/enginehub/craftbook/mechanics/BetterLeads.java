@@ -51,7 +51,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerClick(final PlayerInteractEntityEvent event) {
-        if (!(event.getRightClicked() instanceof LivingEntity) || !EventUtil.passesFilter(event)) {
+        if (!(event.getRightClicked() instanceof LivingEntity entity) || entity.isLeashed() || !EventUtil.passesFilter(event)) {
             return;
         }
 
@@ -70,8 +70,8 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         CraftBookPlugin.logDebugMessage("It is of type: " + typeName, "betterleads.allowed-mobs");
 
         if (!allowedMobs.contains(typeName)
-            || !typeName.startsWith("minecraft:")
-            || !allowedMobs.contains(typeName.substring("minecraft:".length()))) {
+            && (!typeName.startsWith("minecraft:")
+            || !allowedMobs.contains(typeName.substring("minecraft:".length())))) {
             return;
         }
 
@@ -85,14 +85,14 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         }
 
         CraftBookPlugin.logDebugMessage("Leashing entity!", "betterleads.allowed-mobs");
-        if (event.getRightClicked() instanceof Creature && ((Creature) event.getRightClicked()).getTarget() != null && ((Creature) event.getRightClicked()).getTarget().equals(event.getPlayer())) {
-            ((Creature) event.getRightClicked()).setTarget(null); //Rescan for a new target.
+        if (event.getRightClicked() instanceof Creature creature && creature.getTarget() != null && creature.getTarget().equals(event.getPlayer())) {
+            creature.setTarget(null); //Rescan for a new target.
         }
 
         event.setCancelled(true);
 
         Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), () -> {
-            if (!((LivingEntity) event.getRightClicked()).setLeashHolder(event.getPlayer())) {
+            if (!entity.setLeashHolder(event.getPlayer())) {
                 CraftBookPlugin.logDebugMessage("Failed to leash entity!", "betterleads.allowed-mobs");
                 return;
             }
