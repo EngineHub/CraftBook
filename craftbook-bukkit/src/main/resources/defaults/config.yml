@@ -35,6 +35,7 @@ mechanics:
         painting_switcher: false
         readable_bookshelf: false
         snow: false
+        teleporter: false
         variables: true
         xp_storer: false
     minecart:

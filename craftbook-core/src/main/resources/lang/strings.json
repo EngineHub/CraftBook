@@ -115,6 +115,16 @@
 
     "craftbook.snow.description": "Enhances snow, allowing it to build up and realistically spread",
 
+    "craftbook.teleporter.create": "Teleporter created.",
+    "craftbook.teleporter.description": "Create teleporters that let you travel around instantly.",
+    "craftbook.teleporter.invalid-destination": "Invalid destination for this teleporter.",
+    "craftbook.teleporter.no-sign": "There is no sign at your destination.",
+    "craftbook.teleporter.no-depart": "Cannot depart from this teleporter (can only arrive).",
+    "craftbook.teleporter.no-floor": "There is no floor at your destination!",
+    "craftbook.teleporter.obstructed": "Your destination is obstructed!",
+    "craftbook.teleporter.teleported": "You've been teleported!",
+    "craftbook.teleporter.too-far": "Your destination is too far away!",
+
     "craftbook.temporarycart.description": "Allows creating Minecarts that disappear on exit, by right clicking rails.",
 
     "craftbook.variables.unknown-variable": "Unknown variable: \"{0}\"",

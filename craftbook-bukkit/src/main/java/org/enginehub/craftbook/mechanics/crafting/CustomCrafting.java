@@ -377,6 +377,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
 
     @SuppressWarnings("unchecked")
     public void applyPostData(RecipeManager.Recipe recipe, Player p, InventoryClickEvent event) {
+        CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(p);
 
         if (recipe.hasAdvancedData("permission-node")) {
             CraftBookPlugin.logDebugMessage("A recipe with permission nodes detected!", "advanced-data");
@@ -404,13 +405,13 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
             CraftBookPlugin.logDebugMessage("A recipe with commands is detected!", "advanced-data");
             if (recipe.hasAdvancedData("commands-console")) {
                 for (String s : (List<String>) recipe.getAdvancedData("commands-console")) {
-                    s = ParsingUtil.parseLine(s, p);
+                    s = ParsingUtil.parseLine(s, localPlayer);
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s);
                 }
             }
             if (recipe.hasAdvancedData("commands-player")) {
                 for (String s : (List<String>) recipe.getAdvancedData("commands-player")) {
-                    s = ParsingUtil.parseLine(s, p);
+                    s = ParsingUtil.parseLine(s, localPlayer);
                     PermissionAttachment att = p.addAttachment(CraftBookPlugin.inst());
                     att.setPermission("*", true);
                     boolean wasOp = p.isOp();

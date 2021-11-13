@@ -15,9 +15,10 @@
 
 package org.enginehub.craftbook.util;
 
+import com.sk89q.worldedit.entity.Player;
+import com.sk89q.worldedit.util.Location;
+import com.sk89q.worldedit.world.World;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.entity.Player;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.variables.VariableManager;
 
 import javax.annotation.Nullable;
@@ -42,25 +43,27 @@ public final class ParsingUtil {
             line = parsePlayerTags(line, player);
         }
         if (VariableManager.instance != null) {
-            line = VariableManager.renderVariables(line, player == null ? null : CraftBookPlugin.inst().wrapPlayer(player));
+            line = VariableManager.renderVariables(line, player);
         }
 
         return line;
     }
 
     private static String parsePlayerTags(String line, Player player) {
-        line = StringUtils.replace(line, "@p.l", player.getLocation().getX() + ":" + player.getLocation().getY() + ":" + player.getLocation().getZ());
-        line = StringUtils.replace(line, "@p.x", String.valueOf(player.getLocation().getX()));
-        line = StringUtils.replace(line, "@p.y", String.valueOf(player.getLocation().getY()));
-        line = StringUtils.replace(line, "@p.z", String.valueOf(player.getLocation().getZ()));
-        line = StringUtils.replace(line, "@p.bx", String.valueOf(player.getLocation().getBlockX()));
-        line = StringUtils.replace(line, "@p.by", String.valueOf(player.getLocation().getBlockY()));
-        line = StringUtils.replace(line, "@p.bz", String.valueOf(player.getLocation().getBlockZ()));
-        line = StringUtils.replace(line, "@p.w", player.getLocation().getWorld().getName());
-        line = StringUtils.replace(line, "@p.u", player.getUniqueId().toString());
-        line = StringUtils.replace(line, "@p", player.getName());
+        Location location = player.getLocation();
+
+        line = line.replace("@p.l", location.getX() + "," + location.getY() + "," + location.getZ());
+        line = line.replace("@p.c", location.getX() + " " + location.getY() + " " + location.getZ());
+        line = line.replace("@p.x", String.valueOf(location.getX()));
+        line = line.replace("@p.y", String.valueOf(location.getY()));
+        line = line.replace("@p.z", String.valueOf(location.getZ()));
+        line = line.replace("@p.bx", String.valueOf(location.getBlockX()));
+        line = line.replace("@p.by", String.valueOf(location.getBlockY()));
+        line = line.replace("@p.bz", String.valueOf(location.getBlockZ()));
+        line = line.replace("@p.w", ((World) location.getExtent()).getName());
+        line = line.replace("@p.u", player.getUniqueId().toString());
+        line = line.replace("@p", player.getName());
 
         return line;
     }
-
 }

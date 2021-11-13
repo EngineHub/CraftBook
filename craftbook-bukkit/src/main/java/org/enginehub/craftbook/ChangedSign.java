@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook;
 
+import com.sk89q.worldedit.entity.Player;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -25,6 +26,7 @@ import org.enginehub.craftbook.util.ParsingUtil;
 
 import java.util.Arrays;
 import java.util.Objects;
+import javax.annotation.Nullable;
 
 public class ChangedSign {
 
@@ -101,7 +103,11 @@ public class ChangedSign {
     }
 
     public String getLine(int index) throws IndexOutOfBoundsException {
-        return ParsingUtil.parseLine(this.lines[index], null);
+        return this.getLine(index, null);
+    }
+
+    public String getLine(int index, @Nullable Player player) throws IndexOutOfBoundsException {
+        return ParsingUtil.parseLine(this.lines[index], player);
     }
 
     public String getRawLine(int index) throws IndexOutOfBoundsException {

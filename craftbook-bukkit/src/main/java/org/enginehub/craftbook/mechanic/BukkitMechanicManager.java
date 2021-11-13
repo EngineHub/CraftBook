@@ -36,7 +36,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("HiddenSwitch", org.enginehub.craftbook.mechanics.HiddenSwitch.class, MechanicCategory.GENERAL);
 //        registerMechanic("Bridge", org.enginehub.craftbook.mechanics.area.simple.Bridge.class, MechanicCategory.GENERAL);
 //        registerMechanic("Door", org.enginehub.craftbook.mechanics.area.simple.Door.class, MechanicCategory.GENERAL);
-//        registerMechanic("Teleporter", org.enginehub.craftbook.mechanics.Teleporter.class, MechanicCategory.GENERAL);
 //        registerMechanic("ToggleArea", org.enginehub.craftbook.mechanics.area.Area.class, MechanicCategory.GENERAL);
 //        registerMechanic("Cauldron", org.enginehub.craftbook.mechanics.cauldron.ImprovedCauldron.class, MechanicCategory.CUSTOMISATION);
 //        registerMechanic("Gate", org.enginehub.craftbook.mechanics.area.simple.Gate.class, MechanicCategory.GENERAL);
@@ -409,6 +408,15 @@ public class BukkitMechanicManager extends MechanicManager {
             .name("XPStorer")
             .description(TranslatableComponent.of("craftbook.xpstorer.description"))
             .className("org.enginehub.craftbook.mechanics.XPStorer")
+            .category(MechanicCategory.GENERAL)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("teleporter")
+            .name("Teleporter")
+            .description(TranslatableComponent.of("craftbook.teleporter.description"))
+            .className("org.enginehub.craftbook.mechanics.Teleporter")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 

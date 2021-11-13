@@ -17,10 +17,12 @@ package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.util.Location;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import com.sk89q.worldedit.world.block.BlockCategories;
+import com.sk89q.worldedit.world.block.BlockState;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
@@ -44,230 +46,230 @@ import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.events.SignClickEvent;
 
 /**
- * Teleporter Mechanism. Based off Elevator
- *
- * @author sk89q
- * @author hash
- * @author Me4502
+ * Teleporter mechanic; teleports players to another location based on position.
  */
 public class Teleporter extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
-        if (!EventUtil.passesFilter(event)) return;
+        if (!event.getLine(1).equalsIgnoreCase("[Teleporter]")) {
+            return;
+        }
 
-        if (!event.getLine(1).equalsIgnoreCase("[Teleporter]")) return;
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        if (!player.hasPermission("craftbook.mech.teleporter")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
+                player.printError(TranslatableComponent.of(
+                    "craftbook.mechanisms.create-permission",
+                    TextComponent.of(getMechanicType().getName())
+                ));
+            }
 
-        if (!localPlayer.hasPermission("craftbook.mech.teleporter")) {
-            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
-                localPlayer.printError("mech.create-permission");
             SignUtil.cancelSignChange(event);
             return;
         }
 
-        String[] pos = RegexUtil.COLON_PATTERN.split(ParsingUtil.parseLine(event.getLine(2), event.getPlayer()));
-        if (pos.length <= 2) {
-            localPlayer.printError("mech.teleport.invalidcoords");
-            SignUtil.cancelSignChange(event);
-            return;
+        String posLine = event.getLine(2);
+        if (posLine.length() > 0) {
+            String[] pos = RegexUtil.COMMA_PATTERN.split(ParsingUtil.parseLine(posLine, player));
+            if (pos.length <= 2) {
+                player.printError(TranslatableComponent.of("craftbook.teleporter.invalid-destination"));
+                SignUtil.cancelSignChange(event);
+                return;
+            }
         }
 
-        localPlayer.print("mech.teleport.create");
+        player.printInfo(TranslatableComponent.of("craftbook.teleporter.create"));
         event.setLine(1, "[Teleporter]");
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
+        if (!teleporterButtonEnabled
+            || event.getHand() != EquipmentSlot.HAND
+            || event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
 
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (SignUtil.isSign(event.getClickedBlock())) return;
+        if (!Tag.BUTTONS.isTagged(event.getClickedBlock().getType())) {
+            return;
+        }
 
         onCommonClick(event);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
-
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         onCommonClick(event);
     }
 
     public void onCommonClick(PlayerInteractEvent event) {
-
-        if (!EventUtil.passesFilter(event) || event.getHand() != EquipmentSlot.HAND)
+        if (!EventUtil.passesFilter(event)
+            || event.getHand() != EquipmentSlot.HAND
+            || event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
+        }
 
         CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        Block trigger = null;
+        Block block = null;
+        ChangedSign sign = null;
 
         if (SignUtil.isSign(event.getClickedBlock())) {
-            ChangedSign s = CraftBookBukkitUtil.toChangedSign(event.getClickedBlock());
-            if (!s.getLine(1).equals("[Teleporter]")) return;
-            String[] pos = RegexUtil.COLON_PATTERN.split(s.getLine(2));
-            if (pos.length <= 2) {
-                localPlayer.printError("mech.teleport.invalidcoords");
-                return;
-            }
-            trigger = event.getClickedBlock();
+            sign = CraftBookBukkitUtil.toChangedSign(event.getClickedBlock());
+            block = event.getClickedBlock();
         } else if (Tag.BUTTONS.isTagged(event.getClickedBlock().getType())) {
             Directional b = (Directional) event.getClickedBlock().getBlockData();
-            if (b == null || b.getFacing() == null) return;
-            Block sign = event.getClickedBlock().getRelative(b.getFacing().getOppositeFace(), 2);
-            if (SignUtil.isSign(sign)) {
-                ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
-                if (!s.getLine(1).equals("[Teleporter]")) return;
-                String[] pos = RegexUtil.COLON_PATTERN.split(s.getLine(2));
-                if (pos.length <= 2) {
-                    localPlayer.printError("mech.teleport.invalidcoords");
-                    return;
-                }
-                trigger = sign;
+            Block oppositeBlock = event.getClickedBlock().getRelative(b.getFacing().getOppositeFace(), 2);
+            if (SignUtil.isSign(oppositeBlock)) {
+                sign = CraftBookBukkitUtil.toChangedSign(oppositeBlock);
+                block = oppositeBlock;
             }
-        } else
+        } else {
             return;
+        }
 
-        if (trigger == null) return;
+        if (block == null || sign == null) {
+            return;
+        }
 
-        if (!localPlayer.hasPermission("craftbook.mech.teleporter.use")) {
-            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!sign.getLine(1).equals("[Teleporter]")) {
+            return;
+        }
+
+        if (sign.getLine(2).length() == 0) {
+            localPlayer.printError(TranslatableComponent.of("craftbook.teleporter.no-depart"));
+            return;
+        }
+
+        String[] pos = RegexUtil.COMMA_PATTERN.split(sign.getLine(2));
+        if (pos.length <= 2) {
+            localPlayer.printError(TranslatableComponent.of("craftbook.teleporter.invalid-destination"));
+            return;
+        }
+
+        Block destination;
+
+        try {
+            int x = Integer.parseInt(pos[0]);
+            int y = Integer.parseInt(pos[1]);
+            int z = Integer.parseInt(pos[2]);
+
+            destination = block.getWorld().getBlockAt(x, y, z);
+        } catch (NumberFormatException ignored) {
+            localPlayer.printError(TranslatableComponent.of("craftbook.teleporter.invalid-destination"));
+            return;
+        }
+
+        if (teleporterRequireSign) {
+            if (!SignUtil.isSign(destination)) {
+                localPlayer.printError(TranslatableComponent.of("craftbook.teleporter.no-sign"));
+                return;
+            }
+
+            ChangedSign destSign = CraftBookBukkitUtil.toChangedSign(destination);
+            if (!destSign.getLine(1).equals("[Teleporter]")) {
+                localPlayer.printError(TranslatableComponent.of("craftbook.teleporter.no-sign"));
+                return;
+            }
+        }
+
+        if (!localPlayer.hasPermission("craftbook.teleporter.use")) {
+            event.setCancelled(true);
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                 localPlayer.printError("mech.use-permission");
+            }
             return;
         }
 
-        if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canUse(event.getPlayer(), block.getLocation(), event.getBlockFace(), event.getAction())) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                 localPlayer.printError("area.use-permissions");
+            }
             return;
         }
 
-        makeItSo(localPlayer, trigger);
+        if (teleporterMaxRange > 0) {
+            if (localPlayer.getLocation().toVector().distanceSq(BukkitAdapter.adapt(destination.getLocation()).toVector()) > teleporterMaxRange * teleporterMaxRange) {
+                localPlayer.printError(TranslatableComponent.of("craftbook.teleporter.too-far"));
+                return;
+            }
+        }
+
+        activateTeleporter(localPlayer, destination);
 
         event.setCancelled(true);
     }
 
-    private void makeItSo(CraftBookPlayer player, Block trigger) {
-        // start with the block shifted vertically from the player
-        // to the destination sign's height (plus one).
-        // check if this looks at all like something we're interested in first
-
-        double toX = 0;
-        double toY = 0;
-        double toZ = 0;
-
-        if (SignUtil.isSign(trigger)) {
-            ChangedSign s = CraftBookBukkitUtil.toChangedSign(trigger);
-            String[] pos = RegexUtil.COLON_PATTERN.split(s.getLine(2));
-            if (pos.length > 2) {
-                try {
-                    toX = Double.parseDouble(pos[0]);
-                    toY = Double.parseDouble(pos[1]);
-                    toZ = Double.parseDouble(pos[2]);
-                } catch (Exception e) {
-                    player.printError("mech.teleport.arriveonly");
-                    return;
-                }
-            } else {
-                player.printError("mech.teleport.arriveonly");
-                return;
-            }
-        }
-
-        if (requireSign) {
-            Block location = trigger.getWorld().getBlockAt((int) toX, (int) toY, (int) toZ);
-            if (SignUtil.isSign(location)) {
-                if (!checkTeleportSign(player, location)) {
-                    return;
-                }
-            } else if (Tag.BUTTONS.isTagged(location.getType())) {
-                Directional b = (Directional) location.getBlockData();
-                Block sign = location.getRelative(b.getFacing(), 2);
-                if (!checkTeleportSign(player, sign)) {
-                    return;
-                }
-            } else {
-                player.printError("mech.teleport.sign");
-                return;
-            }
-        }
-
-        Block floor = trigger.getWorld().getBlockAt((int) Math.floor(toX), (int) (Math.floor(toY) + 1),
-            (int) Math.floor(toZ));
+    private void activateTeleporter(CraftBookPlayer player, Block destination) {
+        com.sk89q.worldedit.util.Location floor = BukkitAdapter.adapt(destination.getLocation()).setY(destination.getY() + 1);
+        BlockState floorBlock = player.getWorld().getBlock(floor.toVector().toBlockPoint());
         // well, unless that's already a ceiling.
-        if (floor.getType().isSolid())
-            floor = floor.getRelative(BlockFace.DOWN);
+        if (floorBlock.getBlockType().getMaterial().isMovementBlocker() && !BlockCategories.SIGNS.contains(floorBlock)) {
+            floor = floor.setY(floor.getY() - 1);
+            floorBlock = player.getWorld().getBlock(floor.toVector().toBlockPoint());
+        }
 
         // now iterate down until we find enough open space to stand in
         // or until we're 5 blocks away, which we consider too far.
         int foundFree = 0;
+        boolean foundGround = false;
         for (int i = 0; i < 5; i++) {
-            if (!floor.getType().isSolid() || SignUtil.isSign(floor))
+            if (!floorBlock.getBlockType().getMaterial().isMovementBlocker() || BlockCategories.SIGNS.contains(floorBlock)) {
                 foundFree++;
-            else
+            } else {
+                foundGround = true;
                 break;
-            if (floor.getY() == 0x0) break;
-            floor = floor.getRelative(BlockFace.DOWN);
+            }
+            if (floor.getY() == 0) {
+                break;
+            }
+            floor = floor.setY(floor.getY() - 1);
+            floorBlock = player.getWorld().getBlock(floor.toVector().toBlockPoint());
+        }
+        if (!foundGround) {
+            player.printError(TranslatableComponent.of("craftbook.teleporter.no-floor"));
+            return;
         }
         if (foundFree < 2) {
-            player.printError("mech.teleport.obstruct");
+            player.printError(TranslatableComponent.of("craftbook.teleporter.obstructed"));
             return;
         }
 
+        teleportPlayer(player, LocationUtil.getBlockCentreTop(BukkitAdapter.adapt(floor).getBlock()));
+    }
+
+    private void teleportPlayer(final CraftBookPlayer player, final org.bukkit.Location destination) {
         // Teleport!
-        Location subspaceRift = player.getLocation();
-        subspaceRift = subspaceRift.setX(floor.getX() + 0.5);
-        subspaceRift = subspaceRift.setY(floor.getY() + 1.0);
-        subspaceRift = subspaceRift.setZ(floor.getZ() + 0.5);
-
-        if (maxRange > 0) {
-            if (subspaceRift.toVector().distanceSq(player.getLocation().toVector()) > maxRange * maxRange) {
-                player.print("mech.teleport.range");
-                return;
-            }
-        }
-
         if (player.isInsideVehicle()) {
-            org.bukkit.Location newLocation = BukkitAdapter.adapt(subspaceRift);
-            Entity teleportedVehicle = LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
-
-            player.setLocation(subspaceRift);
-
+            Entity teleportedVehicle = LocationUtil.ejectAndTeleportPlayerVehicle(player, destination);
+            player.trySetPosition(BukkitAdapter.adapt(destination).toVector(), destination.getPitch(), destination.getYaw());
             LocationUtil.addVehiclePassengerDelayed(teleportedVehicle, player);
         } else {
-            player.setLocation(subspaceRift);
+            player.trySetPosition(BukkitAdapter.adapt(destination).toVector(), destination.getPitch(), destination.getYaw());
         }
 
-        player.print("mech.teleport.alert");
+        player.printInfo(TranslatableComponent.of("craftbook.teleporter.teleported"));
     }
 
-    private static boolean checkTeleportSign(CraftBookPlayer player, Block sign) {
-        if (!SignUtil.isSign(sign)) {
-            player.printError("mech.teleport.sign");
-            return false;
-        }
-
-        ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
-        if (!s.getLine(1).equals("[Teleporter]")) {
-            player.printError("mech.teleport.sign");
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean requireSign;
-    private int maxRange;
+    private boolean teleporterRequireSign;
+    private int teleporterMaxRange;
+    private boolean teleporterButtonEnabled;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
         config.setComment("require-sign", "Require a sign to be at the destination of the teleportation.");
-        requireSign = config.getBoolean("require-sign", false);
+        teleporterRequireSign = config.getBoolean("require-sign", false);
 
         config.setComment("max-range", "The maximum distance between the start and end of a teleporter. Set to 0 for infinite.");
-        maxRange = config.getInt("max-range", 0);
+        teleporterMaxRange = config.getInt("max-range", 0);
+
+        config.setComment("enable-buttons", "Allow teleporters to be used by a button on the other side of the block.");
+        teleporterButtonEnabled = config.getBoolean("enable-buttons", true);
     }
 }

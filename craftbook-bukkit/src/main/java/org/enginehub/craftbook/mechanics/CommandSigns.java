@@ -26,7 +26,6 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.BukkitCraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.util.BlockUtil;
@@ -123,7 +122,7 @@ public class CommandSigns extends AbstractCraftBookMechanic {
             }
         }
 
-        command = new StringBuilder(ParsingUtil.parseLine(command.toString(), player == null ? null : ((BukkitCraftBookPlayer) player).getPlayer()));
+        command = new StringBuilder(ParsingUtil.parseLine(command.toString(), player));
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.toString());
     }
