@@ -141,7 +141,7 @@ debug-mode-file-logging: false
 debug-flags: []
 
 # Enables random easter eggs. Can be from console messages on startup for a special occasion, to funny little effects with IC's and other mechanics (Always harmless, won't mess anything up)
-easter-eggs: true
+easter-eggs: false
 
 # Random numbers are much more random, with a small cost to CPU usage.
 realistic-randoms: false

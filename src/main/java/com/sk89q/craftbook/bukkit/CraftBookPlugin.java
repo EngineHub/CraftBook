@@ -725,9 +725,9 @@ public class CraftBookPlugin extends JavaPlugin {
             logDebugMessage("Initializing Metrics!", "startup");
             org.bstats.bukkit.Metrics metrics = new org.bstats.bukkit.Metrics(this, 3319);
 
-            metrics.addCustomChart(new org.bstats.bukkit.Metrics.AdvancedPie("language",
+            metrics.addCustomChart(new org.bstats.charts.AdvancedPie("language",
                     () -> languageManager.getLanguages().stream().collect(Collectors.toMap(Function.identity(), o -> 1))));
-            metrics.addCustomChart(new org.bstats.bukkit.Metrics.SimpleBarChart("enabled_mechanics",
+            metrics.addCustomChart(new org.bstats.charts.SimpleBarChart("enabled_mechanics",
                     () -> mechanics.stream().collect(Collectors.toMap(mech -> mech.getClass().getSimpleName(), o -> 1))));
         } catch (Throwable e1) {
             CraftBookBukkitUtil.printStacktrace(e1);

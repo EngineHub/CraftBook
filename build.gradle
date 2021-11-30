@@ -1,5 +1,5 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.0'
     id "com.jfrog.artifactory" version "4.21.0"
 }
 
@@ -40,10 +40,6 @@ allprojects {
         toolchain {
             languageVersion = JavaLanguageVersion.of(16)
         }
-    }
-
-    tasks.compileJava {
-        options.release.set(8)
     }
 
     tasks.test {
@@ -90,20 +86,20 @@ allprojects {
 
     dependencies {
         compileOnly 'org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT'
-        compileOnly 'com.sk89q.worldedit:worldedit-core:7.1.0-SNAPSHOT'
-        compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7.1.0-SNAPSHOT'
-        compileOnly 'com.sk89q.worldguard:worldguard-core:7.0.0-SNAPSHOT'
-        compileOnly 'com.sk89q.worldguard:worldguard-legacy:7.0.0-SNAPSHOT'
+        compileOnly 'com.sk89q.worldedit:worldedit-core:7.2.0'
+        compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7.2.0'
+        compileOnly 'com.sk89q.worldguard:worldguard-core:7.0.5'
+        compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.5'
         compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
         compileOnly 'com.comphenix.protocol:ProtocolLib:4.5.0'
         compileOnly 'fr.neatmonster:nocheatplus:3.15.1-RC'
 
         implementation 'com.sk89q:squirrelid:0.1.0'
-        implementation "io.papermc:paperlib:1.0.6"
-        implementation 'org.bstats:bstats-bukkit:1.8'
+        implementation "io.papermc:paperlib:1.0.7"
+        implementation 'org.bstats:bstats-bukkit:2.2.1'
 
         testImplementation 'org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT'
-        testImplementation 'com.sk89q.worldedit:worldedit-core:7.1.0-SNAPSHOT'
+        testImplementation 'com.sk89q.worldedit:worldedit-core:7.2.0'
         testImplementation group: 'junit', name: 'junit', version: '4.12'
         testImplementation group: 'org.powermock', name: 'powermock-api-mockito', version: '1.7.4'
         testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: '1.7.4'
@@ -148,7 +144,7 @@ allprojects {
             include(dependency('io.papermc:paperlib'))
             include(dependency('com.sk89q:squirrelid'))
 			relocate ("org.bstats", "com.sk89q.craftbook.bukkit.bstats") {
-				include(dependency("org.bstats:bstats-bukkit:1.8"))
+				include(dependency("org.bstats:bstats-bukkit:2.2.1"))
 			}
         }
         relocate 'com.sk89q.squirrelid', 'com.sk89q.craftbook.util.profile'

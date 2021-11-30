@@ -129,6 +129,10 @@ public class CommandItems extends AbstractCraftBookMechanic {
             if(addDefinition(comdef)) {
                 CraftBookPlugin.logDebugMessage("Added CommandItem: " + key, "command-items.initialize");
                 amount++;
+
+                if (comdef.type == CommandType.SUPERUSER && !"true".equals(System.getProperty("craftbook.ignore-superuser-warning"))) {
+                    CraftBookPlugin.logger().warning("Type `SUPERUSER` in use for CommandItem " + comdef.name + ". This is not recommended due to safety and performance issues with Spigot and the way permission plugins work. This will be removed in the future. Try to migrate to `CONSOLE`. Set property craftbook.ignore-superuser-warning to true to hide this message.");
+                }
             } else
                 CraftBookPlugin.logger().warning("Failed to add CommandItem: " + key);
         }
