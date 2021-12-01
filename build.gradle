@@ -143,10 +143,9 @@ allprojects {
         dependencies {
             include(dependency('io.papermc:paperlib'))
             include(dependency('com.sk89q:squirrelid'))
-			relocate ("org.bstats", "com.sk89q.craftbook.bukkit.bstats") {
-				include(dependency("org.bstats:bstats-bukkit:2.2.1"))
-			}
+            include(dependency("org.bstats:"))
         }
+        relocate 'org.bstats', 'com.sk89q.craftbook.bukkit.bstats'
         relocate 'com.sk89q.squirrelid', 'com.sk89q.craftbook.util.profile'
         relocate 'io.papermc.lib', 'com.sk89q.craftbook.bukkit.paperlib'
         exclude 'GradleStart**'
