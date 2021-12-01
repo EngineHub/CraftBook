@@ -96,12 +96,12 @@ public class Ammeter extends AbstractCraftBookMechanic {
         Material type = block.getType();
         BlockData blockData = block.getBlockData();
         int current = -1;
-        if (blockData instanceof Powerable) {
-            current = ((Powerable) blockData).isPowered() ? 15 : 0;
-        } else if (blockData instanceof AnaloguePowerable) {
-            current = ((AnaloguePowerable) blockData).getPower();
-        } else if ((type == Material.REDSTONE_TORCH || type == Material.REDSTONE_WALL_TORCH) && blockData instanceof Lightable) {
-            current = ((Lightable) blockData).isLit() ? 15 : 0;
+        if (blockData instanceof Powerable powerable) {
+            current = powerable.isPowered() ? 15 : 0;
+        } else if (blockData instanceof AnaloguePowerable powerable) {
+            current = powerable.getPower();
+        } else if ((type == Material.REDSTONE_TORCH || type == Material.REDSTONE_WALL_TORCH) && blockData instanceof Lightable lightable) {
+            current = lightable.isLit() ? 15 : 0;
         } else if (block.getType() == Material.REDSTONE_BLOCK) {
             current = 15;
         }

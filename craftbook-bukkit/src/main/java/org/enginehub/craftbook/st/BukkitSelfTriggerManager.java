@@ -114,7 +114,7 @@ public class BukkitSelfTriggerManager implements SelfTriggerManager, Listener {
                     unregisterSelfTrigger(location, UnregisterReason.NOT_HANDLED);
                 }
             } catch (Throwable t) { // Mechanic failed to think for some reason
-                CraftBook.LOGGER.warn("CraftBook mechanic: Failed to think for " + location.toString(), t);
+                CraftBook.LOGGER.warn("CraftBook mechanic: Failed to think for " + location, t);
                 unregisterSelfTrigger(location, UnregisterReason.ERROR);
             }
         }
@@ -159,7 +159,7 @@ public class BukkitSelfTriggerManager implements SelfTriggerManager, Listener {
         Bukkit.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
             removingLocations.add(location);
-            CraftBookPlugin.logDebugMessage("Unregistered ST at: " + location.toString() + " for reason: " + reason.name(), "st.unregister");
+            CraftBookPlugin.logDebugMessage("Unregistered ST at: " + location + " for reason: " + reason.name(), "st.unregister");
         }
     }
 

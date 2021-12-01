@@ -3,5 +3,5 @@ main: org.enginehub.craftbook.bukkit.CraftBookPlugin
 version: "${internalVersion}"
 website: https://enginehub.org/craftbook/
 softdepend: [WorldEdit, WorldGuard, ProtocolLib, Vault]
-api-version: 1.16
+api-version: 1.18
 commands:

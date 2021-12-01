@@ -1,3 +1,24 @@
+3.10.5
+* No changes - re-upload due to corrupt BukkitDev jar
+
+3.10.4
+* Target 1.17 as the minimum version
+* Require Java 16+
+* Don't load self triggering ICs on boundary chunks for performance
+* Improve support for 1.17 items
+* Allow MOB_ANY EntityType to match slimes
+* Add a warning about SUPERUSER CommandItem deprecation
+* Disable easter-eggs by default
+
+3.10.3
+* Target 1.16 as the minimum version
+* Fixed an issue where CraftBook would error if a furnace recipe with no ingredients was provided by Spigot
+* Fixed some errors that were occurring on 1.16 due to a Spigot bug
+* Fixed @b CommandItem selectors returning odd data
+* Made @b.t CommandItem selector return the Minecraft block key rather than the Spigot name
+* Fixed Soul Fire not working with the Cooking Pot
+* Added new 1.16 items to the Cooking Pot recipe table
+
 3.10.2
 * Target 1.15.2 as the minimum version
 * Fixed issues where new blocks added in 1.14 and 1.15 couldn't be added to furnaces by pipes
