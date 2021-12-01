@@ -1,3 +1,6 @@
+3.10.5
+* No changes - re-upload due to corrupt BukkitDev jar
+
 3.10.4
 * Target 1.17 as the minimum version
 * Require Java 16+
