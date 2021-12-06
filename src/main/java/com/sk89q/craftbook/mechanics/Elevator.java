@@ -306,7 +306,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                     low.setY(0);
                     destination = destination.getWorld().getBlockAt(low);
                     loopd = true;
-                } else if (destination.getY() == 0) { // hit the bottom of the world
+                } else if (destination.getY() == clickedBlock.getWorld().getMinHeight()) { // hit the bottom of the world
                     org.bukkit.Location low = destination.getLocation();
                     low.setY(clickedBlock.getWorld().getMaxHeight());
                     destination = destination.getWorld().getBlockAt(low);
@@ -316,7 +316,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                 if (destination.getY() == clickedBlock.getWorld().getMaxHeight()) {
                     return null;
                 }
-                else if (destination.getY() == 0) {
+                else if (destination.getY() == clickedBlock.getWorld().getMinHeight()) {
                     return null;
                 }
             }
