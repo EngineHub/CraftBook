@@ -284,7 +284,7 @@ public class Elevator extends AbstractCraftBookMechanic {
     public Block findDestination(Direction dir, BlockFace shift, Block clickedBlock) {
 
         // find destination sign
-        int f = dir == Direction.UP ? clickedBlock.getWorld().getMaxHeight() : 0;
+        int f = dir == Direction.UP ? clickedBlock.getWorld().getMaxHeight() : clickedBlock.getWorld().getMinHeight();
         Block destination = clickedBlock;
         // heading up from top or down from bottom
         if (destination.getY() == f) {
@@ -303,10 +303,10 @@ public class Elevator extends AbstractCraftBookMechanic {
             if (elevatorLoop && !loopd) {
                 if (destination.getY() == clickedBlock.getWorld().getMaxHeight()) { // hit the top of the world
                     org.bukkit.Location low = destination.getLocation();
-                    low.setY(0);
+                    low.setY(clickedBlock.getWorld().getMinHeight());
                     destination = destination.getWorld().getBlockAt(low);
                     loopd = true;
-                } else if (destination.getY() == 0) { // hit the bottom of the world
+                } else if (destination.getY() == clickedBlock.getWorld().getMinHeight()) { // hit the bottom of the world
                     org.bukkit.Location low = destination.getLocation();
                     low.setY(clickedBlock.getWorld().getMaxHeight());
                     destination = destination.getWorld().getBlockAt(low);
@@ -316,7 +316,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                 if (destination.getY() == clickedBlock.getWorld().getMaxHeight()) {
                     return null;
                 }
-                else if (destination.getY() == 0) {
+                else if (destination.getY() == clickedBlock.getWorld().getMinHeight()) {
                     return null;
                 }
             }
@@ -346,7 +346,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                 foundGround = true;
                 break;
             }
-            if (floor.getY() == 0x0) {
+            if (floor.getY() == clickedBlock.getWorld().getMinHeight()) {
                 break;
             }
             floor = floor.getRelative(BlockFace.DOWN);
