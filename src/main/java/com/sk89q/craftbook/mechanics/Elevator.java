@@ -346,7 +346,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                 foundGround = true;
                 break;
             }
-            if (floor.getY() == clickedBlock.getWorld().getMinHeight()) {
+            if (floor.getY() == destination.getWorld().getMinHeight()) {
                 break;
             }
             floor = floor.getRelative(BlockFace.DOWN);
