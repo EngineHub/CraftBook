@@ -39,8 +39,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("ToggleArea", org.enginehub.craftbook.mechanics.area.Area.class, MechanicCategory.GENERAL);
 //        registerMechanic("Cauldron", org.enginehub.craftbook.mechanics.cauldron.ImprovedCauldron.class, MechanicCategory.CUSTOMISATION);
 //        registerMechanic("Gate", org.enginehub.craftbook.mechanics.area.simple.Gate.class, MechanicCategory.GENERAL);
-//        registerMechanic("CookingPot", org.enginehub.craftbook.mechanics.CookingPot.class, MechanicCategory.GENERAL);
-//        registerMechanic("Sponge", org.enginehub.craftbook.mechanics.Sponge.class, MechanicCategory.GENERAL);
 //        registerMechanic("Pay", org.enginehub.craftbook.mechanics.Payment.class, MechanicCategory.CIRCUIT);
 //        registerMechanic("Pipes", org.enginehub.craftbook.mechanics.pipe.Pipes.class, MechanicCategory.CIRCUIT);
 //        registerMechanic("BounceBlocks", org.enginehub.craftbook.mechanics.BounceBlocks.class, MechanicCategory.GENERAL);
@@ -417,6 +415,15 @@ public class BukkitMechanicManager extends MechanicManager {
             .name("Teleporter")
             .description(TranslatableComponent.of("craftbook.teleporter.description"))
             .className("org.enginehub.craftbook.mechanics.Teleporter")
+            .category(MechanicCategory.GENERAL)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("cooking_pot")
+            .name("CookingPot")
+            .description(TranslatableComponent.of("craftbook.cookingpot.description"))
+            .className("org.enginehub.craftbook.mechanics.CookingPot")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 

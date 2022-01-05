@@ -16,6 +16,7 @@
 package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -41,350 +42,335 @@ import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.events.SelfTriggerPingEvent;
 import org.enginehub.craftbook.util.events.SelfTriggerThinkEvent;
-import org.enginehub.craftbook.util.events.SelfTriggerUnregisterEvent;
 import org.enginehub.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
 import org.enginehub.craftbook.util.events.SignClickEvent;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import javax.annotation.Nullable;
 
 public class CookingPot extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
-        if (!EventUtil.passesFilter(event)) return;
-
-        if (!event.getLine(1).equalsIgnoreCase("[Cook]")) return;
+        if (!event.getLine(1).equalsIgnoreCase("[Cook]")) {
+            return;
+        }
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if (!player.hasPermission("craftbook.mech.cook")) {
-            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
+        if (!player.hasPermission("craftbook.cookingpot.create")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                 player.printError("mech.create-permission");
+            }
             SignUtil.cancelSignChange(event);
             return;
         }
 
         event.setLine(1, "[Cook]");
         event.setLine(2, "0");
-        event.setLine(3, cookingPotFuel ? "0" : "1");
-        player.print("mech.cook.create");
+        event.setLine(3, requireFuel ? "0" : "1");
+        player.printInfo(TranslatableComponent.of("craftbook.cookingpot.create"));
 
         ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).registerSelfTrigger(event.getBlock().getLocation());
     }
 
-    private HashSet<String> cookingSet = new HashSet<>();
-
     @EventHandler(priority = EventPriority.HIGH)
     public void onPing(SelfTriggerPingEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
-
-        if (!SignUtil.isSign(event.getBlock())) return;
+        if (!EventUtil.passesFilter(event) || !SignUtil.isSign(event.getBlock())) {
+            return;
+        }
 
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
-        if (!sign.getLine(1).equals("[Cook]")) return;
-
-        if (cookingPotChunkLimit) {
-            if (cookingSet.contains(event.getBlock().getChunk().getX() + ";" + event.getBlock().getChunk().getZ()))
-                return;
-
-            cookingSet.add(event.getBlock().getChunk().getX() + ";" + event.getBlock().getChunk().getZ());
+        if (!sign.getLine(1).equals("[Cook]")) {
+            return;
         }
 
         event.setHandled(true);
-    }
-
-    @EventHandler
-    public void onUnregister(SelfTriggerUnregisterEvent event) {
-
-        if (cookingPotChunkLimit)
-            cookingSet.remove(event.getBlock().getChunk().getX() + ";" + event.getBlock().getChunk().getZ());
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onThink(SelfTriggerThinkEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
-
-        if (!SignUtil.isSign(event.getBlock())) return;
+        if (!EventUtil.passesFilter(event) || !SignUtil.isSign(event.getBlock())) {
+            return;
+        }
 
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
-        if (!sign.getLine(1).equals("[Cook]")) return;
+        if (!sign.getLine(1).equals("[Cook]")) {
+            return;
+        }
 
         event.setHandled(true);
 
-        if (cookingPotHeating && sign.getLine(0).equals("HEATING")) {
-
-            //So it's waiting.
-            if (ThreadLocalRandom.current().nextInt(200) != 0)
+        if (emptyCooldown && sign.getLine(0).equals("COOLDOWN")) {
+            if (ThreadLocalRandom.current().nextInt(100) != 0) {
+                // Ticks 10 times per second. This will re-check every 10 seconds on average.
                 return;
+            }
+
             sign.setLine(0, "");
+            sign.update(false);
         }
 
-        int lastTick = 0, oldTick;
+        int currentCookProgress = 0, previousCookProgress;
 
         try {
-            lastTick = Math.max(0, Integer.parseInt(sign.getLine(2)));
+            currentCookProgress = Math.max(0, Integer.parseInt(sign.getLine(2)));
         } catch (Exception e) {
             sign.setLine(2, String.valueOf(0));
         }
-        oldTick = lastTick;
+
+        previousCookProgress = currentCookProgress;
         Block b = SignUtil.getBackBlock(event.getBlock());
         Block cb = b.getRelative(0, 2, 0);
         if (cb.getType() == Material.CHEST) {
-            Block fire = b.getRelative(0, 1, 0);
-            if (Tag.FIRE.isTagged(fire.getType())) {
-                Chest chest = (Chest) cb.getState();
+            Material fireType = b.getRelative(0, 1, 0).getType();
+
+            if (Tag.FIRE.isTagged(fireType) || Tag.CAMPFIRES.isTagged(fireType)) {
+                Chest chest = (Chest) cb.getState(false);
                 Inventory inventory = chest.getInventory();
 
                 List<ItemStack> items;
-                if (cookingPotOres)
+                if (allowSmelting)
                     items = ItemUtil.getRawMaterials(inventory);
                 else
                     items = ItemUtil.getRawFood(inventory);
 
                 if (items.size() == 0) {
-                    if (cookingPotHeating) {
-                        sign.setLine(0, "HEATING");
+                    if (emptyCooldown) {
+                        sign.setLine(0, "COOLDOWN");
                         sign.update(false);
                     }
                     return;
                 }
 
-                if (lastTick < 500) {
+                int fuelLevel = getFuelLevel(sign);
 
-                    int multiplier = getMultiplier(sign);
-
-                    lastTick = cookingPotSuperFast ? lastTick + multiplier : lastTick + Math.min(multiplier, 5);
-                    if (multiplier > 0)
-                        setMultiplier(sign, multiplier - 1);
+                if (fuelLevel > 0) {
+                    currentCookProgress += progressPerFuel * Math.min(fuelPerTick, fuelLevel);
+                    setFuelLevel(sign, fuelLevel - Math.min(fuelPerTick, fuelLevel));
                 }
-                if (lastTick >= 50) {
-                    for (ItemStack i : items) {
 
-                        if (!ItemUtil.isStackValid(i)) continue;
+                if (currentCookProgress >= 50) {
+                    for (ItemStack i : items) {
+                        if (!ItemUtil.isStackValid(i)) {
+                            continue;
+                        }
+
                         ItemStack cooked = ItemUtil.getCookedResult(i);
                         if (cooked == null) {
-                            if (cookingPotOres)
+                            if (allowSmelting) {
                                 cooked = ItemUtil.getSmeletedResult(i);
-                            else
+                                if (cooked == null) {
+                                    continue;
+                                }
+                            } else {
                                 continue;
+                            }
                         }
                         if (inventory.addItem(cooked).isEmpty()) {
                             ItemStack toRemove = i.clone();
                             toRemove.setAmount(1);
                             inventory.removeItem(toRemove);
                             // chest.update(); Oii 
-                            lastTick -= 50;
+                            currentCookProgress -= 50;
                             break;
                         }
                     }
                 }
-            } else
-                lastTick = 0;
+            } else {
+                currentCookProgress = 0;
+            }
         }
 
-        if (oldTick != lastTick) {
-            sign.setLine(2, String.valueOf(lastTick));
-            sign.update(false);
+        if (previousCookProgress != currentCookProgress) {
+            sign.setLine(2, String.valueOf(currentCookProgress));
         }
+
+        sign.update(false);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
-
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_BLOCK)
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || !EventUtil.passesFilter(event)) {
             return;
+        }
 
         ChangedSign sign = event.getSign();
 
-        if (!sign.getLine(1).equals("[Cook]")) return;
+        if (!sign.getLine(1).equals("[Cook]")) {
+            return;
+        }
 
         ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).registerSelfTrigger(event.getClickedBlock().getLocation());
 
         CraftBookPlayer p = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            Block b = SignUtil.getBackBlock(event.getClickedBlock());
-            Block cb = b.getRelative(0, 2, 0);
-            if (cb.getType() == Material.CHEST) {
-                Player player = event.getPlayer();
-                if (!player.hasPermission("craftbook.mech.cook.refuel")) {
-                    if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
-                        p.printError("mech.restock-permission");
-                    event.setCancelled(true);
-                    return;
+        Block b = SignUtil.getBackBlock(event.getClickedBlock());
+        Block cb = b.getRelative(0, 2, 0);
+        if (cb.getType() == Material.CHEST) {
+            Player player = event.getPlayer();
+            if (!player.hasPermission("craftbook.cookingpot.refuel")) {
+                if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
+                    p.printError(TranslatableComponent.of("craftbook.cookingpot.no-refuel-permissions"));
                 }
-                if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-                    if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
-                        p.printError("area.use-permissions");
-                    return;
-                }
-                if (ItemUtil.isStackValid(player.getItemInHand()) && Ingredients.isIngredient(player.getItemInHand().getType())) {
-                    Material itemID = player.getItemInHand().getType();
-                    increaseMultiplier(sign, Ingredients.getTime(itemID));
-                    if (player.getItemInHand().getAmount() <= 1) {
-                        player.setItemInHand(null);
-                    } else {
-                        player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
-                    }
-                    if (itemID == Material.LAVA_BUCKET && !cookingPotDestroyBuckets)
-                        player.getInventory().addItem(new ItemStack(Material.BUCKET, 1));
-                    p.print("mech.cook.add-fuel");
-                    event.setCancelled(true);
-                } else if (cookingPotSignOpen) {
-                    player.openInventory(((Chest) cb.getState()).getBlockInventory());
-                    event.setCancelled(true);
-                }
+                event.setCancelled(true);
+                return;
             }
 
-            if (sign.hasChanged())
-                sign.update(false);
-        } else {
-            event.getPlayer().setFireTicks(getMultiplier(sign) + 40);
-            CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-            player.printError("mech.cook.ouch");
+            if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+                if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
+                    p.printError("area.use-permissions");
+                }
+                return;
+            }
+
+            CookingPotFuel fuel = CookingPotFuel.getByMaterial(player.getInventory().getItemInMainHand().getType());
+
+            if (ItemUtil.isStackValid(player.getInventory().getItemInMainHand()) && fuel != null) {
+                increaseFuelLevel(sign, fuel.getFuelCount());
+
+                player.getInventory().setItemInMainHand(ItemUtil.getUsedItem(player.getInventory().getItemInMainHand()));
+
+                p.printInfo(TranslatableComponent.of("craftbook.cookingpot.fuel-added"));
+                event.setCancelled(true);
+            } else if (openSign) {
+                player.openInventory(((Chest) cb.getState(false)).getBlockInventory());
+                event.setCancelled(true);
+            }
         }
+
+        sign.update(false);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockDestroy(BlockBreakEvent event) {
-
-        if (!EventUtil.passesFilter(event)) return;
-
-        if (!SignUtil.isSign(event.getBlock())) return;
+        if (!EventUtil.passesFilter(event) || !SignUtil.isSign(event.getBlock())) {
+            return;
+        }
 
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
-        if (!sign.getLine(1).equals("[Cook]")) return;
+        if (!sign.getLine(1).equals("[Cook]")) {
+            return;
+        }
 
         ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).unregisterSelfTrigger(event.getBlock().getLocation(), UnregisterReason.BREAK);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
-
-        if (!cookingPotAllowRedstone) return;
-
-        if (!SignUtil.isSign(event.getBlock())) return;
-
-        if (!EventUtil.passesFilter(event)) return;
+        if (!allowRedstone || !requireFuel || !SignUtil.isSign(event.getBlock()) || !EventUtil.passesFilter(event)) {
+            return;
+        }
 
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
-        if (!sign.getLine(1).equals("[Cook]")) return;
+        if (!sign.getLine(1).equals("[Cook]")) {
+            return;
+        }
 
         ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).registerSelfTrigger(event.getBlock().getLocation());
 
-        if (event.isOn() && !event.isMinor())
-            increaseMultiplier(sign, event.getNewCurrent() - event.getOldCurrent());
-
-        if (sign.hasChanged())
+        if (event.isOn() && !event.isMinor()) {
+            increaseFuelLevel(sign, event.getNewCurrent());
             sign.update(false);
+        }
     }
 
-    public void setMultiplier(ChangedSign sign, int amount) {
-
-        if (!cookingPotFuel)
+    public void setFuelLevel(ChangedSign sign, int amount) {
+        if (!requireFuel) {
             amount = Math.max(amount, 1);
+        }
+
         sign.setLine(3, String.valueOf(amount));
     }
 
-    public void increaseMultiplier(ChangedSign sign, int amount) {
-
-        if (sign.getLine(0).equals("HEATING"))
-            sign.setLine(0, "");
-        setMultiplier(sign, getMultiplier(sign) + amount);
+    public void increaseFuelLevel(ChangedSign sign, int amount) {
+        setFuelLevel(sign, getFuelLevel(sign) + amount);
     }
 
-    public int getMultiplier(ChangedSign sign) {
-
+    public int getFuelLevel(ChangedSign sign) {
         int multiplier;
+
         try {
             multiplier = Integer.parseInt(sign.getLine(3));
         } catch (Exception e) {
-            multiplier = cookingPotFuel ? 0 : 1;
-            setMultiplier(sign, multiplier);
+            multiplier = requireFuel ? 0 : 1;
+            setFuelLevel(sign, multiplier);
         }
-        if (multiplier <= 0 && !cookingPotFuel) return 1;
-        return Math.max(0, multiplier);
+
+        return Math.max(requireFuel ? 0 : 1, multiplier);
     }
 
-    private enum Ingredients {
-        COAL(Material.COAL, 40), COALBLOCK(Material.COAL_BLOCK, 360), LAVA(Material.LAVA_BUCKET, 6000), BLAZE(Material.BLAZE_ROD, 500),
-        BLAZEDUST(Material.BLAZE_POWDER, 250), SNOWBALL(Material.SNOWBALL, -40), SNOW(Material.SNOW_BLOCK, -100), ICE(Material.ICE, -1000);
+    private enum CookingPotFuel {
+        COAL(Material.COAL, 40),
+        CHARCOAL(Material.CHARCOAL, 40),
+        COALBLOCK(Material.COAL_BLOCK, 360),
+        BLAZEDUST(Material.BLAZE_POWDER, 250),
+        BLAZE(Material.BLAZE_ROD, 500),
+        LAVA(Material.LAVA_BUCKET, 6000);
 
-        private Material id;
-        private int mult;
+        private final Material id;
+        private final int fuelCount;
 
-        Ingredients(Material id, int mult) {
-
+        CookingPotFuel(Material id, int fuelCount) {
             this.id = id;
-            this.mult = mult;
+            this.fuelCount = fuelCount;
         }
 
-        public static boolean isIngredient(Material id) {
-
-            for (Ingredients in : values()) {
-                if (in.id == id) {
-                    return true;
-                }
-            }
-            return false;
+        public int getFuelCount() {
+            return this.fuelCount;
         }
 
-        public static int getTime(Material id) {
-
-            for (Ingredients in : values()) {
+        @Nullable
+        public static CookingPotFuel getByMaterial(Material id) {
+            for (CookingPotFuel in : values()) {
                 if (in.id == id) {
-                    return in.mult;
+                    return in;
                 }
             }
-            return 0;
+
+            return null;
         }
     }
 
-    private boolean cookingPotAllowRedstone;
-    private boolean cookingPotFuel;
-    private boolean cookingPotOres;
-    private boolean cookingPotSignOpen;
-    private boolean cookingPotDestroyBuckets;
-    private boolean cookingPotSuperFast;
-
-    private boolean cookingPotChunkLimit;
-    private boolean cookingPotHeating;
+    private boolean allowRedstone;
+    private boolean requireFuel;
+    private boolean allowSmelting;
+    private boolean openSign;
+    private int progressPerFuel;
+    private int fuelPerTick;
+    private boolean emptyCooldown;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
         config.setComment("allow-redstone", "Allows for redstone to be used as a fuel source.");
-        cookingPotAllowRedstone = config.getBoolean("allow-redstone", true);
+        allowRedstone = config.getBoolean("allow-redstone", false);
 
         config.setComment("require-fuel", "Require fuel to cook.");
-        cookingPotFuel = config.getBoolean("require-fuel", true);
+        requireFuel = config.getBoolean("require-fuel", true);
 
-        config.setComment("cook-ores", "Allows the cooking pot to cook ores and other smeltable items.");
-        cookingPotOres = config.getBoolean("cook-ores", false);
+        config.setComment("allow-smelting", "Allows the cooking pot to cook ores and other smeltable items.");
+        allowSmelting = config.getBoolean("allow-smelting", false);
 
         config.setComment("sign-click-open", "When enabled, right clicking the [Cook] sign will open the cooking pot.");
-        cookingPotSignOpen = config.getBoolean("sign-click-open", true);
+        openSign = config.getBoolean("sign-click-open", true);
 
-        config.setComment("take-buckets", "When enabled, lava buckets being used as fuel will consume the bucket.");
-        cookingPotDestroyBuckets = config.getBoolean("take-buckets", false);
+        config.setComment("progress-per-fuel", "How much the current smelt progress increases per unit of fuel (line 4). Decreases fuel per cooked item and increases cooking speed.");
+        progressPerFuel = config.getInt("progress-per-fuel", 2);
 
-        config.setComment("super-fast-cooking", "When enabled, cooking pots cook at incredibly fast speeds. Useful for semi-instant cooking systems.");
-        cookingPotSuperFast = config.getBoolean("super-fast-cooking", false);
+        config.setComment("fuel-per-tick", "How many fuel units (line 4) are used per tick. Increases cooking speed.");
+        fuelPerTick = config.getInt("fuel-per-tick", 5);
 
-        cookingPotHeating = config.getBoolean("heating", false);
-
-        cookingPotChunkLimit = config.getBoolean("chunk-limit", false);
+        config.setComment("empty-cooldown", "Put the cooking pot in a \"low power\" mode while the chest is empty. Useful for low-performance machines or overloaded servers.");
+        emptyCooldown = config.getBoolean("empty-cooldown", false);
     }
 }

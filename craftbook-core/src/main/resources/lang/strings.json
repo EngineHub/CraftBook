@@ -36,6 +36,11 @@
     "craftbook.chunkanchor.create": "Chunk Anchor created.",
     "craftbook.chunkanchor.description": "Anchors a chunk to keep it loaded.",
 
+    "craftbook.cookingpot.create": "Cooking Pot created.",
+    "craftbook.cookingpot.description": "A structure for bulk-cooking foods and other items.",
+    "craftbook.cookingpot.fuel-added": "You put fuel into the cooking pot, and watch as the fire roars...",
+    "craftbook.cookingpot.no-refuel-permissions": "You don't have permission to refuel this mechanic.",
+
     "craftbook.dispenserrecipes.description": "Adds recipes that can be used inside a dispenser to make things happen",
 
     "craftbook.elevator.create.up": "Lift Up created.",

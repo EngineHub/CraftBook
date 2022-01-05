@@ -26,12 +26,6 @@ repositories {
     }
 }
 
-configurations.all {
-    resolutionStrategy {
-        force("com.google.guava:guava:21.0")
-    }
-}
-
 val localImplementation = configurations.create("localImplementation") {
     description = "Dependencies used locally, but provided by the runtime Bukkit implementation"
     isCanBeConsumed = false
@@ -43,7 +37,7 @@ configurations["testImplementation"].extendsFrom(localImplementation)
 dependencies {
     "api"(project(":craftbook-core"))
     "api"(project(":craftbook-libs:bukkit"))
-    "localImplementation"("io.papermc.paper:paper-api:1.18-R0.1-SNAPSHOT") {
+    "localImplementation"("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT") {
         exclude("junit", "junit")
         exclude(group = "org.slf4j", module = "slf4j-api")
     }
@@ -62,7 +56,7 @@ dependencies {
 
     "compileOnly"("com.sk89q.worldedit.worldedit-libs:ap:${Versions.WORLDEDIT}")
     "annotationProcessor"("com.sk89q.worldedit.worldedit-libs:ap:${Versions.WORLDEDIT}")
-    "annotationProcessor"("com.google.guava:guava:21.0")
+    "annotationProcessor"("com.google.guava:guava:${Versions.GUAVA}")
 }
 
 tasks.named<Copy>("processResources") {

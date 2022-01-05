@@ -655,79 +655,6 @@ public final class ItemUtil {
     }
 
     /**
-     * Checks whether the item is usable as a fuel in a furnace.
-     *
-     * @param item The item to check.
-     * @return Whether it is usable in a furnace.
-     */
-    public static boolean isAFuel(ItemStack item) {
-
-        switch (item.getType()) {
-            case COAL:
-            case CHARCOAL:
-            case COAL_BLOCK:
-            case WOODEN_AXE:
-            case WOODEN_HOE:
-            case WOODEN_PICKAXE:
-            case WOODEN_SHOVEL:
-            case WOODEN_SWORD:
-            case STICK:
-            case OAK_FENCE:
-            case OAK_FENCE_GATE:
-            case OAK_TRAPDOOR:
-            case ACACIA_TRAPDOOR:
-            case BIRCH_TRAPDOOR:
-            case DARK_OAK_TRAPDOOR:
-            case JUNGLE_TRAPDOOR:
-            case SPRUCE_TRAPDOOR:
-            case CRAFTING_TABLE:
-            case CHEST:
-            case TRAPPED_CHEST:
-            case JUKEBOX:
-            case NOTE_BLOCK:
-            case BROWN_MUSHROOM_BLOCK:
-            case RED_MUSHROOM_BLOCK:
-            case BLAZE_ROD:
-            case LAVA_BUCKET:
-            case BOOKSHELF:
-            case ACACIA_STAIRS:
-            case DARK_OAK_STAIRS:
-            case SPRUCE_FENCE:
-            case JUNGLE_FENCE:
-            case BIRCH_FENCE:
-            case ACACIA_FENCE:
-            case DARK_OAK_FENCE:
-            case SPRUCE_FENCE_GATE:
-            case JUNGLE_FENCE_GATE:
-            case BIRCH_FENCE_GATE:
-            case ACACIA_FENCE_GATE:
-            case DARK_OAK_FENCE_GATE:
-            case FISHING_ROD:
-            case BOW:
-            case LADDER:
-            case SCAFFOLDING:
-            case DRIED_KELP_BLOCK:
-            case BAMBOO:
-                return true;
-            default:
-                return Tag.ITEMS_BOATS.isTagged(item.getType())
-                    || Tag.WOODEN_DOORS.isTagged(item.getType())
-                    || Tag.CARPETS.isTagged(item.getType())
-                    || Tag.WOODEN_BUTTONS.isTagged(item.getType())
-                    || Tag.ITEMS_BANNERS.isTagged(item.getType())
-                    || Tag.LOGS.isTagged(item.getType())
-                    || Tag.LEAVES.isTagged(item.getType())
-                    || Tag.PLANKS.isTagged(item.getType())
-                    || Tag.WOODEN_STAIRS.isTagged(item.getType())
-                    || Tag.WOODEN_SLABS.isTagged(item.getType())
-                    || Tag.SAPLINGS.isTagged(item.getType())
-                    || Tag.WOOL.isTagged(item.getType())
-                    || Tag.WOODEN_PRESSURE_PLATES.isTagged(item.getType())
-                    || Tag.SIGNS.isTagged(item.getType());
-        }
-    }
-
-    /**
      * Checks whether an item is a potion ingredient.
      *
      * @param item The item to check.
@@ -821,6 +748,8 @@ public final class ItemUtil {
     }
 
     public static ItemStack getUsedItem(ItemStack item) {
+        item = item.clone();
+
         if (item.getType() == Material.MUSHROOM_STEW) {
             item.setType(Material.BOWL); // Get your bowl back
         } else if (item.getType() == Material.POTION) {

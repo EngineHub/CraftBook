@@ -1,10 +1,11 @@
 object Versions {
     const val PISTON = "0.5.5"
     const val JINGLENOTE = "1.0.0-SNAPSHOT"
-    const val JUNIT = "5.7.0"
-    const val MOCKITO = "3.7.7"
+    const val JUNIT = "5.8.1"
+    const val MOCKITO = "4.0.0"
     const val WORLDEDIT = "7.3.0-SNAPSHOT"
     const val WORLDGUARD = "7.0.7-SNAPSHOT"
     const val SQUIRRELID = "0.3.0"
-    const val LOG4J = "2.14.1"
+    const val GUAVA = "31.0.1-jre"
+    const val LOG4J = "2.15.0"
 }

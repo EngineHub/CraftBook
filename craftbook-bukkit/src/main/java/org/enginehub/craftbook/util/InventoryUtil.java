@@ -99,12 +99,12 @@ public class InventoryUtil {
             if (!ItemUtil.isStackValid(stack))
                 continue;
 
-            if (ItemUtil.isFurnacable(stack) && fitsInSlot(stack, furnace.getInventory().getSmelting())) {
+            if (furnace.getInventory().canSmelt(stack) && fitsInSlot(stack, furnace.getInventory().getSmelting())) {
                 if (furnace.getInventory().getSmelting() == null)
                     furnace.getInventory().setSmelting(stack);
                 else
                     leftovers.add(ItemUtil.addToStack(furnace.getInventory().getSmelting(), stack));
-            } else if (ItemUtil.isAFuel(stack) && fitsInSlot(stack, furnace.getInventory().getFuel())) {
+            } else if (furnace.getInventory().isFuel(stack) && fitsInSlot(stack, furnace.getInventory().getFuel())) {
                 if (furnace.getInventory().getFuel() == null)
                     furnace.getInventory().setFuel(stack);
                 else
