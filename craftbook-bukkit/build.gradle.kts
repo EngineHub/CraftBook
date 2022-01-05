@@ -47,7 +47,7 @@ dependencies {
     "api"("com.sk89q.worldguard:worldguard-bukkit:${Versions.WORLDGUARD}") {
         exclude(group = "org.spigotmc")
     }
-    "implementation"("net.milkbowl.vault:VaultAPI:1.7") { isTransitive = false }
+    "implementation"("com.github.MilkBowl:VaultAPI:1.7") { isTransitive = false }
     "implementation"("com.comphenix.protocol:ProtocolLib:4.5.1") { isTransitive = false }
     "implementation"("org.bstats:bstats-bukkit:2.2.1")
 
