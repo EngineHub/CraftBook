@@ -218,7 +218,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("item", "The item for the sign copy tool.");
-        item = ItemSyntax.getItem(config.getString("item", ItemTypes.INK_SAC.getId()));
+        item = ItemSyntax.getItem(config.getString("item", ItemTypes.FLINT.getId()));
 
         config.setComment("copy-color", "If the sign copier should also copy the dyed color of the sign.");
         copyColor = config.getBoolean("copy-color", true);
