@@ -261,5 +261,6 @@ public class LanguageManager {
         put("worldedit.ic.unsupported","WorldEdit selection type currently unsupported for IC's!");
         put("worldedit.ic.notfound","WorldEdit not found!");
         put("worldedit.ic.noselection","No selection was found!");
+        put("worldedit.ic.create","You've created");
     }};
 }

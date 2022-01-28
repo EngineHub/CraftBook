@@ -468,7 +468,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
                     CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(block.getLocation());
                 }
 
-                player.print("You've created " + registration.getId() + ": " + ic.getTitle() + ".");
+                player.print(player.translate("worldedit.ic.create") + " " + registration.getId() + ": " + ic.getTitle() + ".");
             });
 
             return;
