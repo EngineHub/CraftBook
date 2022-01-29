@@ -199,6 +199,8 @@ public class LanguageManager {
         put("mech.headdrops.click-message","This is the dismembered head of..");
         put("mech.headdrops.break-permission","You don't have permission to break heads!");
 
+        put("mech.ic.create","You've created");
+
         put("mech.lift.target-sign-created","Elevator target sign created.");
         put("mech.lift.down-sign-created","Elevator down sign created.");
         put("mech.lift.up-sign-created","Elevator up sign created.");
@@ -261,6 +263,5 @@ public class LanguageManager {
         put("worldedit.ic.unsupported","WorldEdit selection type currently unsupported for IC's!");
         put("worldedit.ic.notfound","WorldEdit not found!");
         put("worldedit.ic.noselection","No selection was found!");
-        put("worldedit.ic.create","You've created");
     }};
 }
