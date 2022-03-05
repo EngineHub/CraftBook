@@ -5,73 +5,73 @@ labels: ['type:bug', 'status:pending']
 body:
 - type: markdown
   attributes:
-  value: |
-  Please note that this is only for bugs, help with installation or other types of support should
-  be taken to the Discord Guild instead.
+    value: |
+      Please note that this is only for bugs, help with installation or other types of support should
+      be taken to the Discord Guild instead.
 
 - type: input
   attributes:
-  label: CraftBook Version
-  description: The full version of CraftBook, can be found by using `/cb version`.
-  placeholder: e.g. 3.0.5 or 5.0.0-SNAPSHOT
+    label: CraftBook Version
+    description: The full version of CraftBook, can be found by using `/cb version`.
+    placeholder: e.g. 3.0.5 or 5.0.0-SNAPSHOT
   validations:
-  required: true
+    required: true
 
 - type: input
   attributes:
-  label: Platform Version
-  description: |
-  The version of the platform you are on, i.e. Spigot or Paper.
-  Please ensure you are running up-to-date software before making a bug report.
-  Old versions or hybrids will receive little to no support.
-  placeholder: e.g. git-Spigot-21fe707-e1ebe52, git-Paper-463
+    label: Platform Version
+    description: |
+      The version of the platform you are on, i.e. Spigot or Paper.
+      Please ensure you are running up-to-date software before making a bug report.
+      Old versions or hybrids will receive little to no support.
+    placeholder: e.g. git-Spigot-21fe707-e1ebe52, git-Paper-463
   validations:
-  required: true
+    required: true
 
 - type: checkboxes
   id: confirmations
   attributes:
-  label: Confirmations
-  description: Please confirm the following before submitting the bug. Your report will be closed if you are running hybrids or old software.
-  options:
-  - label: I am using the most recent Minecraft release.
-  required: true
-  - label: I am using a version of WorldEdit compatible with my Minecraft version.
-  required: true
-  - label: I am using a version of CraftBook compatible with my Minecraft version.
+    label: Confirmations
+    description: Please confirm the following before submitting the bug. Your report will be closed if you are running hybrids or old software.
+    options:
+      - label: I am using the most recent Minecraft release.
+        required: true
+      - label: I am using a version of WorldEdit compatible with my Minecraft version.
+        required: true
+      - label: I am using a version of CraftBook compatible with my Minecraft version.
+        required: true
+      - label: I am using the latest or recommended version of my platform software.
+        required: true
+      - label: I am NOT using a hybrid server, e.g. a server that combines Bukkit and Forge. Examples include Arclight, Mohist, and Cardboard.
+        required: true
+      - label: I am NOT using a fork of WorldEdit, such as FastAsyncWorldEdit (FAWE) or AsyncWorldEdit (AWE)
+        required: true
+
+- type: textarea
+  attributes:
+    label: Bug Description
+    description: A clear and concise description of what the bug is.
+  validations:
     required: true
-  - label: I am using the latest or recommended version of my platform software.
-  required: true
-  - label: I am NOT using a hybrid server, e.g. a server that combines Bukkit and Forge. Examples include Arclight, Mohist, and Cardboard.
-  required: true
-  - label: I am NOT using a fork of WorldEdit, such as FastAsyncWorldEdit (FAWE) or AsyncWorldEdit (AWE)
-  required: true
 
 - type: textarea
   attributes:
-  label: Bug Description
-  description: A clear and concise description of what the bug is.
+    label: Expected Behavior
+    description: The behavior that you expected, instead of the bugged behavior that occurs.
   validations:
-  required: true
+    required: true
 
 - type: textarea
   attributes:
-  label: Expected Behavior
-  description: The behavior that you expected, instead of the bugged behavior that occurs.
+    label: Reproduction Steps
+    description: Steps to reproduce the behavior.
+    value: |
+      1. ...
+      2. ...
   validations:
-  required: true
+    required: true
 
 - type: textarea
   attributes:
-  label: Reproduction Steps
-  description: Steps to reproduce the behavior.
-  value: |
-  1. ...
-  2. ...
-  validations:
-  required: true
-
-- type: textarea
-  attributes:
-  label: Anything Else?
-  description: Add any additional context you can provide below.
+    label: Anything Else?
+    description: Add any additional context you can provide below.
