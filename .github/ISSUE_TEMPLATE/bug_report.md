@@ -1,30 +1,77 @@
----
 name: Bug report
-about: Report a way in which CraftBook is not working as intended
-title: ''
-labels: type:bug, status:pending
-assignees: ''
+description: Report a way in which CraftBook is not working as intended
+labels: ['type:bug', 'status:pending']
 
----
+body:
+- type: markdown
+  attributes:
+  value: |
+  Please note that this is only for bugs, help with installation or other types of support should
+  be taken to the Discord Guild instead.
 
-**Versions**
-<!-- Please include the full version of CraftBook and the Bukkit you are running, e.g. output from `/cb about` and `/version` commands, where applicable. Please ensure you are running up to date software before making a bug report. Old versions will recieve little to no support. -->
-CraftBook version:
-Bukkit version:
+- type: input
+  attributes:
+  label: CraftBook Version
+  description: The full version of CraftBook, can be found by using `/cb version`.
+  placeholder: e.g. 3.0.5 or 5.0.0-SNAPSHOT
+  validations:
+  required: true
 
-**Describe the bug**
-<!-- A clear and concise description of what the bug is. -->
+- type: input
+  attributes:
+  label: Platform Version
+  description: |
+  The version of the platform you are on, i.e. Spigot or Paper.
+  Please ensure you are running up-to-date software before making a bug report.
+  Old versions or hybrids will receive little to no support.
+  placeholder: e.g. git-Spigot-21fe707-e1ebe52, git-Paper-463
+  validations:
+  required: true
 
-**To Reproduce**
-<!-- Steps to reproduce the behavior: -->
-1. ...
-2. ...
+- type: checkboxes
+  id: confirmations
+  attributes:
+  label: Confirmations
+  description: Please confirm the following before submitting the bug. Your report will be closed if you are running hybrids or old software.
+  options:
+  - label: I am using the most recent Minecraft release.
+  required: true
+  - label: I am using a version of WorldEdit compatible with my Minecraft version.
+  required: true
+  - label: I am using a version of CraftBook compatible with my Minecraft version.
+    required: true
+  - label: I am using the latest or recommended version of my platform software.
+  required: true
+  - label: I am NOT using a hybrid server, e.g. a server that combines Bukkit and Forge. Examples include Arclight, Mohist, and Cardboard.
+  required: true
+  - label: I am NOT using a fork of WorldEdit, such as FastAsyncWorldEdit (FAWE) or AsyncWorldEdit (AWE)
+  required: true
 
-**Expected behavior**
-<!-- A clear and concise description of what you expected to happen. -->
+- type: textarea
+  attributes:
+  label: Bug Description
+  description: A clear and concise description of what the bug is.
+  validations:
+  required: true
 
-**Screenshots**
-<!-- If applicable, add screenshots to help explain your problem. -->
+- type: textarea
+  attributes:
+  label: Expected Behavior
+  description: The behavior that you expected, instead of the bugged behavior that occurs.
+  validations:
+  required: true
 
-**Additional context**
-<!-- Add any other context about the problem here. -->
+- type: textarea
+  attributes:
+  label: Reproduction Steps
+  description: Steps to reproduce the behavior.
+  value: |
+  1. ...
+  2. ...
+  validations:
+  required: true
+
+- type: textarea
+  attributes:
+  label: Anything Else?
+  description: Add any additional context you can provide below.
