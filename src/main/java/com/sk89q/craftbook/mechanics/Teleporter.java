@@ -191,7 +191,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
                 foundFree++;
             else
                 break;
-            if (floor.getY() == 0x0) break;
+            if (floor.getY() == floor.getWorld().getMinHeight()) break;
             floor = floor.getRelative(BlockFace.DOWN);
         }
         if (foundFree < 2) {

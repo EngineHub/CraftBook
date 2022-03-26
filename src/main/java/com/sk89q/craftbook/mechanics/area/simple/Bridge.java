@@ -187,7 +187,7 @@ public class Bridge extends CuboidToggleMechanic {
 
         // If we've reached this point nothing was found on the top, check the bottom
         proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
-        if (trigger.getY() > 0 && Blocks.containsFuzzy(blocks, BukkitAdapter.adapt(proximalBaseCenter.getBlockData())))
+        if (trigger.getY() > trigger.getWorld().getMinHeight() && Blocks.containsFuzzy(blocks, BukkitAdapter.adapt(proximalBaseCenter.getBlockData())))
             return proximalBaseCenter; // it's below
 
         proximalBaseCenter = trigger.getRelative(SignUtil.getBack(trigger));
