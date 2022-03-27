@@ -109,8 +109,14 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
                     lplayer.printError("mech.hiddenswitch.key");
             }
 
-            if(success)
+            if (
+                    success &&
+                    lplayer.hasPermission(
+                            "craftbook.mech.hiddenswitch.toggle-message"
+                    )
+            ) {
                 lplayer.print("mech.hiddenswitch.toggle");
+            }
 
             return !lplayer.isSneaking();
         }
