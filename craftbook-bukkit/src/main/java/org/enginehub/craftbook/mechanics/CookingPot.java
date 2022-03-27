@@ -167,7 +167,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
                         ItemStack cooked = ItemUtil.getCookedResult(i);
                         if (cooked == null) {
                             if (allowSmelting) {
-                                cooked = ItemUtil.getSmeletedResult(i);
+                                cooked = ItemUtil.getSmeltedResult(i);
                                 if (cooked == null) {
                                     continue;
                                 }

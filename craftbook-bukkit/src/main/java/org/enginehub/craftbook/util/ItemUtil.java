@@ -498,32 +498,54 @@ public final class ItemUtil {
 
     public static boolean isSmeltable(ItemStack item) {
 
-        return getSmeletedResult(item) != null;
+        return getSmeltedResult(item) != null;
     }
 
-    public static ItemStack getSmeletedResult(ItemStack item) {
+    public static ItemStack getSmeltedResult(ItemStack item) {
 
         switch (item.getType()) {
             case COBBLESTONE:
                 return new ItemStack(Material.STONE);
+            case COBBLED_DEEPSLATE:
+                return new ItemStack(Material.DEEPSLATE);
+            case DEEPSLATE_BRICKS:
+                return new ItemStack(Material.CRACKED_DEEPSLATE_BRICKS);
+            case DEEPSLATE_TILES:
+                return new ItemStack(Material.CRACKED_DEEPSLATE_TILES);
+            case POLISHED_BLACKSTONE_BRICKS:
+                return new ItemStack(Material.CRACKED_POLISHED_BLACKSTONE_BRICKS);
+            case BASALT:
+                return new ItemStack(Material.SMOOTH_BASALT);
             case CACTUS:
                 return new ItemStack(Material.GREEN_DYE);
             case IRON_ORE:
+            case RAW_IRON:
+            case DEEPSLATE_IRON_ORE:
                 return new ItemStack(Material.IRON_INGOT);
             case COAL_ORE:
                 return new ItemStack(Material.COAL);
             case LAPIS_ORE:
+            case DEEPSLATE_LAPIS_ORE:
                 return new ItemStack(Material.LAPIS_LAZULI);
             case REDSTONE_ORE:
+            case DEEPSLATE_REDSTONE_ORE:
                 return new ItemStack(Material.REDSTONE, 4);
             case EMERALD_ORE:
+            case DEEPSLATE_EMERALD_ORE:
                 return new ItemStack(Material.EMERALD);
             case GOLD_ORE:
             case NETHER_GOLD_ORE:
+            case RAW_GOLD:
+            case DEEPSLATE_GOLD_ORE:
                 return new ItemStack(Material.GOLD_INGOT);
             case ANCIENT_DEBRIS:
                 return new ItemStack(Material.NETHERITE_SCRAP);
+            case COPPER_ORE:
+            case RAW_COPPER:
+            case DEEPSLATE_COPPER_ORE:
+                return new ItemStack(Material.COPPER_INGOT);
             case DIAMOND_ORE:
+            case DEEPSLATE_DIAMOND_ORE:
                 return new ItemStack(Material.DIAMOND);
             case SAND:
                 return new ItemStack(Material.GLASS);

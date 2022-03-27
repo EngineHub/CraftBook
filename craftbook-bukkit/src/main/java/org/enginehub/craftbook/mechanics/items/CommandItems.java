@@ -157,6 +157,10 @@ public class CommandItems extends AbstractCraftBookMechanic {
             if (addDefinition(comdef)) {
                 CraftBookPlugin.logDebugMessage("Added CommandItem: " + key, "command-items.initialize");
                 amount++;
+
+                if (comdef.type == CommandType.SUPERUSER && !"true".equals(System.getProperty("craftbook.ignore-superuser-warning"))) {
+                    CraftBook.LOGGER.warn("Type `SUPERUSER` in use for CommandItem " + comdef.name + ". This is not recommended due to safety and performance issues with Spigot and the way permission plugins work. This will be removed in the future. Try to migrate to `CONSOLE`. Set property craftbook.ignore-superuser-warning to true to hide this message.");
+                }
             } else
                 CraftBook.LOGGER.warn("Failed to add CommandItem: " + key);
         }
@@ -613,7 +617,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
             command = StringUtils.replace(command, "@d.bx", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getBlockX()));
             command = StringUtils.replace(command, "@d.by", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getBlockY()));
             command = StringUtils.replace(command, "@d.bz", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getBlockZ()));
-            command = StringUtils.replace(command, "@d.w", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getWorld().getName()));
+            command = StringUtils.replace(command, "@d.w", ((EntityDamageByEntityEvent) event).getEntity().getLocation().getWorld().getName());
             command = StringUtils.replace(command, "@d.l", ((EntityDamageByEntityEvent) event).getEntity().getLocation().toString());
             command = StringUtils.replace(command, "@d.u", ((EntityDamageByEntityEvent) event).getEntity().getUniqueId().toString());
             if (((EntityDamageByEntityEvent) event).getEntity() instanceof Player) {
@@ -628,7 +632,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
             command = StringUtils.replace(command, "@d.bx", String.valueOf(((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getBlockX()));
             command = StringUtils.replace(command, "@d.by", String.valueOf(((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getBlockY()));
             command = StringUtils.replace(command, "@d.bz", String.valueOf(((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getBlockZ()));
-            command = StringUtils.replace(command, "@d.w", String.valueOf(((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getWorld().getName()));
+            command = StringUtils.replace(command, "@d.w", ((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getWorld().getName());
             command = StringUtils.replace(command, "@d.l", ((PlayerInteractEntityEvent) event).getRightClicked().getLocation().toString());
             command = StringUtils.replace(command, "@d.u", ((PlayerInteractEntityEvent) event).getRightClicked().getUniqueId().toString());
             if (((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player) {
@@ -636,25 +640,25 @@ public class CommandItems extends AbstractCraftBookMechanic {
             } else
                 command = StringUtils.replace(command, "@d", ((PlayerInteractEntityEvent) event).getRightClicked().getType().name());
         }
-        if (event instanceof BlockEvent && ((BlockEvent) event).getBlock() != null) {
+        if (event instanceof BlockEvent) {
             command = StringUtils.replace(command, "@b.x", String.valueOf(((BlockEvent) event).getBlock().getX()));
             command = StringUtils.replace(command, "@b.y", String.valueOf(((BlockEvent) event).getBlock().getY()));
             command = StringUtils.replace(command, "@b.z", String.valueOf(((BlockEvent) event).getBlock().getZ()));
             command = StringUtils.replace(command, "@b.w", ((BlockEvent) event).getBlock().getLocation().getWorld().getName());
             command = StringUtils.replace(command, "@b.l", ((BlockEvent) event).getBlock().getLocation().toString());
             command = StringUtils.replace(command, "@b.d", String.valueOf(((BlockEvent) event).getBlock().getData()));
-            command = StringUtils.replace(command, "@b.t", ((BlockEvent) event).getBlock().getType().name());
-            command = StringUtils.replace(command, "@b", ((BlockEvent) event).getBlock().getType().name() + (((BlockEvent) event).getBlock().getData() == 0 ? "" : ":") + ((BlockEvent) event).getBlock().getData());
+            command = StringUtils.replace(command, "@b.t", ((BlockEvent) event).getBlock().getType().getKey().toString());
+            command = StringUtils.replace(command, "@b", ((BlockEvent) event).getBlock().getType().name());
         }
         if (event instanceof PlayerInteractEvent && ((PlayerInteractEvent) event).getClickedBlock() != null) {
             command = StringUtils.replace(command, "@b.x", String.valueOf(((PlayerInteractEvent) event).getClickedBlock().getX()));
             command = StringUtils.replace(command, "@b.y", String.valueOf(((PlayerInteractEvent) event).getClickedBlock().getY()));
             command = StringUtils.replace(command, "@b.z", String.valueOf(((PlayerInteractEvent) event).getClickedBlock().getZ()));
-            command = StringUtils.replace(command, "@b.w", String.valueOf(((PlayerInteractEvent) event).getClickedBlock().getWorld().getName()));
+            command = StringUtils.replace(command, "@b.w", ((PlayerInteractEvent) event).getClickedBlock().getWorld().getName());
             command = StringUtils.replace(command, "@b.l", ((PlayerInteractEvent) event).getClickedBlock().getLocation().toString());
             command = StringUtils.replace(command, "@b.d", String.valueOf(((PlayerInteractEvent) event).getClickedBlock().getData()));
-            command = StringUtils.replace(command, "@b.t", ((PlayerInteractEvent) event).getClickedBlock().getType().name());
-            command = StringUtils.replace(command, "@b", ((PlayerInteractEvent) event).getClickedBlock().getType().name() + (((PlayerInteractEvent) event).getClickedBlock().getData() == 0 ? "" : ":") + ((PlayerInteractEvent) event).getClickedBlock().getData());
+            command = StringUtils.replace(command, "@b.t", ((PlayerInteractEvent) event).getClickedBlock().getType().getKey().toString());
+            command = StringUtils.replace(command, "@b", ((PlayerInteractEvent) event).getClickedBlock().getType().name());
         }
         if (event instanceof EntityEvent && ((EntityEvent) event).getEntityType() != null && command.contains("@e")) {
             command = StringUtils.replace(command, "@e.x", String.valueOf(((EntityEvent) event).getEntity().getLocation().getX()));
@@ -663,7 +667,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
             command = StringUtils.replace(command, "@e.bx", String.valueOf(((EntityEvent) event).getEntity().getLocation().getBlockX()));
             command = StringUtils.replace(command, "@e.by", String.valueOf(((EntityEvent) event).getEntity().getLocation().getBlockY()));
             command = StringUtils.replace(command, "@e.bz", String.valueOf(((EntityEvent) event).getEntity().getLocation().getBlockZ()));
-            command = StringUtils.replace(command, "@e.w", String.valueOf(((EntityEvent) event).getEntity().getLocation().getWorld().getName()));
+            command = StringUtils.replace(command, "@e.w", ((EntityEvent) event).getEntity().getLocation().getWorld().getName());
             command = StringUtils.replace(command, "@e.l", ((EntityEvent) event).getEntity().getLocation().toString());
             command = StringUtils.replace(command, "@e.u", ((EntityEvent) event).getEntity().getUniqueId().toString());
             command = StringUtils.replace(command, "@e", ((EntityEvent) event).getEntityType().getName());

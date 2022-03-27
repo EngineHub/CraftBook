@@ -1,3 +1,9 @@
+3.10.6
+* Target 1.18 as the minimum version
+* Require Java 17+
+* Fix elevators below 0
+* Use flint as the default SignCopier item
+
 3.10.5
 * No changes - re-upload due to corrupt BukkitDev jar
 

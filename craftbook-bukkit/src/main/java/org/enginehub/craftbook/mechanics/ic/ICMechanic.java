@@ -483,7 +483,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
                     ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).registerSelfTrigger(block.getLocation());
                 }
 
-                player.print("You've created " + registration.getId() + ": " + ic.getTitle() + ".");
+                player.print(player.translate("mech.ic.create") + " " + registration.getId() + ": " + ic.getTitle() + ".");
             });
 
             return;

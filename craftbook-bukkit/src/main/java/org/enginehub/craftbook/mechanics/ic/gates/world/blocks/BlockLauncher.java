@@ -92,7 +92,7 @@ public class BlockLauncher extends AbstractIC {
         if (velocity.getY() < 0) {
             above = getBackBlock().getRelative(0, -1, 0);
             timeout = 12;
-            while (above.getType() != Material.AIR || timeout < 0 || above.getLocation().getY() <= 1) {
+            while (above.getType() != Material.AIR || timeout < 0 || above.getLocation().getY() <= above.getWorld().getMinHeight() + 1) {
                 above = above.getRelative(0, -1, 0);
                 timeout--;
             }
