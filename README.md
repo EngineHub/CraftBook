@@ -43,8 +43,7 @@ Links
 * [IRC channel](https://webchat.esper.net/?join=sk89q) (#sk89q on irc.esper.net)
 * [Issue tracker](https://github.com/EngineHub/CraftBook/issues)
 * [Continuous integration](http://builds.enginehub.org) [![Build Status](https://ci.enginehub.org/app/rest/builds/buildType:bt6,branch:master/statusIcon.svg)](http://ci.enginehub.org/viewType.html?buildTypeId=bt6&guest=1)
-* [End-user documentation](https://craftbook.enginehub.org/en/latest/)
-* [End-user documentation](https://craftbook.enginehub.org/en/3.x/)
+* [End-user documentation](https://craftbook.enginehub.org/en/5.0.0/)
 
 Supporters
 ----------
