@@ -40,11 +40,17 @@ public final class BukkitCraftBookPlayer extends BukkitPlayer implements CraftBo
 
     @Override
     public void print(String message) {
+        if (message.trim().isEmpty()) {
+            return;
+        }
         player.sendMessage(ChatColor.GOLD + ChatColor.translateAlternateColorCodes('&', translate(message)));
     }
 
     @Override
     public void printError(String message) {
+        if (message.trim().isEmpty()) {
+            return;
+        }
         player.sendMessage(ChatColor.RED + ChatColor.translateAlternateColorCodes('&', translate(message)));
     }
 
