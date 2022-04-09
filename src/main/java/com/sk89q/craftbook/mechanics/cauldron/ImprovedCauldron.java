@@ -20,6 +20,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -89,7 +90,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
         if (!block.getWorld().isChunkLoaded(block.getX() >> 4, block.getZ() >> 4)) {
             return false;
         }
-        if (block.getType() == Material.CAULDRON && (block.getRelative(BlockFace.DOWN).getType() == Material.FIRE || block.getRelative(BlockFace.DOWN).getType() == Material.LAVA)) {
+        if (block.getType() == Material.WATER_CAULDRON && (block.getRelative(BlockFace.DOWN).getType() == Material.FIRE || block.getRelative(BlockFace.DOWN).getType() == Material.LAVA)) {
             if(requireSign) {
                 BlockFace[] faces = new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST};
                 boolean found = false;
@@ -103,11 +104,17 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
                         }
                     }
                 }
-                if(!found)
+                if (!found) {
                     return false;
+                }
             }
-            Levelled levelled = (Levelled) block.getBlockData();
-            return levelled.getLevel() == levelled.getMaximumLevel();
+            BlockData data = block.getBlockData();
+            if (data instanceof Levelled levelled) {
+                return levelled.getLevel() == levelled.getMaximumLevel();
+            } else {
+                // Work around a Spigot bug where it sometimes gives empty BlockData for blocks with levelled property.
+                return true;
+            }
         }
         return false;
     }
