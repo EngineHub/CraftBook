@@ -179,7 +179,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
                             ItemStack toRemove = i.clone();
                             toRemove.setAmount(1);
                             inventory.removeItem(toRemove);
-                            // chest.update(); Oii 
+
                             currentCookProgress -= 50;
                             break;
                         }

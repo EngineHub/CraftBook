@@ -119,23 +119,23 @@ public class BetterSponge extends AbstractCraftBookMechanic {
     }
 
     private boolean isValidSponge(Material type) {
-        return type == Material.SPONGE || (includeWet && type == Material.WET_SPONGE);
+        return type == Material.SPONGE || includeWet && type == Material.WET_SPONGE;
     }
 
     private boolean isRemovableWater(Material material) {
-        return material == Material.WATER || material == Material.SEAGRASS
+        return material == Material.WATER || destructive && (material == Material.SEAGRASS
             || material == Material.TALL_SEAGRASS || material == Material.KELP_PLANT
-            || material == Material.KELP;
+            || material == Material.KELP);
     }
 
     private void setBlockToWater(Block block, Block source) {
         if (block.getType().isAir()) {
             BlockData sourceData = source.getBlockData();
             int level = 0;
-            if (sourceData instanceof Levelled) {
-                int sourceLevel = ((Levelled) sourceData).getLevel();
+            if (sourceData instanceof Levelled levelled) {
+                int sourceLevel = levelled.getLevel();
                 if (sourceLevel != 0) {
-                    level = Math.max(((Levelled) sourceData).getLevel() + 1, 7);
+                    level = Math.max(levelled.getLevel() + 1, 7);
                 }
             }
             if (CraftBook.getInstance().getPlatform().getConfiguration().obeyPluginProtections) {
@@ -166,9 +166,9 @@ public class BetterSponge extends AbstractCraftBookMechanic {
                         water.setType(Material.AIR);
                     } else {
                         BlockData data = water.getBlockData();
-                        if (data instanceof Waterlogged) {
-                            ((Waterlogged) data).setWaterlogged(false);
-                            water.setBlockData(data);
+                        if (data instanceof Waterlogged waterlogged) {
+                            waterlogged.setWaterlogged(false);
+                            water.setBlockData(waterlogged);
                         }
                     }
                 }
@@ -266,6 +266,7 @@ public class BetterSponge extends AbstractCraftBookMechanic {
     private boolean sphereRange;
     private boolean redstone;
     private boolean includeWet;
+    private boolean destructive;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
@@ -280,5 +281,8 @@ public class BetterSponge extends AbstractCraftBookMechanic {
 
         config.setComment("require-redstone", "Whether to require redstone to suck up water or not.");
         redstone = config.getBoolean("require-redstone", false);
+
+        config.setComment("destructive", "Whether to remove blocks that spread water such as kelp. These will not be returned when the sponge is de-activated.");
+        destructive = config.getBoolean("destructive", true);
     }
 }

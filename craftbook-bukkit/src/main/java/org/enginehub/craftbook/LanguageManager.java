@@ -33,9 +33,6 @@ public class LanguageManager {
         put("mech.group", "You are not in the required group!");
         put("mech.restock", "Mechanism Restocked!");
 
-        put("mech.anchor.create", "Chunk Anchor Created!");
-        put("mech.anchor.already-anchored", "This chunk is already anchored!");
-
         put("mech.area.create", "Toggle Area Created!");
         put("mech.area.missing", "The area or namespace does not exist.");
 
@@ -63,10 +60,6 @@ public class LanguageManager {
         put("mech.command-items.wait", "You have to wait %time% seconds to use this again!");
         put("mech.command-items.need", "You need %item% to use this command!");
 
-        put("mech.cook.create", "Cooking Pot Created!");
-        put("mech.cook.ouch", "Ouch! That was hot!");
-        put("mech.cook.add-fuel", "You put fuel into the cooking pot, and watch as the fire roars!");
-
         put("mech.custom-crafting.recipe-permission", "You do not have permission to craft this recipe.");
 
         put("mech.door.create", "Door Created!");
@@ -84,21 +77,10 @@ public class LanguageManager {
         put("mech.hiddenswitch.key", "The key did not fit!");
         put("mech.hiddenswitch.toggle", "You hear the muffled click of a switch!");
 
-        put("mech.map.create", "Map Changer Created!");
-        put("mech.map.invalid", "Invalid Map ID!");
-
         put("mech.pay.create", "Pay Created!");
         put("mech.pay.success", "Payment Successful! You paid: ");
         put("mech.pay.not-enough-money", "Payment Failed! You don't have enough money.");
         put("mech.pay.failed-to-pay", "Payment Failed! The money failed to be exchanged.");
-
-        put("mech.teleport.create", "Teleporter Created!");
-        put("mech.teleport.alert", "You Teleported!");
-        put("mech.teleport.range", "Out of Range!");
-        put("mech.teleport.sign", "There is no Sign at your Destination!");
-        put("mech.teleport.arriveonly", "You can only arrive at this teleporter!");
-        put("mech.teleport.invalidcoords", "The entered coordinates are invalid!");
-        put("mech.teleport.obstruct", "Your destination is obstructed!");
 
         put("circuits.pipes.create", "Pipe created!");
         put("circuits.pipes.pipe-not-found", "Failed to find pipe!");
