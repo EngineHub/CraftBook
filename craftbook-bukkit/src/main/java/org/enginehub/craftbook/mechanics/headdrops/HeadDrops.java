@@ -187,8 +187,11 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                     return;
                 }
 
-                // TODO Re-enable word-casing of mob names.
-                player.printInfo(TranslatableComponent.of("craftbook.headdrops.click-message.mob", TextComponent.of(entityType.getKey().getKey().replace("_", " "))));
+                try {
+                    player.printInfo(TranslatableComponent.of("craftbook.headdrops.click-message.mob", TranslatableComponent.of(entityType.translationKey())));
+                } catch (IllegalArgumentException e) {
+                    player.printInfo(TranslatableComponent.of("craftbook.headdrops.click-message.mob", TextComponent.of(entityType.getKey().getKey().replace("_", " "))));
+                }
             } else {
                 PlayerProfile profile = skull.getPlayerProfile();
                 if (profile == null || profile.getName() == null || profile.getName().equals(SkinData.HEAD_NAME)) {

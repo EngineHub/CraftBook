@@ -25,6 +25,7 @@ import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.CraftBookPlayer;
@@ -84,26 +85,25 @@ public class HeadDropsCommands {
             throw new AuthorizationException();
         }
 
-        ItemStack toDrop = headDrops.createFromEntityType(BukkitAdapter.adapt(entityType));
+        EntityType bukkitEntityType = BukkitAdapter.adapt(entityType);
+        ItemStack toDrop = headDrops.createFromEntityType(bukkitEntityType);
         if (toDrop != null) {
             toDrop.setAmount(amount);
         }
 
         if (toDrop == null || !player.getInventory().addItem(toDrop).isEmpty()) {
-            // TODO Re-enable word-casing of mob names.
             actor.printError(TranslatableComponent.of(
                 "craftbook.headdrops.give.failed",
                 TextComponent.of(player.getName(), TextColor.WHITE),
-                TextComponent.of(entityType.getName().replace("_ ", " "), TextColor.WHITE)
+                TextComponent.of(bukkitEntityType.translationKey(), TextColor.WHITE)
             ));
             return;
         }
 
         if (!silent) {
-            // TODO Re-enable word-casing of mob names.
             actor.printInfo(TranslatableComponent.of(
                 "craftbook.headdrops.give",
-                TextComponent.of(entityType.getName().replace("_ ", " "), TextColor.WHITE),
+                TranslatableComponent.of(bukkitEntityType.translationKey(), TextColor.WHITE),
                 TextComponent.of(player.getName(), TextColor.WHITE)
             ));
         }
