@@ -37,7 +37,7 @@ configurations["testImplementation"].extendsFrom(localImplementation)
 dependencies {
     "api"(project(":craftbook-core"))
     "api"(project(":craftbook-libs:bukkit"))
-    "localImplementation"("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT") {
+    "localImplementation"("io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT") {
         exclude("junit", "junit")
         exclude(group = "org.slf4j", module = "slf4j-api")
     }
@@ -48,7 +48,7 @@ dependencies {
         exclude(group = "org.spigotmc")
     }
     "implementation"("com.github.MilkBowl:VaultAPI:1.7") { isTransitive = false }
-    "implementation"("com.comphenix.protocol:ProtocolLib:4.5.1") { isTransitive = false }
+    "implementation"("com.comphenix.protocol:ProtocolLib:5.0.0-SNAPSHOT") { isTransitive = false }
     "implementation"("org.bstats:bstats-bukkit:2.2.1")
 
     "localImplementation"(platform("org.apache.logging.log4j:log4j-bom:2.8.1"))

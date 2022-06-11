@@ -19,7 +19,6 @@ import com.google.common.collect.Lists;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extension.platform.Actor;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -116,7 +115,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         // TODO: remove after some time to stop converting existing MCA ICs
         // convert existing MCA ICs to the new [MCXXXX]A syntax
         if (prefix.equalsIgnoreCase("MCA")) {
-            sign.setLine(1, (StringUtils.replace(sign.getLine(1).toLowerCase(Locale.ENGLISH), "mca", "mc") + "a").toUpperCase(Locale.ENGLISH));
+            sign.setLine(1, (sign.getLine(1).toLowerCase(Locale.ENGLISH).replace("mca", "mc") + "a").toUpperCase(Locale.ENGLISH));
             sign.update(false);
 
             return setupIC(block, create);
@@ -127,14 +126,14 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             else if (sign.getLine(1).equalsIgnoreCase("[mc0421]"))
                 sign.setLine(1, "[MC1422]S");
             else
-                sign.setLine(1, (StringUtils.replace(sign.getLine(1).toLowerCase(Locale.ENGLISH), "mc0", "mc1") + "s").toUpperCase(Locale.ENGLISH));
+                sign.setLine(1, (sign.getLine(1).toLowerCase(Locale.ENGLISH).replace("mc0", "mc1") + "s").toUpperCase(Locale.ENGLISH));
             sign.update(false);
 
             return setupIC(block, create);
         }
 
         if (sign.getLine(1).toLowerCase(Locale.ENGLISH).startsWith("[mcz")) {
-            sign.setLine(1, (StringUtils.replace(sign.getLine(1).toLowerCase(Locale.ENGLISH), "mcz", "mcx") + "s").toUpperCase(Locale.ENGLISH));
+            sign.setLine(1, (sign.getLine(1).toLowerCase(Locale.ENGLISH).replace("mcz", "mcx") + "s").toUpperCase(Locale.ENGLISH));
             sign.update(false);
 
             return setupIC(block, create);
@@ -491,7 +490,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             String id = event.getLine(0).substring(1);
 
             boolean st = id.toLowerCase(Locale.ENGLISH).endsWith(" st");
-            id = StringUtils.replace(id.toLowerCase(Locale.ENGLISH), " st", "");
+            id = id.toLowerCase(Locale.ENGLISH).replace(" st", "");
 
             String shortId = manager.longRegistered.get(id.toLowerCase(Locale.ENGLISH));
             if (shortId == null) {

@@ -18,7 +18,6 @@ package org.enginehub.craftbook.util;
 import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.world.World;
-import org.apache.commons.lang.StringUtils;
 import org.enginehub.craftbook.mechanics.variables.VariableManager;
 
 import javax.annotation.Nullable;

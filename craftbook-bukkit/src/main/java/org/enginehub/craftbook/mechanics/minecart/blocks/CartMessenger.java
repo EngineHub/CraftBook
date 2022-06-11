@@ -18,7 +18,6 @@ package org.enginehub.craftbook.mechanics.minecart.blocks;
 import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.enginehub.craftbook.ChangedSign;
@@ -74,7 +73,7 @@ public class CartMessenger extends CartBlockMechanism {
             }
 
             for (String mes : messages) {
-                if (stack) mes = StringUtils.replace(mes, "+", "");
+                if (stack) mes = mes.replace("+", "");
                 p.sendMessage(mes);
             }
         }

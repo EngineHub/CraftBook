@@ -15,8 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.variables;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
+import com.google.common.base.Preconditions;
 import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
@@ -79,7 +78,7 @@ public class NumericModifier extends AbstractIC {
 
                 String val = String.valueOf(currentValue);
                 if (val.endsWith(".0"))
-                    val = StringUtils.replace(val, ".0", "");
+                    val = val.replace(".0", "");
 
                 VariableManager.instance.setVariable(variableKey, val);
                 chip.setOutput(0, true);
@@ -221,7 +220,7 @@ public class NumericModifier extends AbstractIC {
                 if (variableKey == null || !VariableManager.instance.hasVariable(variableKey)) {
                     throw new ICVerificationException("Unknown Variable!");
                 }
-                Validate.notNull(MathFunction.parseFunction(sign.getLine(3).split(":")[0]));
+                Preconditions.checkNotNull(MathFunction.parseFunction(sign.getLine(3).split(":")[0]));
                 Double.parseDouble(sign.getLine(3).split(":")[1]);
             } catch (NumberFormatException e) {
                 throw new ICVerificationException("Amount must be a number!");

@@ -31,7 +31,6 @@ import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import org.apache.commons.lang.StringUtils;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.util.HistoryHashMap;
 
@@ -120,7 +119,7 @@ public class CopyManager {
      * @param area to check
      */
     public static boolean isExistingArea(File dataFolder, String namespace, String area) {
-        area = StringUtils.replace(area, "-", "");
+        area = area.replace("-", "");
         File file = new File(dataFolder, "areas/" + namespace);
         if (!new File(file, area + getFileSuffix()).exists()) {
             return new File(file, area + '.' + BuiltInClipboardFormat.MCEDIT_SCHEMATIC.getPrimaryFileExtension()).exists();

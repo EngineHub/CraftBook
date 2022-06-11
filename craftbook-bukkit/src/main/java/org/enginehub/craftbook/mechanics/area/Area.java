@@ -20,7 +20,6 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -216,8 +215,8 @@ public class Area extends AbstractCraftBookMechanic {
 
         try {
             String namespace = sign.getLine(0);
-            String id = StringUtils.replace(sign.getLine(2), "-", "").toLowerCase(Locale.ENGLISH);
-            String inactiveID = StringUtils.replace(sign.getLine(3), "-", "").toLowerCase(Locale.ENGLISH);
+            String id = sign.getLine(2).replace("-", "").toLowerCase(Locale.ENGLISH);
+            String inactiveID = sign.getLine(3).replace("-", "").toLowerCase(Locale.ENGLISH);
 
             BlockArrayClipboard copy;
 
@@ -271,8 +270,8 @@ public class Area extends AbstractCraftBookMechanic {
 
         try {
             String namespace = sign.getLine(0);
-            String id = StringUtils.replace(sign.getLine(2), "-", "").toLowerCase(Locale.ENGLISH);
-            String inactiveID = StringUtils.replace(sign.getLine(3), "-", "").toLowerCase(Locale.ENGLISH);
+            String id = sign.getLine(2).replace("-", "").toLowerCase(Locale.ENGLISH);
+            String inactiveID = sign.getLine(3).replace("-", "").toLowerCase(Locale.ENGLISH);
 
             BlockArrayClipboard copy;
 
@@ -343,7 +342,7 @@ public class Area extends AbstractCraftBookMechanic {
 
         int toToggleOn = state ? 2 : 3;
         int toToggleOff = state ? 3 : 2;
-        sign.setLine(toToggleOff, StringUtils.replace(sign.getLine(toToggleOff), "-", ""));
+        sign.setLine(toToggleOff, sign.getLine(toToggleOff).replace("-", ""));
         sign.setLine(toToggleOn, '-' + sign.getLine(toToggleOn) + '-');
         sign.update(false);
     }

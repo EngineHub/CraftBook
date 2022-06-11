@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.entity;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.enginehub.craftbook.ChangedSign;
@@ -56,7 +55,7 @@ public class PlayerTrap extends AbstractSelfTriggeredIC {
     public void load() {
 
         if (getSign().getLine(2).contains("&")) {
-            getSign().setLine(2, StringUtils.replace(getSign().getLine(2), "&", "="));
+            getSign().setLine(2, getSign().getLine(2).replace("&", "="));
             getSign().update(false);
         }
 

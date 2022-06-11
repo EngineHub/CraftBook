@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
@@ -51,7 +50,7 @@ public class CombinationLock extends AbstractIC {
     public void trigger(ChipState state) {
 
         try {
-            Character[] data = ArrayUtils.toObject(getSign().getLine(2).toCharArray());
+            char[] data = getSign().getLine(2).toCharArray();
             checkCombo:
             {
                 if (state.getInput(0) != (data[1] == 'X'))

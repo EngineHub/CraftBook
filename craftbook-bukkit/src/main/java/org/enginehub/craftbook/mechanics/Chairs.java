@@ -19,7 +19,6 @@ import com.comphenix.protocol.AsynchronousManager;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.async.AsyncListenerHandler;
-import com.comphenix.protocol.events.ListenerOptions;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
@@ -426,8 +425,7 @@ public class Chairs extends AbstractCraftBookMechanic {
             super(PacketAdapter
                 .params(CraftBookPlugin.inst(), PacketType.Play.Client.STEER_VEHICLE)
                 .clientSide()
-                .listenerPriority(ListenerPriority.HIGHEST)
-                .options(ListenerOptions.INTERCEPT_INPUT_BUFFER));
+                .listenerPriority(ListenerPriority.HIGHEST));
         }
 
         @Override
@@ -448,8 +446,7 @@ public class Chairs extends AbstractCraftBookMechanic {
             super(PacketAdapter
                 .params(CraftBookPlugin.inst(), PacketType.Play.Client.ENTITY_ACTION)
                 .clientSide()
-                .listenerPriority(ListenerPriority.HIGHEST)
-                .options(ListenerOptions.INTERCEPT_INPUT_BUFFER));
+                .listenerPriority(ListenerPriority.HIGHEST));
         }
 
         @Override

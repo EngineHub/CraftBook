@@ -15,9 +15,9 @@
 
 package org.enginehub.craftbook.mechanics.ic;
 
+import com.google.common.base.Preconditions;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.Location;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.AnaloguePowerable;
@@ -41,7 +41,7 @@ public abstract class AbstractChipState implements ChipState {
     protected AbstractChipState(Location source, ChangedSign sign, boolean selfTriggered) {
 
         // Check this here to prevent and handle future NPEs
-        Validate.notNull(sign, "Null ChangedSign found: " + source.toString());
+        Preconditions.checkNotNull(sign, "Null ChangedSign found: " + source.toString());
         this.sign = sign;
         this.source = source;
         this.selfTriggered = selfTriggered;

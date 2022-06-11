@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.util.jinglenote;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -231,13 +230,13 @@ public class Playlist {
                         show.lastPlayers = lastPlayers;
                         show.sequencer = sequencer;
                         show.jNote = jNote;
-                        task = Bukkit.getScheduler().runTaskLaterAsynchronously(CraftBookPlugin.inst(), show, Long.parseLong(StringUtils.replace(line, "wait ", "")));
+                        task = Bukkit.getScheduler().runTaskLaterAsynchronously(CraftBookPlugin.inst(), show, Long.parseLong(line.replace("wait ", "")));
                     }
                     return;
                 } else if (line.startsWith("midi ")) {
 
                     File file = null;
-                    String midiName = StringUtils.replace(line, "midi ", "");
+                    String midiName = line.replace("midi ", "");
 
                     File[] trialPaths = {
                         new File(ICManager.inst().getMidiFolder(), midiName),
@@ -284,7 +283,7 @@ public class Playlist {
                     }
                 } else if (line.startsWith("tune ")) {
 
-                    String tune = StringUtils.replace(line, "tune ", "");
+                    String tune = line.replace("tune ", "");
 
                     sequencer = new StringJingleSequencer(tune, 0);
 
@@ -302,7 +301,7 @@ public class Playlist {
                     }
                 } else if (line.startsWith("send ")) {
 
-                    String message = StringUtils.replace(line, "send ", "");
+                    String message = line.replace("send ", "");
 
                     for (String player : players.keySet()) {
                         Player pp = Bukkit.getPlayerExact(player);
@@ -311,7 +310,7 @@ public class Playlist {
                     }
                 } else if (line.startsWith("goto ")) {
 
-                    position = Integer.parseInt(StringUtils.replace(line, "goto ", ""));
+                    position = Integer.parseInt(line.replace("goto ", ""));
                     CraftBookPlugin.logDebugMessage("Setting line to: " + position, "playlist");
                 }
             }

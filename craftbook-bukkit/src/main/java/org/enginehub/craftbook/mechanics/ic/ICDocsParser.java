@@ -16,7 +16,6 @@
 package org.enginehub.craftbook.mechanics.ic;
 
 import com.sk89q.worldedit.extension.platform.Actor;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.enginehub.craftbook.CraftBook;
 
@@ -70,9 +69,9 @@ public class ICDocsParser {
         if (line.contains("+o"))
             line = ChatColor.GRAY + line + " (Optional)";
 
-        line = StringUtils.replace(line, "{", ChatColor.GRAY + "");
-        line = StringUtils.replace(line, "}", ChatColor.YELLOW + "");
+        line = line.replace("{", ChatColor.GRAY + "");
+        line = line.replace("}", ChatColor.YELLOW + "");
 
-        return StringUtils.replace(line, "+o", "");
+        return line.replace("+o", "");
     }
 }

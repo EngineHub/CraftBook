@@ -15,8 +15,8 @@
 
 package org.enginehub.craftbook;
 
+import com.google.common.base.Preconditions;
 import com.sk89q.worldedit.entity.Player;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -44,7 +44,7 @@ public class ChangedSign {
     }
 
     public ChangedSign(Block block, String[] lines) {
-        Validate.notNull(block);
+        Preconditions.checkNotNull(block, "block");
 
         this.block = block;
 

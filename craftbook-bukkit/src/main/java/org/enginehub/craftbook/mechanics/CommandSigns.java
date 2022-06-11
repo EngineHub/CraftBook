@@ -16,7 +16,6 @@
 package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -105,7 +104,7 @@ public class CommandSigns extends AbstractCraftBookMechanic {
 
     public static void runCommandSign(ChangedSign sign, CraftBookPlayer player) {
 
-        StringBuilder command = new StringBuilder(StringUtils.replace(sign.getLine(2), "/", "") + sign.getLine(3));
+        StringBuilder command = new StringBuilder(sign.getLine(2).replace("/", "") + sign.getLine(3));
 
         while (BlockUtil.areBlocksIdentical(sign.getBlock(), sign.getBlock().getRelative(0, -1, 0))) {
 

@@ -21,7 +21,6 @@ import com.google.common.collect.Maps;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
-import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -188,7 +187,8 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                     return;
                 }
 
-                player.printInfo(TranslatableComponent.of("craftbook.headdrops.click-message.mob", TextComponent.of(WordUtils.capitalize(entityType.getKey().getKey().replace("_", " ")))));
+                // TODO Re-enable word-casing of mob names.
+                player.printInfo(TranslatableComponent.of("craftbook.headdrops.click-message.mob", TextComponent.of(entityType.getKey().getKey().replace("_", " "))));
             } else {
                 PlayerProfile profile = skull.getPlayerProfile();
                 if (profile == null || profile.getName() == null || profile.getName().equals(SkinData.HEAD_NAME)) {
@@ -264,7 +264,8 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             SkullMeta meta = (SkullMeta) stack.getItemMeta();
             meta.setPlayerProfile(profile);
             meta.getPersistentDataContainer().set(headDropsEntityKey, PersistentDataType.STRING, entityTypeId);
-            meta.setDisplayName(ChatColor.RESET + WordUtils.capitalize(type.getKey().getKey().replace("_", " ")) + " Head");
+            // TODO Re-enable word-casing of mob names.
+            meta.setDisplayName(ChatColor.RESET + type.getKey().getKey().replace("_", " ") + " Head");
             stack.setItemMeta(meta);
 
             event.setCancelled(true);
@@ -284,7 +285,8 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             ItemStack toDrop = new ItemStack(Material.PLAYER_HEAD, 1);
             ItemMeta itemMeta = toDrop.getItemMeta();
             if (itemMeta instanceof SkullMeta skullMeta) {
-                skullMeta.setDisplayName(ChatColor.RESET + WordUtils.capitalize(entityKey.getKey().replace("_", " ")) + " Head");
+                // TODO Re-enable word-casing of mob names.
+                skullMeta.setDisplayName(ChatColor.RESET + entityKey.getKey().replace("_", " ") + " Head");
                 skullMeta.setPlayerProfile(profile);
                 skullMeta.getPersistentDataContainer().set(headDropsEntityKey, PersistentDataType.STRING, entityKey.toString());
                 toDrop.setItemMeta(skullMeta);
@@ -301,7 +303,6 @@ public class HeadDrops extends AbstractCraftBookMechanic {
     private NamespacedKey parseKey(String name) {
         if (name.contains(":")) {
             String[] nameParts = name.split(":");
-            //noinspection deprecation
             return new NamespacedKey(nameParts[0], nameParts[1]);
         } else {
             return NamespacedKey.minecraft(name);

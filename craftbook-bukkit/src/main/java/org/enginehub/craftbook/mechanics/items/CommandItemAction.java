@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.items;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.enginehub.craftbook.CraftBook;
@@ -102,7 +101,7 @@ public class CommandItemAction {
 
                 String val = String.valueOf(currentValue);
                 if (val.endsWith(".0"))
-                    val = StringUtils.replace(val, ".0", "");
+                    val = val.replace(".0", "");
 
                 VariableManager.instance.setVariable(mVariableKey, val);
                 return true;

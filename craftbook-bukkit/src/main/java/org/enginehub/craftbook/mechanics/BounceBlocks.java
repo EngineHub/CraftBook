@@ -21,7 +21,6 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
@@ -117,7 +116,7 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
                         double x = 0, y, z = 0;
                         boolean straight = s.getLine(2).startsWith("!");
 
-                        String[] bits = RegexUtil.COMMA_PATTERN.split(StringUtils.replace(s.getLine(2), "!", ""));
+                        String[] bits = RegexUtil.COMMA_PATTERN.split(s.getLine(2).replace("!", ""));
                         if (bits.length == 0) {
                             y = 0.5;
                         } else if (bits.length == 1) {
@@ -189,7 +188,7 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
         }
 
         try {
-            String[] bits = RegexUtil.COMMA_PATTERN.split(StringUtils.replace(event.getLine(2), "!", ""));
+            String[] bits = RegexUtil.COMMA_PATTERN.split(event.getLine(2).replace("!", ""));
             if (bits.length == 1) {
                 Double.parseDouble(bits[0]);
             } else if (bits.length > 1) {

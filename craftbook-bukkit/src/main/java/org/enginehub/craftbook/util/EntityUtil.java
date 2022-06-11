@@ -19,7 +19,6 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extension.input.ParserContext;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.attribute.Attribute;
@@ -237,16 +236,16 @@ public final class EntityUtil {
                 }
                 break;
             case OCELOT:
-                if (StringUtils.replace(StringUtils.replace(data[0], "_CAT", ""), "_OCELOT", "").equalsIgnoreCase("WILD")) {
+                if (data[0].replace("_CAT", "").replace("_OCELOT", "").equalsIgnoreCase("WILD")) {
                     ((Ocelot) ent).setCatType(Ocelot.Type.WILD_OCELOT);
                 }
-                if (StringUtils.replace(StringUtils.replace(data[0], "_CAT", ""), "_OCELOT", "").equalsIgnoreCase("BLACK")) {
+                if (data[0].replace("_CAT", "").replace("_OCELOT", "").equalsIgnoreCase("BLACK")) {
                     ((Ocelot) ent).setCatType(Ocelot.Type.BLACK_CAT);
                 }
-                if (StringUtils.replace(StringUtils.replace(data[0], "_CAT", ""), "_OCELOT", "").equalsIgnoreCase("RED")) {
+                if (data[0].replace("_CAT", "").replace("_OCELOT", "").equalsIgnoreCase("RED")) {
                     ((Ocelot) ent).setCatType(Ocelot.Type.RED_CAT);
                 }
-                if (StringUtils.replace(StringUtils.replace(data[0], "_CAT", ""), "_OCELOT", "").equalsIgnoreCase("SIAMESE")) {
+                if (data[0].replace("_CAT", "").replace("_OCELOT", "").equalsIgnoreCase("SIAMESE")) {
                     ((Ocelot) ent).setCatType(Ocelot.Type.SIAMESE_CAT);
                 }
                 break;

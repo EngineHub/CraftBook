@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.variables;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Server;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -87,7 +86,7 @@ public class ItemCounter extends AbstractIC {
 
                 String val = String.valueOf(existing + amount);
                 if (val.endsWith(".0"))
-                    val = StringUtils.replace(val, ".0", "");
+                    val = val.replace(".0", "");
 
                 VariableManager.instance.setVariable(variableKey, val);
             } catch (VariableException e) {

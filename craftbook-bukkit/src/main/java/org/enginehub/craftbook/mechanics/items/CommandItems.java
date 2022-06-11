@@ -20,7 +20,6 @@ import com.google.common.collect.Maps;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -611,69 +610,69 @@ public class CommandItems extends AbstractCraftBookMechanic {
         CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(player);
 
         if (event instanceof EntityDamageByEntityEvent) {
-            command = StringUtils.replace(command, "@d.x", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getX()));
-            command = StringUtils.replace(command, "@d.y", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getY()));
-            command = StringUtils.replace(command, "@d.z", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getZ()));
-            command = StringUtils.replace(command, "@d.bx", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getBlockX()));
-            command = StringUtils.replace(command, "@d.by", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getBlockY()));
-            command = StringUtils.replace(command, "@d.bz", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getBlockZ()));
-            command = StringUtils.replace(command, "@d.w", ((EntityDamageByEntityEvent) event).getEntity().getLocation().getWorld().getName());
-            command = StringUtils.replace(command, "@d.l", ((EntityDamageByEntityEvent) event).getEntity().getLocation().toString());
-            command = StringUtils.replace(command, "@d.u", ((EntityDamageByEntityEvent) event).getEntity().getUniqueId().toString());
+            command = command.replace("@d.x", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getX()));
+            command = command.replace("@d.y", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getY()));
+            command = command.replace("@d.z", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getZ()));
+            command = command.replace("@d.bx", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getBlockX()));
+            command = command.replace("@d.by", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getBlockY()));
+            command = command.replace("@d.bz", String.valueOf(((EntityDamageByEntityEvent) event).getEntity().getLocation().getBlockZ()));
+            command = command.replace("@d.w", ((EntityDamageByEntityEvent) event).getEntity().getLocation().getWorld().getName());
+            command = command.replace("@d.l", ((EntityDamageByEntityEvent) event).getEntity().getLocation().toString());
+            command = command.replace("@d.u", ((EntityDamageByEntityEvent) event).getEntity().getUniqueId().toString());
             if (((EntityDamageByEntityEvent) event).getEntity() instanceof Player) {
-                command = StringUtils.replace(command, "@d", ((EntityDamageByEntityEvent) event).getEntity().getName());
+                command = command.replace("@d", ((EntityDamageByEntityEvent) event).getEntity().getName());
             } else
-                command = StringUtils.replace(command, "@d", ((EntityDamageByEntityEvent) event).getEntity().getType().name());
+                command = command.replace("@d", ((EntityDamageByEntityEvent) event).getEntity().getType().name());
         }
         if (event instanceof PlayerInteractEntityEvent) {
-            command = StringUtils.replace(command, "@d.x", String.valueOf(((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getX()));
-            command = StringUtils.replace(command, "@d.y", String.valueOf(((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getY()));
-            command = StringUtils.replace(command, "@d.z", String.valueOf(((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getZ()));
-            command = StringUtils.replace(command, "@d.bx", String.valueOf(((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getBlockX()));
-            command = StringUtils.replace(command, "@d.by", String.valueOf(((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getBlockY()));
-            command = StringUtils.replace(command, "@d.bz", String.valueOf(((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getBlockZ()));
-            command = StringUtils.replace(command, "@d.w", ((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getWorld().getName());
-            command = StringUtils.replace(command, "@d.l", ((PlayerInteractEntityEvent) event).getRightClicked().getLocation().toString());
-            command = StringUtils.replace(command, "@d.u", ((PlayerInteractEntityEvent) event).getRightClicked().getUniqueId().toString());
+            command = command.replace("@d.x", String.valueOf(((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getX()));
+            command = command.replace("@d.y", String.valueOf(((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getY()));
+            command = command.replace("@d.z", String.valueOf(((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getZ()));
+            command = command.replace("@d.bx", String.valueOf(((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getBlockX()));
+            command = command.replace("@d.by", String.valueOf(((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getBlockY()));
+            command = command.replace("@d.bz", String.valueOf(((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getBlockZ()));
+            command = command.replace("@d.w", ((PlayerInteractEntityEvent) event).getRightClicked().getLocation().getWorld().getName());
+            command = command.replace("@d.l", ((PlayerInteractEntityEvent) event).getRightClicked().getLocation().toString());
+            command = command.replace("@d.u", ((PlayerInteractEntityEvent) event).getRightClicked().getUniqueId().toString());
             if (((PlayerInteractEntityEvent) event).getRightClicked() instanceof Player) {
-                command = StringUtils.replace(command, "@d", ((PlayerInteractEntityEvent) event).getRightClicked().getName());
+                command = command.replace("@d", ((PlayerInteractEntityEvent) event).getRightClicked().getName());
             } else
-                command = StringUtils.replace(command, "@d", ((PlayerInteractEntityEvent) event).getRightClicked().getType().name());
+                command = command.replace("@d", ((PlayerInteractEntityEvent) event).getRightClicked().getType().name());
         }
         if (event instanceof BlockEvent) {
-            command = StringUtils.replace(command, "@b.x", String.valueOf(((BlockEvent) event).getBlock().getX()));
-            command = StringUtils.replace(command, "@b.y", String.valueOf(((BlockEvent) event).getBlock().getY()));
-            command = StringUtils.replace(command, "@b.z", String.valueOf(((BlockEvent) event).getBlock().getZ()));
-            command = StringUtils.replace(command, "@b.w", ((BlockEvent) event).getBlock().getLocation().getWorld().getName());
-            command = StringUtils.replace(command, "@b.l", ((BlockEvent) event).getBlock().getLocation().toString());
-            command = StringUtils.replace(command, "@b.d", String.valueOf(((BlockEvent) event).getBlock().getData()));
-            command = StringUtils.replace(command, "@b.t", ((BlockEvent) event).getBlock().getType().getKey().toString());
-            command = StringUtils.replace(command, "@b", ((BlockEvent) event).getBlock().getType().name());
+            command = command.replace("@b.x", String.valueOf(((BlockEvent) event).getBlock().getX()));
+            command = command.replace("@b.y", String.valueOf(((BlockEvent) event).getBlock().getY()));
+            command = command.replace("@b.z", String.valueOf(((BlockEvent) event).getBlock().getZ()));
+            command = command.replace("@b.w", ((BlockEvent) event).getBlock().getLocation().getWorld().getName());
+            command = command.replace("@b.l", ((BlockEvent) event).getBlock().getLocation().toString());
+            command = command.replace("@b.d", String.valueOf(((BlockEvent) event).getBlock().getData()));
+            command = command.replace("@b.t", ((BlockEvent) event).getBlock().getType().getKey().toString());
+            command = command.replace("@b", ((BlockEvent) event).getBlock().getType().name());
         }
         if (event instanceof PlayerInteractEvent && ((PlayerInteractEvent) event).getClickedBlock() != null) {
-            command = StringUtils.replace(command, "@b.x", String.valueOf(((PlayerInteractEvent) event).getClickedBlock().getX()));
-            command = StringUtils.replace(command, "@b.y", String.valueOf(((PlayerInteractEvent) event).getClickedBlock().getY()));
-            command = StringUtils.replace(command, "@b.z", String.valueOf(((PlayerInteractEvent) event).getClickedBlock().getZ()));
-            command = StringUtils.replace(command, "@b.w", ((PlayerInteractEvent) event).getClickedBlock().getWorld().getName());
-            command = StringUtils.replace(command, "@b.l", ((PlayerInteractEvent) event).getClickedBlock().getLocation().toString());
-            command = StringUtils.replace(command, "@b.d", String.valueOf(((PlayerInteractEvent) event).getClickedBlock().getData()));
-            command = StringUtils.replace(command, "@b.t", ((PlayerInteractEvent) event).getClickedBlock().getType().getKey().toString());
-            command = StringUtils.replace(command, "@b", ((PlayerInteractEvent) event).getClickedBlock().getType().name());
+            command = command.replace("@b.x", String.valueOf(((PlayerInteractEvent) event).getClickedBlock().getX()));
+            command = command.replace("@b.y", String.valueOf(((PlayerInteractEvent) event).getClickedBlock().getY()));
+            command = command.replace("@b.z", String.valueOf(((PlayerInteractEvent) event).getClickedBlock().getZ()));
+            command = command.replace("@b.w", ((PlayerInteractEvent) event).getClickedBlock().getWorld().getName());
+            command = command.replace("@b.l", ((PlayerInteractEvent) event).getClickedBlock().getLocation().toString());
+            command = command.replace("@b.d", String.valueOf(((PlayerInteractEvent) event).getClickedBlock().getData()));
+            command = command.replace("@b.t", ((PlayerInteractEvent) event).getClickedBlock().getType().getKey().toString());
+            command = command.replace("@b", ((PlayerInteractEvent) event).getClickedBlock().getType().name());
         }
         if (event instanceof EntityEvent && ((EntityEvent) event).getEntityType() != null && command.contains("@e")) {
-            command = StringUtils.replace(command, "@e.x", String.valueOf(((EntityEvent) event).getEntity().getLocation().getX()));
-            command = StringUtils.replace(command, "@e.y", String.valueOf(((EntityEvent) event).getEntity().getLocation().getY()));
-            command = StringUtils.replace(command, "@e.z", String.valueOf(((EntityEvent) event).getEntity().getLocation().getZ()));
-            command = StringUtils.replace(command, "@e.bx", String.valueOf(((EntityEvent) event).getEntity().getLocation().getBlockX()));
-            command = StringUtils.replace(command, "@e.by", String.valueOf(((EntityEvent) event).getEntity().getLocation().getBlockY()));
-            command = StringUtils.replace(command, "@e.bz", String.valueOf(((EntityEvent) event).getEntity().getLocation().getBlockZ()));
-            command = StringUtils.replace(command, "@e.w", ((EntityEvent) event).getEntity().getLocation().getWorld().getName());
-            command = StringUtils.replace(command, "@e.l", ((EntityEvent) event).getEntity().getLocation().toString());
-            command = StringUtils.replace(command, "@e.u", ((EntityEvent) event).getEntity().getUniqueId().toString());
-            command = StringUtils.replace(command, "@e", ((EntityEvent) event).getEntityType().getName());
+            command = command.replace("@e.x", String.valueOf(((EntityEvent) event).getEntity().getLocation().getX()));
+            command = command.replace("@e.y", String.valueOf(((EntityEvent) event).getEntity().getLocation().getY()));
+            command = command.replace("@e.z", String.valueOf(((EntityEvent) event).getEntity().getLocation().getZ()));
+            command = command.replace("@e.bx", String.valueOf(((EntityEvent) event).getEntity().getLocation().getBlockX()));
+            command = command.replace("@e.by", String.valueOf(((EntityEvent) event).getEntity().getLocation().getBlockY()));
+            command = command.replace("@e.bz", String.valueOf(((EntityEvent) event).getEntity().getLocation().getBlockZ()));
+            command = command.replace("@e.w", ((EntityEvent) event).getEntity().getLocation().getWorld().getName());
+            command = command.replace("@e.l", ((EntityEvent) event).getEntity().getLocation().toString());
+            command = command.replace("@e.u", ((EntityEvent) event).getEntity().getUniqueId().toString());
+            command = command.replace("@e", ((EntityEvent) event).getEntityType().getName());
         }
         if (event instanceof AsyncPlayerChatEvent && command.contains("@m"))
-            command = StringUtils.replace(command, "@m", ((AsyncPlayerChatEvent) event).getMessage());
+            command = command.replace("@m", ((AsyncPlayerChatEvent) event).getMessage());
 
         command = ParsingUtil.parseLine(command, localPlayer);
 
