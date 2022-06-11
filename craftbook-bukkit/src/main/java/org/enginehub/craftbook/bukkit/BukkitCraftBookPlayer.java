@@ -20,6 +20,7 @@ import com.sk89q.worldedit.util.HandSide;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.adapter.bukkit.TextAdapter;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
+import com.sk89q.worldedit.util.formatting.text.serializer.legacy.LegacyComponentSerializer;
 import com.sk89q.worldedit.world.item.ItemType;
 import org.bukkit.entity.Player;
 import org.enginehub.craftbook.CraftBookPlayer;
@@ -39,12 +40,18 @@ public final class BukkitCraftBookPlayer extends BukkitPlayer implements CraftBo
 
     @Override
     public void print(Component component) {
+        if (LegacyComponentSerializer.legacy().serialize(component).isBlank()) {
+            return;
+        }
         TextAdapter.sendMessage(player, TextUtil.format(component, getLocale()));
     }
 
 
     @Override
     public void printActionBar(Component component) {
+        if (LegacyComponentSerializer.legacy().serialize(component).isBlank()) {
+            return;
+        }
         TextAdapter.sendActionBar(player, TextUtil.format(component, getLocale()));
     }
 

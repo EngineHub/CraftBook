@@ -24,6 +24,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -47,7 +48,6 @@ import org.enginehub.craftbook.bukkit.BukkitCraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.util.BlockUtil;
-import org.enginehub.craftbook.util.EntityUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.SignUtil;
@@ -104,9 +104,9 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
         if (!block.getWorld().isChunkLoaded(block.getX() >> 4, block.getZ() >> 4)) {
             return false;
         }
-        if (block.getType() == Material.CAULDRON && (block.getRelative(BlockFace.DOWN).getType() == Material.FIRE || block.getRelative(BlockFace.DOWN).getType() == Material.LAVA)) {
-            if (requireSign) {
-                BlockFace[] faces = new BlockFace[] { BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST };
+        if (block.getType() == Material.WATER_CAULDRON && (block.getRelative(BlockFace.DOWN).getType() == Material.FIRE || block.getRelative(BlockFace.DOWN).getType() == Material.LAVA)) {
+            if(requireSign) {
+                BlockFace[] faces = new BlockFace[]{ BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST };
                 boolean found = false;
                 for (BlockFace face : faces) {
                     Block sign = block.getRelative(face);
@@ -118,11 +118,17 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
                         }
                     }
                 }
-                if (!found)
+                if (!found) {
                     return false;
+                }
             }
-            Levelled levelled = (Levelled) block.getBlockData();
-            return levelled.getLevel() == levelled.getMaximumLevel();
+            BlockData data = block.getBlockData();
+            if (data instanceof Levelled levelled) {
+                return levelled.getLevel() == levelled.getMaximumLevel();
+            } else {
+                // Work around a Spigot bug where it sometimes gives empty BlockData for blocks with levelled property.
+                return true;
+            }
         }
         return false;
     }
