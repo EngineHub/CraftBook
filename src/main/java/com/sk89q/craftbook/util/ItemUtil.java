@@ -747,7 +747,7 @@ public final class ItemUtil {
             default:
                 return Tag.ITEMS_BOATS.isTagged(item.getType())
                         || Tag.WOODEN_DOORS.isTagged(item.getType())
-                        || Tag.CARPETS.isTagged(item.getType())
+                        || Tag.WOOL_CARPETS.isTagged(item.getType())
                         || Tag.WOODEN_BUTTONS.isTagged(item.getType())
                         || Tag.ITEMS_BANNERS.isTagged(item.getType())
                         || Tag.LOGS.isTagged(item.getType())

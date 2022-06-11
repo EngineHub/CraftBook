@@ -2,7 +2,6 @@ package com.sk89q.craftbook.mechanics;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.ListenerOptions;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
@@ -333,7 +332,7 @@ public class Chair extends AbstractCraftBookMechanic {
 
         try {
             Class.forName("com.comphenix.protocol.events.PacketListener");
-            ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new PacketAdapter(PacketAdapter.params(CraftBookPlugin.inst(), PacketType.Play.Client.STEER_VEHICLE).clientSide().listenerPriority(ListenerPriority.HIGHEST).options(ListenerOptions.INTERCEPT_INPUT_BUFFER)) {
+            ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new PacketAdapter(PacketAdapter.params(CraftBookPlugin.inst(), PacketType.Play.Client.STEER_VEHICLE).clientSide().listenerPriority(ListenerPriority.HIGHEST)) {
                 @Override
                 public void onPacketReceiving(PacketEvent e) {
                     if (!e.isCancelled()) {
@@ -345,7 +344,7 @@ public class Chair extends AbstractCraftBookMechanic {
                 }
             }).syncStart();
 
-            ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new PacketAdapter(PacketAdapter.params(CraftBookPlugin.inst(), PacketType.Play.Client.ENTITY_ACTION).clientSide().listenerPriority(ListenerPriority.HIGHEST).options(ListenerOptions.INTERCEPT_INPUT_BUFFER)) {
+            ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new PacketAdapter(PacketAdapter.params(CraftBookPlugin.inst(), PacketType.Play.Client.ENTITY_ACTION).clientSide().listenerPriority(ListenerPriority.HIGHEST)) {
                 @Override
                 public void onPacketReceiving(PacketEvent e) {
                     if (!e.isCancelled()) {
@@ -356,7 +355,7 @@ public class Chair extends AbstractCraftBookMechanic {
                 }
             }).syncStart();
 
-            ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new PacketAdapter(PacketAdapter.params(CraftBookPlugin.inst(), PacketType.Play.Client.POSITION, PacketType.Play.Client.POSITION_LOOK).clientSide().listenerPriority(ListenerPriority.HIGHEST).options(ListenerOptions.INTERCEPT_INPUT_BUFFER)) {
+            ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new PacketAdapter(PacketAdapter.params(CraftBookPlugin.inst(), PacketType.Play.Client.POSITION, PacketType.Play.Client.POSITION_LOOK).clientSide().listenerPriority(ListenerPriority.HIGHEST)) {
                 @Override
                 public void onPacketReceiving(PacketEvent e) {
                     if (!e.isCancelled()) {

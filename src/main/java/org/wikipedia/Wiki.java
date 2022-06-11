@@ -1037,7 +1037,7 @@ public class Wiki implements Serializable
             };
         for (int i = 0; i < values.length; i++)
         {
-            Integer value = new Integer(values[i]);
+            Integer value = Integer.parseInt(values[i]);
             ret.put(keys[i], value);
         }
         return ret;
@@ -1438,7 +1438,7 @@ public class Wiki implements Serializable
             String ns = parseAttribute(line, "id", a);
             int b = line.indexOf('>', a) + 1;
             int c = line.indexOf('<', b);
-            namespaces.put(normalize(decode(line.substring(b, c))), new Integer(ns));
+            namespaces.put(normalize(decode(line.substring(b, c))), Integer.parseInt(ns));
         }
 
         log(Level.INFO, "namespace", "Successfully retrieved namespace list (" + namespaces.size() + " namespaces)");
@@ -3373,9 +3373,9 @@ public class Wiki implements Serializable
         HashMap<String, Object> metadata = new HashMap<>(30);
 
         // size, width, height, mime type
-        metadata.put("size", new Integer(parseAttribute(line, "size", 0)));
-        metadata.put("width", new Integer(parseAttribute(line, "width", 0)));
-        metadata.put("height", new Integer(parseAttribute(line, "height", 0)));
+        metadata.put("size", Integer.parseInt(parseAttribute(line, "size", 0)));
+        metadata.put("width", Integer.parseInt(parseAttribute(line, "width", 0)));
+        metadata.put("height", Integer.parseInt(parseAttribute(line, "height", 0)));
         metadata.put("mime", parseAttribute(line, "mime", 0));
 
         // exif

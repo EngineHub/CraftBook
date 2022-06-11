@@ -22,7 +22,6 @@ import com.sk89q.craftbook.mechanics.ChunkAnchor;
 import com.sk89q.craftbook.mechanics.CommandSigns;
 import com.sk89q.craftbook.mechanics.CookingPot;
 import com.sk89q.craftbook.mechanics.Elevator;
-import com.sk89q.craftbook.mechanics.Footprints;
 import com.sk89q.craftbook.mechanics.GlowStone;
 import com.sk89q.craftbook.mechanics.HiddenSwitch;
 import com.sk89q.craftbook.mechanics.JackOLantern;
@@ -145,7 +144,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
-
 import javax.annotation.Nullable;
 
 public class CraftBookPlugin extends JavaPlugin {
@@ -261,7 +259,6 @@ public class CraftBookPlugin extends JavaPlugin {
         availableMechanics.put("Sponge", Sponge.class);
         availableMechanics.put("BetterPlants", BetterPlants.class);
         availableMechanics.put("Chairs", Chair.class);
-        availableMechanics.put("Footprints", Footprints.class);
         availableMechanics.put("Pay", Payment.class);
         availableMechanics.put("Jukebox", RedstoneJukebox.class);
         availableMechanics.put("Glowstone", GlowStone.class);

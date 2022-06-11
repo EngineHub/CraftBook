@@ -96,7 +96,7 @@ public class Snow extends AbstractCraftBookMechanic {
                 if (Tag.SLABS.isTagged(block.getType())) {
                     return ((Slab) block.getBlockData()).getType() != Slab.Type.BOTTOM;
                 }
-                if (Tag.CARPETS.isTagged(block.getType()) || Tag.RAILS.isTagged(block.getType()) || Tag.SAPLINGS.isTagged(block.getType())) {
+                if (Tag.WOOL_CARPETS.isTagged(block.getType()) || Tag.RAILS.isTagged(block.getType()) || Tag.SAPLINGS.isTagged(block.getType())) {
                     return false;
                 }
                 return !(!freezeWater && (block.getType() == Material.WATER)) && !isReplacable(block);
