@@ -47,8 +47,8 @@ public class BetterAI extends AbstractCraftBookMechanic {
             return;
         }
 
-        if (isEntityEnabled(event.getEntity(), attackPassive) && event.getEntity() instanceof Monster) {
-            Bukkit.getServer().getMobGoals().addGoal((Monster) event.getEntity(), 5, new AttackPassiveGoal((Monster) event.getEntity()));
+        if (isEntityEnabled(event.getEntity(), attackPassive) && event.getEntity() instanceof Monster monster) {
+            Bukkit.getServer().getMobGoals().addGoal(monster, 5, new AttackPassiveGoal(monster));
         }
     }
 
@@ -73,8 +73,8 @@ public class BetterAI extends AbstractCraftBookMechanic {
             Difficulty diff = event.getEntity().getWorld().getDifficulty();
 
             LivingEntity enemy = (LivingEntity) event.getEntity();
-            if (event.getTarget() instanceof Player && !enemy.hasLineOfSight(event.getTarget())) {
-                if (!((Player) event.getTarget()).isSprinting()) {
+            if (event.getTarget() instanceof Player player && !enemy.hasLineOfSight(event.getTarget())) {
+                if (!player.isSprinting()) {
                     CraftBookPlugin.logDebugMessage("Disabling entity target - Player is not visible.", "ai-mechanics.entity-target.vision");
                     event.setCancelled(true);
                     return;
@@ -83,9 +83,9 @@ public class BetterAI extends AbstractCraftBookMechanic {
             if (event.getTarget().getLocation().getBlock().getLightLevel() > (diff == Difficulty.HARD ? 4 : 6) && enemy.hasLineOfSight(event.getTarget())) {
                 return; // They can clearly see the target.
             }
-            if (event.getTarget() instanceof Player) {
-                if (((Player) event.getTarget()).isSneaking()) {
-                    int distance = (int) Math.floor(event.getTarget().getLocation().distanceSquared(enemy.getLocation()));
+            if (event.getTarget() instanceof Player player) {
+                if (player.isSneaking()) {
+                    int distance = (int) Math.floor(player.getLocation().distanceSquared(enemy.getLocation()));
                     if (distance != 0 && ThreadLocalRandom.current().nextInt(distance) > (diff == Difficulty.HARD ? 4 : 2)) {
                         CraftBookPlugin.logDebugMessage("Disabling entity target - Player is sneaking.", "ai-mechanics.entity-target.vision");
                         event.setCancelled(true);
@@ -142,7 +142,7 @@ public class BetterAI extends AbstractCraftBookMechanic {
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("enhanced-vision-enabled", "The list of entities to enable the enhanced vision AI mechanic for.");
         enhancedVision = ImmutableSet.copyOf(config.getStringList("enhanced-vision-enabled", Lists.newArrayList(
-            EntityTypes.ZOMBIE.getId(), EntityTypes.ZOMBIFIED_PIGLIN.getId()
+            EntityTypes.ZOMBIE.getId(), EntityTypes.DROWNED.getId(), EntityTypes.HUSK.getId(), EntityTypes.ZOMBIFIED_PIGLIN.getId()
         )));
 
         config.setComment("critical-bow-enabled", "The list of entities to enable the critical bow AI mechanic for.");
@@ -152,7 +152,7 @@ public class BetterAI extends AbstractCraftBookMechanic {
 
         config.setComment("attack-passive-enabled", "The list of entities to enable the attack passive AI mechanic for.");
         attackPassive = ImmutableSet.copyOf(config.getStringList("attack-passive-enabled", Lists.newArrayList(
-            EntityTypes.ZOMBIE.getId()
+            EntityTypes.ZOMBIE.getId(), EntityTypes.DROWNED.getId(), EntityTypes.HUSK.getId()
         )));
     }
 }
