@@ -21,6 +21,9 @@ import com.google.common.collect.Maps;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -267,8 +270,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             SkullMeta meta = (SkullMeta) stack.getItemMeta();
             meta.setPlayerProfile(profile);
             meta.getPersistentDataContainer().set(headDropsEntityKey, PersistentDataType.STRING, entityTypeId);
-            // TODO Re-enable word-casing of mob names.
-            meta.setDisplayName(ChatColor.RESET + type.getKey().getKey().replace("_", " ") + " Head");
+            meta.displayName(Component.translatable(type.translationKey()).append(Component.text(" Head")).style(Style.style().decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)));
             stack.setItemMeta(meta);
 
             event.setCancelled(true);
@@ -288,8 +290,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             ItemStack toDrop = new ItemStack(Material.PLAYER_HEAD, 1);
             ItemMeta itemMeta = toDrop.getItemMeta();
             if (itemMeta instanceof SkullMeta skullMeta) {
-                // TODO Re-enable word-casing of mob names.
-                skullMeta.setDisplayName(ChatColor.RESET + entityKey.getKey().replace("_", " ") + " Head");
+                skullMeta.displayName(Component.translatable(entityType.translationKey()).append(Component.text(" Head")).style(Style.style().decoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)));
                 skullMeta.setPlayerProfile(profile);
                 skullMeta.getPersistentDataContainer().set(headDropsEntityKey, PersistentDataType.STRING, entityKey.toString());
                 toDrop.setItemMeta(skullMeta);
