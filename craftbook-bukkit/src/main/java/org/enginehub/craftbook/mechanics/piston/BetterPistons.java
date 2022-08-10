@@ -286,8 +286,8 @@ public class BetterPistons extends AbstractCraftBookMechanic {
 
         Vector vel = new Vector(piston.getFacing().getModX(), piston.getFacing().getModY(), piston.getFacing().getModZ()).multiply(multiplier);
         Block pistonHead = trigger.getRelative(piston.getFacing());
-        Material pistonHeadType = pistonHead.getType();
         BlockData pistonHeadData = pistonHead.getBlockData();
+        Material pistonHeadType = pistonHeadData.getMaterial();
 
         if (pistonHeadType.isAir()
             || pistonHeadType == Material.MOVING_PISTON

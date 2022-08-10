@@ -80,7 +80,7 @@ public class BetterPlants extends AbstractCraftBookMechanic {
             return;
         }
 
-        Bisected belowData = (Bisected) block.getBlockData();
+        Bisected belowData = (Bisected) below.getBlockData();
         if (belowData.getHalf() != Bisected.Half.BOTTOM) {
             return;
         }

@@ -36,15 +36,13 @@ public class MinecartEmptyDecay extends AbstractCraftBookMechanic {
             return;
         }
 
-        Vehicle vehicle = event.getVehicle();
-
-        if (!(vehicle instanceof RideableMinecart)) {
+        if (!(event.getVehicle() instanceof RideableMinecart rideableMinecart)) {
             return;
         }
 
         Bukkit.getScheduler().runTaskLater(
             CraftBookPlugin.inst(),
-            new Decay((RideableMinecart) vehicle),
+            new Decay(rideableMinecart),
             decayDelay
         );
     }

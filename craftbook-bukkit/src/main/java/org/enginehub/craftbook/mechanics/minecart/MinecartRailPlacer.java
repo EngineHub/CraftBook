@@ -39,7 +39,7 @@ public class MinecartRailPlacer extends AbstractCraftBookMechanic {
 
         Vehicle vehicle = event.getVehicle();
 
-        if (!(vehicle instanceof InventoryHolder) || !(vehicle instanceof Minecart)) {
+        if (!(vehicle instanceof InventoryHolder holder) || !(vehicle instanceof Minecart)) {
             return;
         }
 
@@ -47,9 +47,7 @@ public class MinecartRailPlacer extends AbstractCraftBookMechanic {
         Block belowBlock = toBlock.getRelative(BlockFace.DOWN);
 
         if (toBlock.getType().isAir() && belowBlock.getType().isSolid()) {
-            Inventory inventory = ((InventoryHolder) event.getVehicle()).getInventory();
-
-            if (inventory.removeItem(new ItemStack(Material.RAIL, 1)).isEmpty()) {
+            if (holder.getInventory().removeItem(new ItemStack(Material.RAIL, 1)).isEmpty()) {
                 toBlock.setType(Material.RAIL);
             }
         }

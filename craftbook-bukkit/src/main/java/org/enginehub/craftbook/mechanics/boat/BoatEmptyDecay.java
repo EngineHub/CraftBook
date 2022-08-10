@@ -19,7 +19,6 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleExitEvent;
@@ -36,15 +35,13 @@ public class BoatEmptyDecay extends AbstractCraftBookMechanic {
             return;
         }
 
-        Vehicle vehicle = event.getVehicle();
-
-        if (!(vehicle instanceof Boat)) {
+        if (!(event.getVehicle() instanceof Boat boat)) {
             return;
         }
 
         Bukkit.getScheduler().runTaskLater(
             CraftBookPlugin.inst(),
-            new Decay((Boat) vehicle),
+            new Decay(boat),
             decayDelay
         );
     }
