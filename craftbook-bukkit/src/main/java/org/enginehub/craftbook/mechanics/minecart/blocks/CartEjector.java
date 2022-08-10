@@ -31,32 +31,23 @@ import java.util.List;
 
 public class CartEjector extends CartBlockMechanism {
 
+    private final static List<String> SIGNS = ImmutableList.of("Eject");
+
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
-
-        // care?
-        if (!event.getBlocks().matches(getBlock())) return;
-        if (event.getMinecart().isEmpty()) return;
-
-        // enabled?
-        if (Power.OFF == isActive(event.getBlocks())) return;
-
-        // go
-        Block ejectTarget;
-        if (!event.getBlocks().hasSign()) {
-            ejectTarget = event.getBlocks().rail();
-        } else if (!event.getBlocks().matches("eject")) {
-            ejectTarget = event.getBlocks().rail();
-        } else {
-            ejectTarget = event.getBlocks().rail().getRelative(SignUtil.getFront(event.getBlocks().sign()));
+        if (event.getMinecart().isEmpty() || !event.getBlocks().matches(getBlock()) || Power.OFF == isActive(event.getBlocks())) {
+            return;
         }
-        // if you use just
-        // cart.getPassenger().teleport(ejectTarget.getLocation());
-        // the client tweaks as bukkit tries to teleport you, then changes its mind and leaves you in the cart.
-        // the cart also comes to a dead halt at the time of writing, and i have no idea why.
+
         List<Entity> passengers = event.getMinecart().getPassengers();
         event.getMinecart().eject();
-        passengers.forEach(ent -> ent.teleport(ejectTarget.getLocation().toCenterLocation()));
+
+        if (event.getBlocks().matches("eject")) {
+            Block ejectTarget = event.getBlocks().rail().getRelative(SignUtil.getFront(event.getBlocks().sign()));
+            for (Entity ent : passengers) {
+                ent.teleport(ejectTarget.getLocation().toCenterLocation());
+            }
+        }
 
         // notice!
         // if a client tries to board a cart immediately before it crosses an ejector,
@@ -67,14 +58,12 @@ public class CartEjector extends CartBlockMechanism {
 
     @Override
     public List<String> getApplicableSigns() {
-
-        return ImmutableList.copyOf(new String[] { "Eject" });
+        return SIGNS;
     }
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
-        config.setComment("block", "Sets the block that is the base of the ejector mechanic.");
+        config.setComment("block", "The block the Cart Ejector mechanic uses.");
         setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.IRON_BLOCK.getId()), true));
     }
 }

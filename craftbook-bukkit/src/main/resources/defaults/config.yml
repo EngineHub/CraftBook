@@ -42,6 +42,7 @@ mechanics:
     minecart:
         minecart_booster: false
         minecart_collision_entry: false
+        minecart_ejector: false
         minecart_empty_decay: false
         minecart_exit_remover: false
         minecart_impact_damage: false

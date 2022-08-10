@@ -167,7 +167,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
                 return;
             }
 
-            player.checkPermission("craftbook.vehicles." + getNodeId());
+            player.checkPermission("craftbook." + getNodeId() + ".create");
             event.setLine(1, '[' + lineFound + ']');
             player.printInfo(TranslatableComponent.of("craftbook." + getNodeId() + ".create"));
         } catch (AuthorizationException e) {
