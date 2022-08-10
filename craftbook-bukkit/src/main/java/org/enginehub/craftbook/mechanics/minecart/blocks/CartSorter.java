@@ -57,7 +57,7 @@ public class CartSorter extends CartBlockMechanism {
 
         // validate
         if (!event.getBlocks().matches("sort")) return;
-        ChangedSign sign = event.getBlocks().getSign();
+        ChangedSign sign = event.getBlocks().getChangedSign();
 
         // pi(sign)hich sort conditions apply
         // (left dominates if both apply)
@@ -72,7 +72,7 @@ public class CartSorter extends CartBlockMechanism {
         // perhaps oddly, it's the sign facing that determines the concepts of left and right, and not the track.
         // this is required since there's not a north track and a south track; just a north-south track type.
         Rail trackData = (Rail) Material.RAIL.createBlockData();
-        BlockFace next = SignUtil.getFacing(event.getBlocks().sign);
+        BlockFace next = SignUtil.getFacing(event.getBlocks().sign());
         switch (next) {
             case SOUTH:
                 switch (dir) {
@@ -125,7 +125,7 @@ public class CartSorter extends CartBlockMechanism {
             default:
                 return;
         }
-        Block targetTrack = event.getBlocks().rail.getRelative(next);
+        Block targetTrack = event.getBlocks().rail().getRelative(next);
 
         // now check sanity real quick that there's actually a track after this,
         // and then make the change.

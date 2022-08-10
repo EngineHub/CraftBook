@@ -43,7 +43,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("Pipes", org.enginehub.craftbook.mechanics.pipe.Pipes.class, MechanicCategory.CIRCUIT);
 //        registerMechanic("BounceBlocks", org.enginehub.craftbook.mechanics.BounceBlocks.class, MechanicCategory.GENERAL);
 //        registerMechanic("IntegratedCircuits", org.enginehub.craftbook.mechanics.ic.ICMechanic.class, MechanicCategory.CIRCUIT);
-//        registerMechanic("MinecartBooster", org.enginehub.craftbook.mechanics.minecart.blocks.CartBooster.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartReverser", org.enginehub.craftbook.mechanics.minecart.blocks.CartReverser.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartSorter", org.enginehub.craftbook.mechanics.minecart.blocks.CartSorter.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartStation", org.enginehub.craftbook.mechanics.minecart.blocks.CartStation.class, MechanicCategory.MINECART);
@@ -388,6 +387,42 @@ public class BukkitMechanicManager extends MechanicManager {
             .name("MinecartReverser")
             .description(TranslatableComponent.of("craftbook.minecartreverser.description"))
             .className("org.enginehub.craftbook.mechanics.minecart.blocks.CartReverser")
+            .category(MechanicCategory.MINECART)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("minecart_booster")
+            .name("MinecartBooster")
+            .description(TranslatableComponent.of("craftbook.minecartbooster.description"))
+            .className("org.enginehub.craftbook.mechanics.minecart.blocks.speed.CartBooster")
+            .category(MechanicCategory.MINECART)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("minecart_max_booster")
+            .name("MinecartMaxBooster")
+            .description(TranslatableComponent.of("craftbook.minecartmaxbooster.description"))
+            .className("org.enginehub.craftbook.mechanics.minecart.blocks.speed.CartMaxBooster")
+            .category(MechanicCategory.MINECART)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("minecart_light_braker")
+            .name("MinecartLightBraker")
+            .description(TranslatableComponent.of("craftbook.minecartlightbraker.description"))
+            .className("org.enginehub.craftbook.mechanics.minecart.blocks.speed.CartLightBraker")
+            .category(MechanicCategory.MINECART)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("minecart_strong_braker")
+            .name("MinecartStrongBraker")
+            .description(TranslatableComponent.of("craftbook.minecartstrongbraker.description"))
+            .className("org.enginehub.craftbook.mechanics.minecart.blocks.speed.CartStrongBraker")
             .category(MechanicCategory.MINECART)
             .buildAndRegister();
 

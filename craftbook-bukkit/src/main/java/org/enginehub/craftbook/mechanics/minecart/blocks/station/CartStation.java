@@ -26,6 +26,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartBlockMechanism;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
@@ -73,14 +74,14 @@ public class CartStation extends CartBlockMechanism {
         switch (isActive(blocks)) {
             case ON:
                 // standardize its speed and direction.
-                launch(cart, blocks.sign);
+                launch(cart, blocks.sign());
                 break;
             case OFF:
             case NA:
                 // park it.
                 stop(cart);
                 // recenter it
-                Location l = blocks.rail.getLocation().add(0.5, 0.5, 0.5);
+                Location l = blocks.rail().getLocation().add(0.5, 0.5, 0.5);
                 if (!cart.getLocation().equals(l)) {
                     cart.teleport(l);
                 }
@@ -109,11 +110,12 @@ public class CartStation extends CartBlockMechanism {
         if (!event.getBlocks().matches(getBlock())) return;
         if (!event.getBlocks().matches("station")) return;
 
-        if (!event.getBlocks().getSign().getLine(2).equalsIgnoreCase("AUTOSTART")) return;
+        ChangedSign sign = event.getBlocks().getChangedSign();
 
-        if (!event.getBlocks().getSign().getLine(3).isEmpty() && event.getEntered() instanceof Player) {
+        if (!sign.getLine(2).equalsIgnoreCase("AUTOSTART")) return;
 
-            ItemStack testItem = ItemSyntax.getItem(event.getBlocks().getSign().getLine(3));
+        if (!sign.getLine(3).isEmpty() && event.getEntered() instanceof Player) {
+            ItemStack testItem = ItemSyntax.getItem(sign.getLine(3));
             if (!ItemUtil.areItemsIdentical(testItem, ((Player) event.getEntered()).getItemInHand()))
                 return;
         }
@@ -122,14 +124,14 @@ public class CartStation extends CartBlockMechanism {
         switch (isActive(event.getBlocks())) {
             case ON:
                 // standardize its speed and direction.
-                launch(event.getMinecart(), event.getBlocks().sign);
+                launch(event.getMinecart(), event.getBlocks().sign());
                 break;
             case OFF:
             case NA:
                 // park it.
                 stop(event.getMinecart());
                 // recenter it
-                Location l = event.getBlocks().rail.getLocation().add(0.5, 0.5, 0.5);
+                Location l = event.getBlocks().rail().getLocation().add(0.5, 0.5, 0.5);
                 if (!event.getMinecart().getLocation().equals(l)) {
                     event.getMinecart().teleport(l);
                 }

@@ -59,7 +59,7 @@ public class CartDeposit extends CartBlockMechanism {
 
         // go
         List<Tuple2<ItemInfo, Integer>> items = new ArrayList<>();
-        for (String data : RegexUtil.COMMA_PATTERN.split(event.getBlocks().getSign().getLine(2))) {
+        for (String data : RegexUtil.COMMA_PATTERN.split(event.getBlocks().getChangedSign().getLine(2))) {
             int itemID = -1;
             short itemData = -1;
             int amount = -1;
@@ -83,8 +83,8 @@ public class CartDeposit extends CartBlockMechanism {
         ArrayList<ItemStack> leftovers = new ArrayList<>();
 
         // search for containers
-        List<Chest> containers = new ArrayList<>(RailUtil.getNearbyChests(event.getBlocks().base));
-        containers.addAll(RailUtil.getNearbyChests(event.getBlocks().rail));
+        List<Chest> containers = new ArrayList<>(RailUtil.getNearbyChests(event.getBlocks().base()));
+        containers.addAll(RailUtil.getNearbyChests(event.getBlocks().rail()));
 
         // are there any containers?
         if (containers.isEmpty()) return;

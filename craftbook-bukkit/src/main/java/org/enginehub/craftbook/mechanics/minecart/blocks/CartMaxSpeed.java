@@ -41,7 +41,7 @@ public class CartMaxSpeed extends CartBlockMechanism {
 
         double maxSpeed = 0.4D;
         try {
-            maxSpeed = Double.parseDouble(event.getBlocks().getSign().getLine(2));
+            maxSpeed = Double.parseDouble(event.getBlocks().getChangedSign().getLine(2));
         } catch (Exception ignored) {
         }
 

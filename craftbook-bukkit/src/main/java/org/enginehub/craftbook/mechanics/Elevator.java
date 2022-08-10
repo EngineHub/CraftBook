@@ -153,7 +153,7 @@ public class Elevator extends AbstractCraftBookMechanic {
 
             if (!localPlayer.hasPermission("craftbook.elevator.use")) {
                 if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                    localPlayer.printError("mech.use-permission");
+                    localPlayer.printError(TranslatableComponent.of("craftbook.mechanisms.use-permission", TextComponent.of(getMechanicType().getName())));
                 }
                 continue;
             }
@@ -232,7 +232,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         if (!localPlayer.hasPermission("craftbook.elevator.use")) {
             event.setCancelled(true);
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                localPlayer.printError("mech.use-permission");
+                localPlayer.printError(TranslatableComponent.of("craftbook.mechanisms.use-permission", TextComponent.of(getMechanicType().getName())));
             }
             return;
         }

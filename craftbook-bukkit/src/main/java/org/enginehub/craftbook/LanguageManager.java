@@ -26,8 +26,6 @@ public class LanguageManager {
         put("area.break-permissions", "You don't have permissions to break that in this area!");
 
 
-        put("mech.create-permission", "You don't have permission to create this mechanic.");
-        put("mech.use-permission", "You don't have permission to use this mechanic.");
         put("mech.restock-permission", "You don't have permission to restock this mechanic.");
         put("mech.not-enough-blocks", "Not enough blocks to trigger mechanic!");
         put("mech.group", "You are not in the required group!");

@@ -55,7 +55,7 @@ public class Marquee extends AbstractCraftBookMechanic {
         CraftBookPlayer lplayer = event.getWrappedPlayer();
         if (!lplayer.hasPermission("craftbook.marquee.use")) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                lplayer.printError("mech.use-permission");
+                lplayer.printError(TranslatableComponent.of("craftbook.mechanisms.use-permission", TextComponent.of(getMechanicType().getName())));
             }
             return;
         }

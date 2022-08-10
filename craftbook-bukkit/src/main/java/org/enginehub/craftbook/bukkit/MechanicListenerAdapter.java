@@ -41,7 +41,6 @@ import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.mechanics.minecart.blocks.CartBlockMechanism;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
@@ -301,12 +300,13 @@ final class MechanicListenerAdapter implements Listener {
         if (CartBlockRedstoneEvent.getHandlerList().getRegisteredListeners().length != 0) {
             Bukkit.getServer().getScheduler().runTask(CraftBookPlugin.inst(), () -> {
                 CartMechanismBlocks cmb = CartMechanismBlocks.find(event.getBlock());
-                if (cmb != null) {
-                    CartBlockRedstoneEvent ev =
-                        new CartBlockRedstoneEvent(event.getBlock(), event.getSource(), event.getOldCurrent(), event.getNewCurrent(), cmb,
-                            CartBlockMechanism.getCart(cmb.rail));
-                    CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
+                if (cmb == null) {
+                    return;
                 }
+
+                CartBlockRedstoneEvent ev =
+                    new CartBlockRedstoneEvent(event.getBlock(), event.getSource(), event.getOldCurrent(), event.getNewCurrent(), cmb, cmb.findMinecart());
+                CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
             });
         }
     }
@@ -327,7 +327,7 @@ final class MechanicListenerAdapter implements Listener {
             Location from = event.getFrom();
             Location to = event.getTo();
 
-            if (!LocationUtil.isWithinSphericalRadius(from, to, 2)) { //Further than max distance
+            if (cmb == null || !LocationUtil.isWithinSphericalRadius(from, to, 2)) { //Further than max distance
                 return;
             }
 
@@ -351,6 +351,11 @@ final class MechanicListenerAdapter implements Listener {
         if (event.getVehicle() instanceof Minecart cart) {
             Block block = event.getVehicle().getLocation().getBlock();
             CartMechanismBlocks cmb = CartMechanismBlocks.findByRail(block);
+
+            if (cmb == null) {
+                return;
+            }
+
             CartBlockEnterEvent ev = new CartBlockEnterEvent(cart, event.getEntered(), cmb);
             CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
             if (ev.isCancelled()) {

@@ -18,6 +18,7 @@ package org.enginehub.craftbook.mechanics;
 import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockTypes;
@@ -126,7 +127,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         if (!player.hasPermission("craftbook.xpstorer.use")) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                player.printError("mech.use-permission");
+                player.printError(TranslatableComponent.of("craftbook.mechanisms.use-permission", TextComponent.of(getMechanicType().getName())));
             }
             return;
         }

@@ -19,6 +19,7 @@ import org.enginehub.craftbook.mechanics.betterai.BetterAI;
 import org.enginehub.craftbook.mechanics.Ammeter;
 import org.enginehub.craftbook.mechanics.BetterLeads;
 import org.enginehub.craftbook.mechanics.BetterPhysics;
+import org.enginehub.craftbook.mechanics.minecart.blocks.speed.CartMaxBooster;
 import org.enginehub.craftbook.mechanics.piston.BetterPistons;
 import org.enginehub.craftbook.mechanics.BetterPlants;
 import org.enginehub.craftbook.mechanics.ReadableBookshelf;
@@ -167,6 +168,8 @@ public class MechanicTypes {
     public static final MechanicType<MinecartExitRemover> MINECART_EXIT_REMOVER = get("minecart_exit_remover");
     @Nullable
     public static final MechanicType<MinecartItemPickup> MINECART_ITEM_PICKUP = get("minecart_item_pickup");
+    @Nullable
+    public static final MechanicType<CartMaxBooster> MINECART_MAX_BOOSTER = get("minecart_max_booster");
     @Nullable
     public static final MechanicType<CartMaxSpeed> MINECART_MAX_SPEED = get("minecart_max_speed");
     @Nullable

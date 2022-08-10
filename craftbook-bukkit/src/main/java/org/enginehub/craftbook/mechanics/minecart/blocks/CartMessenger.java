@@ -43,7 +43,7 @@ public class CartMessenger extends CartBlockMechanism {
         // go
         if (event.getMinecart().getPassenger() instanceof Player) {
             Player p = (Player) event.getMinecart().getPassenger();
-            ChangedSign s = event.getBlocks().getSign();
+            ChangedSign s = event.getBlocks().getChangedSign();
             if (!s.getLine(0).equalsIgnoreCase("[print]") && !s.getLine(1).equalsIgnoreCase("[print]"))
                 return;
 

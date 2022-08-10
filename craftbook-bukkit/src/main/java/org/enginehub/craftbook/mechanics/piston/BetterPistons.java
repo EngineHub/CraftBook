@@ -23,6 +23,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.SideEffect;
 import com.sk89q.worldedit.util.SideEffectSet;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BaseBlock;
@@ -104,7 +105,10 @@ public class BetterPistons extends AbstractCraftBookMechanic {
 
             if (!player.hasPermission("craftbook.betterpistons." + type.name().toLowerCase(Locale.ENGLISH) + ".create")) {
                 if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                    player.printError("mech.create-permission");
+                    player.printError(TranslatableComponent.of(
+                        "craftbook.mechanisms.create-permission",
+                        TextComponent.of(getMechanicType().getName())
+                    ));
                 }
                 SignUtil.cancelSignChange(event);
                 return;

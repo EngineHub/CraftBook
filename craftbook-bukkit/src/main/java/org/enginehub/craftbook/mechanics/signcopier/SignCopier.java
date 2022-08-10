@@ -18,6 +18,7 @@ package org.enginehub.craftbook.mechanics.signcopier;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.item.ItemTypes;
 import org.bukkit.Bukkit;
@@ -135,7 +136,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
 
         if (!player.hasPermission("craftbook.signcopier.use")) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                player.printError("mech.use-permission");
+                player.printError(TranslatableComponent.of("craftbook.mechanisms.use-permission", TextComponent.of(getMechanicType().getName())));
             }
             return;
         }

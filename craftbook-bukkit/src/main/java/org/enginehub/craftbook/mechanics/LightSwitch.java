@@ -84,7 +84,7 @@ public class LightSwitch extends AbstractCraftBookMechanic {
         CraftBookPlayer player = event.getWrappedPlayer();
         if (!player.hasPermission("craftbook.lightswitch.use")) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                player.printError("mech.use-permission");
+                player.printError(TranslatableComponent.of("craftbook.mechanisms.use-permission", TextComponent.of(getMechanicType().getName())));
             }
             return;
         }

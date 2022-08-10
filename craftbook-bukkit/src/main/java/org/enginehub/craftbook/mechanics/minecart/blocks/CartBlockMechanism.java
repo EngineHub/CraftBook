@@ -22,12 +22,9 @@ import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.util.BoundingBox;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
@@ -63,7 +60,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
         this.block = block;
     }
 
-    public static final BlockFace[] powerSupplyOptions = new BlockFace[] {
+    private static final BlockFace[] powerSupplyOptions = new BlockFace[] {
         BlockFace.NORTH, BlockFace.EAST,
         BlockFace.SOUTH, BlockFace.WEST
     };
@@ -79,7 +76,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
     public static Power isActive(CartMechanismBlocks blocks) {
         boolean isWired = false;
         if (blocks.hasSign()) {
-            switch (isActive(blocks.sign)) {
+            switch (isActive(blocks.sign())) {
                 case ON:
                     return Power.ON;
                 case NA:
@@ -90,7 +87,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
         }
 
         if (blocks.hasBase()) {
-            switch (isActive(blocks.base)) {
+            switch (isActive(blocks.base())) {
                 case ON:
                     return Power.ON;
                 case NA:
@@ -101,7 +98,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
         }
 
         if (blocks.hasRail()) {
-            switch (isActive(blocks.rail)) {
+            switch (isActive(blocks.rail())) {
                 case ON:
                     return Power.ON;
                 case NA:
@@ -139,29 +136,6 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
         return isWired ? Power.OFF : Power.NA;
     }
 
-    /**
-     * @param rail the block we're searching for carts (mostly likely containing rails
-     *     generally,
-     *     though it's not strictly relevant).
-     * @return a Minecart if one is found within the given block, or null if none found. (If there
-     *     is more than one
-     *     minecart within the block, the
-     *     first one encountered when traversing the list of Entity in the Chunk is the one
-     *     returned.)
-     */
-    public static Minecart getCart(Block rail) {
-        for (Entity ent : rail.getChunk().getEntities()) {
-            if (!(ent instanceof Minecart)) {
-                continue;
-            }
-            if (BoundingBox.of(rail).contains(ent.getBoundingBox())) {
-                return (Minecart) ent;
-            }
-        }
-
-        return null;
-    }
-
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
         if (getApplicableSigns().isEmpty() || !EventUtil.passesFilter(event)) {
@@ -193,9 +167,9 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
                 return;
             }
 
-            player.checkPermission("craftbook.vehicles." + getNodeId().toLowerCase(Locale.ENGLISH));
+            player.checkPermission("craftbook.vehicles." + getNodeId());
             event.setLine(1, '[' + lineFound + ']');
-            player.print(getNodeId() + " Created!");
+            player.printInfo(TranslatableComponent.of("craftbook." + getNodeId() + ".create"));
         } catch (AuthorizationException e) {
             player.printError(TranslatableComponent.of(
                 "craftbook.mechanisms.create-permission",
@@ -216,7 +190,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
      * @return The node ID.
      */
     protected String getNodeId() {
-        return getMechanicType().getId().replace("_", "");
+        return getMechanicType().getId().replace("_", "").toLowerCase(Locale.ENGLISH);
     }
 
     public List<String> getApplicableSigns() {

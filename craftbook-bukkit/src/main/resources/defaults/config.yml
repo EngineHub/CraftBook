@@ -40,15 +40,19 @@ mechanics:
         variables: true
         xp_storer: false
     minecart:
+        minecart_booster: false
         minecart_collision_entry: false
         minecart_empty_decay: false
         minecart_exit_remover: false
         minecart_impact_damage: false
         minecart_item_pickup: false
+        minecart_light_braker: false
+        minecart_max_booster: false
         minecart_no_collide: false
         minecart_physics_control: false
         minecart_rail_placer: false
         minecart_reverser: false
+        minecart_strong_braker: false
         more_rails: false
         temporary_cart: false
     tool:

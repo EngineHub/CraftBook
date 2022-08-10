@@ -19,6 +19,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.entity.EntityTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -79,7 +81,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
 
         if (!player.hasPermission("craftbook.betterleads.leash") && !player.hasPermission("craftbook.betterleads.leash." + typeName.replace(":", "."))) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                player.printError("mech.use-permission");
+                player.printError(TranslatableComponent.of("craftbook.mechanisms.use-permission", TextComponent.of(getMechanicType().getName())));
             }
             return;
         }

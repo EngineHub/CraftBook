@@ -73,6 +73,8 @@
     "craftbook.marquee.create": "Marquee created.",
     "craftbook.marquee.description": "Lets players view Variable values by right clicking a sign",
 
+    "craftbook.minecartbooster.description": "Boosts Minecarts when they drive over it",
+
     "craftbook.minecartcollisionentry.description": "Causes players to enter minecarts when they collide with the cart",
 
     "craftbook.minecartemptydecay.description": "Causes minecarts to break after time when empty",
@@ -85,13 +87,20 @@
 
     "craftbook.morerails.description": "Adds more types of rails for Minecarts",
 
+    "craftbook.minecartlightbraker.description": "Lightly brakes Minecarts when they drive over it",
+
+    "craftbook.minecartmaxbooster.description": "Accelerates Minecarts to the max speed when they drive over it",
+
     "craftbook.minecartnocollide.description": "Cause minecarts to not collide with each other",
 
     "craftbook.minecartphysicscontrol.description": "Allows fine-grained control over Minecart physics",
 
     "craftbook.minecartrailplacer.description": "Causes storage carts to place rails in front of them",
 
+    "craftbook.minecartreverser.create": "Minecart Reverser created.",
     "craftbook.minecartreverser.description": "Reverses Minecarts when they drive over it",
+
+    "craftbook.minecartstrongbraker.description": "Strongly brakes Minecarts when they drive over it",
 
     "craftbook.paintingswitcher.now-editing": "You are now editing this painting!",
     "craftbook.paintingswitcher.no-longer-editing": "You are no longer editing this painting!",
@@ -165,6 +174,7 @@
     "craftbook.mechanisms.click-to-enable": "Click to enable",
     "craftbook.mechanisms.click-to-disable": "Click to disable",
     "craftbook.mechanisms.create-permission": "You don't have permission to create the {0} mechanic.",
+    "craftbook.mechanisms.use-permission": "You don't have permission to use the {0} mechanic.",
 
     "craftbook.version.version": "CraftBook version {0}",
 

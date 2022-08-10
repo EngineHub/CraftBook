@@ -48,7 +48,7 @@ public class CartLift extends CartBlockMechanism {
 
         // go
         boolean up = event.getBlocks().matches("cartlift up");
-        Block destination = event.getBlocks().sign;
+        Block destination = event.getBlocks().sign();
 
         BlockFace face;
         if (up) face = BlockFace.UP;
@@ -63,7 +63,7 @@ public class CartLift extends CartBlockMechanism {
 
             destination = destination.getRelative(face);
 
-            if (SignUtil.isSign(destination) && event.getBlocks().base.getType() == destination.getRelative(BlockFace.UP, 1).getType()) {
+            if (SignUtil.isSign(destination) && event.getBlocks().base().getType() == destination.getRelative(BlockFace.UP, 1).getType()) {
 
                 ChangedSign state = CraftBookBukkitUtil.toChangedSign(destination);
                 String testLine = state.getLine(1);

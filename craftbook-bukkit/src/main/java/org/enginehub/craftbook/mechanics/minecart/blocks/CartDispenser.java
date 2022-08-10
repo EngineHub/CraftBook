@@ -36,7 +36,6 @@ import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.EntityUtil;
-import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.RailUtil;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
 import org.enginehub.craftbook.util.SignUtil;
@@ -96,17 +95,17 @@ public class CartDispenser extends CartBlockMechanism {
 
         // detect intentions
         Power pow = isActive(blocks);
-        boolean inf = "inf".equalsIgnoreCase(blocks.getSign().getLine(2));
+        boolean inf = "inf".equalsIgnoreCase(blocks.getChangedSign().getLine(2));
 
         if (inf) {
 
-            CartType type = CartType.fromString(blocks.getSign().getLine(0));
+            CartType type = CartType.fromString(blocks.getChangedSign().getLine(0));
 
             // go
             if (cart == null) {
                 switch (pow) {
                     case ON:
-                        if (!blocks.getSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("collect"))
+                        if (!blocks.getChangedSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("collect"))
                             dispense(blocks, null, type);
                         return;
                     case OFF: // power going off doesn't eat a cart unless the cart moves.
@@ -118,21 +117,21 @@ public class CartDispenser extends CartBlockMechanism {
                         return;
                     case OFF:
                     case NA:
-                        if (!blocks.getSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense"))
+                        if (!blocks.getChangedSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense"))
                             collect(cart, null);
                 }
             }
         } else {
-            for (Chest c : RailUtil.getNearbyChests(blocks.base)) {
+            for (Chest c : RailUtil.getNearbyChests(blocks.base())) {
                 Inventory inv = c.getInventory();
 
-                CartType type = CartType.fromString(blocks.getSign().getLine(0));
+                CartType type = CartType.fromString(blocks.getChangedSign().getLine(0));
 
                 // go
                 if (cart == null) {
                     switch (pow) {
                         case ON:
-                            if (!blocks.getSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("collect"))
+                            if (!blocks.getChangedSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("collect"))
                                 dispense(blocks, inv, type);
                             return;
                         case OFF: // power going off doesn't eat a cart unless the cart moves.
@@ -144,7 +143,7 @@ public class CartDispenser extends CartBlockMechanism {
                             return;
                         case OFF:
                         case NA:
-                            if (!blocks.getSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense"))
+                            if (!blocks.getChangedSign().getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense"))
                                 collect(cart, inv);
                             return;
                     }
@@ -182,11 +181,11 @@ public class CartDispenser extends CartBlockMechanism {
      * @param inv the inventory to remove a cart item from, or null if we don't care.
      */
     private void dispense(CartMechanismBlocks blocks, Inventory inv, CartType type) {
-        Location location = blocks.rail.getLocation().toCenterLocation();
+        Location location = blocks.rail().getLocation().toCenterLocation();
 
         if (minecartDispenserLegacy) {
-            BlockFace direction = SignUtil.getFront(blocks.sign).getOppositeFace();
-            location = blocks.rail.getRelative(direction).getLocation();
+            BlockFace direction = SignUtil.getFront(blocks.sign()).getOppositeFace();
+            location = blocks.rail().getRelative(direction).getLocation();
         }
 
         if (minecartDispenserAntiSpam && EntityUtil.isEntityOfTypeInBlock(location.getBlock(), EntityType.MINECART))
@@ -210,9 +209,9 @@ public class CartDispenser extends CartBlockMechanism {
                 inv.removeItem(new ItemStack(Material.HOPPER_MINECART, 1));
             }
         }
-        Minecart cart = blocks.rail.getWorld().spawn(location, type.toClass());
+        Minecart cart = blocks.rail().getWorld().spawn(location, type.toClass());
         if (minecartDispenserPropel) {
-            BlockFace dir = SignUtil.getBack(blocks.sign);
+            BlockFace dir = SignUtil.getBack(blocks.sign());
             Vector vel = new Vector(dir.getModX(), dir.getModY(), dir.getModZ());
             cart.setVelocity(vel.normalize());
         }

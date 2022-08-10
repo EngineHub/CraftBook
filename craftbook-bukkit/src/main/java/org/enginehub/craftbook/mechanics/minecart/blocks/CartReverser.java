@@ -44,7 +44,7 @@ public class CartReverser extends CartBlockMechanism {
             return;
         }
 
-        BlockFace dir = SignUtil.getFacing(event.getBlocks().sign);
+        BlockFace dir = SignUtil.getFacing(event.getBlocks().sign());
 
         Vector normalVelocity = event.getMinecart().getVelocity().normalize();
 

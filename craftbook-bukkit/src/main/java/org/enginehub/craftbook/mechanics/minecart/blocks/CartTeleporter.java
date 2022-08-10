@@ -43,9 +43,9 @@ public class CartTeleporter extends CartBlockMechanism {
 
         // go
         World world = event.getMinecart().getWorld();
-        String[] pts = RegexUtil.COMMA_PATTERN.split(event.getBlocks().getSign().getLine(2).trim(), 3);
-        if (!event.getBlocks().getSign().getLine(3).trim().isEmpty()) {
-            world = event.getMinecart().getServer().getWorld(event.getBlocks().getSign().getLine(3).trim());
+        String[] pts = RegexUtil.COMMA_PATTERN.split(event.getBlocks().getChangedSign().getLine(2).trim(), 3);
+        if (!event.getBlocks().getChangedSign().getLine(3).trim().isEmpty()) {
+            world = event.getMinecart().getServer().getWorld(event.getBlocks().getChangedSign().getLine(3).trim());
         }
 
         double x;

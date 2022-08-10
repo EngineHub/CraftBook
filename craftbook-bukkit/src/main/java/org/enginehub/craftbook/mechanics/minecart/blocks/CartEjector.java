@@ -44,11 +44,11 @@ public class CartEjector extends CartBlockMechanism {
         // go
         Block ejectTarget;
         if (!event.getBlocks().hasSign()) {
-            ejectTarget = event.getBlocks().rail;
+            ejectTarget = event.getBlocks().rail();
         } else if (!event.getBlocks().matches("eject")) {
-            ejectTarget = event.getBlocks().rail;
+            ejectTarget = event.getBlocks().rail();
         } else {
-            ejectTarget = event.getBlocks().rail.getRelative(SignUtil.getFront(event.getBlocks().sign));
+            ejectTarget = event.getBlocks().rail().getRelative(SignUtil.getFront(event.getBlocks().sign()));
         }
         // if you use just
         // cart.getPassenger().teleport(ejectTarget.getLocation());

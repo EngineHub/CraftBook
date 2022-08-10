@@ -22,6 +22,9 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.MultipleFacing;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Minecart;
+import org.bukkit.util.BoundingBox;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.util.RailUtil;
@@ -48,25 +51,73 @@ import javax.annotation.Nullable;
  * it is possible if editing the world directly without physics).
  * </p>
  */
-public class CartMechanismBlocks {
-    public final Block rail;
-    public final Block base;
-    public final Block sign;
+public record CartMechanismBlocks(Block rail, Block base, Block sign) {
 
     /**
-     * Declarative constructor. No arguments are validated in any way.
+     * Determines if the given sign includes the given text.
      *
-     * @param rail the block containing the rails.
-     * @param base the block on which the rails sit; the type of this block is what determines
-     *     the mechanism type.
-     * @param sign the block containing the sign that gives additional configuration to the
-     *     mechanism,
-     *     or null if not interested.
+     * @param testText The text on the sign to test against.
+     * @return true if the bracketed keyword on the sign matches the given testText; false otherwise
+     *     or if no sign.
      */
-    private CartMechanismBlocks(Block rail, Block base, Block sign) {
-        this.rail = rail;
-        this.base = base;
-        this.sign = sign;
+    public boolean matches(String testText) {
+        // the astute will notice there's a problem coming up here with the one dang thing that had to go and break
+        // the mold with second line definer.
+        return hasSign() && getChangedSign().getLine(1).equalsIgnoreCase("[" + testText + "]");
+    }
+
+    /**
+     * Gets whether this CartMechanismBlocks instance matches the given block.
+     *
+     * @param mat The {@link BaseBlock} material.
+     * @return if the base block is the same type as the given block.
+     */
+    public boolean matches(BaseBlock mat) {
+        return mat.equalsFuzzy(BukkitAdapter.adapt(base.getBlockData()));
+    }
+
+    public boolean hasSign() {
+        return sign != null && SignUtil.isSign(sign);
+    }
+
+    public boolean hasRail() {
+        return rail != null;
+    }
+
+    public boolean hasBase() {
+        return base != null;
+    }
+
+    public ChangedSign getChangedSign() {
+        return hasSign() ? CraftBookBukkitUtil.toChangedSign(sign) : null;
+    }
+
+    /**
+     * Attempts to find a Minecart on the rails.
+     *
+     * @return a Minecart if one is found within the given block, or null if none found. (If there
+     *     is more than one
+     *     minecart within the block, the
+     *     first one encountered when traversing the list of Entity in the Chunk is the one
+     *     returned.)
+     */
+    @Nullable
+    public Minecart findMinecart() {
+        if (!hasRail()) {
+            return null;
+        }
+
+        BoundingBox railBox = BoundingBox.of(rail);
+        for (Entity ent : rail.getChunk().getEntities()) {
+            if (!(ent instanceof Minecart cart)) {
+                continue;
+            }
+            if (railBox.contains(cart.getBoundingBox())) {
+                return cart;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -198,48 +249,5 @@ public class CartMechanismBlocks {
         }
 
         return null;
-    }
-
-    /**
-     * @param mechname
-     * @return true if the bracketed keyword on the sign matches the given mechname; false otherwise
-     *     or if no sign.
-     * @throws ClassCastException if the declarative constructor was used in such a way that a
-     *     non-sign block was
-     *     specified for a sign.
-     */
-    public boolean matches(String mechname) {
-        // the astute will notice there's a problem coming up here with the one dang thing that had to go and break
-        // the mold with second line definer.
-        return hasSign() && getSign().getLine(1).equalsIgnoreCase("[" + mechname + "]");
-    }
-
-    /**
-     * Gets whether this CartMechanismBlocks instance matches the given block.
-     *
-     * @param mat The {@link BaseBlock} material.
-     * @return if the base block is the same type as the given block.
-     */
-    public boolean matches(BaseBlock mat) {
-        return mat.equalsFuzzy(BukkitAdapter.adapt(base.getBlockData()));
-    }
-
-    /**
-     * @return a Sign BlockState, or null if there is no sign block.
-     */
-    public ChangedSign getSign() {
-        return !hasSign() ? null : CraftBookBukkitUtil.toChangedSign(sign);
-    }
-
-    boolean hasSign() {
-        return sign != null && SignUtil.isSign(sign);
-    }
-
-    boolean hasRail() {
-        return rail != null;
-    }
-
-    boolean hasBase() {
-        return base != null;
     }
 }
