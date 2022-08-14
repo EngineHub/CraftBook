@@ -17,6 +17,7 @@ package org.enginehub.craftbook.mechanics.minecart.blocks;
 
 import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -28,6 +29,7 @@ import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
 import org.enginehub.craftbook.util.BlockParser;
@@ -73,6 +75,18 @@ import javax.annotation.Nullable;
 public class CartDispenser extends CartBlockMechanism {
 
     private final static List<String> SIGNS = ImmutableList.of("Dispenser");
+
+    @Override
+    public boolean verify(ChangedSign sign, CraftBookPlayer player) {
+        boolean inf = "inf".equalsIgnoreCase(sign.getLine(2));
+
+        if (inf && !player.hasPermission("craftbook.minecartdispenser.infinite")) {
+            player.printError(TranslatableComponent.of("craftbook.minecartdispenser.infinite-permissions"));
+            return false;
+        }
+
+        return super.verify(sign, player);
+    }
 
     @EventHandler
     public void onCartImpact(CartBlockImpactEvent event) {

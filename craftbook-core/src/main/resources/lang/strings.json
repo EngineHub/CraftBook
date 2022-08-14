@@ -79,6 +79,7 @@
 
     "craftbook.minecartdispenser.create": "Minecart Dispenser created.",
     "craftbook.minecartdispenser.description": "Dispenses and collects minecarts on redstone signal or when they drive over it.",
+    "craftbook.minecartdispenser.infinite-permissions": "You don't have permission to create infinite dispensers.",
 
     "craftbook.minecartejector.create": "Minecart Ejector created.",
     "craftbook.minecartejector.description": "Ejects all entities from Minecarts when they drive over it",
