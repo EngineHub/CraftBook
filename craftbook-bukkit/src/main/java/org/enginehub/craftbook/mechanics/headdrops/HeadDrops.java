@@ -80,8 +80,6 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             "CraftBook HeadDrops Commands",
             (commandManager, registration) -> HeadDropsCommands.register(commandManager, registration, this)
         );
-
-
     }
 
     @Override

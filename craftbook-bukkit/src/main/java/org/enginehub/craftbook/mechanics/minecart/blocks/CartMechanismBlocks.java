@@ -27,7 +27,7 @@ import org.bukkit.entity.Minecart;
 import org.bukkit.util.BoundingBox;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
-import org.enginehub.craftbook.util.RailUtil;
+import org.enginehub.craftbook.mechanics.minecart.RailUtil;
 import org.enginehub.craftbook.util.SignUtil;
 
 import javax.annotation.Nullable;

@@ -40,7 +40,6 @@ import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.util.CartUtil;
 import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.RailUtil;
 
 public class TemporaryCart extends AbstractCraftBookMechanic {
     private NamespacedKey temporaryCartKey;

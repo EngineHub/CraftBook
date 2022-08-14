@@ -77,6 +77,9 @@
 
     "craftbook.minecartcollisionentry.description": "Causes players to enter minecarts when they collide with the cart",
 
+    "craftbook.minecartdispenser.create": "Minecart Dispenser created.",
+    "craftbook.minecartdispenser.description": "Dispenses and collects minecarts on redstone signal or when they drive over it.",
+
     "craftbook.minecartejector.create": "Minecart Ejector created.",
     "craftbook.minecartejector.description": "Ejects all entities from Minecarts when they drive over it",
 

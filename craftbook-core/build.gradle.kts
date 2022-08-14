@@ -31,7 +31,7 @@ dependencies {
     "implementation"("com.google.code.findbugs:jsr305:1.3.9")
     "implementation"("com.google.code.gson:gson")
     "implementation"("it.unimi.dsi:fastutil")
-    "languageFiles"("${project.group}:craftbook-lang:${project.version}:309@zip")
+    "languageFiles"("${project.group}:craftbook-lang:${project.version}:773@zip")
 
     "implementation"("org.apache.logging.log4j:log4j-api:${Versions.LOG4J}")
 

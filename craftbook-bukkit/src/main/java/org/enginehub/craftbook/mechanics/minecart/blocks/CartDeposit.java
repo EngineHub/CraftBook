@@ -18,9 +18,9 @@ package org.enginehub.craftbook.mechanics.minecart.blocks;
 import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import org.bukkit.block.Chest;
 import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
+import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
@@ -28,7 +28,7 @@ import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.ItemInfo;
 import org.enginehub.craftbook.util.ItemUtil;
-import org.enginehub.craftbook.util.RailUtil;
+import org.enginehub.craftbook.mechanics.minecart.RailUtil;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.Tuple2;
@@ -83,8 +83,7 @@ public class CartDeposit extends CartBlockMechanism {
         ArrayList<ItemStack> leftovers = new ArrayList<>();
 
         // search for containers
-        List<Chest> containers = new ArrayList<>(RailUtil.getNearbyChests(event.getBlocks().base()));
-        containers.addAll(RailUtil.getNearbyChests(event.getBlocks().rail()));
+        List<BlockInventoryHolder> containers = new ArrayList<>(RailUtil.getNearbyInventoryBlocks(event.getBlocks()));
 
         // are there any containers?
         if (containers.isEmpty()) return;
@@ -135,7 +134,7 @@ public class CartDeposit extends CartBlockMechanism {
             for (ItemStack stack : transferItems)
                 CraftBookPlugin.logDebugMessage("collecting " + stack.getAmount() + " items of type " + stack.getType().toString(), "cart-deposit.collect");
 
-            for (Chest container : containers) {
+            for (BlockInventoryHolder container : containers) {
                 if (transferItems.isEmpty()) {
                     break;
                 }
@@ -162,7 +161,7 @@ public class CartDeposit extends CartBlockMechanism {
             // depositing
             ArrayList<ItemStack> transferitems = new ArrayList<>();
 
-            for (Chest container : containers) {
+            for (BlockInventoryHolder container : containers) {
                 Inventory containerinventory = container.getInventory();
                 if (!items.isEmpty()) {
                     for (ItemStack item : containerinventory.getContents()) {
@@ -215,7 +214,7 @@ public class CartDeposit extends CartBlockMechanism {
 
             CraftBookPlugin.logDebugMessage("deposited, " + transferitems.size() + " items left over.", "cart-deposit.deposit");
 
-            for (Chest container : containers) {
+            for (BlockInventoryHolder container : containers) {
                 if (transferitems.isEmpty()) {
                     break;
                 }

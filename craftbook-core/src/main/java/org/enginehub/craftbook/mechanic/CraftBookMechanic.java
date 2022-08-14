@@ -16,6 +16,7 @@
 package org.enginehub.craftbook.mechanic;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 
 import java.io.File;
@@ -67,5 +68,9 @@ public interface CraftBookMechanic {
      * @param config The YAMLProcessor for this config.
      */
     default void loadFromConfiguration(YAMLProcessor config) {
+    }
+
+    default String getDocsUrl(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        return CraftBook.getDocsDomain() + "mechanics/" + mechanicType.getId() + "/";
     }
 }

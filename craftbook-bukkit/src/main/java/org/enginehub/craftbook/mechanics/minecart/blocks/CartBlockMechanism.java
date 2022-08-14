@@ -180,7 +180,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
         }
     }
 
-    protected String getDocsUrl(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public String getDocsUrl(MechanicType<? extends CraftBookMechanic> mechanicType) {
         return CraftBook.getDocsDomain() + "mechanics/minecart/block/" + mechanicType.getId() + "/";
     }
 

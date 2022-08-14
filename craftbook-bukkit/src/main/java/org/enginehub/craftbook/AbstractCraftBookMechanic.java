@@ -69,8 +69,4 @@ public abstract class AbstractCraftBookMechanic implements CraftBookMechanic, Li
 
         mechanicConfig.save();
     }
-
-    protected String getDocsUrl(MechanicType<? extends CraftBookMechanic> mechanicType) {
-        return CraftBook.getDocsDomain() + "mechanics/" + mechanicType.getId() + "/";
-    }
 }

@@ -116,6 +116,8 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
 
     @Override
     public void disable() {
+        // Clear the existing registry.
+        REGISTRY.clear();
     }
 
     @EventHandler(priority = EventPriority.HIGH)
