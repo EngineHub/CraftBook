@@ -54,6 +54,7 @@ mechanics:
         minecart_physics_control: false
         minecart_rail_placer: false
         minecart_reverser: false
+        minecart_station: false
         minecart_strong_braker: false
         more_rails: false
         temporary_cart: false

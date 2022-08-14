@@ -83,7 +83,6 @@ public class TemporaryCart extends AbstractCraftBookMechanic {
             }
             return;
         }
-
         RideableMinecart cart = event.getClickedBlock().getWorld().spawn(
             event.getClickedBlock().getLocation().toCenterLocation(),
             RideableMinecart.class

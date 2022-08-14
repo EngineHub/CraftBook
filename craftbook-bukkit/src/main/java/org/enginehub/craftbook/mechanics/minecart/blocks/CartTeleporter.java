@@ -21,6 +21,7 @@ import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
+import org.bukkit.util.Vector;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
@@ -61,12 +62,12 @@ public class CartTeleporter extends CartBlockMechanism {
             y = event.getFrom().getY();
             z = event.getFrom().getZ();
 
-            CartUtil.stop(event.getMinecart());
+            event.getMinecart().setVelocity(new Vector(0, 0, 0));
         }
 
         Location loc = new Location(world, x, y, z, event.getMinecart().getLocation().getYaw(), event.getMinecart().getLocation().getPitch()).toCenterLocation();
         loc.getChunk().load(true);
-        CartUtil.teleport(event.getMinecart(), loc);
+        event.getMinecart().teleport(loc, true);
     }
 
     @Override

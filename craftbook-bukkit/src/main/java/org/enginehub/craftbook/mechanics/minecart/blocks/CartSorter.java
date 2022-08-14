@@ -33,7 +33,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.mechanics.minecart.blocks.station.StationManager;
+import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.mechanic.MechanicTypes;
+import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
+import org.enginehub.craftbook.mechanics.minecart.blocks.station.CartStation;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.ItemSyntax;
@@ -47,6 +50,15 @@ import java.util.List;
  */
 
 public class CartSorter extends CartBlockMechanism {
+
+    private CartStation cartStation;
+
+    @Override
+    public void enable() throws MechanicInitializationException {
+        super.enable();
+
+        cartStation = CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(MechanicTypes.MINECART_STATION).orElse(null);
+    }
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
@@ -138,7 +150,7 @@ public class CartSorter extends CartBlockMechanism {
         STRAIGHT, LEFT, RIGHT
     }
 
-    public static boolean isSortApplicable(String fullLine, Minecart minecart) {
+    public boolean isSortApplicable(String fullLine, Minecart minecart) {
         for (String line : RegexUtil.COMMA_PATTERN.split(fullLine)) {
             if (line.equalsIgnoreCase("All"))
                 return true;
@@ -224,9 +236,9 @@ public class CartSorter extends CartBlockMechanism {
                         }
                     }
                 }
-            if (line.startsWith("#")) {
+            if (line.startsWith("#") && cartStation != null) {
                 if (player != null) {
-                    String selectedStation = StationManager.getStation(player.getName());
+                    String selectedStation = cartStation.getStation(player.getUniqueId());
                     return line.equalsIgnoreCase('#' + selectedStation);
                 }
             }

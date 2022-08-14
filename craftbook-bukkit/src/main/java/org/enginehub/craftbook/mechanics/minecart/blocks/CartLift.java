@@ -75,7 +75,10 @@ public class CartLift extends CartBlockMechanism {
             }
         }
 
-        CartUtil.teleport(cart, new Location(destination.getWorld(), destination.getX(), destination.getY(), destination.getZ(), cart.getLocation().getYaw(), cart.getLocation().getPitch()));
+        Location newLocation = destination.getLocation();
+        newLocation.setYaw(cart.getLocation().getYaw());
+        newLocation.setPitch(cart.getLocation().getPitch());
+        cart.teleport(newLocation, true);
     }
 
     @Override

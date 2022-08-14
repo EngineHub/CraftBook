@@ -444,6 +444,15 @@ public class BukkitMechanicManager extends MechanicManager {
 
         MechanicType.Builder
             .create()
+            .id("minecart_station")
+            .name("MinecartStation")
+            .description(TranslatableComponent.of("craftbook.minecartstation.description"))
+            .className("org.enginehub.craftbook.mechanics.minecart.blocks.station.CartStation")
+            .category(MechanicCategory.MINECART)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
             .id("better_pistons")
             .name("BetterPistons")
             .description(TranslatableComponent.of("craftbook.betterpistons.description"))

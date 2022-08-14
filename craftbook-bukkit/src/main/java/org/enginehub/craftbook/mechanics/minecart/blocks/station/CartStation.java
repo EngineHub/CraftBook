@@ -19,137 +19,127 @@ import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartBlockMechanism;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
 import org.enginehub.craftbook.util.BlockParser;
-import org.enginehub.craftbook.util.ItemSyntax;
-import org.enginehub.craftbook.util.ItemUtil;
+import org.enginehub.craftbook.util.RedstoneUtil;
 import org.enginehub.craftbook.util.SignUtil;
 
+import java.util.HashMap;
 import java.util.List;
-
-import static org.enginehub.craftbook.util.CartUtil.stop;
+import java.util.Map;
+import java.util.UUID;
 
 public class CartStation extends CartBlockMechanism {
 
+    private final static List<String> SIGNS = ImmutableList.of("Station");
+
+    private final Map<UUID, String> stationSelection = new HashMap<>();
+
     @Override
-    public void enable() {
-        // TODO
-//        CraftBookPlugin.inst().registerCommands(StationCommands.class);
+    public void enable() throws MechanicInitializationException {
+        MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
+        registrar.registerTopLevelCommands(
+            (commandManager, registration) -> StationCommands.register(commandManager, registration, this)
+        );
+
+        stationSelection.clear();
+
+        super.enable();
+    }
+
+    @Override
+    public void disable() {
+        stationSelection.clear();
+
+        super.disable();
+    }
+
+    public String getStation(UUID player) {
+        return this.stationSelection.get(player);
+    }
+
+    public void setStation(UUID player, String stationName) {
+        this.stationSelection.put(player, stationName);
     }
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
-
-        stationInteraction(event.getMinecart(), event.getBlocks());
+        stationInteraction(event.getMinecart(), event.getBlocks(), false);
     }
 
     @EventHandler
     public void onBlockPower(CartBlockRedstoneEvent event) {
-
-        stationInteraction(event.getMinecart(), event.getBlocks());
-    }
-
-    public void stationInteraction(Minecart cart, CartMechanismBlocks blocks) {
-
-        // validate
-        if (!blocks.matches(getBlock())) return;
-        if (!blocks.matches("station")) return;
-
-        if (cart == null)
-            return;
-
-        // go
-        switch (isActive(blocks)) {
-            case ON:
-                // standardize its speed and direction.
-                launch(cart, blocks.sign());
-                break;
-            case OFF:
-            case NA:
-                // park it.
-                stop(cart);
-                // recenter it
-                Location l = blocks.rail().getLocation().add(0.5, 0.5, 0.5);
-                if (!cart.getLocation().equals(l)) {
-                    cart.teleport(l);
-                }
-                // recentering and parking almost completely prevents more than one cart from getting onto the same
-                // station.
-                break;
-        }
-    }
-
-    private static void launch(Minecart cart, Block director) {
-        cart.setVelocity(propel(SignUtil.getFacing(director)));
-    }
-
-    /**
-     * WorldEdit's Vector type collides with Bukkit's Vector type here. It's not pleasant.
-     */
-    public static Vector propel(BlockFace face) {
-
-        return new Vector(face.getModX() * 0.2, face.getModY() * 0.2, face.getModZ() * 0.2);
+        stationInteraction(event.getMinecart(), event.getBlocks(), true);
     }
 
     @EventHandler
     public void onVehicleEnter(CartBlockEnterEvent event) {
-
-        // validate
-        if (!event.getBlocks().matches(getBlock())) return;
-        if (!event.getBlocks().matches("station")) return;
-
-        ChangedSign sign = event.getBlocks().getChangedSign();
-
-        if (!sign.getLine(2).equalsIgnoreCase("AUTOSTART")) return;
-
-        if (!sign.getLine(3).isEmpty() && event.getEntered() instanceof Player) {
-            ItemStack testItem = ItemSyntax.getItem(sign.getLine(3));
-            if (!ItemUtil.areItemsIdentical(testItem, ((Player) event.getEntered()).getItemInHand()))
-                return;
+        if (!event.getBlocks().hasSign()) {
+            return;
         }
 
-        // go
-        switch (isActive(event.getBlocks())) {
-            case ON:
-                // standardize its speed and direction.
-                launch(event.getMinecart(), event.getBlocks().sign());
-                break;
-            case OFF:
-            case NA:
-                // park it.
-                stop(event.getMinecart());
-                // recenter it
-                Location l = event.getBlocks().rail().getLocation().add(0.5, 0.5, 0.5);
-                if (!event.getMinecart().getLocation().equals(l)) {
-                    event.getMinecart().teleport(l);
+        /*
+        // TODO Temporarily disable tickets for now, until we have proper item comparisons.
+        if (!sign.getLine(3).isEmpty() && event.getEntered() instanceof Player player) {
+            ItemStack testItem = ItemSyntax.getItem(sign.getLine(3));
+            if (!ItemUtil.areItemsIdentical(testItem, player.getItemInHand()))
+                return;
+        }
+        */
+
+        stationInteraction(event.getMinecart(), event.getBlocks(), false);
+    }
+
+    private void stationInteraction(Minecart cart, CartMechanismBlocks blocks, boolean powerChange) {
+        if (cart == null || !blocks.matches(getBlock()) || !blocks.matches("station")) {
+            return;
+        }
+
+        ChangedSign sign = blocks.getChangedSign();
+        boolean autoStart = sign.getLine(2).equalsIgnoreCase("AUTOSTART");
+
+        if (!powerChange && !autoStart) {
+            return;
+        }
+
+        RedstoneUtil.Power pow = isActive(blocks);
+
+        switch (pow) {
+            case ON -> {
+                if (autoStart && powerChange) {
+                    return;
                 }
-                // recentering and parking almost completely prevents more than one cart from getting onto the same
-                // station.
-                break;
+                cart.setVelocity(SignUtil.getFacing(blocks.sign()).getDirection().multiply(0.2));
+            }
+            case OFF, NA -> {
+                // park it.
+                cart.setVelocity(new Vector(0, 0, 0));
+
+                // recenter it
+                Location l = blocks.rail().getLocation().add(0.5, 0.5, 0.5);
+                cart.teleport(l, true);
+            }
         }
     }
 
     @Override
     public List<String> getApplicableSigns() {
-
-        return ImmutableList.copyOf(new String[] { "station" });
+        return SIGNS;
     }
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
         config.setComment("block", "Sets the block that is the base of the station mechanic.");
         setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.OBSIDIAN.getId()), true));
     }

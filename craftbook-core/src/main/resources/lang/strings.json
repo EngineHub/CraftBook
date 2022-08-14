@@ -107,6 +107,12 @@
     "craftbook.minecartreverser.create": "Minecart Reverser created.",
     "craftbook.minecartreverser.description": "Reverses Minecarts when they drive over it",
 
+    "craftbook.minecartstation.create": "Minecart Station created.",
+    "craftbook.minecartstation.description": "Stops and propels Minecarts when they drive over it based on redstone signal",
+    "craftbook.minecartstation.current-selected": "Current selected station: \"{0}\".",
+    "craftbook.minecartstation.none-selected": "No station selected.",
+    "craftbook.minecartstation.set-to": "Station set to: \"{0}\".",
+
     "craftbook.minecartstrongbraker.description": "Strongly brakes Minecarts when they drive over it",
 
     "craftbook.paintingswitcher.now-editing": "You are now editing this painting!",

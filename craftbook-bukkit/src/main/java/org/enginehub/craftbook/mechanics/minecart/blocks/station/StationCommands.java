@@ -15,37 +15,75 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks.station;
 
-import com.sk89q.minecraft.util.commands.Command;
-import com.sk89q.minecraft.util.commands.CommandContext;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.command.util.CommandPermissions;
+import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
+import com.sk89q.worldedit.entity.Player;
+import com.sk89q.worldedit.extension.platform.Actor;
+import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import com.sk89q.worldedit.util.formatting.text.format.TextColor;
+import org.bukkit.Bukkit;
+import org.enginehub.craftbook.exception.CraftBookException;
+import org.enginehub.piston.CommandManager;
+import org.enginehub.piston.annotation.Command;
+import org.enginehub.piston.annotation.CommandContainer;
+import org.enginehub.piston.annotation.param.Arg;
+import org.enginehub.piston.annotation.param.ArgFlag;
 
+@CommandContainer(superTypes = CommandPermissionsConditionGenerator.Registration.class)
 public class StationCommands {
 
-    public StationCommands(CraftBookPlugin plugin) {
-
+    public static void register(CommandManager commandManager, CommandRegistrationHandler registration, CartStation cartStation) {
+        registration.register(
+            commandManager,
+            StationCommandsRegistration.builder(),
+            new StationCommands(cartStation)
+        );
     }
 
-    @Command(aliases = { "station", "st" }, desc = "Commands to manage Craftbook station selection")
-    public void st(CommandContext context, CommandSender sender) {
+    private final CartStation cartStation;
 
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("This command can only used by a player");
-            return;
-        }
-        Player player = (Player) sender;
-        if (context.argsLength() == 0) {
-            String stationName = StationManager.getStation(player.getName());
+    public StationCommands(CartStation cartStation) {
+        this.cartStation = cartStation;
+    }
 
-            if (stationName == null)
-                sender.sendMessage("You have no station selected.");
-            else
-                sender.sendMessage("Your currently selected station is " + stationName);
+    @Command(
+        name = "station",
+        desc = "Select a CraftBook Minecart station."
+    )
+    @CommandPermissions({ "craftbook.minecartstation.station" })
+    public void st(Actor actor,
+                   @Arg(desc = "The station to select, or null to view current", def = "") String station,
+                   @ArgFlag(name = 'p', desc = "The player to target") String otherPlayer) throws CraftBookException {
+        Player player = null;
+        if (otherPlayer != null) {
+            org.bukkit.entity.Player bukkitPlayer = Bukkit.getPlayer(otherPlayer);
+            if (bukkitPlayer != null) {
+                player = BukkitAdapter.adapt(bukkitPlayer);
+            }
+        } else if (actor instanceof Player) {
+            player = (Player) actor;
         } else {
-            String stationName = context.getString(0);
-            StationManager.setStation(player.getName(), stationName);
-            sender.sendMessage("Station set to: " + stationName);
+            throw new CraftBookException(TranslatableComponent.of("craftbook.command.player-required"));
+        }
+
+        if (player == null) {
+            throw new CraftBookException(TranslatableComponent.of("craftbook.command.unknown-player"));
+        }
+
+        if (station == null || station.isBlank()) {
+            String stationName = cartStation.getStation(player.getUniqueId());
+
+            if (stationName == null) {
+                actor.printInfo(TranslatableComponent.of("craftbook.minecartstation.none-selected"));
+            } else {
+                actor.printInfo(TranslatableComponent.of("craftbook.minecartstation.current-selected", TextComponent.of(stationName).color(TextColor.AQUA)));
+            }
+        } else {
+            cartStation.setStation(player.getUniqueId(), station);
+            actor.printInfo(TranslatableComponent.of("craftbook.minecartstation.set-to", TextComponent.of(station).color(TextColor.AQUA)));
         }
     }
 }
