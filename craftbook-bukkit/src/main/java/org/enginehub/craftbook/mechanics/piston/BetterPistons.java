@@ -28,7 +28,9 @@ import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import io.papermc.paper.entity.RelativeTeleportFlag;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -37,11 +39,13 @@ import org.bukkit.block.data.type.Chest;
 import org.bukkit.block.data.type.Piston;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
@@ -73,6 +77,12 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         }
 
         Block pistonBlock = SignUtil.getBackBlock(event.getBlock());
+
+        while (SignUtil.isSign(pistonBlock)) {
+            // Iterate backwards from signs.
+            pistonBlock = SignUtil.getBackBlock(pistonBlock);
+        }
+
         Material pistonBlockType = pistonBlock.getType();
 
         // Check if this looks at all like something we're interested in first.
@@ -182,7 +192,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             // Only care if it faces the piston
             if (face != BlockFace.UP
                 && face != BlockFace.DOWN
-                && SignUtil.getBackBlock(event.getBlock().getRelative(face)).getBlockKey() != event.getBlock().getBlockKey()) {
+                && !SignUtil.getBackBlock(event.getBlock().getRelative(face)).equals(event.getBlock())) {
                 continue;
             }
 
@@ -211,15 +221,13 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         }
 
         // We only listen to this for sticky
-        if (event.getBlock().getType() != Material.STICKY_PISTON) {
+        if (!event.isSticky()) {
             return;
         }
 
-        Piston piston = (Piston) event.getBlock().getBlockData();
-
         for (BlockFace face : LocationUtil.getDirectFaces()) {
             // Cannot put a sign on this face
-            if (face == piston.getFacing()) {
+            if (face == event.getDirection()) {
                 continue;
             }
 
@@ -233,7 +241,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             // Only care if it faces the piston
             if (face != BlockFace.UP
                 && face != BlockFace.DOWN
-                && SignUtil.getBackBlock(event.getBlock().getRelative(face)).getBlockKey() != event.getBlock().getBlockKey()) {
+                && !SignUtil.getBackBlock(event.getBlock().getRelative(face)).equals(event.getBlock())) {
                 continue;
             }
 
@@ -245,7 +253,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                 PistonType type = PistonType.getFromSign(signState);
 
                 if (type == PistonType.SUPER_STICKY) {
-                    superSticky(event.getBlock(), piston, signState);
+                    superSticky(event.getBlock(), event.getDirection(), signState);
 
                     // Only one type - eject once we've ran it.
                     break;
@@ -308,12 +316,8 @@ public class BetterPistons extends AbstractCraftBookMechanic {
         }
     }
 
-    public void superSticky(final Block trigger, final Piston piston, final ChangedSign signState) {
-        if (piston.getMaterial() != Material.STICKY_PISTON) {
-            return;
-        }
-
-        Block pistonHead = trigger.getRelative(piston.getFacing());
+    public void superSticky(final Block trigger, final BlockFace facing, final ChangedSign signState) {
+        Block pistonHead = trigger.getRelative(facing);
         Material pistonHeadType = pistonHead.getType();
 
         if (pistonHeadType == Material.PISTON_HEAD || pistonHeadType == Material.MOVING_PISTON) {
@@ -339,8 +343,8 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             for (int run = 0; run < amount; run++) {
                 Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
                     for (int x = 3; x <= fblock + 2; x++) {
-                        Block to = trigger.getRelative(piston.getFacing(), x - 1);
-                        Block from = trigger.getRelative(piston.getFacing(), x);
+                        Block to = trigger.getRelative(facing, x - 1);
+                        Block from = trigger.getRelative(facing, x);
                         Material fromType = from.getType();
 
                         if (x >= fblock + 2
@@ -353,8 +357,14 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                         }
 
                         if (to.getType().isAir()) {
-                            for (Entity ent : trigger.getWorld().getNearbyEntities(BoundingBox.of(from))) {
-                                ent.teleport(ent.getLocation().subtract(piston.getFacing().getDirection()));
+                            BoundingBox fromBounds = BoundingBox.of(from);
+                            for (Entity ent : trigger.getWorld().getNearbyEntities(fromBounds)) {
+                                Location dest = ent.getLocation().subtract(facing.getDirection());
+                                if (ent instanceof Player player) {
+                                    player.teleport(dest, PlayerTeleportEvent.TeleportCause.PLUGIN, true, true, RelativeTeleportFlag.values());
+                                } else {
+                                    ent.teleport(dest, true, true);
+                                }
                             }
 
                             if (copyData(from, to)) {
@@ -401,8 +411,14 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                         }
 
                         if (to.getType().isAir()) {
-                            for (Entity ent : trigger.getWorld().getNearbyEntities(BoundingBox.of(from))) {
-                                ent.teleport(ent.getLocation().add(piston.getFacing().getDirection()));
+                            BoundingBox fromBounds = BoundingBox.of(from);
+                            for (Entity ent : trigger.getWorld().getNearbyEntities(fromBounds)) {
+                                Location dest = ent.getLocation().add(piston.getFacing().getDirection());
+                                if (ent instanceof Player player) {
+                                    player.teleport(dest, PlayerTeleportEvent.TeleportCause.PLUGIN, true, true, RelativeTeleportFlag.values());
+                                } else {
+                                    ent.teleport(dest, true, true);
+                                }
                             }
                             if (copyData(from, to)) {
                                 from.setType(Material.AIR);

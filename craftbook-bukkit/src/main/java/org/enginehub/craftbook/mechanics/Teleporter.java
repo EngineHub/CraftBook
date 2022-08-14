@@ -21,15 +21,18 @@ import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
+import io.papermc.paper.entity.RelativeTeleportFlag;
+import org.bukkit.Location;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Directional;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
@@ -201,12 +204,12 @@ public class Teleporter extends AbstractCraftBookMechanic {
             }
         }
 
-        activateTeleporter(localPlayer, destination);
+        activateTeleporter(localPlayer, event.getPlayer(), destination);
 
         event.setCancelled(true);
     }
 
-    private void activateTeleporter(CraftBookPlayer player, Block destination) {
+    private void activateTeleporter(CraftBookPlayer player, Player bukkitPlayer, Block destination) {
         com.sk89q.worldedit.util.Location floor = BukkitAdapter.adapt(destination.getLocation()).setY(destination.getY() + 1);
         BlockState floorBlock = player.getWorld().getBlock(floor.toVector().toBlockPoint());
         // well, unless that's already a ceiling.
@@ -241,20 +244,18 @@ public class Teleporter extends AbstractCraftBookMechanic {
             return;
         }
 
-        teleportPlayer(player, LocationUtil.getBlockCentreTop(BukkitAdapter.adapt(floor).getBlock()));
-    }
+        Location newLocation = LocationUtil.getBlockCentreTop(BukkitAdapter.adapt(floor).getBlock());
+        player.trySetPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
 
-    private void teleportPlayer(final CraftBookPlayer player, final org.bukkit.Location destination) {
-        // Teleport!
-        if (player.isInsideVehicle()) {
-            Entity teleportedVehicle = LocationUtil.ejectAndTeleportPlayerVehicle(player, destination);
-            player.trySetPosition(BukkitAdapter.adapt(destination).toVector(), destination.getPitch(), destination.getYaw());
-            LocationUtil.addVehiclePassengerDelayed(teleportedVehicle, player);
+        boolean teleported = bukkitPlayer.getVehicle() == null
+            ? bukkitPlayer.teleport(newLocation, PlayerTeleportEvent.TeleportCause.PLUGIN, true, true, RelativeTeleportFlag.values())
+            : bukkitPlayer.getVehicle().teleport(newLocation, PlayerTeleportEvent.TeleportCause.PLUGIN, true, true);
+
+        if (teleported) {
+            player.printInfo(TranslatableComponent.of("craftbook.teleporter.teleported"));
         } else {
-            player.trySetPosition(BukkitAdapter.adapt(destination).toVector(), destination.getPitch(), destination.getYaw());
+            player.printError(TranslatableComponent.of("craftbook.teleporter.obstructed"));
         }
-
-        player.printInfo(TranslatableComponent.of("craftbook.teleporter.teleported"));
     }
 
     private boolean teleporterRequireSign;

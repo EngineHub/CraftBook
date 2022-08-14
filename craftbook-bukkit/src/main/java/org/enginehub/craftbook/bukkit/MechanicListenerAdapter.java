@@ -290,7 +290,7 @@ final class MechanicListenerAdapter implements Listener {
      * @param newLevel The new power level
      */
     private static void handleDirectWireInput(Block block, Block sourceBlock, int oldLevel, int newLevel) {
-        if (block.getBlockKey() == sourceBlock.getBlockKey()) { //The same block, don't run.
+        if (block.equals(sourceBlock)) { //The same block, don't run.
             return;
         }
         final SourcedBlockRedstoneEvent event = new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel);

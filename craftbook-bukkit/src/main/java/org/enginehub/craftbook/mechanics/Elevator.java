@@ -16,24 +16,24 @@
 package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
+import io.papermc.paper.entity.RelativeTeleportFlag;
 import org.bukkit.Location;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Switch;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
@@ -42,7 +42,6 @@ import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SignUtil;
@@ -158,7 +157,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                 continue;
             }
 
-            activateElevator(localPlayer, destination, shift);
+            activateElevator(localPlayer, player, destination, shift);
         }
     }
 
@@ -244,7 +243,7 @@ public class Elevator extends AbstractCraftBookMechanic {
             return;
         }
 
-        activateElevator(localPlayer, destination, shift);
+        activateElevator(localPlayer, event.getPlayer(), destination, shift);
 
         // At this point, even if it failed, the user intended to use an elevator. So we'll cancel the event.
         event.setCancelled(true);
@@ -298,7 +297,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         return destination;
     }
 
-    private void activateElevator(CraftBookPlayer player, Block destination, BlockFace shift) {
+    private void activateElevator(CraftBookPlayer player, Player bukkitPlayer, Block destination, BlockFace shift) {
         com.sk89q.worldedit.util.Location floor = player.getLocation().setY(destination.getY() + 1);
         BlockState floorBlock = player.getWorld().getBlock(floor.toVector().toBlockPoint());
         // well, unless that's already a ceiling.
@@ -333,23 +332,18 @@ public class Elevator extends AbstractCraftBookMechanic {
             return;
         }
 
-        teleportPlayer(player, floor.getBlockY(), destination, shift);
-    }
+        final Location newLocation = bukkitPlayer.getLocation();
+        newLocation.setY(floor.getBlockY() + 1);
 
-    private void teleportPlayer(final CraftBookPlayer player, final int height, final Block destination, final BlockFace shift) {
-        final Location newLocation = BukkitAdapter.adapt(player.getLocation());
-        newLocation.setY(height + 1);
+        boolean teleported = bukkitPlayer.getVehicle() == null
+            ? bukkitPlayer.teleport(newLocation, PlayerTeleportEvent.TeleportCause.PLUGIN, true, true, RelativeTeleportFlag.values())
+            : bukkitPlayer.getVehicle().teleport(newLocation, PlayerTeleportEvent.TeleportCause.PLUGIN, true, true);
 
-        // Teleport!
-        if (player.isInsideVehicle()) {
-            Entity teleportedVehicle = LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
-            player.trySetPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
-            LocationUtil.addVehiclePassengerDelayed(teleportedVehicle, player);
+        if (teleported) {
+            teleportFinish(player, destination, shift);
         } else {
-            player.trySetPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
+            player.printError(TranslatableComponent.of("craftbook.elevator.obstructed"));
         }
-
-        teleportFinish(player, destination, shift);
     }
 
     public static void teleportFinish(CraftBookPlayer player, Block destination, BlockFace shift) {
