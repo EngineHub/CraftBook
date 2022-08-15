@@ -17,54 +17,60 @@ package org.enginehub.craftbook.mechanics.minecart.blocks;
 
 import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.util.Vector;
 import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.BlockParser;
-import org.enginehub.craftbook.util.CartUtil;
+import org.enginehub.craftbook.util.RedstoneUtil;
 import org.enginehub.craftbook.util.SignUtil;
 
 import java.util.List;
 
 public class CartLift extends CartBlockMechanism {
 
+    private final static List<String> SIGNS = ImmutableList.of("CartLift Up", "CartLift Down", "CartLift");
+
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
-
-        // validate
-        if (!event.getBlocks().matches(getBlock())) return;
-        if (!event.getBlocks().hasSign()) return;
-        if (event.isMinor()) return;
-        if (!(event.getBlocks().matches("cartlift up") || event.getBlocks().matches("cartlift down")))
+        if (event.isMinor()
+            || !event.getBlocks().matches(getBlock())
+            || RedstoneUtil.Power.OFF == isActive(event.getBlocks())
+            || !(event.getBlocks().matches("cartlift up") || event.getBlocks().matches("cartlift down"))) {
             return;
+        }
 
-        Minecart cart = (Minecart) event.getVehicle();
+        Minecart cart = event.getMinecart();
 
-        // go
         boolean up = event.getBlocks().matches("cartlift up");
         Block destination = event.getBlocks().sign();
+        Material baseType = event.getBlocks().base().getType();
 
-        BlockFace face;
-        if (up) face = BlockFace.UP;
-        else face = BlockFace.DOWN;
+        BlockFace face = up ? BlockFace.UP : BlockFace.DOWN;
 
         while (true) {
-
-            if (destination.getLocation().getBlockY() <= 0 && !up)
+            if (destination.getLocation().getBlockY() <= 0 && !up) {
                 return;
-            if (destination.getLocation().getBlockY() >= destination.getWorld().getMaxHeight() - 1 && up)
+            }
+            if (destination.getLocation().getBlockY() >= destination.getWorld().getMaxHeight() - 1 && up) {
                 return;
+            }
 
             destination = destination.getRelative(face);
 
-            if (SignUtil.isSign(destination) && event.getBlocks().base().getType() == destination.getRelative(BlockFace.UP, 1).getType()) {
-
+            if (SignUtil.isSign(destination) && baseType == destination.getRelative(BlockFace.UP, 1).getType()) {
                 ChangedSign state = CraftBookBukkitUtil.toChangedSign(destination);
                 String testLine = state.getLine(1);
 
@@ -75,21 +81,27 @@ public class CartLift extends CartBlockMechanism {
             }
         }
 
+        Vector oldVelocity = cart.getVelocity();
         Location newLocation = destination.getLocation();
-        newLocation.setYaw(cart.getLocation().getYaw());
-        newLocation.setPitch(cart.getLocation().getPitch());
+        newLocation.setDirection(cart.getLocation().getDirection());
         cart.teleport(newLocation, true);
+        cart.setVelocity(oldVelocity);
+
+        for (Entity entity : cart.getPassengers()) {
+            if (entity instanceof Player player) {
+                CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(player);
+                localPlayer.printInfo(TranslatableComponent.of(up ? "craftbook.minecartelevator.moved-up" : "craftbook.minecartelevator.moved-down"));
+            }
+        }
     }
 
     @Override
     public List<String> getApplicableSigns() {
-
-        return ImmutableList.copyOf(new String[] { "CartLift Up", "CartLift Down", "CartLift" });
+        return SIGNS;
     }
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
         config.setComment("block", "Sets the block that is the base of the elevator mechanic.");
         setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.NETHER_BRICKS.getId()), true));
     }

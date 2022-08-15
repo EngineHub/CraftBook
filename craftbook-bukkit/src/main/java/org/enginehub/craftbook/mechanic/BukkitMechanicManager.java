@@ -44,10 +44,8 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("BounceBlocks", org.enginehub.craftbook.mechanics.BounceBlocks.class, MechanicCategory.GENERAL);
 //        registerMechanic("IntegratedCircuits", org.enginehub.craftbook.mechanics.ic.ICMechanic.class, MechanicCategory.CIRCUIT);
 //        registerMechanic("MinecartSorter", org.enginehub.craftbook.mechanics.minecart.blocks.CartSorter.class, MechanicCategory.MINECART);
-//        registerMechanic("MinecartStation", org.enginehub.craftbook.mechanics.minecart.blocks.CartStation.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartDeposit", org.enginehub.craftbook.mechanics.minecart.blocks.CartDeposit.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartTeleporter", org.enginehub.craftbook.mechanics.minecart.blocks.CartTeleporter.class, MechanicCategory.MINECART);
-//        registerMechanic("MinecartElevator", org.enginehub.craftbook.mechanics.minecart.blocks.CartLift.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartDispenser", org.enginehub.craftbook.mechanics.minecart.blocks.CartDispenser.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartMessenger", org.enginehub.craftbook.mechanics.minecart.blocks.CartMessenger.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartMaxSpeed", org.enginehub.craftbook.mechanics.minecart.blocks.CartMaxSpeed.class, MechanicCategory.MINECART);
@@ -439,6 +437,15 @@ public class BukkitMechanicManager extends MechanicManager {
             .name("MinecartEjector")
             .description(TranslatableComponent.of("craftbook.minecartejector.description"))
             .className("org.enginehub.craftbook.mechanics.minecart.blocks.CartEjector")
+            .category(MechanicCategory.MINECART)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("minecart_elevator")
+            .name("MinecartElevator")
+            .description(TranslatableComponent.of("craftbook.minecartelevator.description"))
+            .className("org.enginehub.craftbook.mechanics.minecart.blocks.CartLift")
             .category(MechanicCategory.MINECART)
             .buildAndRegister();
 

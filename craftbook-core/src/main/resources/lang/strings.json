@@ -84,6 +84,11 @@
     "craftbook.minecartejector.create": "Minecart Ejector created.",
     "craftbook.minecartejector.description": "Ejects all entities from Minecarts when they drive over it",
 
+    "craftbook.minecartelevator.create": "Minecart Elevator created.",
+    "craftbook.minecartelevator.description": "Allows Minecarts to teleport up or down when they drive over it",
+    "craftbook.minecartelevator.moved-up": "You went up a floor!",
+    "craftbook.minecartelevator.moved-down": "You went down a floor!",
+
     "craftbook.minecartemptydecay.description": "Causes minecarts to break after time when empty",
 
     "craftbook.minecartexitremover.description": "Breaks minecarts after they're exited",
