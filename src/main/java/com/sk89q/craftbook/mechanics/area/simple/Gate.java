@@ -630,7 +630,7 @@ public class Gate extends AbstractCraftBookMechanic {
         public int getEndingY() {
 
             if(minY == -1) {
-                int min = Math.max(0, block.getY() - remainingColumnHeight);
+                int min = Math.max(block.getWorld().getMinHeight(), block.getY() - remainingColumnHeight);
                 for (int y = block.getY(); y >= min; y--) {
                     if(remainingColumnHeight <= 0) break;
                     BlockState currentBlock = BukkitAdapter.adapt(block.getWorld().getBlockAt(block.getX(), y, block.getZ()).getBlockData());
