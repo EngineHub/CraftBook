@@ -33,6 +33,7 @@ import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.session.ClipboardHolder;
+import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.apache.commons.lang.StringUtils;
 
@@ -219,8 +220,8 @@ public class CopyManager {
      * @return The BlockArrayClipboard
      * @throws WorldEditException If something went wrong.
      */
-    public BlockArrayClipboard copy(Region region) throws WorldEditException {
-        return copy(region, false, false);
+    public BlockArrayClipboard copy(Region region, World world) throws WorldEditException {
+        return copy(region, world, false, false);
     }
 
     /**
@@ -230,11 +231,10 @@ public class CopyManager {
      * @return The BlockArrayClipboard
      * @throws WorldEditException If something went wrong.
      */
-    public BlockArrayClipboard copy(Region region, boolean copyEntities, boolean copyBiomes) throws WorldEditException {
+    public BlockArrayClipboard copy(Region region, World world, boolean copyEntities, boolean copyBiomes) throws WorldEditException {
         BlockArrayClipboard copy = new BlockArrayClipboard(region);
-//        copy.setOrigin(origin);
 
-        EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(region.getWorld(), -1);
+        EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(world, -1);
 
         ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(editSession, region, copy, region.getMinimumPoint());
         forwardExtentCopy.setCopyingEntities(copyEntities);
@@ -250,8 +250,8 @@ public class CopyManager {
      * @param clipboard The clipboard
      * @throws WorldEditException If it fails
      */
-    public void paste(BlockArrayClipboard clipboard) throws WorldEditException {
-        try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(clipboard.getRegion().getWorld(), -1)) {
+    public void paste(BlockArrayClipboard clipboard, World world) throws WorldEditException {
+        try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(world, -1)) {
 
             Operation operation = new ClipboardHolder(clipboard)
                     .createPaste(editSession)
@@ -270,8 +270,8 @@ public class CopyManager {
      *
      * @param clipboard The clipboard
      */
-    public void clear(BlockArrayClipboard clipboard) {
-        try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(clipboard.getRegion().getWorld(), -1)) {
+    public void clear(BlockArrayClipboard clipboard, World world) {
+        try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(world, -1)) {
             editSession.setBlocks(clipboard.getRegion(), BlockTypes.AIR.getDefaultState());
         } catch (MaxChangedBlocksException e) {
             // is never thrown
