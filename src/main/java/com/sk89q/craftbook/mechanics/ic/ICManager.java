@@ -551,7 +551,7 @@ public class ICManager {
                 }
             } catch (Throwable e) {
                 CraftBookPlugin.logger().warning("An error occurred generating the docs for IC: " + ic + ".");
-                CraftBookPlugin.logger().warning("Please report this error on: http://youtrack.sk89q.com/.");
+                CraftBookPlugin.logger().warning("Please report this error on: https://github.com/EngineHub/CraftBook/.");
             }
         }
 

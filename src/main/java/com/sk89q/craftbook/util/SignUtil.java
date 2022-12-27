@@ -53,7 +53,7 @@ import org.bukkit.event.block.SignChangeEvent;
 public final class SignUtil {
 
     public static boolean isSign(Block block) {
-        return isStandingSign(block) || isWallSign(block);
+        return Tag.ALL_SIGNS.isTagged(block.getType());
     }
 
     public static boolean isStandingSign(Block block) {

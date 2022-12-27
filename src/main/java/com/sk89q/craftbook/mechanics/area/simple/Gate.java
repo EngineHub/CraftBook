@@ -586,7 +586,7 @@ public class Gate extends AbstractCraftBookMechanic {
         private final Block block;
         private final boolean smallSearchSize;
 
-        private int minY = -1, maxY = -1;
+        private int minY = Integer.MIN_VALUE, maxY = Integer.MAX_VALUE;
         private int remainingColumnHeight;
 
         public GateColumn(ChangedSign sign, Block block, boolean smallSearchSize) {
@@ -610,7 +610,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
         public int getStartingY() {
 
-            if(maxY == -1) {
+            if(maxY == Integer.MAX_VALUE) {
                 int max = Math.min(block.getWorld().getMaxHeight()-1, block.getY() + remainingColumnHeight);
                 for (int y1 = block.getY() + 1; y1 <= max; y1++) {
                     if(remainingColumnHeight <= 0) break;
@@ -621,7 +621,7 @@ public class Gate extends AbstractCraftBookMechanic {
                         break;
                 }
 
-                if(maxY == -1) maxY = block.getY();
+                if(maxY == Integer.MAX_VALUE) maxY = block.getY();
             }
 
             return maxY;
@@ -629,7 +629,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
         public int getEndingY() {
 
-            if(minY == -1) {
+            if(minY == Integer.MIN_VALUE) {
                 int min = Math.max(block.getWorld().getMinHeight(), block.getY() - remainingColumnHeight);
                 for (int y = block.getY(); y >= min; y--) {
                     if(remainingColumnHeight <= 0) break;
@@ -641,7 +641,7 @@ public class Gate extends AbstractCraftBookMechanic {
                     } else
                         break;
                 }
-                if(minY == -1) minY = block.getY();
+                if(minY == Integer.MIN_VALUE) minY = block.getY();
             }
 
             return minY;

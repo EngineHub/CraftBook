@@ -307,6 +307,7 @@ public class InventoryUtil {
             case BLAST_FURNACE:
             case SMOKER:
             case BARREL:
+            case CHISELED_BOOKSHELF:
                 return true;
             default:
                 return false;

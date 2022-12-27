@@ -32,14 +32,7 @@ public final class BlockUtil {
     }
 
     public static boolean isAir(Material id) {
-        switch (id) {
-            case AIR:
-            case CAVE_AIR:
-            case VOID_AIR:
-                return true;
-            default:
-                return false;
-        }
+        return id.isAir();
     }
 
     public static boolean isBlockReplacable(Material id) {
@@ -60,22 +53,6 @@ public final class BlockUtil {
                 return true;
             default:
                 return false;
-        }
-    }
-
-    public static boolean hasTileData(Material material) {
-        switch(material) {
-            case CHEST:
-            case FURNACE:
-            case BREWING_STAND:
-            case DISPENSER:
-            case DROPPER:
-            case HOPPER:
-            case TRAPPED_CHEST:
-            case BARREL:
-                return true;
-            default:
-                return Tag.SIGNS.isTagged(material) || Tag.SHULKER_BOXES.isTagged(material);
         }
     }
 

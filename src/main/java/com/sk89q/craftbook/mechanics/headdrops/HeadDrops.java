@@ -114,6 +114,11 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                     return;
                 toDrop = new ItemStack(Material.DRAGON_HEAD, 1);
                 break;
+            case PIGLIN:
+                if(!enableMobs)
+                    return;
+                toDrop = new ItemStack(Material.PIGLIN_HEAD, 1);
+                break;
             default:
                 if(!enableMobs)
                     return;

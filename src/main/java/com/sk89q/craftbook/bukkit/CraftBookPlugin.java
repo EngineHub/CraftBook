@@ -546,7 +546,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 "# This configuration will automatically add new configuration options for you,",
                 "# So there is no need to regenerate this configuration unless you need to.",
                 "# More information about these features are available at...",
-                "# " + CraftBookPlugin.getWikiDomain() + "/Usage",
+                "# " + CraftBookPlugin.getWikiDomain() + "/mechanics/",
                 "#",
                 "# NOTE! MAKE SURE TO ENABLE FEATURES IN THE config.yml FILE!",
                 "");
@@ -615,7 +615,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 "# This configuration will automatically add new configuration options for you,",
                 "# So there is no need to regenerate this configuration unless you need to.",
                 "# More information about these features are available at...",
-                "# " + CraftBookPlugin.getWikiDomain() + "/Usage",
+                "# " + CraftBookPlugin.getWikiDomain() + "/mechanics/",
                 "#",
                 "# NOTE! MAKE SURE TO ENABLE FEATURES IN THE config.yml FILE!",
                 "");
@@ -1257,6 +1257,6 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     public static String getWikiDomain() {
-        return "http://wiki.sk89q.com/wiki/CraftBook";
+        return "https://craftbook.enginehub.org/en/3.x";
     }
 }
