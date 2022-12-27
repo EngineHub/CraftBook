@@ -138,6 +138,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                     case SKELETON -> new ItemStack(Material.SKELETON_SKULL, 1);
                     case WITHER_SKELETON -> new ItemStack(Material.WITHER_SKELETON_SKULL, 1);
                     case ENDER_DRAGON -> new ItemStack(Material.DRAGON_HEAD, 1);
+                    case PIGLIN -> new ItemStack(Material.PIGLIN_HEAD, 1);
                     default -> null;
                 };
 

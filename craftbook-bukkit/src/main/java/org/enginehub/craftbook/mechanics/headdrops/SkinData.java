@@ -146,9 +146,6 @@ public class SkinData {
         skinMap.put(EntityType.VILLAGER, createProfile(
             "ewogICJ0aW1lc3RhbXAiIDogMTYwNDIzNzMwMjc2MCwKICAicHJvZmlsZUlkIiA6ICJiZDQ4MjczOTc2N2M0NWRjYTFmOGMzM2M0MDUzMDk1MiIsCiAgInByb2ZpbGVOYW1lIiA6ICJNSEZfVmlsbGFnZXIiLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjRiZDgzMjgxM2FjMzhlNjg2NDg5MzhkN2EzMmY2YmEyOTgwMWFhZjMxNzQwNDM2N2YyMTRiNzhiNGQ0NzU0YyIKICAgIH0KICB9Cn0="
         ));
-        skinMap.put(EntityType.PIGLIN, createProfile(
-            "ewogICJ0aW1lc3RhbXAiIDogMTYwNjkwNjM1ODQxNiwKICAicHJvZmlsZUlkIiA6ICI0NWIyMDhiMGM4ZWY0Y2I1YTkyNjVlYjdkNTM0ZDM2YSIsCiAgInByb2ZpbGVOYW1lIiA6ICJNSEZfUGlnbGluIiwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzgzMTM5YWZmMmY5OGE3YjhiMzQxZTA4OGEzMTYzOTI2MjA5YTdjZGI5MDgzYzYzY2MxZGNkZjQwZTNlYTA5MjUiCiAgICB9CiAgfQp9"
-        ));
         skinMap.put(EntityType.HUSK, createProfile(
             "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjY5Yjk3MzRkMGU3YmYwNjBmZWRjNmJmN2ZlYzY0ZTFmN2FkNmZjODBiMGZkODQ0MWFkMGM3NTA4Yzg1MGQ3MyJ9fX0="
         ));
@@ -241,7 +238,7 @@ public class SkinData {
     private static final EnumSet<EntityType> IGNORED_ENTITIES = EnumSet.of(
         EntityType.PLAYER, EntityType.ZOMBIE, EntityType.CREEPER,
         EntityType.SKELETON, EntityType.WITHER_SKELETON,
-        EntityType.ARMOR_STAND, EntityType.ENDER_DRAGON
+        EntityType.ARMOR_STAND, EntityType.ENDER_DRAGON, EntityType.PIGLIN
     );
 
     @SuppressWarnings("unused")

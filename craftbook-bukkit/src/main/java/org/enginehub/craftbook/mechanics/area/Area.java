@@ -20,6 +20,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
+import com.sk89q.worldedit.world.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -219,23 +220,22 @@ public class Area extends AbstractCraftBookMechanic {
             String inactiveID = sign.getLine(3).replace("-", "").toLowerCase(Locale.ENGLISH);
 
             BlockArrayClipboard copy;
+            World weWorld = BukkitAdapter.adapt(sign.getBlock().getWorld());
 
             if (checkToggleState(sign)) {
                 copy = CopyManager.getInstance().load(namespace, id);
-                copy.getRegion().setWorld(BukkitAdapter.adapt(sign.getBlock().getWorld()));
 
                 // if this is a save area save it before toggling off
                 if (save) {
-                    copy = CopyManager.getInstance().copy(copy.getRegion());
+                    copy = CopyManager.getInstance().copy(copy.getRegion(), weWorld);
                     CopyManager.getInstance().save(namespace, id, copy);
                 }
                 // if we are toggling to the second area we dont clear the old area
                 if (!inactiveID.isEmpty() && !inactiveID.equals("--")) {
                     copy = CopyManager.getInstance().load(namespace, inactiveID);
-                    copy.getRegion().setWorld(BukkitAdapter.adapt(sign.getBlock().getWorld()));
-                    CopyManager.getInstance().paste(copy);
+                    CopyManager.getInstance().paste(copy, weWorld);
                 } else {
-                    CopyManager.getInstance().clear(copy);
+                    CopyManager.getInstance().clear(copy, weWorld);
                 }
                 setToggledState(sign, false);
             } else {
@@ -244,14 +244,12 @@ public class Area extends AbstractCraftBookMechanic {
                 // if this is a save area save it before toggling off
                 if (save && !inactiveID.isEmpty() && !inactiveID.equals("--")) {
                     copy = CopyManager.getInstance().load(namespace, inactiveID);
-                    copy.getRegion().setWorld(BukkitAdapter.adapt(sign.getBlock().getWorld()));
-                    copy = CopyManager.getInstance().copy(copy.getRegion());
+                    copy = CopyManager.getInstance().copy(copy.getRegion(), weWorld);
                     CopyManager.getInstance().save(namespace, inactiveID, copy);
                 }
 
                 copy = CopyManager.getInstance().load(namespace, id);
-                copy.getRegion().setWorld(BukkitAdapter.adapt(sign.getBlock().getWorld()));
-                CopyManager.getInstance().paste(copy);
+                CopyManager.getInstance().paste(copy, weWorld);
                 setToggledState(sign, true);
             }
             return true;
@@ -274,23 +272,22 @@ public class Area extends AbstractCraftBookMechanic {
             String inactiveID = sign.getLine(3).replace("-", "").toLowerCase(Locale.ENGLISH);
 
             BlockArrayClipboard copy;
+            World weWorld = BukkitAdapter.adapt(sign.getBlock().getWorld());
 
             if (toggleOn) {
                 copy = CopyManager.getInstance().load(namespace, id);
-                copy.getRegion().setWorld(BukkitAdapter.adapt(sign.getBlock().getWorld()));
 
                 // if this is a save area save it before toggling off
                 if (save) {
-                    copy = CopyManager.getInstance().copy(copy.getRegion());
+                    copy = CopyManager.getInstance().copy(copy.getRegion(), weWorld);
                     CopyManager.getInstance().save(namespace, id, copy);
                 }
                 // if we are toggling to the second area we dont clear the old area
                 if (!inactiveID.isEmpty() && !inactiveID.equals("--")) {
                     copy = CopyManager.getInstance().load(namespace, inactiveID);
-                    copy.getRegion().setWorld(BukkitAdapter.adapt(sign.getBlock().getWorld()));
-                    CopyManager.getInstance().paste(copy);
+                    CopyManager.getInstance().paste(copy, weWorld);
                 } else {
-                    CopyManager.getInstance().clear(copy);
+                    CopyManager.getInstance().clear(copy, weWorld);
                 }
                 setToggledState(sign, false);
             } else {
@@ -298,14 +295,12 @@ public class Area extends AbstractCraftBookMechanic {
                 // if this is a save area save it before toggling off
                 if (save && !inactiveID.isEmpty() && !inactiveID.equals("--")) {
                     copy = CopyManager.getInstance().load(namespace, inactiveID);
-                    copy.getRegion().setWorld(BukkitAdapter.adapt(sign.getBlock().getWorld()));
-                    copy = CopyManager.getInstance().copy(copy.getRegion());
+                    copy = CopyManager.getInstance().copy(copy.getRegion(), weWorld);
                     CopyManager.getInstance().save(namespace, inactiveID, copy);
                 } else {
                     copy = CopyManager.getInstance().load(namespace, id);
-                    copy.getRegion().setWorld(BukkitAdapter.adapt(sign.getBlock().getWorld()));
                 }
-                CopyManager.getInstance().paste(copy);
+                CopyManager.getInstance().paste(copy, weWorld);
                 setToggledState(sign, true);
             }
             return true;

@@ -64,7 +64,7 @@ public class RecipeManager {
         config.setHeader(
             "# CraftBook Custom Recipes. CraftBook Version: " + CraftBookPlugin.inst().getDescription().getVersion(),
             "# For more information on setting up custom recipes, see the wiki:",
-            "# " + CraftBook.getDocsDomain() + "/Custom_crafting",
+            "# " + CraftBook.getDocsDomain() + "/mechanics/custom_crafting",
             "",
             "");
 
@@ -95,7 +95,7 @@ public class RecipeManager {
         config.setHeader(
             "# CraftBook Custom Recipes. CraftBook Version: " + CraftBookPlugin.inst().getDescription().getVersion(),
             "# For more information on setting up custom recipes, see the wiki:",
-            "# " + CraftBook.getDocsDomain() + "/Custom_crafting",
+            "# " + CraftBook.getDocsDomain() + "/mechanics/custom_crafting",
             "",
             "");
 

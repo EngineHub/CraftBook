@@ -58,7 +58,7 @@ public final class SignUtil {
     }
 
     public static boolean isSign(Block block) {
-        return Tag.SIGNS.isTagged(block.getType());
+        return Tag.ALL_SIGNS.isTagged(block.getType());
     }
 
     public static boolean isStandingSign(Block block) {

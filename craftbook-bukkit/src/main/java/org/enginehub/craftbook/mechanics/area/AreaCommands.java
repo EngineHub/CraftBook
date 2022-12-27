@@ -129,7 +129,7 @@ public class AreaCommands {
             }
 
             // Copy
-            BlockArrayClipboard copy = CopyManager.getInstance().copy(sel, saveEntities, saveBiomes);
+            BlockArrayClipboard copy = CopyManager.getInstance().copy(sel, world, saveEntities, saveBiomes);
 
             plugin.getServer().getLogger().info(player.getName() + " saving toggle area with folder '" + namespace +
                 "' and ID '" + name + "'.");

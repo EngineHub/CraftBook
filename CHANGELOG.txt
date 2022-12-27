@@ -1,3 +1,15 @@
+3.10.8
+* Fixed a few situations where gates might not work correctly under Y=0
+* Removed a few HeadDrops that had the skins hijacked by offensive imagery
+* Add references to 1.19.3 experimental blocks
+
+3.10.7
+* Update to 1.19, removing 1.18 support
+* Allow the IC creation message to be translated
+* Fixed a few "y < 0" bugs
+* Work around a Spigot bug causing occasional errors with the Cauldron mechanic
+* Work around a Spigot bug that caused empty messages to print to the player
+
 3.10.6
 * Target 1.18 as the minimum version
 * Require Java 17+
