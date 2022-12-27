@@ -1,3 +1,8 @@
+3.10.8
+* Fixed a few situations where gates might not work correctly under Y=0
+* Removed a few HeadDrops that had the skins hijacked by offensive imagery
+* Add references to 1.19.3 experimental blocks
+
 3.10.7
 * Update to 1.19, removing 1.18 support
 * Allow the IC creation message to be translated
