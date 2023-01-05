@@ -20,8 +20,11 @@ import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
 import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.exception.CraftBookException;
+import org.enginehub.craftbook.util.AdventureText3Adapter;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.annotation.Command;
 import org.enginehub.piston.annotation.CommandContainer;
@@ -57,13 +60,13 @@ public class SignEditCommands {
             throw new CraftBookException(TranslatableComponent.of("craftbook.signcopier.invalid-line"));
         }
 
-        // TODO Integrate MiniMessage
+        Component message = MiniMessage.miniMessage().deserialize(text);
 
-        signCopier.setSignLine(player.getUniqueId(), line - 1, text);
+        signCopier.setSignLine(player.getUniqueId(), line - 1, message);
         player.printInfo(TranslatableComponent.of(
             "craftbook.signcopier.edited",
             TextComponent.of(line),
-            TextComponent.of(text)
+            AdventureText3Adapter.fromAdventure(message)
         ));
     }
 

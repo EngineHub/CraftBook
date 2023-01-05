@@ -21,6 +21,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.item.ItemTypes;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.block.Block;
@@ -40,6 +41,7 @@ import org.enginehub.craftbook.util.ItemSyntax;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.events.SignClickEvent;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
@@ -101,8 +103,8 @@ public class SignCopier extends AbstractCraftBookMechanic {
      * @param lineNumber The line number (0-3)
      * @param line The new line value
      */
-    public void setSignLine(UUID uuid, int lineNumber, String line) {
-        signs.get(uuid).lines[lineNumber] = line;
+    public void setSignLine(UUID uuid, int lineNumber, Component line) {
+        signs.get(uuid).lines.set(lineNumber, line);
     }
 
     /**
@@ -164,8 +166,8 @@ public class SignCopier extends AbstractCraftBookMechanic {
             Bukkit.getPluginManager().callEvent(sev);
 
             if (!sev.isCancelled() || !CraftBook.getInstance().getPlatform().getConfiguration().obeyPluginProtections) {
-                for (int i = 0; i < signData.lines.length; i++) {
-                    sign.setLine(i, signData.lines[i]);
+                for (int i = 0; i < signData.lines.size(); i++) {
+                    sign.line(i, signData.lines.get(i));
                 }
                 if (copyColor && signData.color != null) {
                     sign.setColor(signData.color);
@@ -188,7 +190,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
      * Stores data about the copied sign.
      */
     protected static class SignData {
-        protected String[] lines;
+        protected List<Component> lines;
         protected boolean glowing;
         @Nullable
         protected DyeColor color;
@@ -199,7 +201,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
          * @param lines The sign lines
          * @param color The dyed color, if present
          */
-        protected SignData(String[] lines, boolean glowing, @Nullable DyeColor color) {
+        protected SignData(List<Component> lines, boolean glowing, @Nullable DyeColor color) {
             checkNotNull(lines);
 
             this.lines = lines;
@@ -208,7 +210,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
         }
 
         public static SignData fromSign(Sign sign) {
-            return new SignData(sign.getLines(), sign.isGlowingText(), sign.getColor());
+            return new SignData(sign.lines(), sign.isGlowingText(), sign.getColor());
         }
     }
 
