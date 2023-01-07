@@ -238,6 +238,8 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
             treeType = TreeType.ACACIA;
         } else if (data == Material.DARK_OAK_SAPLING) {
             treeType = TreeType.DARK_OAK;
+        } else if (data == Material.AZALEA || data == Material.FLOWERING_AZALEA) {
+            treeType = TreeType.AZALEA;
         } else {
             treeType = TreeType.TREE;
             if (random.nextInt(10) == 0) {
