@@ -17,9 +17,9 @@ package org.enginehub.craftbook.util;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Snow;
 import org.bukkit.inventory.ItemStack;
 
@@ -36,27 +36,15 @@ public final class BlockUtil {
         return block.getType() == block2.getType() && block.getBlockData().matches(block2.getBlockData());
     }
 
-    public static boolean areBlocksIdentical(Block block, BlockData block2) {
-        return block.getType() == block2.getMaterial() && block.getBlockData().matches(block2);
-    }
-
     public static boolean isBlockReplacable(Material id) {
-        switch (id) {
-            case AIR:
-            case CAVE_AIR:
-            case VOID_AIR:
-            case DEAD_BUSH:
-            case FIRE:
-            case GRASS:
-            case FERN:
-            case LAVA:
-            case WATER:
-            case SNOW:
-            case MOVING_PISTON:
-                return true;
-            default:
-                return false;
+        if (id.isAir() || Tag.REPLACEABLE_PLANTS.isTagged(id)) {
+            return true;
         }
+
+        return switch (id) {
+            case FIRE, LAVA, WATER, SNOW, MOVING_PISTON -> true;
+            default -> false;
+        };
     }
 
     public static Location getBlockCentre(Block block) {

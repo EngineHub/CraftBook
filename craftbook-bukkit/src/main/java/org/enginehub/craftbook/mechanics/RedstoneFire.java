@@ -24,6 +24,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
@@ -53,7 +54,7 @@ public class RedstoneFire extends AbstractCraftBookMechanic {
         Block above = event.getBlock().getRelative(BlockFace.UP);
         Material aboveType = above.getType();
 
-        if (event.isOn() && canReplaceWithFire(aboveType)) {
+        if (event.isOn() && BlockUtil.isBlockReplacable(aboveType)) {
             above.setType(getFireForBlock(type));
         } else if (!event.isOn() && (aboveType == Material.FIRE || aboveType == Material.SOUL_FIRE)) {
             above.setType(Material.AIR);
@@ -86,20 +87,15 @@ public class RedstoneFire extends AbstractCraftBookMechanic {
     @Nonnull
     private Material getFireForBlock(Material type) {
         switch (type) {
-            case NETHERRACK:
+            case NETHERRACK -> {
                 return Material.FIRE;
-            case SOUL_SOIL:
+            }
+            case SOUL_SOIL -> {
                 return Material.SOUL_FIRE;
+            }
         }
 
         throw new RuntimeException("Tried to place fire on an unsupported block. Please report this error to CraftBook");
-    }
-
-    private static boolean canReplaceWithFire(Material type) {
-        return switch (type) {
-            case SNOW, GRASS, VINE, DEAD_BUSH, AIR -> true;
-            default -> false;
-        };
     }
 
     private boolean enableNetherrack;

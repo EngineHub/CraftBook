@@ -13,7 +13,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.area;
+package org.enginehub.craftbook.mechanics.area.clipboard;
 
 import com.google.common.collect.Lists;
 import com.sk89q.util.yaml.YAMLProcessor;

@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanic.exception;
 
+import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import org.enginehub.craftbook.exception.CraftBookException;
 
@@ -32,16 +33,22 @@ import org.enginehub.craftbook.exception.CraftBookException;
  */
 public class InvalidMechanismException extends CraftBookException {
 
-    private static final long serialVersionUID = -6917162805444409894L;
-
+    @Deprecated
     public InvalidMechanismException(String message, Throwable cause) {
-
         super(TextComponent.of(message), cause);
     }
 
+    @Deprecated
     public InvalidMechanismException(String message) {
-
         super(TextComponent.of(message));
+    }
+
+    public InvalidMechanismException(Component message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public InvalidMechanismException(Component message) {
+        super(message);
     }
 
     @Override

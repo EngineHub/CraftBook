@@ -25,11 +25,14 @@ mechanics:
         better_pistons: false
         better_plants: false
         better_sponge: false
+        bridge: false
         chairs: false
         chunk_anchor: false
         cooking_pot: false
         dispenser_recipes: false
+        door: false
         elevator: false
+        gate: false
         head_drops: false
         light_switch: false
         marquee: false

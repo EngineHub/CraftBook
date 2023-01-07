@@ -13,7 +13,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.area;
+package org.enginehub.craftbook.mechanics.area.clipboard;
 
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.WorldEdit;
@@ -34,6 +34,7 @@ import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.exception.CraftBookException;
+import org.enginehub.craftbook.mechanics.area.clipboard.AreaCommandsRegistration;
 import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.annotation.Command;

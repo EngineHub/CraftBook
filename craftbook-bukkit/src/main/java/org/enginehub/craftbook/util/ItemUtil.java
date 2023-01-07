@@ -830,16 +830,15 @@ public final class ItemUtil {
      * @return A {@link ArrayList} of {@link Item}s.
      */
     public static List<Item> getItemsAtBlock(Block block) {
-
         List<Item> items = new ArrayList<>();
 
         for (Entity en : block.getWorld().getNearbyEntities(BoundingBox.of(block))) {
-            if (!(en instanceof Item)) {
+            if (!(en instanceof Item item)) {
                 continue;
             }
-            Item item = (Item) en;
-            if (item.isDead() || !item.isValid())
+            if (item.isDead() || !item.isValid()) {
                 continue;
+            }
 
             items.add(item);
         }
@@ -926,36 +925,8 @@ public final class ItemUtil {
         }
     }
 
-    private static boolean shouldDamageItem(ItemStack stack) {
-        Map<Enchantment, Integer> enchants = stack.getEnchantments();
-        int level = enchants.getOrDefault(Enchantment.DURABILITY, 0);
-
-        if (level > 0) {
-            int chance = (int) (100d / (level + 1));
-            if (isArmor(stack.getType())) {
-                chance = (int) (60d + (40d / (level + 1)));
-            }
-            int roll = ThreadLocalRandom.current().nextInt(100);
-            return !(roll < chance);
-        }
-
-        return true;
-    }
-
     public static void damageHeldItem(Player player) {
-        ItemStack heldItem = player.getInventory().getItemInMainHand();
-        ItemMeta meta = heldItem.getItemMeta();
-        if (meta instanceof Damageable && getMaxDurability(heldItem.getType()) > 0) {
-            if (!shouldDamageItem(heldItem)) {
-                return;
-            }
-            ((Damageable) meta).setDamage(((Damageable) meta).getDamage() + 1);
-            heldItem.setItemMeta(meta);
-            if (((Damageable) meta).getDamage() <= getMaxDurability(heldItem.getType()))
-                player.getInventory().setItemInMainHand(heldItem);
-            else
-                player.getInventory().setItemInMainHand(null);
-        }
+        player.getInventory().getItemInMainHand().damage(1, player);
     }
 
     public static boolean isStainedGlass(Material typeId) {
@@ -1062,27 +1033,6 @@ public final class ItemUtil {
     }
 
     public static boolean isShulkerBox(Material type) {
-        switch (type) {
-            case SHULKER_BOX:
-            case BLACK_SHULKER_BOX:
-            case BLUE_SHULKER_BOX:
-            case BROWN_SHULKER_BOX:
-            case CYAN_SHULKER_BOX:
-            case GRAY_SHULKER_BOX:
-            case GREEN_SHULKER_BOX:
-            case LIGHT_BLUE_SHULKER_BOX:
-            case LIGHT_GRAY_SHULKER_BOX:
-            case LIME_SHULKER_BOX:
-            case MAGENTA_SHULKER_BOX:
-            case ORANGE_SHULKER_BOX:
-            case PINK_SHULKER_BOX:
-            case PURPLE_SHULKER_BOX:
-            case RED_SHULKER_BOX:
-            case WHITE_SHULKER_BOX:
-            case YELLOW_SHULKER_BOX:
-                return true;
-            default:
-                return false;
-        }
+        return Tag.SHULKER_BOXES.isTagged(type);
     }
 }

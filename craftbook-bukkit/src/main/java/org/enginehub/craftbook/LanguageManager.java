@@ -34,13 +34,6 @@ public class LanguageManager {
         put("mech.area.create", "Toggle Area Created!");
         put("mech.area.missing", "The area or namespace does not exist.");
 
-        put("mech.bridge.create", "Bridge Created!");
-        put("mech.bridge.toggle", "Bridge Toggled!");
-        put("mech.bridge.end-create", "Bridge End Created!");
-        put("mech.bridge.unusable", "Material not usable for a bridge!");
-        put("mech.bridge.material", "Bridge must be made entirely out of the same material!");
-        put("mech.bridge.other-sign", "Bridge sign required on other side (or it was too far away).");
-
         put("mech.cauldron.create", "Cauldron Created!");
         put("mech.cauldron.too-small", "Cauldron is too small!");
         put("mech.cauldron.leaky", "Cauldron has a leak!");
@@ -59,18 +52,6 @@ public class LanguageManager {
         put("mech.command-items.need", "You need %item% to use this command!");
 
         put("mech.custom-crafting.recipe-permission", "You do not have permission to craft this recipe.");
-
-        put("mech.door.create", "Door Created!");
-        put("mech.door.toggle", "Door Toggled!");
-        put("mech.door.other-sign", "Door sign required on other side (or it was too far away).");
-        put("mech.door.unusable", "Material not usable for a door!");
-        put("mech.door.material", "Door must be made entirely out of the same material!");
-
-        put("mech.gate.create", "Gate Created!");
-        put("mech.gate.toggle", "Gate Toggled!");
-        put("mech.gate.not-found", "Failed to find a gate!");
-        put("mech.gate.valid-item", "Line 1 needs to be a valid block id.");
-        put("mech.dgate.create", "Small Gate Created!");
 
         put("mech.hiddenswitch.key", "The key did not fit!");
         put("mech.hiddenswitch.toggle", "You hear the muffled click of a switch!");

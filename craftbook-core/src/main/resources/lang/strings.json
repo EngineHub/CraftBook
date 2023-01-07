@@ -26,6 +26,17 @@
     "craftbook.bounceblocks.create": "BounceBlock Created!",
     "craftbook.bounceblocks.invalid-velocity": "You need to enter a valid velocity on the 3rd line!",
 
+    "craftbook.bridge.create": "Bridge Created!",
+    "craftbook.bridge.description": "Create bridges that can be opened and closed by players and redstone.",
+    "craftbook.bridge.different-materials": "Bridge must be made entirely out of the same material!",
+    "craftbook.bridge.end-create": "Bridge End Created!",
+    "craftbook.bridge.missing-other-sign": "Bridge sign required on other side (or it was too far away).",
+    "craftbook.bridge.not-enough-blocks": "Not enough blocks to construct this bridge (try restocking?)",
+    "craftbook.bridge.toggle": "You activate the bridge",
+    "craftbook.bridge.too-short": "This bridge is too short to activate",
+    "craftbook.bridge.restock": "You restock the bridge",
+    "craftbook.bridge.unusable-material": "This material cannot be used to make a bridge",
+
     "craftbook.chairs.description": "Allows sitting on stair blocks.",
     "craftbook.chairs.block-in-use": "This chair is in use!",
     "craftbook.chairs.floating": "That chair is floating!",
@@ -43,6 +54,17 @@
 
     "craftbook.dispenserrecipes.description": "Adds recipes that can be used inside a dispenser to make things happen",
 
+    "craftbook.door.create": "Door Created!",
+    "craftbook.door.description": "Create doors that can be opened and closed by players and redstone.",
+    "craftbook.door.different-materials": "Door must be made entirely out of the same material!",
+    "craftbook.door.end-create": "Door End Created!",
+    "craftbook.door.missing-other-sign": "Door sign required on other side (or it was too far away).",
+    "craftbook.door.not-enough-blocks": "Not enough blocks to construct this door (try restocking?)",
+    "craftbook.door.restock": "You restock the door",
+    "craftbook.door.toggle": "You activate the door",
+    "craftbook.door.too-short": "This door is too short to activate",
+    "craftbook.door.unusable-material": "This material cannot be used to make a door",
+
     "craftbook.elevator.create.up": "Lift Up created.",
     "craftbook.elevator.create.down": "Lift Down created.",
     "craftbook.elevator.create.recv": "Lift Receiver created.",
@@ -55,6 +77,14 @@
     "craftbook.elevator.floor-notice": "Floor: {0}",
     "craftbook.elevator.moved-up": "You went up a floor!",
     "craftbook.elevator.moved-down": "You went down a floor!",
+
+    "craftbook.gate.create": "Gate Created!",
+    "craftbook.gate.description": "Create gates that can be opened and closed by players or redstone.",
+    "craftbook.gate.not-enough-blocks": "Not enough blocks to construct this gate (try restocking?)",
+    "craftbook.gate.restock": "You restock the gate",
+    "craftbook.gate.not-found": "No gate was found (is it too far away?)",
+    "craftbook.gate.toggle": "You activate the gate",
+    "craftbook.gate.unusable-material": "This material cannot be used to make a gate",
 
     "craftbook.headdrops.description": "Allows the head of players and mobs to be collected",
     "craftbook.headdrops.click-message.player": "The dismembered head of {0}...",

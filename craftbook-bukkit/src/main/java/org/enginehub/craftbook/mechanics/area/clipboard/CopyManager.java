@@ -13,7 +13,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.area;
+package org.enginehub.craftbook.mechanics.area.clipboard;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;

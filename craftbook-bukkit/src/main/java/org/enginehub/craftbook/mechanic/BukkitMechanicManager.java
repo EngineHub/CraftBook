@@ -34,11 +34,8 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("TreeLopper", org.enginehub.craftbook.mechanics.TreeLopper.class, MechanicCategory.GENERAL);
 //        registerMechanic("CommandSigns", org.enginehub.craftbook.mechanics.CommandSigns.class, MechanicCategory.GENERAL);
 //        registerMechanic("HiddenSwitch", org.enginehub.craftbook.mechanics.HiddenSwitch.class, MechanicCategory.GENERAL);
-//        registerMechanic("Bridge", org.enginehub.craftbook.mechanics.area.simple.Bridge.class, MechanicCategory.GENERAL);
-//        registerMechanic("Door", org.enginehub.craftbook.mechanics.area.simple.Door.class, MechanicCategory.GENERAL);
 //        registerMechanic("ToggleArea", org.enginehub.craftbook.mechanics.area.Area.class, MechanicCategory.GENERAL);
 //        registerMechanic("Cauldron", org.enginehub.craftbook.mechanics.cauldron.ImprovedCauldron.class, MechanicCategory.CUSTOMISATION);
-//        registerMechanic("Gate", org.enginehub.craftbook.mechanics.area.simple.Gate.class, MechanicCategory.GENERAL);
 //        registerMechanic("Pay", org.enginehub.craftbook.mechanics.Payment.class, MechanicCategory.CIRCUIT);
 //        registerMechanic("Pipes", org.enginehub.craftbook.mechanics.pipe.Pipes.class, MechanicCategory.CIRCUIT);
 //        registerMechanic("BounceBlocks", org.enginehub.craftbook.mechanics.BounceBlocks.class, MechanicCategory.GENERAL);
@@ -46,7 +43,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("MinecartSorter", org.enginehub.craftbook.mechanics.minecart.blocks.CartSorter.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartDeposit", org.enginehub.craftbook.mechanics.minecart.blocks.CartDeposit.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartTeleporter", org.enginehub.craftbook.mechanics.minecart.blocks.CartTeleporter.class, MechanicCategory.MINECART);
-//        registerMechanic("MinecartDispenser", org.enginehub.craftbook.mechanics.minecart.blocks.CartDispenser.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartMessenger", org.enginehub.craftbook.mechanics.minecart.blocks.CartMessenger.class, MechanicCategory.MINECART);
 //        registerMechanic("MinecartMaxSpeed", org.enginehub.craftbook.mechanics.minecart.blocks.CartMaxSpeed.class, MechanicCategory.MINECART);
 
@@ -492,6 +488,33 @@ public class BukkitMechanicManager extends MechanicManager {
             .description(TranslatableComponent.of("craftbook.cookingpot.description"))
             .className("org.enginehub.craftbook.mechanics.CookingPot")
             .category(MechanicCategory.GENERAL)
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("bridge")
+            .name("Bridge")
+            .description(TranslatableComponent.of("craftbook.bridge.description"))
+            .category(MechanicCategory.GENERAL)
+            .className("org.enginehub.craftbook.mechanics.area.Bridge")
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("door")
+            .name("Door")
+            .description(TranslatableComponent.of("craftbook.door.description"))
+            .category(MechanicCategory.GENERAL)
+            .className("org.enginehub.craftbook.mechanics.area.Door")
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("gate")
+            .name("Gate")
+            .description(TranslatableComponent.of("craftbook.gate.description"))
+            .category(MechanicCategory.GENERAL)
+            .className("org.enginehub.craftbook.mechanics.area.Gate")
             .buildAndRegister();
 
         // TODO CommandItems needs to load early (after variables).
