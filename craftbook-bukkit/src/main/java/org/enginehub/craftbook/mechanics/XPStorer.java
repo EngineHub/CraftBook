@@ -134,7 +134,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                player.printError("area.use-permissions");
+                player.printError(TranslatableComponent.of("craftbook.mechanisms.protection-blocked", TextComponent.of(getMechanicType().getName())));
             }
             return;
         }

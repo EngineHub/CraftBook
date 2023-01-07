@@ -16,6 +16,7 @@
 package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -227,7 +228,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
             if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
                 if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                    p.printError("area.use-permissions");
+                    p.printError(TranslatableComponent.of("craftbook.mechanisms.protection-blocked", TextComponent.of(getMechanicType().getName())));
                 }
                 return;
             }

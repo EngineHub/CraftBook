@@ -109,14 +109,14 @@ public class Door extends CuboidToggleMechanic {
 
         if (!player.hasPermission("craftbook.door.use")) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                player.printError("mech.use-permission");
+                player.printError(TranslatableComponent.of("craftbook.mechanisms.use-permission", TextComponent.of(getMechanicType().getName())));
             }
             return;
         }
 
         if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                player.printError("area.use-permissions");
+                player.printError(TranslatableComponent.of("craftbook.mechanisms.protection-blocked", TextComponent.of(getMechanicType().getName())));
             }
             return;
         }
@@ -129,7 +129,7 @@ public class Door extends CuboidToggleMechanic {
                     if (heldItemType == bridgeType) {
                         if (!player.hasPermission("craftbook.door.restock")) {
                             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                                player.printError("mech.restock-permission");
+                                player.printError(TranslatableComponent.of("craftbook.door.restock-permissions"));
                             }
                             return;
                         }

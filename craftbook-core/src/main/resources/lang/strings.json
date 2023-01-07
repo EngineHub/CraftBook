@@ -35,6 +35,7 @@
     "craftbook.bridge.toggle": "You activate the bridge",
     "craftbook.bridge.too-short": "This bridge is too short to activate",
     "craftbook.bridge.restock": "You restock the bridge",
+    "craftbook.bridge.restock-permissions": "You don't have permission to restock bridges",
     "craftbook.bridge.unusable-material": "This material cannot be used to make a bridge",
 
     "craftbook.chairs.description": "Allows sitting on stair blocks.",
@@ -60,6 +61,7 @@
     "craftbook.door.end-create": "Door End Created!",
     "craftbook.door.missing-other-sign": "Door sign required on other side (or it was too far away).",
     "craftbook.door.not-enough-blocks": "Not enough blocks to construct this door (try restocking?)",
+    "craftbook.door.restock-permissions": "You don't have permission to restock doors",
     "craftbook.door.restock": "You restock the door",
     "craftbook.door.toggle": "You activate the door",
     "craftbook.door.too-short": "This door is too short to activate",
@@ -81,6 +83,7 @@
     "craftbook.gate.create": "Gate Created!",
     "craftbook.gate.description": "Create gates that can be opened and closed by players or redstone.",
     "craftbook.gate.not-enough-blocks": "Not enough blocks to construct this gate (try restocking?)",
+    "craftbook.gate.restock-permissions": "You don't have permission to restock gates",
     "craftbook.gate.restock": "You restock the gate",
     "craftbook.gate.not-found": "No gate was found (is it too far away?)",
     "craftbook.gate.toggle": "You activate the gate",
@@ -223,6 +226,7 @@
     "craftbook.mechanisms.click-to-disable": "Click to disable",
     "craftbook.mechanisms.create-permission": "You don't have permission to create the {0} mechanic.",
     "craftbook.mechanisms.use-permission": "You don't have permission to use the {0} mechanic.",
+    "craftbook.mechanisms.protection-blocked": "The {0} mechanic is denied by protection systems here.",
 
     "craftbook.version.version": "CraftBook version {0}",
 

@@ -62,7 +62,7 @@ public class Marquee extends AbstractCraftBookMechanic {
 
         if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                lplayer.printError("area.use-permissions");
+                lplayer.printError(TranslatableComponent.of("craftbook.mechanisms.protection-blocked", TextComponent.of(getMechanicType().getName())));
             }
             return;
         }

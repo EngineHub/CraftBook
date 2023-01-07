@@ -21,15 +21,9 @@ import java.util.HashMap;
 public class LanguageManager {
 
     public static final HashMap<String, String> defaultMessages = new HashMap<String, String>(32, 1.0f) {{
-        put("area.permissions", "You don't have permissions to do that in this area!");
-        put("area.use-permissions", "You don't have permissions to use that in this area!");
         put("area.break-permissions", "You don't have permissions to break that in this area!");
 
-
-        put("mech.restock-permission", "You don't have permission to restock this mechanic.");
-        put("mech.not-enough-blocks", "Not enough blocks to trigger mechanic!");
         put("mech.group", "You are not in the required group!");
-        put("mech.restock", "Mechanism Restocked!");
 
         put("mech.area.create", "Toggle Area Created!");
         put("mech.area.missing", "The area or namespace does not exist.");

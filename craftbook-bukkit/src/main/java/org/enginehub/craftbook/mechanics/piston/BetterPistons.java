@@ -137,7 +137,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                     Block off = pistonBlock.getRelative(pistonData.getFacing());
                     if (ProtectionUtil.isBreakingPrevented(event.getPlayer(), off)) {
                         if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                            player.printError("area.use-permission");
+                            player.printError(TranslatableComponent.of("craftbook.mechanisms.protection-blocked", TextComponent.of(getMechanicType().getName())));
                         }
                         SignUtil.cancelSignChange(event);
                         return;
@@ -155,7 +155,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                         off = off.getRelative(pistonData.getFacing());
                         if (ProtectionUtil.isBreakingPrevented(event.getPlayer(), off)) {
                             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                                player.printError("area.use-permission");
+                                player.printError(TranslatableComponent.of("craftbook.mechanisms.protection-blocked", TextComponent.of(getMechanicType().getName())));
                             }
                             SignUtil.cancelSignChange(event);
                             return;

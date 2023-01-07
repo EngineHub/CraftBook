@@ -73,7 +73,7 @@ public class Ammeter extends AbstractCraftBookMechanic {
 
         if (!ProtectionUtil.canUse(event.getPlayer(), block.getLocation(), event.getBlockFace(), event.getAction())) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                player.printError("area.use-permissions");
+                player.printError(TranslatableComponent.of("craftbook.mechanisms.protection-blocked", TextComponent.of(getMechanicType().getName())));
             }
             return;
         }

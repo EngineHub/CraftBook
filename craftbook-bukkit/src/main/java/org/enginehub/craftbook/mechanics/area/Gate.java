@@ -252,14 +252,14 @@ public class Gate extends StoredBlockMechanic {
 
         if (!player.hasPermission("craftbook.gate.use")) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                player.printError("mech.use-permission");
+                player.printError(TranslatableComponent.of("craftbook.mechanisms.use-permission", TextComponent.of(getMechanicType().getName())));
             }
             return;
         }
 
         if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                player.printError("area.use-permissions");
+                player.printError(TranslatableComponent.of("craftbook.mechanisms.protection-blocked", TextComponent.of(getMechanicType().getName())));
             }
             return;
         }
@@ -272,7 +272,7 @@ public class Gate extends StoredBlockMechanic {
                     if (gateType == heldItemType) {
                         if (!player.hasPermission("craftbook.gate.restock")) {
                             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                                player.printError("mech.restock-permission");
+                                player.printError(TranslatableComponent.of("craftbook.gate.restock-permissions"));
                             }
                             return;
                         }

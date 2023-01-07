@@ -72,16 +72,16 @@ public class PaintingSwitcher extends AbstractCraftBookMechanic {
         if (event.getHand() == EquipmentSlot.HAND && event.getRightClicked() instanceof Painting paint) {
             CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-            if (!player.hasPermission("craftbook.mech.paintingswitch.use")) {
+            if (!player.hasPermission("craftbook.paintingswitcher.use")) {
                 if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                    player.printError("mech.use-permissions");
+                    player.printError(TranslatableComponent.of("craftbook.mechanisms.use-permission", TextComponent.of(getMechanicType().getName())));
                 }
                 return;
             }
 
             if (ProtectionUtil.isPlacementPrevented(event.getPlayer(), paint.getLocation().getBlock())) {
                 if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                    player.printError("area.use-permissions");
+                    player.printError(TranslatableComponent.of("craftbook.mechanisms.protection-blocked", TextComponent.of(getMechanicType().getName())));
                 }
                 return;
             }
