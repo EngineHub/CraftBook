@@ -153,6 +153,9 @@
 
     "craftbook.minecartstrongbraker.description": "Strongly brakes Minecarts when they drive over it",
 
+    "craftbook.minecartteleporter.description": "Teleports Minecarts when they drive over it",
+    "craftbook.minecartteleporter.invalid-location-syntax": "Line 3 must contain coordinates seperated by a comma! (x,y,z)",
+
     "craftbook.paintingswitcher.now-editing": "You are now editing this painting!",
     "craftbook.paintingswitcher.no-longer-editing": "You are no longer editing this painting!",
     "craftbook.paintingswitcher.too-far-away": "You are too far away from that painting!",

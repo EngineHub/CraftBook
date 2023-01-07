@@ -60,6 +60,7 @@ mechanics:
         minecart_reverser: false
         minecart_station: false
         minecart_strong_braker: false
+        minecart_teleporter: false
         more_rails: false
         temporary_cart: false
     tool:

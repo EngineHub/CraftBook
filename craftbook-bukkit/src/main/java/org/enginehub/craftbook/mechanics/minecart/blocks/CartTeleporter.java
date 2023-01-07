@@ -17,6 +17,7 @@ package org.enginehub.craftbook.mechanics.minecart.blocks;
 
 import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -26,23 +27,20 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.BlockParser;
-import org.enginehub.craftbook.util.CartUtil;
-import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 
 import java.util.List;
 
 public class CartTeleporter extends CartBlockMechanism {
 
+    private final static List<String> SIGNS = ImmutableList.of("TeleCart");
+
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
-        // validate
-        if (!event.getBlocks().matches(getBlock())) return;
-        if (!event.getBlocks().hasSign()) return;
-        if (event.isMinor()) return;
-        if (!event.getBlocks().matches("teleport")) return;
+        if (event.isMinor() || !event.getBlocks().matches(getBlock()) || !event.getBlocks().hasSign() || !event.getBlocks().matches("telecart")) {
+            return;
+        }
 
-        // go
         World world = event.getMinecart().getWorld();
         String[] pts = RegexUtil.COMMA_PATTERN.split(event.getBlocks().getChangedSign().getLine(2).trim(), 3);
         if (!event.getBlocks().getChangedSign().getLine(3).trim().isEmpty()) {
@@ -72,14 +70,13 @@ public class CartTeleporter extends CartBlockMechanism {
 
     @Override
     public boolean verify(ChangedSign sign, CraftBookPlayer player) {
-
         String[] pts = RegexUtil.COMMA_PATTERN.split(sign.getLine(2).trim(), 3);
         try {
             Double.parseDouble(pts[0].trim());
             Double.parseDouble(pts[1].trim());
             Double.parseDouble(pts[2].trim());
-        } catch (NumberFormatException e) {
-            player.printError("Line 3 must contain coordinates seperated by a comma! (x,y,z)");
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            player.printError(TranslatableComponent.of("craftbook.minecartteleporter.invalid-location-syntax"));
             return false;
         }
         return true;
@@ -87,14 +84,12 @@ public class CartTeleporter extends CartBlockMechanism {
 
     @Override
     public List<String> getApplicableSigns() {
-
-        return ImmutableList.copyOf(new String[] { "Teleport" });
+        return SIGNS;
     }
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
-        config.setComment("block", "Sets the block that is the base of the teleport mechanic.");
+        config.setComment("block", "The block the TeleCart mechanic uses.");
         setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.EMERALD_BLOCK.getId()), true));
     }
 }
