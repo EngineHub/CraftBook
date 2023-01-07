@@ -23,7 +23,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.BlockParser;
-import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
 import org.enginehub.craftbook.util.SignUtil;
 

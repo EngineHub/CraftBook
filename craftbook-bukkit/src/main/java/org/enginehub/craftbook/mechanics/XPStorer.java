@@ -163,11 +163,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         int bottleCount = (int) Math.min(maxBottleCount, Math.floor(xp / (double) bottleXpRequirement));
 
         if (requireBottle) {
-            if (event.getItem().getAmount() - bottleCount <= 0) {
-                event.getPlayer().getInventory().setItem(event.getHand(), null);
-            } else {
-                event.getItem().setAmount(event.getItem().getAmount() - bottleCount);
-            }
+            event.getItem().subtract(bottleCount);
         }
 
         int tempBottles = bottleCount;
@@ -323,13 +319,8 @@ public class XPStorer extends AbstractCraftBookMechanic {
                     }
                     ItemStack content = inventory.getContents()[i];
                     if (ItemUtil.isStackValid(content) && content.getType() == stack.getType()) {
-                        if (content.getAmount() - amount <= 0) {
-                            amount -= content.getAmount();
-                            inventory.setItem(i, null);
-                        } else {
-                            content.setAmount(content.getAmount() - amount);
-                            amount = 0;
-                        }
+                        content.subtract(amount);
+                        amount = Math.max(0, amount - content.getAmount());
                     }
                 }
             }

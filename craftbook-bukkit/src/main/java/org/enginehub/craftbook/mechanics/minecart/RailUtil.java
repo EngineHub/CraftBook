@@ -91,7 +91,7 @@ public final class RailUtil {
     }
 
     public static boolean isTrack(Material id) {
-        if (CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(MechanicTypes.MINECART_MORE_RAILS)
+        if (CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(MechanicTypes.MORE_RAILS)
             .map(moreRails -> moreRails.isValidRail(id))
             .orElse(false)) {
             return true;

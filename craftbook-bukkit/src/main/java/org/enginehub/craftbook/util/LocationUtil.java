@@ -20,13 +20,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.BukkitCraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 
 public final class LocationUtil {

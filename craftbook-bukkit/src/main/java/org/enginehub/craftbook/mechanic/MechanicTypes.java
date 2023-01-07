@@ -15,22 +15,17 @@
 
 package org.enginehub.craftbook.mechanic;
 
-import org.enginehub.craftbook.mechanics.betterai.BetterAI;
 import org.enginehub.craftbook.mechanics.Ammeter;
 import org.enginehub.craftbook.mechanics.BetterLeads;
 import org.enginehub.craftbook.mechanics.BetterPhysics;
-import org.enginehub.craftbook.mechanics.minecart.blocks.speed.CartBooster;
-import org.enginehub.craftbook.mechanics.minecart.blocks.speed.CartMaxBooster;
-import org.enginehub.craftbook.mechanics.piston.BetterPistons;
 import org.enginehub.craftbook.mechanics.BetterPlants;
-import org.enginehub.craftbook.mechanics.ReadableBookshelf;
+import org.enginehub.craftbook.mechanics.BetterSponge;
 import org.enginehub.craftbook.mechanics.BounceBlocks;
 import org.enginehub.craftbook.mechanics.Chairs;
 import org.enginehub.craftbook.mechanics.ChunkAnchor;
 import org.enginehub.craftbook.mechanics.CommandSigns;
 import org.enginehub.craftbook.mechanics.CookingPot;
 import org.enginehub.craftbook.mechanics.Elevator;
-import org.enginehub.craftbook.mechanics.RedstoneGlowstone;
 import org.enginehub.craftbook.mechanics.HiddenSwitch;
 import org.enginehub.craftbook.mechanics.JackOLantern;
 import org.enginehub.craftbook.mechanics.LightStone;
@@ -38,17 +33,19 @@ import org.enginehub.craftbook.mechanics.LightSwitch;
 import org.enginehub.craftbook.mechanics.Marquee;
 import org.enginehub.craftbook.mechanics.PaintingSwitcher;
 import org.enginehub.craftbook.mechanics.Payment;
+import org.enginehub.craftbook.mechanics.ReadableBookshelf;
 import org.enginehub.craftbook.mechanics.RedstoneFire;
+import org.enginehub.craftbook.mechanics.RedstoneGlowstone;
 import org.enginehub.craftbook.mechanics.RedstoneJukebox;
 import org.enginehub.craftbook.mechanics.Snow;
-import org.enginehub.craftbook.mechanics.BetterSponge;
 import org.enginehub.craftbook.mechanics.Teleporter;
 import org.enginehub.craftbook.mechanics.TreeLopper;
 import org.enginehub.craftbook.mechanics.XPStorer;
-import org.enginehub.craftbook.mechanics.area.clipboard.Area;
 import org.enginehub.craftbook.mechanics.area.Bridge;
 import org.enginehub.craftbook.mechanics.area.Door;
 import org.enginehub.craftbook.mechanics.area.Gate;
+import org.enginehub.craftbook.mechanics.area.clipboard.Area;
+import org.enginehub.craftbook.mechanics.betterai.BetterAI;
 import org.enginehub.craftbook.mechanics.boat.BoatEmptyDecay;
 import org.enginehub.craftbook.mechanics.boat.BoatExitRemover;
 import org.enginehub.craftbook.mechanics.boat.BoatImpactDamage;
@@ -62,12 +59,12 @@ import org.enginehub.craftbook.mechanics.items.CommandItems;
 import org.enginehub.craftbook.mechanics.minecart.MinecartCollisionEntry;
 import org.enginehub.craftbook.mechanics.minecart.MinecartEmptyDecay;
 import org.enginehub.craftbook.mechanics.minecart.MinecartExitRemover;
-import org.enginehub.craftbook.mechanics.minecart.MinecartItemPickup;
-import org.enginehub.craftbook.mechanics.minecart.MinecartPhysicsControl;
-import org.enginehub.craftbook.mechanics.minecart.MoreRails;
-import org.enginehub.craftbook.mechanics.minecart.MinecartNoCollide;
-import org.enginehub.craftbook.mechanics.minecart.MinecartRailPlacer;
 import org.enginehub.craftbook.mechanics.minecart.MinecartImpactDamage;
+import org.enginehub.craftbook.mechanics.minecart.MinecartItemPickup;
+import org.enginehub.craftbook.mechanics.minecart.MinecartNoCollide;
+import org.enginehub.craftbook.mechanics.minecart.MinecartPhysicsControl;
+import org.enginehub.craftbook.mechanics.minecart.MinecartRailPlacer;
+import org.enginehub.craftbook.mechanics.minecart.MoreRails;
 import org.enginehub.craftbook.mechanics.minecart.TemporaryCart;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartDeposit;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartDispenser;
@@ -77,9 +74,14 @@ import org.enginehub.craftbook.mechanics.minecart.blocks.CartMaxSpeed;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMessenger;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartReverser;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartSorter;
-import org.enginehub.craftbook.mechanics.minecart.blocks.station.CartStation;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartTeleporter;
+import org.enginehub.craftbook.mechanics.minecart.blocks.speed.CartBooster;
+import org.enginehub.craftbook.mechanics.minecart.blocks.speed.CartLightBraker;
+import org.enginehub.craftbook.mechanics.minecart.blocks.speed.CartMaxBooster;
+import org.enginehub.craftbook.mechanics.minecart.blocks.speed.CartStrongBraker;
+import org.enginehub.craftbook.mechanics.minecart.blocks.station.CartStation;
 import org.enginehub.craftbook.mechanics.pipe.Pipes;
+import org.enginehub.craftbook.mechanics.piston.BetterPistons;
 import org.enginehub.craftbook.mechanics.signcopier.SignCopier;
 import org.enginehub.craftbook.mechanics.variables.VariableManager;
 
@@ -155,8 +157,6 @@ public class MechanicTypes {
     @Nullable
     public static final MechanicType<MinecartCollisionEntry> MINECART_COLLISION_ENTRY = get("minecart_collision_entry");
     @Nullable
-    public static final MechanicType<MinecartEmptyDecay> MINECART_EMPTY_DECAY = get("minecart_empty_decay");
-    @Nullable
     public static final MechanicType<CartDeposit> MINECART_DEPOSIT = get("minecart_deposit");
     @Nullable
     public static final MechanicType<CartDispenser> MINECART_DISPENSER = get("minecart_dispenser");
@@ -165,17 +165,21 @@ public class MechanicTypes {
     @Nullable
     public static final MechanicType<CartLift> MINECART_ELEVATOR = get("minecart_elevator");
     @Nullable
+    public static final MechanicType<MinecartEmptyDecay> MINECART_EMPTY_DECAY = get("minecart_empty_decay");
+    @Nullable
     public static final MechanicType<MinecartExitRemover> MINECART_EXIT_REMOVER = get("minecart_exit_remover");
     @Nullable
+    public static final MechanicType<MinecartImpactDamage> MINECART_IMPACT_DAMAGE = get("minecart_impact_damage");
+    @Nullable
     public static final MechanicType<MinecartItemPickup> MINECART_ITEM_PICKUP = get("minecart_item_pickup");
+    @Nullable
+    public static final MechanicType<CartLightBraker> MINECART_LIGHT_BRAKER = get("minecart_light_braker");
+    @Nullable
+    public static final MechanicType<CartMessenger> MINECART_MESSENGER = get("minecart_messenger");
     @Nullable
     public static final MechanicType<CartMaxBooster> MINECART_MAX_BOOSTER = get("minecart_max_booster");
     @Nullable
     public static final MechanicType<CartMaxSpeed> MINECART_MAX_SPEED = get("minecart_max_speed");
-    @Nullable
-    public static final MechanicType<CartMessenger> MINECART_MESSENGER = get("minecart_messenger");
-    @Nullable
-    public static final MechanicType<MoreRails> MINECART_MORE_RAILS = get("minecart_more_rails");
     @Nullable
     public static final MechanicType<MinecartNoCollide> MINECART_NO_COLLIDE = get("minecart_no_collide");
     @Nullable
@@ -183,17 +187,17 @@ public class MechanicTypes {
     @Nullable
     public static final MechanicType<MinecartRailPlacer> MINECART_RAIL_PLACER = get("minecart_rail_placer");
     @Nullable
-    public static final MechanicType<MinecartImpactDamage> MINECART_REMOVE_ENTITIES = get("minecart_remove_entities");
-    @Nullable
     public static final MechanicType<CartReverser> MINECART_REVERSER = get("minecart_reverser");
     @Nullable
-    public static final MechanicType<CartSorter> MINECART_SORTER = get("minecart_sorter");
+    public static final MechanicType<CartSorter> MINECART_SORTER = get("minecart_sorder");
     @Nullable
     public static final MechanicType<CartStation> MINECART_STATION = get("minecart_station");
     @Nullable
+    public static final MechanicType<CartStrongBraker> MINECART_STRONG_BRAKER = get("minecart_strong_braker");
+    @Nullable
     public static final MechanicType<CartTeleporter> MINECART_TELEPORTER = get("minecart_teleporter");
     @Nullable
-    public static final MechanicType<TemporaryCart> TEMPORARY_CART = get("temporary_cart");
+    public static final MechanicType<MoreRails> MORE_RAILS = get("more_rails");
     @Nullable
     public static final MechanicType<PaintingSwitcher> PAINTING_SWITCHER = get("painting_switcher");
     @Nullable
@@ -214,6 +218,8 @@ public class MechanicTypes {
     public static final MechanicType<Snow> SNOW = get("snow");
     @Nullable
     public static final MechanicType<Teleporter> TELEPORTER = get("teleporter");
+    @Nullable
+    public static final MechanicType<TemporaryCart> TEMPORARY_CART = get("temporary_cart");
     @Nullable
     public static final MechanicType<Area> TOGGLE_AREA = get("toggle_area");
     @Nullable

@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.entity;
 
-import com.sk89q.worldedit.math.Vector3;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
@@ -29,7 +28,6 @@ import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
 import org.enginehub.craftbook.util.EntityType;
-import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 
 public class EntityCannon extends AbstractSelfTriggeredIC {

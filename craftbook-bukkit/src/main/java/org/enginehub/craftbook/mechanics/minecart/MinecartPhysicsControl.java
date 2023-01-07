@@ -22,7 +22,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.util.EventUtil;
 
 public class MinecartPhysicsControl extends AbstractCraftBookMechanic {

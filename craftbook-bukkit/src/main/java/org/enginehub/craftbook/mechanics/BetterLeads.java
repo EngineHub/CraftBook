@@ -104,13 +104,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
                 return;
             }
 
-            if (event.getPlayer().getInventory().getItem(event.getHand()).getAmount() == 1) {
-                event.getPlayer().getInventory().setItem(event.getHand(), null);
-            } else {
-                ItemStack newStack = event.getPlayer().getInventory().getItem(event.getHand());
-                newStack.setAmount(newStack.getAmount() - 1);
-                event.getPlayer().getInventory().setItem(event.getHand(), newStack);
-            }
+            event.getPlayer().getInventory().getItem(event.getHand()).subtract(1);
         });
     }
 

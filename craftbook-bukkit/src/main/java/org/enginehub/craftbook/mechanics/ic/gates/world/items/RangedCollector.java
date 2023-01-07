@@ -37,7 +37,6 @@ import org.enginehub.craftbook.util.ICUtil;
 import org.enginehub.craftbook.util.InventoryUtil;
 import org.enginehub.craftbook.util.ItemSyntax;
 import org.enginehub.craftbook.util.ItemUtil;
-import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.events.RangedCollectEvent;

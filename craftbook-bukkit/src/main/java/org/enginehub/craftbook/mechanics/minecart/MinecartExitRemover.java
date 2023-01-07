@@ -18,7 +18,6 @@ package org.enginehub.craftbook.mechanics.minecart;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.entity.minecart.RideableMinecart;

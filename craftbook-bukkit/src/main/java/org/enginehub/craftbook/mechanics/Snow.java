@@ -29,6 +29,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
@@ -103,10 +104,11 @@ public class Snow extends AbstractCraftBookMechanic {
     }
 
     private boolean isReplacable(Block block) {
-        Material type = block.getType();
+        BlockData data = block.getBlockData();
+        Material type = data.getMaterial();
         return !(type == Material.WATER || type == Material.LAVA)
             && (BlockUtil.isBlockReplacable(type)
-            || Blocks.containsFuzzy(dispersionReplacables, BukkitAdapter.adapt(block.getBlockData())));
+            || Blocks.containsFuzzy(dispersionReplacables, BukkitAdapter.adapt(data)));
     }
 
     private boolean canPlaceAt(Block block) {

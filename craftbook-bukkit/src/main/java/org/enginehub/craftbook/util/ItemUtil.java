@@ -30,7 +30,6 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.BoundingBox;
@@ -39,10 +38,8 @@ import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Pattern;
 
 public final class ItemUtil {
@@ -778,10 +775,8 @@ public final class ItemUtil {
             item.setType(Material.GLASS_BOTTLE); // Get your bottle back
         } else if (item.getType() == Material.LAVA_BUCKET || item.getType() == Material.WATER_BUCKET || item.getType() == Material.MILK_BUCKET) {
             item.setType(Material.BUCKET); // Get your bucket back
-        } else if (item.getAmount() == 1) {
-            item.setType(Material.AIR);
         } else {
-            item.setAmount(item.getAmount() - 1);
+            item.subtract();
         }
         return item;
     }

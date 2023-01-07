@@ -30,11 +30,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.mechanics.minecart.RailUtil;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.EntityUtil;
-import org.enginehub.craftbook.mechanics.minecart.RailUtil;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
 import org.enginehub.craftbook.util.SignUtil;
 

@@ -28,7 +28,6 @@ import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
 import org.enginehub.craftbook.util.HistoryHashMap;
-import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.PlayerType;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SearchArea;
