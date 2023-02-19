@@ -1,0 +1,15 @@
+name: CraftBook5
+version: "${internalVersion}"
+main: org.enginehub.craftbook.bukkit.CraftBookPlugin
+author: EngineHub
+api-version: 1.19
+defaultPerm: FALSE
+dependencies:
+  - name: WorldEdit
+    required: true
+  - name: WorldGuard
+    required: false
+  - name: ProtocolLib
+    required: false
+  - name: Vault
+    required: false

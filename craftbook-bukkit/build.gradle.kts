@@ -65,6 +65,9 @@ tasks.named<Copy>("processResources") {
     filesMatching("plugin.yml") {
         expand("internalVersion" to internalVersion)
     }
+    filesMatching("paper-plugin.yml") {
+        expand("internalVersion" to internalVersion)
+    }
 }
 
 addJarManifest();
