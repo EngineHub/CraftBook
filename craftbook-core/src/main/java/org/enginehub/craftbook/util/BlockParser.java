@@ -69,7 +69,7 @@ public class BlockParser {
         return lines.stream()
             .map(line -> getBlock(line, wild))
             .filter(Objects::nonNull)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     public static String toMinifiedId(BlockType holder) {

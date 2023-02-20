@@ -28,14 +28,13 @@ import org.enginehub.craftbook.CraftBook;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MechanicListBox extends PaginationBox {
 
     private static final List<MechanicType<?>> MECHANICS = MechanicType.REGISTRY.values()
         .stream()
         .sorted(Comparator.comparing(MechanicType::getId))
-        .collect(Collectors.toList());
+        .toList();
 
     private final Actor actor;
 

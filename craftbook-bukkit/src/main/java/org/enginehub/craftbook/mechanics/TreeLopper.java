@@ -16,12 +16,14 @@
 package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.blocks.BaseItem;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.HandSide;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockCategories;
-import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.item.ItemType;
 import com.sk89q.worldedit.world.item.ItemTypes;
@@ -29,158 +31,167 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
-import org.bukkit.TreeSpecies;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Leaves;
-import org.bukkit.material.MaterialData;
-import org.bukkit.material.Tree;
+import org.bukkit.inventory.EquipmentSlot;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.ItemSyntax;
-import org.enginehub.craftbook.util.ItemUtil;
-import org.enginehub.craftbook.util.LocationUtil;
+import org.enginehub.craftbook.util.ItemParser;
 import org.enginehub.craftbook.util.ProtectionUtil;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TreeLopper extends AbstractCraftBookMechanic {
 
+    private final Map<Material, Material> LOG_TO_SAPLING = new HashMap<>();
+    private final Map<Material, Material> LEAVES_TO_SAPLING = new HashMap<>();
+
+    @Override
+    public void enable() throws MechanicInitializationException {
+        super.enable();
+
+        LOG_TO_SAPLING.clear();
+        LEAVES_TO_SAPLING.clear();
+
+        Tag.PLANKS.getValues().stream().map(Material::getKey).map(NamespacedKey::asString).forEach(key -> {
+            Material sapling = Material.matchMaterial(key.replace("planks", "sapling"));
+            Material leaves = Material.matchMaterial(key.replace("planks", "leaves"));
+            Material log = Material.matchMaterial(key.replace("planks", "log"));
+
+            if (sapling == null || leaves == null || log == null) {
+                CraftBook.LOGGER.warn("Failed to find sapling, leaves, or log for " + key);
+                return;
+            }
+
+            LOG_TO_SAPLING.put(log, sapling);
+            LEAVES_TO_SAPLING.put(leaves, sapling);
+        });
+    }
+
+    @Override
+    public void disable() {
+        super.disable();
+
+        LOG_TO_SAPLING.clear();
+        LEAVES_TO_SAPLING.clear();
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
-
-        if (event.getPlayer().getGameMode() == GameMode.CREATIVE)
+        if (event.getPlayer().getGameMode() == GameMode.CREATIVE || !EventUtil.passesFilter(event)) {
             return;
+        }
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if (!Blocks.containsFuzzy(enabledBlocks, BukkitAdapter.adapt(event.getBlock().getBlockData())))
-            return;
-        if (!enabledItems.contains(player.getItemInHand(HandSide.MAIN_HAND).getType())) return;
-        if (!player.hasPermission("craftbook.mech.treelopper.use")) {
-            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
-                player.printError("mech.use-permission");
+        if (!Blocks.containsFuzzy(enabledBlocks, BukkitAdapter.adapt(event.getBlock().getBlockData()))) {
             return;
         }
 
-        if (!EventUtil.passesFilter(event))
+        if (!enabledItems.contains(player.getItemInHand(HandSide.MAIN_HAND).getType())) {
             return;
+        }
+
+        if (!player.hasPermission("craftbook.treelopper.use")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
+                player.printError(TranslatableComponent.of("craftbook.mechanisms.use-permission", TextComponent.of(getMechanicType().getName())));
+            }
+            return;
+        }
 
         Set<Location> visitedLocations = new HashSet<>();
-        visitedLocations.add(event.getBlock().getLocation());
-        int broken = 1;
+        Block usedBlock = event.getBlock();
+        Material originalBlock = usedBlock.getType();
 
-        final Block usedBlock = event.getBlock();
+        // Set the planted value very high if we're not allowed to plant saplings
+        int planted = player.hasPermission("craftbook.treelopper.sapling") ? 0 : Integer.MAX_VALUE;
 
-        BlockStateHolder originalBlock = BukkitAdapter.adapt(usedBlock.getBlockData());
-        int planted = 0;
-
-        if (!player.hasPermission("craftbook.mech.treelopper.sapling"))
-            planted = 100;
-
-        TreeSpecies species = null;
-        if (placeSaplings && usedBlock.getState().getData() instanceof Tree
-            && (usedBlock.getRelative(0, -1, 0).getType() == Material.DIRT || usedBlock.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK || usedBlock.getRelative(0, -1, 0).getType() == Material.MYCELIUM)) {
-            species = ((Tree) usedBlock.getState().getData()).getSpecies();
-        }
-
-        if (species != null && planted < maxSaplings(species)) {
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SaplingPlanter(usedBlock, species), 2);
-            planted++;
-        }
-
-        for (Block block : allowDiagonals ? BlockUtil.getIndirectlyTouchingBlocks(usedBlock) : BlockUtil.getTouchingBlocks(usedBlock)) {
-            if (block == null) continue; //Top of map, etc.
-            if (visitedLocations.contains(block.getLocation())) continue;
-            Material blockMaterial = block.getType();
-            if (canBreakBlock(event.getPlayer(), originalBlock, block))
-                if (searchBlock(event, block, player, originalBlock, visitedLocations, broken, planted)) {
-                    if (!singleDamageAxe && (leavesDamageAxe || !Tag.LEAVES.isTagged(blockMaterial))) {
-                        ItemUtil.damageHeldItem(event.getPlayer());
-                    }
-                }
-        }
+        searchBlock(event.getPlayer(), usedBlock, originalBlock, visitedLocations, new AtomicInteger(0), planted);
     }
 
-    private static int maxSaplings(TreeSpecies tree) {
-        if (tree == TreeSpecies.DARK_OAK || tree == TreeSpecies.JUNGLE)
-            return 4;
-        else
-            return 1;
+    private static int getMaximumSaplingCount(Material tree) {
+        return switch (tree) {
+            case DARK_OAK_SAPLING, JUNGLE_SAPLING -> 4;
+            default -> 1;
+        };
     }
 
-    private boolean canBreakBlock(Player player, BlockStateHolder originalBlock, Block toBreak) {
+    private boolean canBreakBlock(Player player, Material originalBlock, Block toBreak) {
+        Material toBreakType = toBreak.getType();
 
-        if (BlockCategories.LOGS.contains(originalBlock) && Tag.LEAVES.isTagged(toBreak.getType()) && breakLeaves) {
-//           TODO MaterialData nw = toBreak.getState().getData();
-//            Tree old = new Tree(originalBlock.getType(), (byte) originalBlock.getData());
-//            if(!(nw instanceof Leaves)) return false;
-//            if(((Leaves) nw).getSpecies() != old.getSpecies()) return false;
-        } else {
-            if (!originalBlock.equalsFuzzy(BukkitAdapter.adapt(toBreak.getBlockData())))
-                return false;
+        if (breakLeaves && LOG_TO_SAPLING.containsKey(originalBlock) && LEAVES_TO_SAPLING.containsKey(toBreakType)) {
+           if (LOG_TO_SAPLING.get(originalBlock) != LEAVES_TO_SAPLING.get(toBreakType)) {
+               return false;
+           }
+        } else if (originalBlock != toBreakType) {
+            return false;
         }
 
         if (ProtectionUtil.isBreakingPrevented(player, toBreak)) {
-            CraftBookPlugin.inst().wrapPlayer(player).printError("area.break-permissions");
+            CraftBookPlugin.inst().wrapPlayer(player).printError(TranslatableComponent.of("craftbook.mechanisms.protection-blocked", TextComponent.of(getMechanicType().getName())));
             return false;
         }
 
         return true;
     }
 
-    private boolean searchBlock(BlockBreakEvent event, Block block, CraftBookPlayer player, BlockStateHolder originalBlock, Set<Location> visitedLocations, int broken, int planted) {
-
-        if (visitedLocations.contains(block.getLocation()))
-            return false;
-        if (broken > maxSearchSize)
-            return false;
-        if (!enabledItems.contains(player.getItemInHand(HandSide.MAIN_HAND).getType()))
-            return false;
-        TreeSpecies species = null;
-        if (placeSaplings
-            && (block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK || block.getRelative(0, -1, 0).getType() == Material.MYCELIUM)) {
-            MaterialData data = block.getState().getData();
-            if (data instanceof Leaves)
-                species = ((Leaves) data).getSpecies();
-            else if (data instanceof Tree)
-                species = ((Tree) data).getSpecies();
+    private void searchBlock(Player player, Block block, Material baseType, Set<Location> visitedLocations, AtomicInteger broken, int planted) {
+        if (broken.get() > maxSearchSize || visitedLocations.contains(block.getLocation()) || !canBreakBlock(player, baseType, block)) {
+            return;
         }
-        block.breakNaturally(event.getPlayer().getItemInHand());
-        if (species != null && planted < maxSaplings(species)) {
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SaplingPlanter(block, species), 2);
+
+        Material currentType = block.getType();
+        Material belowBlockType = block.getRelative(0, -1, 0).getType();
+
+        Material saplingType = null;
+        if (placeSaplings && planted < Integer.MAX_VALUE && Tag.DIRT.isTagged(belowBlockType)) {
+            if (LEAVES_TO_SAPLING.containsKey(currentType)) {
+                saplingType = LEAVES_TO_SAPLING.get(currentType);
+            } else if (LOG_TO_SAPLING.containsKey(currentType)) {
+                saplingType = LOG_TO_SAPLING.get(currentType);
+            }
+        }
+
+        if (saplingType != null && planted < getMaximumSaplingCount(saplingType)) {
+            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SaplingPlanter(block, saplingType), 2);
             planted++;
         }
-        visitedLocations.add(block.getLocation());
-        broken += 1;
-        for (BlockFace face : allowDiagonals ? LocationUtil.getIndirectFaces() : LocationUtil.getDirectFaces()) {
-            Block relativeBlock = block.getRelative(face);
-            Material relativeMaterial = relativeBlock.getType();
-            if (visitedLocations.contains(relativeBlock.getLocation())) continue;
-            if (canBreakBlock(event.getPlayer(), originalBlock, relativeBlock))
-                if (searchBlock(event, relativeBlock, player, originalBlock, visitedLocations, broken, planted)) {
-                    if (!singleDamageAxe && (leavesDamageAxe || !Tag.LEAVES.isTagged(relativeMaterial))) {
-                        ItemUtil.damageHeldItem(event.getPlayer());
-                    }
-                }
+
+        block.breakNaturally(player.getInventory().getItem(EquipmentSlot.HAND));
+        if (!singleDamageAxe && (leavesDamageAxe || !Tag.LEAVES.isTagged(currentType))) {
+            if (player.getInventory().getItemInMainHand().damage(1, player).getAmount() == 0) {
+                // We broke the axe, so we can't continue
+                return;
+            }
         }
 
-        return true;
+        visitedLocations.add(block.getLocation());
+        broken.incrementAndGet();
+
+        for (Block relativeBlock : allowDiagonals ? BlockUtil.getIndirectlyTouchingBlocks(block) : BlockUtil.getTouchingBlocks(block)) {
+            if (visitedLocations.contains(relativeBlock.getLocation())) {
+                continue;
+            }
+
+            searchBlock(player, relativeBlock, baseType, visitedLocations, broken, planted);
+        }
     }
 
     List<BaseBlock> enabledBlocks;
@@ -194,14 +205,12 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
-        config.setComment("block-list", "A list of log blocks. This can be modified to include more logs. (for mod support etc)");
-        enabledBlocks = BlockParser.getBlocks(config.getStringList("block-list", BlockCategories.LOGS.getAll().stream().map(BlockType::getId).sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
+        config.setComment("enabled-blocks", "A list of enabled log blocks. This list can only contain logs, but can be modified to include more logs (for mod support).");
+        enabledBlocks = BlockParser.getBlocks(config.getStringList("enabled-blocks", BlockCategories.LOGS.getAll().stream().map(BlockType::getId).sorted(String::compareToIgnoreCase).toList()), true);
 
         config.setComment("tool-list", "A list of tools that can trigger the TreeLopper mechanic.");
-        enabledItems = config.getStringList("tool-list", Arrays.asList(ItemTypes.IRON_AXE.getId(), ItemTypes.WOODEN_AXE.getId(),
-            ItemTypes.STONE_AXE.getId(), ItemTypes.DIAMOND_AXE.getId(), ItemTypes.GOLDEN_AXE.getId()))
-            .stream().map(ItemSyntax::getItem).map(ItemStack::getType).map(BukkitAdapter::asItemType).collect(Collectors.toList());
+        enabledItems = ItemParser.getItems(config.getStringList("tool-list", Arrays.asList(ItemTypes.IRON_AXE.getId(), ItemTypes.WOODEN_AXE.getId(),
+            ItemTypes.STONE_AXE.getId(), ItemTypes.DIAMOND_AXE.getId(), ItemTypes.GOLDEN_AXE.getId(), ItemTypes.NETHERITE_AXE.getId())), true).stream().map(BaseItem::getType).toList();
 
         config.setComment("max-size", "The maximum amount of blocks the TreeLopper can break.");
         maxSearchSize = config.getInt("max-size", 30);
@@ -212,53 +221,20 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         config.setComment("place-saplings", "If enabled, TreeLopper will plant a sapling automatically when a tree is broken.");
         placeSaplings = config.getBoolean("place-saplings", false);
 
-        config.setComment("break-leaves", "If enabled, TreeLopper will break leaves connected to the tree. (If enforce-data is enabled, will only break leaves of same type)");
-        breakLeaves = config.getBoolean("break-leaves", false);
+        config.setComment("break-leaves", "If enabled, TreeLopper will break leaves connected to the tree.");
+        breakLeaves = config.getBoolean("break-leaves", true);
 
         config.setComment("leaves-damage-axe", "Whether the leaves will also damage the axe when single-damage-axe is false and break-leaves is true.");
-        leavesDamageAxe = config.getBoolean("leaves-damage-axe", true);
+        leavesDamageAxe = config.getBoolean("leaves-damage-axe", false);
 
-        config.setComment("single-damage-axe", "Only remove one damage from the axe, regardless of the amount of logs removed.");
+        config.setComment("single-damage-axe", "Only remove one damage from the axe, regardless of the amount of blocks removed.");
         singleDamageAxe = config.getBoolean("single-damage-axe", false);
     }
 
-    private static class SaplingPlanter implements Runnable {
-        private final Block usedBlock;
-        private final TreeSpecies fspecies;
-
-        SaplingPlanter(Block usedBlock, TreeSpecies fspecies) {
-            this.usedBlock = usedBlock;
-            this.fspecies = fspecies;
-        }
-
+    private record SaplingPlanter(Block location, Material sapling) implements Runnable {
         @Override
         public void run() {
-            Material saplingMaterial;
-            switch (fspecies) {
-                case DARK_OAK:
-                    saplingMaterial = Material.DARK_OAK_SAPLING;
-                    break;
-                case GENERIC:
-                    saplingMaterial = Material.OAK_SAPLING;
-                    break;
-                case REDWOOD:
-                    saplingMaterial = Material.SPRUCE_SAPLING;
-                    break;
-                case BIRCH:
-                    saplingMaterial = Material.BIRCH_SAPLING;
-                    break;
-                case JUNGLE:
-                    saplingMaterial = Material.JUNGLE_SAPLING;
-                    break;
-                case ACACIA:
-                    saplingMaterial = Material.ACACIA_SAPLING;
-                    break;
-                default:
-                    saplingMaterial = Material.OAK_SAPLING;
-                    break;
-            }
-            usedBlock.setType(saplingMaterial);
+            this.location.setType(sapling);
         }
-
     }
 }

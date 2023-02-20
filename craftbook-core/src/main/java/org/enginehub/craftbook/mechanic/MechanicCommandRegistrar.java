@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 
 public class MechanicCommandRegistrar {
     private final CommandManagerService service;
@@ -67,7 +66,7 @@ public class MechanicCommandRegistrar {
             op.accept(manager, registration);
 
             builder.addPart(SubCommandPart.builder(TranslatableComponent.of("worldedit.argument.action"), TextComponent.of("Sub-command to run."))
-                .withCommands(manager.getAllCommands().collect(Collectors.toList()))
+                .withCommands(manager.getAllCommands().toList())
                 .required()
                 .build());
         });

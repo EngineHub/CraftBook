@@ -107,7 +107,7 @@ public class CommandUtils {
         cmdOutput.append(title).append("\n").append(repeatString("~", title.length())).append("\n");
 
         String prefix = ComponentRstRenderer.reduceToRst(TextConfig.commandPrefixValue());
-        List<Command> commands = addCommandNames.stream().map(CommandUtils.commands::get).collect(Collectors.toList());
+        List<Command> commands = addCommandNames.stream().map(CommandUtils.commands::get).toList();
 
         cmdOutput.append(cmdsToPerms(commands, prefix));
 
@@ -131,7 +131,7 @@ public class CommandUtils {
                     ((SubCommandPart) scp).getCommands()
                         .stream()
                         .sorted(Comparator.comparing(Command::getName))
-                        .collect(Collectors.toList()),
+                        .toList(),
                     prefix + c.getName() + " ")
                 );
         });
@@ -220,7 +220,7 @@ public class CommandUtils {
             entries.put("**Permissions**", perms);
         }
 
-        String usage = ComponentRstRenderer.reduceToRst(HelpGenerator.create(Stream.concat(parents, Stream.of(command)).collect(Collectors.toList())).getUsage());
+        String usage = ComponentRstRenderer.reduceToRst(HelpGenerator.create(Stream.concat(parents, Stream.of(command)).toList()).getUsage());
         entries.put("**Usage**", "``" + usage + "``");
 
         // Part descriptions

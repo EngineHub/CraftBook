@@ -204,7 +204,7 @@ public class PlatformCommandManager {
 
     public List<Substring> handleCommandSuggestion(Actor actor, String arguments) {
         try {
-            List<Substring> split = parseArgs(arguments).collect(Collectors.toList());
+            List<Substring> split = parseArgs(arguments).toList();
             List<String> argStrings = split.stream()
                 .map(Substring::getSubstring)
                 .collect(Collectors.toList());

@@ -73,7 +73,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 public class Chairs extends AbstractCraftBookMechanic {
@@ -496,7 +495,7 @@ public class Chairs extends AbstractCraftBookMechanic {
                 .stream()
                 .map(BlockType::getId)
                 .sorted(String::compareToIgnoreCase)
-                .collect(Collectors.toList())
+                .toList()
             ), true);
 
         config.setComment("face-correct-direction", "When the player sits, automatically face them the direction of the chair. (If possible)");

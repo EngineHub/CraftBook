@@ -33,7 +33,6 @@ import org.enginehub.piston.inject.Key;
 
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public final class RegistryConverter<V extends Keyed> implements ArgumentConverter<V> {
 
@@ -83,6 +82,6 @@ public final class RegistryConverter<V extends Keyed> implements ArgumentConvert
 
     @Override
     public List<String> getSuggestions(String input, InjectedValueAccess context) {
-        return SuggestionHelper.getRegistrySuggestions(registry, input).collect(Collectors.toList());
+        return SuggestionHelper.getRegistrySuggestions(registry, input).toList();
     }
 }

@@ -53,7 +53,6 @@ import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Door.
@@ -374,8 +373,8 @@ public class Door extends CuboidToggleMechanic {
         List<String> materials = new ArrayList<>();
         materials.add(BlockTypes.COBBLESTONE.getId());
         materials.add(BlockTypes.GLASS.getId());
-        materials.addAll(BlockCategories.PLANKS.getAll().stream().map(BlockType::getId).collect(Collectors.toList()));
-        materials.addAll(BlockCategories.SLABS.getAll().stream().map(BlockType::getId).collect(Collectors.toList()));
+        materials.addAll(BlockCategories.PLANKS.getAll().stream().map(BlockType::getId).toList());
+        materials.addAll(BlockCategories.SLABS.getAll().stream().map(BlockType::getId).toList());
         return materials;
     }
 

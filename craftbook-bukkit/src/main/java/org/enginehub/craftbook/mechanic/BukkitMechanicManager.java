@@ -31,7 +31,6 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("CommandItems", org.enginehub.craftbook.mechanics.items.CommandItems.class, MechanicCategory.CUSTOMISATION);
 //        registerMechanic("CustomCrafting", org.enginehub.craftbook.mechanics.crafting.CustomCrafting.class, MechanicCategory.CUSTOMISATION);
 //        registerMechanic("CustomDrops", org.enginehub.craftbook.mechanics.drops.CustomDrops.class, MechanicCategory.CUSTOMISATION);
-//        registerMechanic("TreeLopper", org.enginehub.craftbook.mechanics.TreeLopper.class, MechanicCategory.GENERAL);
 //        registerMechanic("CommandSigns", org.enginehub.craftbook.mechanics.CommandSigns.class, MechanicCategory.GENERAL);
 //        registerMechanic("HiddenSwitch", org.enginehub.craftbook.mechanics.HiddenSwitch.class, MechanicCategory.GENERAL);
 //        registerMechanic("ToggleArea", org.enginehub.craftbook.mechanics.area.Area.class, MechanicCategory.GENERAL);
@@ -525,6 +524,14 @@ public class BukkitMechanicManager extends MechanicManager {
             .className("org.enginehub.craftbook.mechanics.minecart.blocks.CartTeleporter")
             .buildAndRegister();
 
+        MechanicType.Builder
+            .create()
+            .id("tree_lopper")
+            .name("TreeLopper")
+            .description(TranslatableComponent.of("craftbook.treelopper.description"))
+            .category(MechanicCategory.GENERAL)
+            .className("org.enginehub.craftbook.mechanics.TreeLopper")
+            .buildAndRegister();
 
         // TODO CommandItems needs to load early (after variables).
     }
