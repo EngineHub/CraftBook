@@ -19,8 +19,11 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.block.BlockType;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.Slab;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -357,5 +360,12 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
         }
 
         return storedType;
+    }
+
+    public int getCostOfBlock(BlockData block) {
+        if (Tag.SLABS.isTagged(block.getMaterial()) && block instanceof Slab slab && slab.getType() == Slab.Type.DOUBLE) {
+            return 2;
+        }
+        return 1;
     }
 }
