@@ -73,7 +73,13 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
         // A few special cases
         LOG_TO_LEAVES.put(Material.CRIMSON_STEM, Material.NETHER_WART_BLOCK);
+        LOG_TO_SAPLING.put(Material.CRIMSON_STEM, Material.CRIMSON_FUNGUS);
+        LEAVES_TO_SAPLING.put(Material.NETHER_WART_BLOCK, Material.CRIMSON_FUNGUS);
+
         LOG_TO_LEAVES.put(Material.WARPED_STEM, Material.WARPED_WART_BLOCK);
+        LOG_TO_SAPLING.put(Material.WARPED_STEM, Material.WARPED_FUNGUS);
+        LEAVES_TO_SAPLING.put(Material.WARPED_WART_BLOCK, Material.WARPED_FUNGUS);
+
         LOG_TO_SAPLING.put(Material.MANGROVE_LOG, Material.MANGROVE_PROPAGULE);
         LEAVES_TO_SAPLING.put(Material.MANGROVE_LEAVES, Material.MANGROVE_PROPAGULE);
 
@@ -150,6 +156,13 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         };
     }
 
+    private static boolean canPlaceOn(Material saplingType, Material blockType) {
+        return switch (saplingType) {
+            case WARPED_FUNGUS, CRIMSON_FUNGUS -> blockType == Material.CRIMSON_NYLIUM || blockType == Material.WARPED_NYLIUM || Tag.DIRT.isTagged(blockType);
+            default -> Tag.DIRT.isTagged(blockType);
+        };
+    }
+
     private boolean canBreakBlock(Player player, Material originalBlock, Block toBreak) {
         Material toBreakType = toBreak.getType();
 
@@ -178,7 +191,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         Material belowBlockType = block.getRelative(0, -1, 0).getType();
 
         Material saplingType = null;
-        if (placeSaplings && planted < Integer.MAX_VALUE && Tag.DIRT.isTagged(belowBlockType)) {
+        if (placeSaplings && planted < Integer.MAX_VALUE) {
             if (LEAVES_TO_SAPLING.containsKey(currentType)) {
                 saplingType = LEAVES_TO_SAPLING.get(currentType);
             } else if (LOG_TO_SAPLING.containsKey(currentType)) {
@@ -186,7 +199,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
             }
         }
 
-        if (saplingType != null && planted < getMaximumSaplingCount(saplingType)) {
+        if (saplingType != null && planted < getMaximumSaplingCount(saplingType) && canPlaceOn(saplingType, belowBlockType)) {
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SaplingPlanter(block, saplingType), 2);
             planted++;
         }
