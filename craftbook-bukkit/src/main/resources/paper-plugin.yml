@@ -4,6 +4,11 @@ main: org.enginehub.craftbook.bukkit.CraftBookPlugin
 author: EngineHub
 api-version: 1.19
 defaultPerm: FALSE
+load-after:
+  - name: WorldEdit
+  - name: WorldGuard
+  - name: ProtocolLib
+  - name: Vault
 dependencies:
   - name: WorldEdit
     required: true

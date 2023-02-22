@@ -62,6 +62,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
     private final Map<Material, Material> LOG_TO_SAPLING = new HashMap<>();
     private final Map<Material, Material> LEAVES_TO_SAPLING = new HashMap<>();
+    private final Map<Material, Material> LOG_TO_LEAVES = new HashMap<>();
 
     @Override
     public void enable() throws MechanicInitializationException {
@@ -70,13 +71,29 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         LOG_TO_SAPLING.clear();
         LEAVES_TO_SAPLING.clear();
 
+        // A few special cases
+        LOG_TO_LEAVES.put(Material.CRIMSON_STEM, Material.NETHER_WART_BLOCK);
+        LOG_TO_LEAVES.put(Material.WARPED_STEM, Material.WARPED_WART_BLOCK);
+        LOG_TO_SAPLING.put(Material.MANGROVE_LOG, Material.MANGROVE_PROPAGULE);
+        LEAVES_TO_SAPLING.put(Material.MANGROVE_LEAVES, Material.MANGROVE_PROPAGULE);
+
         Tag.PLANKS.getValues().stream().map(Material::getKey).map(NamespacedKey::asString).forEach(key -> {
+            if (key.endsWith("crimson_planks") || key.endsWith("warped_planks")) {
+                return;
+            }
             Material sapling = Material.matchMaterial(key.replace("planks", "sapling"));
             Material leaves = Material.matchMaterial(key.replace("planks", "leaves"));
             Material log = Material.matchMaterial(key.replace("planks", "log"));
 
-            if (sapling == null || leaves == null || log == null) {
-                CraftBook.LOGGER.warn("Failed to find sapling, leaves, or log for " + key);
+            if (leaves == null || log == null) {
+                CraftBook.LOGGER.debug("Failed to find leaves, or log for " + key);
+                return;
+            }
+
+            LOG_TO_LEAVES.put(log, leaves);
+
+            if (sapling == null && !LOG_TO_SAPLING.containsKey(log)) {
+                CraftBook.LOGGER.debug("Failed to find sapling for " + key);
                 return;
             }
 
@@ -136,8 +153,8 @@ public class TreeLopper extends AbstractCraftBookMechanic {
     private boolean canBreakBlock(Player player, Material originalBlock, Block toBreak) {
         Material toBreakType = toBreak.getType();
 
-        if (breakLeaves && LOG_TO_SAPLING.containsKey(originalBlock) && LEAVES_TO_SAPLING.containsKey(toBreakType)) {
-           if (LOG_TO_SAPLING.get(originalBlock) != LEAVES_TO_SAPLING.get(toBreakType)) {
+        if (breakLeaves && LOG_TO_LEAVES.containsKey(originalBlock)) {
+           if (LOG_TO_LEAVES.get(originalBlock) != toBreakType) {
                return false;
            }
         } else if (originalBlock != toBreakType) {
