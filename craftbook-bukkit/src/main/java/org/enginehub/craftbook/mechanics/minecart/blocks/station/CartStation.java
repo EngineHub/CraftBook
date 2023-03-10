@@ -18,6 +18,7 @@ package org.enginehub.craftbook.mechanics.minecart.blocks.station;
 import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import io.papermc.paper.entity.TeleportFlag;
 import org.bukkit.Location;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
@@ -128,7 +129,7 @@ public class CartStation extends CartBlockMechanism {
 
                 // recenter it
                 Location l = blocks.rail().getLocation().add(0.5, 0.5, 0.5);
-                cart.teleport(l, true);
+                cart.teleport(l, TeleportFlag.EntityState.RETAIN_VEHICLE, TeleportFlag.EntityState.RETAIN_PASSENGERS);
             }
         }
     }

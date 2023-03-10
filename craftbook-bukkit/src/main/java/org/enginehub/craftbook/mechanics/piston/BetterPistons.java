@@ -28,7 +28,7 @@ import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import io.papermc.paper.entity.RelativeTeleportFlag;
+import io.papermc.paper.entity.TeleportFlag;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -361,9 +361,14 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                             for (Entity ent : trigger.getWorld().getNearbyEntities(fromBounds)) {
                                 Location dest = ent.getLocation().subtract(facing.getDirection());
                                 if (ent instanceof Player player) {
-                                    player.teleport(dest, PlayerTeleportEvent.TeleportCause.PLUGIN, true, true, RelativeTeleportFlag.values());
+                                    player.teleport(dest, PlayerTeleportEvent.TeleportCause.PLUGIN,
+                                        TeleportFlag.Relative.X, TeleportFlag.Relative.Y, TeleportFlag.Relative.Z,
+                                        TeleportFlag.Relative.PITCH, TeleportFlag.Relative.YAW,
+                                        TeleportFlag.EntityState.RETAIN_PASSENGERS, TeleportFlag.EntityState.RETAIN_VEHICLE,
+                                        TeleportFlag.EntityState.RETAIN_OPEN_INVENTORY
+                                    );
                                 } else {
-                                    ent.teleport(dest, true, true);
+                                    ent.teleport(dest, TeleportFlag.EntityState.RETAIN_PASSENGERS, TeleportFlag.EntityState.RETAIN_VEHICLE);
                                 }
                             }
 
@@ -415,9 +420,14 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                             for (Entity ent : trigger.getWorld().getNearbyEntities(fromBounds)) {
                                 Location dest = ent.getLocation().add(piston.getFacing().getDirection());
                                 if (ent instanceof Player player) {
-                                    player.teleport(dest, PlayerTeleportEvent.TeleportCause.PLUGIN, true, true, RelativeTeleportFlag.values());
+                                    player.teleport(dest, PlayerTeleportEvent.TeleportCause.PLUGIN,
+                                        TeleportFlag.Relative.X, TeleportFlag.Relative.Y, TeleportFlag.Relative.Z,
+                                        TeleportFlag.Relative.PITCH, TeleportFlag.Relative.YAW,
+                                        TeleportFlag.EntityState.RETAIN_PASSENGERS, TeleportFlag.EntityState.RETAIN_VEHICLE,
+                                        TeleportFlag.EntityState.RETAIN_OPEN_INVENTORY
+                                    );
                                 } else {
-                                    ent.teleport(dest, true, true);
+                                    ent.teleport(dest, TeleportFlag.EntityState.RETAIN_PASSENGERS, TeleportFlag.EntityState.RETAIN_VEHICLE);
                                 }
                             }
                             if (copyData(from, to)) {

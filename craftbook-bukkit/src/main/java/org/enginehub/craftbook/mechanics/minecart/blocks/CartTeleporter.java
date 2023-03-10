@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import io.papermc.paper.entity.TeleportFlag;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
@@ -65,7 +66,7 @@ public class CartTeleporter extends CartBlockMechanism {
 
         Location loc = new Location(world, x, y, z, event.getMinecart().getLocation().getYaw(), event.getMinecart().getLocation().getPitch()).toCenterLocation();
         loc.getChunk().load(true);
-        event.getMinecart().teleport(loc, true);
+        event.getMinecart().teleport(loc, TeleportFlag.EntityState.RETAIN_VEHICLE, TeleportFlag.EntityState.RETAIN_PASSENGERS);
     }
 
     @Override
