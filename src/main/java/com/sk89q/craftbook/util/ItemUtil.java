@@ -544,6 +544,7 @@ public final class ItemUtil {
             case DEEPSLATE_DIAMOND_ORE:
                 return new ItemStack(Material.DIAMOND);
             case SAND:
+            case RED_SAND:
                 return new ItemStack(Material.GLASS);
             case CLAY_BALL:
                 return new ItemStack(Material.BRICK);
@@ -555,6 +556,8 @@ public final class ItemUtil {
                 return new ItemStack(Material.QUARTZ);
             case STONE_BRICKS:
                 return new ItemStack(Material.CRACKED_STONE_BRICKS);
+            case NETHER_BRICKS:
+                return new ItemStack(Material.CRACKED_NETHER_BRICKS);
             case WET_SPONGE:
                 return new ItemStack(Material.SPONGE);
             case WHITE_TERRACOTTA:
