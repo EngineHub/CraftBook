@@ -16,7 +16,9 @@
 package org.enginehub.craftbook.util;
 
 import org.bukkit.Bukkit;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
+import org.enginehub.craftbook.CraftBook;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -47,6 +49,10 @@ public final class EventUtil {
      * @return true if the event should be processed by this manager; false otherwise.
      */
     public static boolean passesFilter(Event event) {
+        if (CraftBook.getInstance().getPlatform().getConfiguration().obeyPluginProtections && event instanceof Cancellable cancellable && cancellable.isCancelled()) {
+            return false;
+        }
+
         return !EventUtil.shouldIgnoreEvent(event);
     }
 }

@@ -22,6 +22,7 @@ import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 public class VariableConfiguration {
 
@@ -48,7 +49,7 @@ public class VariableConfiguration {
                 String value = String.valueOf(config.getProperty("variables." + namespace + "." + variable));
 
                 try {
-                    VariableKey key = VariableKey.of(namespace, variable, null);
+                    VariableKey key = VariableKey.of(namespace, variable, (UUID) null);
 
                     if (VariableManager.DIRECT_VARIABLE_PATTERN.matcher(key.toString()).matches()
                         && VariableManager.ALLOWED_VALUE_PATTERN.matcher(value).find()) {
