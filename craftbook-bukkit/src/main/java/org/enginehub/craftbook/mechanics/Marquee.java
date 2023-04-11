@@ -17,6 +17,8 @@ package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import org.bukkit.Bukkit;
+import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -33,8 +35,8 @@ import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.events.SignClickEvent;
+import org.enginehub.craftbook.util.persistence.OwnedSignHelper;
 
-// TODO Use a global data injection system for player UUID
 public class Marquee extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -69,7 +71,8 @@ public class Marquee extends AbstractCraftBookMechanic {
 
         VariableKey variableKey;
         try {
-            variableKey = VariableKey.of(sign.getLine(3), sign.getLine(2), null);
+            // Pass in the potentially stored owner, and use as default if enabled and available
+            variableKey = VariableKey.of(sign.getLine(3), sign.getLine(2), OwnedSignHelper.getOwner(sign.getSign()));
         } catch (VariableException e) {
             lplayer.printError(e.getRichMessage());
             event.setCancelled(true);
@@ -111,10 +114,10 @@ public class Marquee extends AbstractCraftBookMechanic {
             return;
         }
 
-        // Don't pass the actor as we want it to default to global.
         VariableKey variableKey;
         try {
-            variableKey = VariableKey.of(event.getLine(3), event.getLine(2), null);
+            // Pass in the actor, and use the global "default to global" option to handle global defaultness
+            variableKey = VariableKey.of(event.getLine(3), event.getLine(2), lplayer);
         } catch (VariableException e) {
             lplayer.printError(e.getRichMessage());
             SignUtil.cancelSignChange(event);
@@ -142,6 +145,20 @@ public class Marquee extends AbstractCraftBookMechanic {
 
         event.setLine(1, "[Marquee]");
         lplayer.printInfo(TranslatableComponent.of("craftbook.marquee.create"));
-    }
 
+        // Set the owner of the sign once the sign has been created.
+        Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), () -> {
+            if (!SignUtil.isSign(event.getBlock())) {
+                return;
+            }
+
+            // Ensure this is still a marquee sign and wasn't cancelled.
+            Sign sign = (Sign) event.getBlock().getState(false);
+            if (!sign.getLine(1).equals("[Marquee]")) {
+                return;
+            }
+
+            OwnedSignHelper.setOwner(sign, lplayer.getUniqueId());
+        });
+    }
 }

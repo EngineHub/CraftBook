@@ -179,6 +179,22 @@ public class VariableKey {
      * @return The VariableKey, if valid
      */
     public static VariableKey of(@Nullable String namespace, String key, @Nullable Actor actor) throws VariableException {
+        return of(namespace, key, actor == null ? null : actor.getUniqueId());
+    }
+
+    /**
+     * Create a new VariableKey from a namespace and key.
+     *
+     * <p>
+     * If an actor UUID is provided, the user's namespace <em>may</em> be used.
+     * </p>
+     *
+     * @param namespace The namespace
+     * @param key The key
+     * @param actorUuid The owner UUID, if applicable
+     * @return The VariableKey, if valid
+     */
+    public static VariableKey of(@Nullable String namespace, String key, @Nullable UUID actorUuid) throws VariableException {
         boolean explicit = namespace != null;
 
         if (!ALLOWED_KEY_PATTERN.matcher(key).matches()) {
@@ -186,10 +202,10 @@ public class VariableKey {
         }
 
         if (namespace == null || namespace.trim().isEmpty()) {
-            if (VariableManager.instance.defaultToGlobal || actor == null) {
+            if (VariableManager.instance.defaultToGlobal || actorUuid == null) {
                 namespace = VariableManager.GLOBAL_NAMESPACE;
             } else {
-                namespace = actor.getUniqueId().toString();
+                namespace = actorUuid.toString();
             }
         } else {
             if (namespace.contains("-")) {
