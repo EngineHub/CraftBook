@@ -37,7 +37,7 @@ public final class BlockUtil {
     }
 
     public static boolean isBlockReplacable(Material id) {
-        if (id.isAir() || Tag.REPLACEABLE_PLANTS.isTagged(id)) {
+        if (id.isAir() || Tag.REPLACEABLE.isTagged(id)) {
             return true;
         }
 
