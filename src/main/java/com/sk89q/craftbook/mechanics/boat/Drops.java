@@ -21,7 +21,7 @@ public class Drops extends AbstractCraftBookMechanic {
 
         if (event.getAttacker() == null) {
             Boat boat = (Boat) event.getVehicle();
-            boat.getLocation().getWorld().dropItemNaturally(boat.getLocation(), new ItemStack(ItemUtil.getBoatFromTree(boat.getWoodType())));
+            boat.getLocation().getWorld().dropItemNaturally(boat.getLocation(), new ItemStack(boat.getBoatType().getMaterial()));
             boat.remove();
             event.setCancelled(true);
         }
