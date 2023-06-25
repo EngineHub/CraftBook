@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.util;
 
+import com.github.Anon8281.universalScheduler.UniversalRunnable;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
@@ -14,8 +15,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import java.util.HashSet;
 
 /**
@@ -346,7 +345,7 @@ public final class LocationUtil {
 
     /**
      * Adds the player to the vehicle. Execution is delayed
-     * by six ticks through a {@link BukkitRunnable} because
+     * by six ticks through a {@link UniversalRunnable} because
      * it doesn't work otherwise.
      *
      * @param vehicle   The vehicle that will set the player as a passenger.
@@ -365,11 +364,11 @@ public final class LocationUtil {
 
         // vehicle.teleport() seems to have a delay. Calling vehicle.setPassenger()
         // without the delayed runnable will not set the passenger.
-        new BukkitRunnable(){
+        new UniversalRunnable(){
             @Override
             public void run () {
                 vehicle.addPassenger(bukkitPlayer);
             }
-        }.runTaskLater(CraftBookPlugin.inst(), runnableDelayInTicks);
+        }.runTaskLater(CraftBookPlugin.inst(),runnableDelayInTicks);
     }
 }

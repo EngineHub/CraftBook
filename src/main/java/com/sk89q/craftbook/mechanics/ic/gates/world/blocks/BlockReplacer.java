@@ -80,12 +80,12 @@ public class BlockReplacer extends AbstractIC {
                     if(!on) {
                         b.setBlockData(BukkitAdapter.adapt(offBlock), physics);
                     }
-                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> replaceBlocks(on, b, traversedBlocks), delay);
+                    CraftBookPlugin.getScheduler().runTaskLater(() -> replaceBlocks(on, b, traversedBlocks), delay);
                 } else if (offBlock.equalsFuzzy(bState)) {
                     if(on) {
                         b.setBlockData(BukkitAdapter.adapt(onBlock), physics);
                     }
-                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> replaceBlocks(on, b, traversedBlocks), delay);
+                    CraftBookPlugin.getScheduler().runTaskLater(() -> replaceBlocks(on, b, traversedBlocks), delay);
                 }
             }
         }

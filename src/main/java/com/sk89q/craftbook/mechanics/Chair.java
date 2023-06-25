@@ -96,7 +96,7 @@ public class Chair extends AbstractCraftBookMechanic {
         // Attach the player to said arrow.
         final Entity far = ar;
         if(ar.isEmpty() && isNew) {
-            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), () -> {
+            CraftBookPlugin.getScheduler().runTask(CraftBookPlugin.inst(), () -> {
                 if (chairLoc != null)
                     player.teleport(chairLoc);
                 far.addPassenger(player);
@@ -125,7 +125,7 @@ public class Chair extends AbstractCraftBookMechanic {
             ent.eject();
             player.eject();
             ent.remove();
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
+            CraftBookPlugin.getScheduler().runTaskLater(() -> {
                 player.teleport(chairData.playerExitPoint);
                 player.setSneaking(false);
             }, 5L);
@@ -290,7 +290,7 @@ public class Chair extends AbstractCraftBookMechanic {
                 if (p == null  || p.isDead() || !p.isValid()) {
                     ChairData data = chairs.remove(pl.getKey());
                     if (data != null && data.chairEntity != null) {
-                        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
+                        CraftBookPlugin.getScheduler().runTaskLater(() -> {
                             data.chairEntity.eject();
                             data.chairEntity.remove();
                         }, 5);
@@ -328,7 +328,7 @@ public class Chair extends AbstractCraftBookMechanic {
 
         chairs = new ConcurrentHashMap<>();
 
-        Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new ChairChecker(), 20L, 20L);
+        CraftBookPlugin.getScheduler().runTaskTimer(new ChairChecker(), 20L, 20L);
 
         try {
             Class.forName("com.comphenix.protocol.events.PacketListener");

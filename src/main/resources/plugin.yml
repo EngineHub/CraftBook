@@ -4,4 +4,5 @@ version: "${internalVersion}"
 dev-url: https://dev.bukkit.org/projects/craftbook
 softdepend: [WorldEdit, WorldGuard, ProtocolLib, Vault]
 api-version: 1.18
+folia-supported: true
 commands:

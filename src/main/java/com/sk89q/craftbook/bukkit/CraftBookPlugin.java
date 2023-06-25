@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.bukkit;
 
+import com.github.Anon8281.universalScheduler.UniversalScheduler;
+import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
 import com.google.common.collect.Sets;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.craftbook.CraftBookMechanic;
@@ -9,35 +11,7 @@ import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.core.LanguageManager;
 import com.sk89q.craftbook.core.st.MechanicClock;
 import com.sk89q.craftbook.core.st.SelfTriggeringManager;
-import com.sk89q.craftbook.mechanics.AIMechanic;
-import com.sk89q.craftbook.mechanics.Ammeter;
-import com.sk89q.craftbook.mechanics.BetterLeads;
-import com.sk89q.craftbook.mechanics.BetterPhysics;
-import com.sk89q.craftbook.mechanics.BetterPistons;
-import com.sk89q.craftbook.mechanics.BetterPlants;
-import com.sk89q.craftbook.mechanics.Bookcase;
-import com.sk89q.craftbook.mechanics.BounceBlocks;
-import com.sk89q.craftbook.mechanics.Chair;
-import com.sk89q.craftbook.mechanics.ChunkAnchor;
-import com.sk89q.craftbook.mechanics.CommandSigns;
-import com.sk89q.craftbook.mechanics.CookingPot;
-import com.sk89q.craftbook.mechanics.Elevator;
-import com.sk89q.craftbook.mechanics.GlowStone;
-import com.sk89q.craftbook.mechanics.HiddenSwitch;
-import com.sk89q.craftbook.mechanics.JackOLantern;
-import com.sk89q.craftbook.mechanics.LightStone;
-import com.sk89q.craftbook.mechanics.LightSwitch;
-import com.sk89q.craftbook.mechanics.MapChanger;
-import com.sk89q.craftbook.mechanics.Marquee;
-import com.sk89q.craftbook.mechanics.Netherrack;
-import com.sk89q.craftbook.mechanics.PaintingSwitch;
-import com.sk89q.craftbook.mechanics.Payment;
-import com.sk89q.craftbook.mechanics.RedstoneJukebox;
-import com.sk89q.craftbook.mechanics.Snow;
-import com.sk89q.craftbook.mechanics.Sponge;
-import com.sk89q.craftbook.mechanics.Teleporter;
-import com.sk89q.craftbook.mechanics.TreeLopper;
-import com.sk89q.craftbook.mechanics.XPStorer;
+import com.sk89q.craftbook.mechanics.*;
 import com.sk89q.craftbook.mechanics.area.Area;
 import com.sk89q.craftbook.mechanics.area.simple.Bridge;
 import com.sk89q.craftbook.mechanics.area.simple.Door;
@@ -56,54 +30,20 @@ import com.sk89q.craftbook.mechanics.headdrops.HeadDrops;
 import com.sk89q.craftbook.mechanics.ic.ICMechanic;
 import com.sk89q.craftbook.mechanics.items.CommandItemDefinition;
 import com.sk89q.craftbook.mechanics.items.CommandItems;
-import com.sk89q.craftbook.mechanics.minecart.CollisionEntry;
-import com.sk89q.craftbook.mechanics.minecart.ConstantSpeed;
-import com.sk89q.craftbook.mechanics.minecart.EmptyDecay;
-import com.sk89q.craftbook.mechanics.minecart.EmptySlowdown;
-import com.sk89q.craftbook.mechanics.minecart.FallModifier;
-import com.sk89q.craftbook.mechanics.minecart.ItemPickup;
-import com.sk89q.craftbook.mechanics.minecart.MobBlocker;
-import com.sk89q.craftbook.mechanics.minecart.MoreRails;
-import com.sk89q.craftbook.mechanics.minecart.NoCollide;
-import com.sk89q.craftbook.mechanics.minecart.PlaceAnywhere;
-import com.sk89q.craftbook.mechanics.minecart.RailPlacer;
-import com.sk89q.craftbook.mechanics.minecart.TemporaryCart;
-import com.sk89q.craftbook.mechanics.minecart.VisionSteering;
-import com.sk89q.craftbook.mechanics.minecart.blocks.CartBlockMechanism;
-import com.sk89q.craftbook.mechanics.minecart.blocks.CartBooster;
-import com.sk89q.craftbook.mechanics.minecart.blocks.CartDeposit;
-import com.sk89q.craftbook.mechanics.minecart.blocks.CartDispenser;
-import com.sk89q.craftbook.mechanics.minecart.blocks.CartEjector;
-import com.sk89q.craftbook.mechanics.minecart.blocks.CartLift;
-import com.sk89q.craftbook.mechanics.minecart.blocks.CartMaxSpeed;
-import com.sk89q.craftbook.mechanics.minecart.blocks.CartMessenger;
-import com.sk89q.craftbook.mechanics.minecart.blocks.CartReverser;
-import com.sk89q.craftbook.mechanics.minecart.blocks.CartSorter;
-import com.sk89q.craftbook.mechanics.minecart.blocks.CartStation;
-import com.sk89q.craftbook.mechanics.minecart.blocks.CartTeleporter;
+import com.sk89q.craftbook.mechanics.minecart.*;
+import com.sk89q.craftbook.mechanics.minecart.blocks.*;
 import com.sk89q.craftbook.mechanics.pipe.Pipes;
 import com.sk89q.craftbook.mechanics.signcopier.SignCopier;
 import com.sk89q.craftbook.mechanics.variables.VariableManager;
-import com.sk89q.craftbook.util.ArrayUtil;
-import com.sk89q.craftbook.util.CompatabilityUtil;
-import com.sk89q.craftbook.util.ItemSyntax;
-import com.sk89q.craftbook.util.RegexUtil;
-import com.sk89q.craftbook.util.UUIDMappings;
+import com.sk89q.craftbook.util.*;
 import com.sk89q.craftbook.util.compat.companion.CompanionPlugins;
 import com.sk89q.craftbook.util.compat.nms.NMSAdapter;
 import com.sk89q.craftbook.util.persistent.PersistentStorage;
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissionsException;
-import com.sk89q.minecraft.util.commands.CommandUsageException;
-import com.sk89q.minecraft.util.commands.CommandsManager;
-import com.sk89q.minecraft.util.commands.MissingNestedCommandException;
-import com.sk89q.minecraft.util.commands.SimpleInjector;
-import com.sk89q.minecraft.util.commands.WrappedCommandException;
+import com.sk89q.minecraft.util.commands.*;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.wepif.PermissionsResolverManager;
 import io.papermc.lib.PaperLib;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Server;
@@ -119,24 +59,11 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
+import javax.annotation.Nullable;
+import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 import java.util.jar.JarFile;
@@ -144,7 +71,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
-import javax.annotation.Nullable;
 
 public class CraftBookPlugin extends JavaPlugin {
 
@@ -214,6 +140,11 @@ public class CraftBookPlugin extends JavaPlugin {
      * The NMS Adapter.
      */
     private NMSAdapter nmsAdapter;
+
+    /**
+     * Universal scheduler
+     */
+    private static TaskScheduler SCHEDULER;
 
     public static final Map<String, Class<? extends CraftBookMechanic>> availableMechanics;
 
@@ -347,7 +278,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     /**
      * Retrieve the UUID Mappings system of CraftBook.
-     * 
+     *
      * @return The UUID Mappings System.
      */
     public UUIDMappings getUUIDMappings() {
@@ -384,6 +315,7 @@ public class CraftBookPlugin extends JavaPlugin {
     public void onEnable() {
 
         ItemSyntax.plugin = this;
+        SCHEDULER = UniversalScheduler.getScheduler(this);
 
         nmsAdapter = new NMSAdapter();
 
@@ -497,8 +429,7 @@ public class CraftBookPlugin extends JavaPlugin {
             }
 
         if(!foundAMech) {
-            Bukkit.getScheduler().runTaskTimer(this,
-                    () -> getLogger().warning(ChatColor.RED + "Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!"), 20L, 20*60*5);
+            CraftBookPlugin.getScheduler().runTaskTimer(() -> getLogger().warning(ChatColor.RED + "Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!"), 20L, 20*60*5);
         }
 
         PaperLib.suggestPaper(this);
@@ -524,7 +455,7 @@ public class CraftBookPlugin extends JavaPlugin {
         languageManager = new LanguageManager();
         languageManager.init();
 
-        getServer().getScheduler().runTask(this, CompatabilityUtil::init);
+        getScheduler().runTask(CompatabilityUtil::init);
 
         mechanics = new ArrayList<>();
 
@@ -598,7 +529,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     /**
      * Enables the mechanic with the specified name.
-     * 
+     *
      * @param mechanic The name of the mechanic.
      * @return If the mechanic could be found and enabled.
      */
@@ -649,7 +580,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     /**
      * Disables the mechanic with the specified name.
-     * 
+     *
      * @param mechanic The name of the mechanic.
      * @return If the mechanic could be found and disabled.
      */
@@ -685,7 +616,7 @@ public class CraftBookPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(managerAdapter, inst());
 
         if(config.easterEggs) {
-            Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+            CraftBookPlugin.getScheduler().runTaskLater(new Runnable() {
 
                 @Override
                 public void run () {
@@ -852,7 +783,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         // Set up the clock for self-triggered ICs.
 
-        getServer().getScheduler().runTaskTimer(this, mechanicClock, 0, config.stThinkRate);
+       getScheduler().runTaskTimer(mechanicClock, 0, config.stThinkRate);
 
         getServer().getPluginManager().registerEvents(selfTriggerManager, this);
     }
@@ -1075,7 +1006,7 @@ public class CraftBookPlugin extends JavaPlugin {
             for(CraftBookMechanic mech : mechanics)
                 mech.disable();
         mechanics = null;
-        getServer().getScheduler().cancelTasks(inst());
+       getScheduler().cancelTasks(inst());
         HandlerList.unregisterAll(inst());
 
         if(config.debugLogToFile) {
@@ -1240,7 +1171,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     /**
      * Parses more advanced portions of the Item Syntax.
-     * 
+     *
      * @param item The item to parse
      * @return The parsed string. (Can be the same, and should be if nothing found)
      */
@@ -1258,5 +1189,9 @@ public class CraftBookPlugin extends JavaPlugin {
 
     public static String getWikiDomain() {
         return "https://craftbook.enginehub.org/en/3.x";
+    }
+
+    public static TaskScheduler getScheduler() {
+        return SCHEDULER;
     }
 }

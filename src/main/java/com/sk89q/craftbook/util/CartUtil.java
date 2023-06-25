@@ -64,7 +64,7 @@ public final class CartUtil {
             for (Entity passenger : passengers) {
                 passenger.teleport(destination);
             }
-            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), () -> {
+            CraftBookPlugin.getScheduler().runTask(CraftBookPlugin.inst(), () -> {
                 for (Entity passenger : passengers) {
                     toCart.addPassenger(passenger);
                     passenger.setVelocity(cart.getVelocity());

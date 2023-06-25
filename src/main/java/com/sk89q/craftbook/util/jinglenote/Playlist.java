@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.util.jinglenote;
 
+import com.github.Anon8281.universalScheduler.scheduling.tasks.MyScheduledTask;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.mechanics.ic.ICManager;
@@ -7,21 +8,15 @@ import com.sk89q.craftbook.util.SearchArea;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiUnavailableException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiUnavailableException;
 
 public class Playlist {
 
@@ -29,7 +24,7 @@ public class Playlist {
 
     private List<String> lines = new ArrayList<>();
 
-    private BukkitTask task;
+    private MyScheduledTask task;
 
     protected PlaylistInterpreter show = new PlaylistInterpreter();
 
@@ -79,7 +74,7 @@ public class Playlist {
         if (task != null)
             task.cancel();
         show = new PlaylistInterpreter();
-        task = Bukkit.getScheduler().runTaskAsynchronously(CraftBookPlugin.inst(), show);
+        task = CraftBookPlugin.getScheduler().runTaskAsynchronously(CraftBookPlugin.inst(), show);
     }
 
     public void stopPlaylist() {
@@ -217,7 +212,7 @@ public class Playlist {
                         show.lastPlayers = lastPlayers;
                         show.sequencer = sequencer;
                         show.jNote = jNote;
-                        task = Bukkit.getScheduler().runTaskLaterAsynchronously(CraftBookPlugin.inst(), show, Long.parseLong(StringUtils.replace(line, "wait ", "")));
+                        task = CraftBookPlugin.getScheduler().runTaskLaterAsynchronously(CraftBookPlugin.inst(), show, Long.parseLong(StringUtils.replace(line, "wait ", "")));
                     }
                     return;
                 } else if (line.startsWith("midi ")) {

@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.mechanics;
 
+import com.github.Anon8281.universalScheduler.UniversalRunnable;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
@@ -50,7 +51,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
@@ -383,7 +383,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                 bukkitPlayer.teleport(lastLocation);
             }
 
-            new BukkitRunnable(){
+            new UniversalRunnable(){
                 @Override
                 public void run () {
 

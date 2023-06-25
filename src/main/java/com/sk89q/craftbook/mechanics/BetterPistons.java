@@ -304,7 +304,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             for (int p = 0; p < amount; p++) {
                 final int fp = p;
 
-                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
+                CraftBookPlugin.getScheduler().runTaskLater(() -> {
                     for (int x = 1; x <= fblock + 2; x++) {
                         int i = x;
                         if (x == 1 && !InventoryUtil.doesBlockHaveInventory(trigger.getRelative(piston.getFacing(), i)) && fp == 0) {
@@ -343,7 +343,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             final int fblock = block;
 
             for (int p = 0; p < amount; p++) {
-                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
+                CraftBookPlugin.getScheduler().runTaskLater(() -> {
                     for (int x = fblock + 2; x >= 1; x--) {
                         Block offset = trigger.getRelative(piston.getFacing(), x);
                         Block next = trigger.getRelative(piston.getFacing(), x + 1);
