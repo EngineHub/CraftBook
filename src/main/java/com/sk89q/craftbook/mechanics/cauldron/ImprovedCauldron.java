@@ -35,6 +35,8 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Cauldron;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.io.File;
@@ -69,14 +71,14 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if (!EventUtil.passesFilter(event)) return;
+        if(!EventUtil.passesFilter(event)) return;
 
         if (!event.getLine(1).equalsIgnoreCase("[Cauldron]")) return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (!player.hasPermission("craftbook.mech.cauldron")) {
-            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
             SignUtil.cancelSign(event);
             return;
@@ -91,14 +93,14 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
             return false;
         }
         if (block.getType() == Material.WATER_CAULDRON && (block.getRelative(BlockFace.DOWN).getType() == Material.FIRE || block.getRelative(BlockFace.DOWN).getType() == Material.LAVA)) {
-            if (requireSign) {
+            if(requireSign) {
                 BlockFace[] faces = new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST};
                 boolean found = false;
-                for (BlockFace face : faces) {
+                for(BlockFace face : faces) {
                     Block sign = block.getRelative(face);
-                    if (SignUtil.isWallSign(sign)) {
+                    if(SignUtil.isWallSign(sign)) {
                         ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
-                        if (s.getLine(1).equals("[Cauldron]")) {
+                        if(s.getLine(1).equals("[Cauldron]")) {
                             found = true;
                             break;
                         }
@@ -122,25 +124,25 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) return;
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) return;
 
-        if (!EventUtil.passesFilter(event)) return;
+        if(!EventUtil.passesFilter(event)) return;
 
-        if (!isCauldron(event.getClickedBlock())) return;
+        if(!isCauldron(event.getClickedBlock())) return;
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if (performCauldron(event.getClickedBlock(), player))
+        if(performCauldron(event.getClickedBlock(), player))
             event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onRedstoneUpdate(SourcedBlockRedstoneEvent event) {
 
-        if (!allowRedstone) return;
+        if(!allowRedstone) return;
 
-        if (!EventUtil.passesFilter(event)) return;
+        if(!EventUtil.passesFilter(event)) return;
 
-        if (!isCauldron(event.getBlock())) return;
+        if(!isCauldron(event.getBlock())) return;
 
         performCauldron(event.getBlock(), null);
     }
@@ -148,11 +150,10 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onItemDrop(final PlayerDropItemEvent event) {
 
-        if (!itemTracking) return;
+        if(!itemTracking) return;
 
-        if (!event.getPlayer().hasPermission("craftbook.mech.cauldron.use"))
-            return; //If they can't use cauldrons, don't track it.
-        if (!EventUtil.passesFilter(event)) return;
+        if(!event.getPlayer().hasPermission("craftbook.mech.cauldron.use")) return; //If they can't use cauldrons, don't track it.
+        if(!EventUtil.passesFilter(event)) return;
 
         new ItemTracker(event.getItemDrop()).runTaskTimer(CraftBookPlugin.inst(), 1L, 1L);
     }
@@ -170,9 +171,9 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
         }
 
         @Override
-        public void run() {
+        public void run () {
 
-            if (item == null) {
+            if(item == null) {
                 cancel();
                 return;
             }
@@ -185,9 +186,9 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
     public boolean trackCauldronItem(Item item) {
 
         Block cauldron;
-        if (isCauldron(item.getLocation().getBlock()))
+        if(isCauldron(item.getLocation().getBlock()))
             cauldron = item.getLocation().getBlock();
-        else if (isCauldron(item.getLocation().getBlock().getRelative(BlockFace.DOWN)))
+        else if(isCauldron(item.getLocation().getBlock().getRelative(BlockFace.DOWN)))
             cauldron = item.getLocation().getBlock().getRelative(BlockFace.DOWN);
         else
             return false;
@@ -209,7 +210,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
         }
 
         @Override
-        public void run() {
+        public void run () {
 
             if (item == null) {
                 cancel();
@@ -245,11 +246,10 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
 
             if (!useSpoons || player == null && allowRedstone) {
                 cook(block, recipe, items);
-                if (player != null)
-                    player.print("You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor.YELLOW + " recipe.");
+                if(player != null) player.print("You have cooked the " + ChatColor.AQUA + recipe.getName() + ChatColor.YELLOW + " recipe.");
                 block.getWorld().createExplosion(block.getRelative(BlockFace.UP).getLocation(), 0.0F, false);
                 return true;
-            } else if (player != null) { // Spoons
+            } else if(player != null) { // Spoons
                 if (isItemSpoon(BukkitAdapter.adapt(player.getItemInHand(HandSide.MAIN_HAND).getType()))) {
                     double chance = getSpoonChance(((BukkitCraftBookPlayer) player).getPlayer().getItemInHand(), recipe.getChance());
                     double ran = CraftBookPlugin.inst().getRandom().nextDouble();
@@ -265,7 +265,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
                 }
             }
         } catch (UnknownRecipeException e) {
-            if (player != null) player.printError(e.getMessage());
+            if(player != null) player.printError(e.getMessage());
         }
 
         return false;
@@ -284,7 +284,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
         double toGo = temp = 1 - temp;
         double tenth = toGo / 10;
         int multiplier = 0;
-        switch (id) {
+        switch(id) {
             case WOODEN_SHOVEL:
                 multiplier = 1;
                 break;
@@ -359,7 +359,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
     private boolean requireSign;
 
     @Override
-    public void loadConfiguration(YAMLProcessor config, String path) {
+    public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "spoons", "Require spoons to cook cauldron recipes.");
         useSpoons = config.getBoolean(path + "spoons", true);

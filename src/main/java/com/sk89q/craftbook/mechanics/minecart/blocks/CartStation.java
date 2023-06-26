@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.mechanics.minecart.blocks;
 
+import static com.sk89q.craftbook.util.CartUtil.stop;
+
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
@@ -19,8 +21,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-
-import static com.sk89q.craftbook.util.CartUtil.stop;
 
 public class CartStation extends CartBlockMechanism {
 

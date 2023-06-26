@@ -1,21 +1,40 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.miscellaneous;
 
-import com.github.Anon8281.universalScheduler.scheduling.tasks.MyScheduledTask;
-import com.sk89q.craftbook.ChangedSign;
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
-import com.sk89q.craftbook.mechanics.ic.*;
-import com.sk89q.craftbook.util.RegexUtil;
-import org.bukkit.*;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
-import org.bukkit.inventory.meta.FireworkMeta;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.github.Anon8281.universalScheduler.scheduling.tasks.MyScheduledTask;
+import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
+import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.scheduler.BukkitTask;
+
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
+import com.sk89q.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
+import com.sk89q.craftbook.mechanics.ic.ChipState;
+import com.sk89q.craftbook.mechanics.ic.IC;
+import com.sk89q.craftbook.mechanics.ic.ICFactory;
+import com.sk89q.craftbook.mechanics.ic.ICManager;
+import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
+import com.sk89q.craftbook.mechanics.ic.RestrictedIC;
+import com.sk89q.craftbook.util.RegexUtil;
 
 public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 

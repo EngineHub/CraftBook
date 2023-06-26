@@ -1,10 +1,18 @@
 package com.sk89q.craftbook.mechanics.ic.gates.logic;
 
 import com.github.Anon8281.universalScheduler.scheduling.tasks.MyScheduledTask;
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
+import org.bukkit.scheduler.BukkitTask;
+
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.mechanics.ic.*;
-import org.bukkit.Server;
+import com.sk89q.craftbook.mechanics.ic.AbstractIC;
+import com.sk89q.craftbook.mechanics.ic.AbstractICFactory;
+import com.sk89q.craftbook.mechanics.ic.ChipState;
+import com.sk89q.craftbook.mechanics.ic.IC;
+import com.sk89q.craftbook.mechanics.ic.ICFactory;
+import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
 
 /**
  * @author Silthus
