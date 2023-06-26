@@ -212,12 +212,12 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
         @Override
         public void run () {
 
-            if (item == null) {
+            if(item == null) {
                 cancel();
                 return;
             }
 
-            if (!isCauldron(block)) {
+            if(!isCauldron(block)) {
                 cancel();
                 return;
             }
@@ -229,7 +229,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
     public boolean performCauldron(Block block, CraftBookPlayer player) {
 
         if (player != null && !player.hasPermission("craftbook.mech.cauldron.use")) {
-            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return false;
         }
