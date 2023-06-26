@@ -454,11 +454,11 @@ public class Elevator extends AbstractCraftBookMechanic {
             if (player.isInsideVehicle()) {
                 Entity teleportedVehicle = LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
 
-                player.setPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
+                player.teleport(BukkitAdapter.adapt(newLocation));
 
                 LocationUtil.addVehiclePassengerDelayed(teleportedVehicle, player);
             } else {
-                player.setPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
+                player.teleport(BukkitAdapter.adapt(newLocation));
             }
 
             teleportFinish(player, destination, shift);
