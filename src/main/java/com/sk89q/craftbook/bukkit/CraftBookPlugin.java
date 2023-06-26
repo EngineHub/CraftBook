@@ -144,7 +144,7 @@ public class CraftBookPlugin extends JavaPlugin {
     /**
      * Universal scheduler
      */
-    private static TaskScheduler SCHEDULER;
+    private static TaskScheduler scheduler;
 
     public static final Map<String, Class<? extends CraftBookMechanic>> availableMechanics;
 
@@ -315,7 +315,7 @@ public class CraftBookPlugin extends JavaPlugin {
     public void onEnable() {
 
         ItemSyntax.plugin = this;
-        SCHEDULER = UniversalScheduler.getScheduler(this);
+        scheduler = UniversalScheduler.getScheduler(this);
 
         nmsAdapter = new NMSAdapter();
 
@@ -1192,6 +1192,6 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     public static TaskScheduler getScheduler() {
-        return SCHEDULER;
+        return scheduler;
     }
 }
