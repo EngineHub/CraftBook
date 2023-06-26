@@ -16,6 +16,7 @@ import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.HandSide;
+import io.papermc.lib.PaperLib;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -219,8 +220,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
                 cancel();
                 return;
             }
-
-            item.teleport(BlockUtil.getBlockCentre(block).add(0, 0.5, 0));
+            PaperLib.teleportAsync(item, BlockUtil.getBlockCentre(block).add(0, 0.5, 0));
             item.setVelocity(new Vector(0, 0.01, 0));
         }
     }

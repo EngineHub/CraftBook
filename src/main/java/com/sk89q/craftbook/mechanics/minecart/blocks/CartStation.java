@@ -1,7 +1,5 @@
 package com.sk89q.craftbook.mechanics.minecart.blocks;
 
-import static com.sk89q.craftbook.util.CartUtil.stop;
-
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
 import com.sk89q.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
@@ -12,6 +10,7 @@ import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -20,6 +19,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+
+import static com.sk89q.craftbook.util.CartUtil.stop;
 
 public class CartStation extends CartBlockMechanism {
 
@@ -64,7 +65,7 @@ public class CartStation extends CartBlockMechanism {
                 // recenter it
                 Location l = blocks.rail.getLocation().add(0.5, 0.5, 0.5);
                 if (!cart.getLocation().equals(l)) {
-                    cart.teleport(l);
+                    PaperLib.teleportAsync(cart, l);
                 }
                 // recentering and parking almost completely prevents more than one cart from getting onto the same
                 // station.
@@ -113,7 +114,7 @@ public class CartStation extends CartBlockMechanism {
                 // recenter it
                 Location l = event.getBlocks().rail.getLocation().add(0.5, 0.5, 0.5);
                 if (!event.getMinecart().getLocation().equals(l)) {
-                    event.getMinecart().teleport(l);
+                    PaperLib.teleportAsync(event.getMinecart(), l);
                 }
                 // recentering and parking almost completely prevents more than one cart from getting onto the same
                 // station.

@@ -7,6 +7,7 @@ import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.worldedit.math.Vector3;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -338,7 +339,7 @@ public final class LocationUtil {
         // Vehicle must eject the passenger first,
         // otherwise vehicle.teleport() will not have any effect.
         vehicle.eject();
-        vehicle.teleport(newLocation);
+        PaperLib.teleportAsync(vehicle, newLocation);
         return vehicle;
     }
 

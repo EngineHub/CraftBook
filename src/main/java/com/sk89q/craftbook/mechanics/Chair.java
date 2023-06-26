@@ -22,6 +22,7 @@ import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.item.ItemTypes;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
@@ -98,7 +99,7 @@ public class Chair extends AbstractCraftBookMechanic {
         if(ar.isEmpty() && isNew) {
             CraftBookPlugin.getScheduler().runTask(CraftBookPlugin.inst(), () -> {
                 if (chairLoc != null)
-                    player.teleport(chairLoc);
+                    PaperLib.teleportAsync(player, chairLoc);
                 far.addPassenger(player);
             });
         } else if (ar.isEmpty()) {
@@ -126,7 +127,7 @@ public class Chair extends AbstractCraftBookMechanic {
             player.eject();
             ent.remove();
             CraftBookPlugin.getScheduler().runTaskLater(() -> {
-                player.teleport(chairData.playerExitPoint);
+                PaperLib.teleportAsync(player, chairData.playerExitPoint);
                 player.setSneaking(false);
             }, 5L);
         }

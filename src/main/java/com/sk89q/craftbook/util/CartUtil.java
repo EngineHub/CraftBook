@@ -1,22 +1,15 @@
 package com.sk89q.craftbook.util;
 
-import org.bukkit.Bukkit;
+import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Minecart;
-import org.bukkit.entity.minecart.CommandMinecart;
-import org.bukkit.entity.minecart.ExplosiveMinecart;
-import org.bukkit.entity.minecart.HopperMinecart;
-import org.bukkit.entity.minecart.PoweredMinecart;
-import org.bukkit.entity.minecart.RideableMinecart;
-import org.bukkit.entity.minecart.SpawnerMinecart;
-import org.bukkit.entity.minecart.StorageMinecart;
+import org.bukkit.entity.minecart.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-
-import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 
 import java.util.List;
 
@@ -62,9 +55,9 @@ public final class CartUtil {
         if (!passengers.isEmpty()) {
             cart.eject();
             for (Entity passenger : passengers) {
-                passenger.teleport(destination);
+                PaperLib.teleportAsync(passenger, destination);
             }
-            CraftBookPlugin.getScheduler().runTask(CraftBookPlugin.inst(), () -> {
+            CraftBookPlugin.getScheduler().runTask(() -> {
                 for (Entity passenger : passengers) {
                     toCart.addPassenger(passenger);
                     passenger.setVelocity(cart.getVelocity());
