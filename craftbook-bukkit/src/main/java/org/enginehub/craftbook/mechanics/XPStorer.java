@@ -22,6 +22,8 @@ import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
@@ -194,7 +196,8 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         Block baseBlock = SignUtil.getBackBlock(event.getBlock());
 
-        if (!event.getLine(1).equalsIgnoreCase("[XP]")
+        String signLine1 = PlainTextComponentSerializer.plainText().serialize(event.line(1));
+        if (!signLine1.equalsIgnoreCase("[XP]")
             || !block.equalsFuzzy(BukkitAdapter.adapt(baseBlock.getBlockData()))) {
             return;
         }
@@ -211,12 +214,12 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         int signRadius = maxRadius;
         try {
-            signRadius = Math.max(maxRadius, Integer.parseInt(event.getLine(2)));
+            signRadius = Math.max(maxRadius, Integer.parseInt(PlainTextComponentSerializer.plainText().serialize(event.line(2))));
         } catch (Exception ignored) {
         }
 
-        event.setLine(1, "[XP]");
-        event.setLine(2, String.valueOf(signRadius));
+        event.line(1, Component.text("[XP]"));
+        event.line(2, Component.text(signRadius));
         player.printInfo(TranslatableComponent.of("craftbook.xpstorer.create"));
 
         // TODO Improve ST manager to not require bukkit stuff

@@ -28,6 +28,7 @@ import org.bukkit.block.data.Lightable;
 import org.bukkit.block.data.Powerable;
 import org.bukkit.block.data.type.RedstoneWire;
 import org.bukkit.entity.Minecart;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -95,10 +96,13 @@ final class MechanicListenerAdapter implements Listener {
                     signClickTimer.put(event.getPlayer().getUniqueId(), System.currentTimeMillis());
                 }
             }
-            SignClickEvent ev = new SignClickEvent(event.getPlayer(), action, event.getItem(), block, event.getBlockFace(), event.getHand(), event.getInteractionPoint());
+            SignClickEvent ev = new SignClickEvent(event.getPlayer(), action, event.getItem(), block, event.getBlockFace(), event.getHand(), event.getClickedPosition());
             CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
-            if (ev.isCancelled()) {
-                event.setCancelled(true);
+            if (ev.useInteractedBlock() == Event.Result.DENY) {
+                event.setUseInteractedBlock(Event.Result.DENY);
+            }
+            if (ev.useItemInHand() == Event.Result.DENY) {
+                event.setUseItemInHand(Event.Result.DENY);
             }
         }
     }
@@ -360,18 +364,6 @@ final class MechanicListenerAdapter implements Listener {
             CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
             if (ev.isCancelled()) {
                 event.setCancelled(true);
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onSignChange(SignChangeEvent event) {
-        // TODO Determine if necessary
-        for (int i = 0; i < 4; i++) {
-            String line = event.getLine(i);
-            if (line.startsWith("&0") || line.startsWith("\u00A70")) {
-                line = line.substring(2);
-                event.setLine(i, line);
             }
         }
     }

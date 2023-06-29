@@ -16,7 +16,9 @@
 package org.enginehub.craftbook.mechanics.area;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.world.block.BlockType;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
@@ -24,6 +26,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Slab;
+import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -70,6 +73,16 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
     public abstract Block getBlockBase(Block sign) throws InvalidMechanismException;
 
     public abstract boolean isApplicableSign(String line);
+
+    public boolean isApplicableSign(Sign sign) {
+        for (Side side : Side.values()) {
+            if (isApplicableSign(PlainTextComponentSerializer.plainText().serialize(sign.getSide(side).line(1)))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPipeFinish(PipeFinishEvent event) {
@@ -173,7 +186,8 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
 
         Sign sign = (Sign) event.getBlock().getState(false);
 
-        if (!isApplicableSign(sign.getLine(1))) {
+
+        if (!isApplicableSign(sign)) {
             return;
         }
 
@@ -190,7 +204,7 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
                 }
             } catch (InvalidMechanismException e) {
                 if (e.getMessage() != null)
-                    player.printError(e.getMessage());
+                    player.printError(TextComponent.of(e.getMessage()));
             }
         }
     }

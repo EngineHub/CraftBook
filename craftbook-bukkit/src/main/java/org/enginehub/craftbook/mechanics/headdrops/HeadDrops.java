@@ -24,7 +24,6 @@ import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -128,7 +127,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             toDrop = new ItemStack(Material.PLAYER_HEAD, 1);
             SkullMeta meta = (SkullMeta) toDrop.getItemMeta();
             meta.setPlayerProfile(playerProfile);
-            meta.setDisplayName(ChatColor.RESET + playerProfile.getName() + "'s Head");
+            meta.displayName(Component.text(playerProfile.getName() + "'s Head"));
             toDrop.setItemMeta(meta);
         } else if (enableMobs) {
             if (overrideNatural) {

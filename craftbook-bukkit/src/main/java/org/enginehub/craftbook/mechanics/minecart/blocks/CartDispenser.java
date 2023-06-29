@@ -21,6 +21,8 @@ import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Minecart;
@@ -216,7 +218,7 @@ public class CartDispenser extends CartBlockMechanism {
             case "command" -> EntityType.MINECART_COMMAND;
             case "mob" -> EntityType.MINECART_MOB_SPAWNER;
             default -> {
-                EntityType type = EntityType.fromName(text.toLowerCase(Locale.ENGLISH));
+                EntityType type = Registry.ENTITY_TYPE.get(NamespacedKey.fromString(text.toLowerCase(Locale.ENGLISH)));
                 if (type == null || type.getEntityClass() == null || !Minecart.class.isAssignableFrom(type.getEntityClass())) {
                     yield null;
                 }

@@ -26,6 +26,8 @@ import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -65,7 +67,8 @@ public class Bridge extends CuboidToggleMechanic {
             return;
         }
 
-        if (!event.getLine(1).equalsIgnoreCase("[bridge]") && !event.getLine(1).equalsIgnoreCase("[bridge end]")) {
+        String signLine1 = PlainTextComponentSerializer.plainText().serialize(event.line(1));
+        if (!signLine1.equalsIgnoreCase("[bridge]") && !signLine1.equalsIgnoreCase("[bridge end]")) {
             return;
         }
 
@@ -82,11 +85,11 @@ public class Bridge extends CuboidToggleMechanic {
             return;
         }
 
-        if (event.getLine(1).equalsIgnoreCase("[bridge]")) {
-            event.setLine(1, "[Bridge]");
+        if (signLine1.equalsIgnoreCase("[bridge]")) {
+            event.line(1, Component.text("[Bridge]"));
             player.printInfo(TranslatableComponent.of("craftbook.bridge.create"));
-        } else if (event.getLine(1).equalsIgnoreCase("[bridge end]")) {
-            event.setLine(1, "[Bridge End]");
+        } else if (signLine1.equalsIgnoreCase("[bridge end]")) {
+            event.line(1, Component.text("[Bridge End]"));
             player.printInfo(TranslatableComponent.of("craftbook.bridge.end-create"));
         }
     }

@@ -18,6 +18,8 @@ package org.enginehub.craftbook.mechanics;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Directional;
@@ -49,7 +51,8 @@ public class LightSwitch extends AbstractCraftBookMechanic {
             return;
         }
 
-        if (!event.getLine(1).equalsIgnoreCase("[i]") && !event.getLine(1).equalsIgnoreCase("[|]")) {
+        String signLine1 = PlainTextComponentSerializer.plainText().serialize(event.line(1));
+        if (!signLine1.equalsIgnoreCase("[i]") && !signLine1.equalsIgnoreCase("[|]")) {
             return;
         }
 
@@ -65,7 +68,7 @@ public class LightSwitch extends AbstractCraftBookMechanic {
             return;
         }
 
-        event.setLine(1, "[I]");
+        event.line(1, Component.text("[I]"));
         lplayer.printInfo(TranslatableComponent.of("craftbook.lightswitch.create"));
     }
 

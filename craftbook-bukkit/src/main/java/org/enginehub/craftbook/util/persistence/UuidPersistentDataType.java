@@ -23,7 +23,7 @@ import java.nio.ByteBuffer;
 import java.util.UUID;
 
 /**
- * Utility class to store a UUID by most & least significant bits within a persistent data container.
+ * Utility class to store a UUID by most and least significant bits within a persistent data container.
  */
 public class UuidPersistentDataType implements PersistentDataType<byte[], UUID> {
     public static final UuidPersistentDataType UUID_PERSISTENT_DATA_TYPE = new UuidPersistentDataType();

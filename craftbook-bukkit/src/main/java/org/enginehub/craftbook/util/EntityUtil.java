@@ -231,9 +231,6 @@ public final class EntityUtil {
                 if (data[0].equalsIgnoreCase("fire")) {
                     ent.setFireTicks(5000);
                 }
-                if (data[0].equalsIgnoreCase("bounce")) {
-                    ((Arrow) ent).setBounce(true);
-                }
                 break;
             case OCELOT:
                 if (data[0].replace("_CAT", "").replace("_OCELOT", "").equalsIgnoreCase("WILD")) {
@@ -247,11 +244,6 @@ public final class EntityUtil {
                 }
                 if (data[0].replace("_CAT", "").replace("_OCELOT", "").equalsIgnoreCase("SIAMESE")) {
                     ((Ocelot) ent).setCatType(Ocelot.Type.SIAMESE_CAT);
-                }
-                break;
-            case THROWN_EXP_BOTTLE:
-                if (data[0].equalsIgnoreCase("bounce")) {
-                    ((ThrownExpBottle) ent).setBounce(true);
                 }
                 break;
             case ZOMBIFIED_PIGLIN:

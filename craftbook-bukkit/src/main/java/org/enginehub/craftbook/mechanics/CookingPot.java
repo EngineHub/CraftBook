@@ -18,6 +18,8 @@ package org.enginehub.craftbook.mechanics;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -59,7 +61,8 @@ public class CookingPot extends AbstractCraftBookMechanic {
             return;
         }
 
-        if (!event.getLine(1).equalsIgnoreCase("[Cook]")) {
+        String signLine1 = PlainTextComponentSerializer.plainText().serialize(event.line(1));
+        if (!signLine1.equalsIgnoreCase("[Cook]")) {
             return;
         }
 
@@ -67,15 +70,18 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         if (!player.hasPermission("craftbook.cookingpot.create")) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                player.printError("mech.create-permission");
+                player.printError(TranslatableComponent.of(
+                    "craftbook.mechanisms.create-permission",
+                    TextComponent.of(getMechanicType().getName())
+                ));
             }
             SignUtil.cancelSignChange(event);
             return;
         }
 
-        event.setLine(1, "[Cook]");
-        event.setLine(2, "0");
-        event.setLine(3, requireFuel ? "0" : "1");
+        event.line(1, Component.text("[Cook]"));
+        event.line(2, Component.text("0"));
+        event.line(3, Component.text(requireFuel ? "0" : "1"));
         player.printInfo(TranslatableComponent.of("craftbook.cookingpot.create"));
 
         ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).registerSelfTrigger(event.getBlock().getLocation());

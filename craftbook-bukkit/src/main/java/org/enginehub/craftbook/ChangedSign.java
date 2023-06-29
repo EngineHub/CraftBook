@@ -17,6 +17,7 @@ package org.enginehub.craftbook;
 
 import com.google.common.base.Preconditions;
 import com.sk89q.worldedit.entity.Player;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -128,7 +129,7 @@ public class ChangedSign {
         }
 
         for (int i = 0; i < 4; i++) {
-            getSign().setLine(i, lines[i]);
+            getSign().line(i, Component.text(lines[i]));
         }
         System.arraycopy(this.lines, 0, this.oldLines, 0, this.lines.length);
 

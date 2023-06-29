@@ -40,7 +40,7 @@ public class MinecartNoCollide extends AbstractCraftBookMechanic {
                 return;
             }
 
-            event.setCollisionCancelled(true);
+            event.setCancelled(true);
         }
     }
 

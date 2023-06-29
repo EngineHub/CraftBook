@@ -44,7 +44,6 @@ public final class ProtectionUtil {
      *
      * @param player The player to check
      * @param block The block to check at.
-     * @param build True for build, false for break
      * @return whether {@code player} can build at {@code block}'s location
      */
     public static boolean isPlacementPrevented(Player player, Block block) {

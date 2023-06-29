@@ -22,6 +22,8 @@ import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
 import io.papermc.paper.entity.TeleportFlag;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -101,7 +103,7 @@ public class Elevator extends AbstractCraftBookMechanic {
             return;
         }
 
-        LiftType dir = LiftType.fromLabel(event.getLine(1));
+        LiftType dir = LiftType.fromLabel(PlainTextComponentSerializer.plainText().serialize(event.line(1)));
         if (dir == null) {
             return;
         }
@@ -121,7 +123,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         }
 
         player.printInfo(TranslatableComponent.of("craftbook.elevator.create." + dir.name().toLowerCase(Locale.ROOT)));
-        event.setLine(1, dir.getLabel());
+        event.line(1, Component.text(dir.getLabel()));
     }
 
     @EventHandler(priority = EventPriority.HIGH)

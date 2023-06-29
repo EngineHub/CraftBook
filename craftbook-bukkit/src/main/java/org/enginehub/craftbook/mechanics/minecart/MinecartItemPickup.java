@@ -38,7 +38,9 @@ public class MinecartItemPickup extends AbstractCraftBookMechanic {
             return;
         }
 
-        if (event.getFrom().toBlockKey() == event.getTo().toBlockKey()) {
+        if (event.getFrom().getBlockX() == event.getTo().getBlockX()
+            && event.getFrom().getBlockZ() == event.getTo().getBlockZ()
+            && event.getFrom().getBlockY() == event.getTo().getBlockY()) {
             return;
         }
 

@@ -23,6 +23,10 @@ import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -203,6 +207,10 @@ public class VariableManager extends AbstractCraftBookMechanic {
         return ImmutableMap.copyOf(this.variableStore);
     }
 
+    public static Collection<VariableKey> getPossibleVariables(Component line, @Nullable Actor actor) {
+        return getPossibleVariables(PlainTextComponentSerializer.plainText().serialize(line), actor);
+    }
+
     public static Collection<VariableKey> getPossibleVariables(String line, @Nullable Actor actor) {
         if (!line.contains("%")) {
             return ImmutableList.of();
@@ -225,7 +233,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
         return variables;
     }
 
-    public static String renderVariables(String line, @Nullable Actor actor) {
+    public static Component renderVariables(Component line, @Nullable Actor actor) {
         checkNotNull(line);
 
         for (VariableKey possibleVariable : getPossibleVariables(line, actor)) {
@@ -237,21 +245,32 @@ public class VariableManager extends AbstractCraftBookMechanic {
                 }
             }
 
-            CraftBookPlugin.logDebugMessage(possibleVariable.toString() + " permissions granted!", "variables.line-parsing");
+            CraftBookPlugin.logDebugMessage(possibleVariable + " permissions granted!", "variables.line-parsing");
 
             String value = instance.getVariable(possibleVariable);
             if (value != null) {
-                line = line.replace("%" + possibleVariable.getOriginalForm() + "%", value);
+                TextReplacementConfig config = TextReplacementConfig.builder()
+                    .matchLiteral("%" + possibleVariable.getOriginalForm() + "%")
+                    .replacement(value).build();
+                line = line.replaceText(config);
             }
         }
 
-        return line.replace("\\%", "%");
+        TextReplacementConfig config = TextReplacementConfig.builder()
+            .matchLiteral("\\%")
+            .replacement("%").build();
+
+        return line.replaceText(config);
+    }
+
+    public static String renderVariables(String line, @Nullable Actor actor) {
+        return PlainTextComponentSerializer.plainText().serialize(renderVariables(Component.text(line), actor));
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    public void onPlayerChat(AsyncPlayerChatEvent event) {
+    public void onPlayerChat(AsyncChatEvent event) {
         if (playerChatOverride && event.getPlayer().hasPermission("craftbook.variables.chat")) {
-            event.setMessage(renderVariables(event.getMessage(), CraftBookPlugin.inst().wrapPlayer(event.getPlayer())));
+            event.message(renderVariables(event.message(), CraftBookPlugin.inst().wrapPlayer(event.getPlayer())));
         }
     }
 

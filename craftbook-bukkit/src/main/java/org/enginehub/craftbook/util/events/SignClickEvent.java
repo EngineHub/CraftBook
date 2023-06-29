@@ -24,6 +24,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
@@ -37,7 +38,7 @@ public class SignClickEvent extends PlayerInteractEvent {
     private final ChangedSign sign;
     private final CraftBookPlayer player;
 
-    public SignClickEvent(Player who, Action action, ItemStack item, Block clickedBlock, BlockFace clickedFace, EquipmentSlot equipmentSlot, Location interactionPoint) {
+    public SignClickEvent(Player who, Action action, ItemStack item, Block clickedBlock, BlockFace clickedFace, EquipmentSlot equipmentSlot, Vector interactionPoint) {
         super(who, action, item, clickedBlock, clickedFace, equipmentSlot, interactionPoint);
 
         this.player = CraftBookPlugin.inst().wrapPlayer(who);

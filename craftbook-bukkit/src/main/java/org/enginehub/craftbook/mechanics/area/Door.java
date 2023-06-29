@@ -26,6 +26,8 @@ import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -65,7 +67,8 @@ public class Door extends CuboidToggleMechanic {
             return;
         }
 
-        if (!event.getLine(1).equalsIgnoreCase("[door]") && !event.getLine(1).equalsIgnoreCase("[door up]") && !event.getLine(1).equalsIgnoreCase("[door down]")) {
+        String signLine1 = PlainTextComponentSerializer.plainText().serialize(event.line(1));
+        if (!signLine1.equalsIgnoreCase("[door]") && !signLine1.equalsIgnoreCase("[door up]") && !signLine1.equalsIgnoreCase("[door down]")) {
             return;
         }
 
@@ -82,14 +85,14 @@ public class Door extends CuboidToggleMechanic {
             return;
         }
 
-        if (event.getLine(1).equalsIgnoreCase("[door]")) {
-            event.setLine(1, "[Door]");
+        if (signLine1.equalsIgnoreCase("[door]")) {
+            event.line(1, Component.text("[Door]"));
             player.printInfo(TranslatableComponent.of("craftbook.door.end-create"));
-        } else if (event.getLine(1).equalsIgnoreCase("[door up]")) {
-            event.setLine(1, "[Door Up]");
+        } else if (signLine1.equalsIgnoreCase("[door up]")) {
+            event.line(1, Component.text("[Door Up]"));
             player.printInfo(TranslatableComponent.of("craftbook.door.create"));
-        } else if (event.getLine(1).equalsIgnoreCase("[door down]")) {
-            event.setLine(1, "[Door Down]");
+        } else if (signLine1.equalsIgnoreCase("[door down]")) {
+            event.line(1, Component.text("[Door Down]"));
             player.printInfo(TranslatableComponent.of("craftbook.door.create"));
         }
     }

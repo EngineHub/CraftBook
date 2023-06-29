@@ -22,6 +22,8 @@ import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
 import io.papermc.paper.entity.TeleportFlag;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -59,7 +61,8 @@ public class Teleporter extends AbstractCraftBookMechanic {
             return;
         }
 
-        if (!event.getLine(1).equalsIgnoreCase("[Teleporter]")) {
+        String signLine1 = PlainTextComponentSerializer.plainText().serialize(event.line(1));
+        if (!signLine1.equalsIgnoreCase("[Teleporter]")) {
             return;
         }
 
@@ -77,7 +80,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
             return;
         }
 
-        String posLine = event.getLine(2);
+        String posLine = PlainTextComponentSerializer.plainText().serialize(event.line(2));
         if (posLine.length() > 0) {
             String[] pos = RegexUtil.COMMA_PATTERN.split(ParsingUtil.parseLine(posLine, player));
             if (pos.length <= 2) {
@@ -88,7 +91,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
         }
 
         player.printInfo(TranslatableComponent.of("craftbook.teleporter.create"));
-        event.setLine(1, "[Teleporter]");
+        event.line(1, Component.text("[Teleporter]"));
     }
 
     @EventHandler(priority = EventPriority.HIGH)

@@ -26,6 +26,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
+import org.bukkit.block.sign.SignSide;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -45,8 +47,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class SignCopier extends AbstractCraftBookMechanic {
 
@@ -150,10 +150,11 @@ public class SignCopier extends AbstractCraftBookMechanic {
             return;
         }
 
+        // TODO Make this support both sides once it becomes possible in the Paper API
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             Sign sign = (Sign) block.getState(false);
 
-            signs.put(player.getUniqueId(), SignData.fromSign(sign));
+            signs.put(player.getUniqueId(), SignData.fromSign(sign.getSide(Side.FRONT)));
 
             player.printInfo(TranslatableComponent.of("craftbook.signcopier.copy"));
             event.setCancelled(true);
@@ -189,27 +190,8 @@ public class SignCopier extends AbstractCraftBookMechanic {
     /**
      * Stores data about the copied sign.
      */
-    protected static class SignData {
-        protected List<Component> lines;
-        protected boolean glowing;
-        @Nullable
-        protected DyeColor color;
-
-        /**
-         * Create a new instance of the SignData class.
-         *
-         * @param lines The sign lines
-         * @param color The dyed color, if present
-         */
-        protected SignData(List<Component> lines, boolean glowing, @Nullable DyeColor color) {
-            checkNotNull(lines);
-
-            this.lines = lines;
-            this.glowing = glowing;
-            this.color = color;
-        }
-
-        public static SignData fromSign(Sign sign) {
+    protected record SignData(List<Component> lines, boolean glowing, @Nullable DyeColor color) {
+        public static SignData fromSign(SignSide sign) {
             return new SignData(sign.lines(), sign.isGlowingText(), sign.getColor());
         }
     }

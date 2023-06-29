@@ -20,6 +20,7 @@ import com.sk89q.worldedit.util.auth.AuthorizationException;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BaseBlock;
+import net.kyori.adventure.text.Component;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
@@ -168,7 +169,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
             }
 
             player.checkPermission("craftbook." + getNodeId() + ".create");
-            event.setLine(1, '[' + lineFound + ']');
+            event.line(1, Component.text('[' + lineFound + ']'));
             player.printInfo(TranslatableComponent.of("craftbook." + getNodeId() + ".create"));
         } catch (AuthorizationException e) {
             player.printError(TranslatableComponent.of(

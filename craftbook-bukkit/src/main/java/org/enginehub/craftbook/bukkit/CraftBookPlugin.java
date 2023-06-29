@@ -146,25 +146,6 @@ public class CraftBookPlugin extends JavaPlugin {
         commandManager.registerCommandsWith(platform);
 
         getServer().getPluginManager().registerEvents(new Listener() {
-
-            /* Bukkit Bug Fixes */
-
-            @EventHandler(priority = EventPriority.LOWEST)
-            public void signChange(SignChangeEvent event) {
-                for (int i = 0; i < event.getLines().length; i++) {
-                    StringBuilder builder = new StringBuilder();
-                    for (char c : event.getLine(i).toCharArray()) {
-                        if (c < 0xF700 || c > 0xF747) {
-                            builder.append(c);
-                        }
-                    }
-                    String fixed = builder.toString();
-                    if (!fixed.equals(event.getLine(i))) {
-                        event.setLine(i, fixed);
-                    }
-                }
-            }
-
             /* Alerts */
 
             @EventHandler(priority = EventPriority.HIGH)

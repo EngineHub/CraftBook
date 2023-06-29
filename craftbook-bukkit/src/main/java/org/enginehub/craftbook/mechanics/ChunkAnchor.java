@@ -18,11 +18,14 @@ package org.enginehub.craftbook.mechanics;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -46,7 +49,8 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
             return;
         }
 
-        if (!event.getLine(1).equalsIgnoreCase("[chunk]")) {
+        String signLine1 = PlainTextComponentSerializer.plainText().serialize(event.line(1));
+        if (!signLine1.equalsIgnoreCase("[chunk]")) {
             return;
         }
 
@@ -64,15 +68,17 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
 
         for (BlockState state : event.getBlock().getChunk().getTileEntities(SignUtil::isSign, false)) {
             if (state instanceof Sign s) {
-                if (s.getLine(1).equals("[Chunk]")) {
-                    lplayer.printError(TranslatableComponent.of("craftbook.chunkanchor.already-anchored"));
-                    SignUtil.cancelSignChange(event);
-                    return;
+                for (Side side : Side.values()) {
+                    if (PlainTextComponentSerializer.plainText().serialize(s.getSide(side).line(1)).equals("[Chunk]")) {
+                        lplayer.printError(TranslatableComponent.of("craftbook.chunkanchor.already-anchored"));
+                        SignUtil.cancelSignChange(event);
+                        return;
+                    }
                 }
             }
         }
 
-        event.setLine(1, "[Chunk]");
+        event.line(1, Component.text( "[Chunk]"));
         lplayer.printInfo(TranslatableComponent.of("craftbook.chunkanchor.create"));
     }
 
@@ -134,10 +140,12 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
                 continue;
             }
             if (state instanceof Sign sign) {
-                if (sign.getLine(1).equals("[Chunk]")) {
-                    if (!useRedstone || !sign.getLine(3).equals("OFF")) {
-                        shouldAnchor = true;
-                        break;
+                for (Side side : Side.values()) {
+                    if (sign.getSide(side).getLine(1).equals("[Chunk]")) {
+                        if (!useRedstone || !sign.getSide(side).getLine(3).equals("OFF")) {
+                            shouldAnchor = true;
+                            break;
+                        }
                     }
                 }
             }

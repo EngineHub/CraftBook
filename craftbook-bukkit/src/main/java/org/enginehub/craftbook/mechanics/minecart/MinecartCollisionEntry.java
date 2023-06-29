@@ -41,7 +41,6 @@ public class MinecartCollisionEntry extends AbstractCraftBookMechanic {
             }
 
             event.getVehicle().addPassenger(event.getEntity());
-            event.setCollisionCancelled(true);
             event.setCancelled(true);
         }
     }

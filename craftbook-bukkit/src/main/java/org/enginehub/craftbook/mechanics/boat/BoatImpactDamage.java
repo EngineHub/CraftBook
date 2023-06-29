@@ -59,8 +59,6 @@ public class BoatImpactDamage extends AbstractCraftBookMechanic {
         }
 
         event.setCancelled(true);
-        event.setPickupCancelled(true);
-        event.setCollisionCancelled(true);
     }
 
     private boolean removeOtherBoats;

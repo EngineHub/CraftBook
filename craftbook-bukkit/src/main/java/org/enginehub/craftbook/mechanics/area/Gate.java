@@ -26,6 +26,8 @@ import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -336,7 +338,8 @@ public class Gate extends StoredBlockMechanic {
             return;
         }
 
-        if (!event.getLine(1).equalsIgnoreCase("[Gate]")) {
+        String signLine1 = PlainTextComponentSerializer.plainText().serialize(event.line(1));
+        if (!signLine1.equalsIgnoreCase("[Gate]")) {
             return;
         }
 
@@ -353,7 +356,7 @@ public class Gate extends StoredBlockMechanic {
             return;
         }
 
-        event.setLine(1, "[Gate]");
+        event.line(1, Component.text("[Gate]"));
         player.printInfo(TranslatableComponent.of("craftbook.gate.create"));
     }
 
