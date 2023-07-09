@@ -26,7 +26,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class BlockParser {
     private static final ParserContext BLOCK_CONTEXT = new ParserContext();
