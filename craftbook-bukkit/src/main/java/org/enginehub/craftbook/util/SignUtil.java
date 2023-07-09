@@ -130,6 +130,9 @@ public final class SignUtil {
         BlockFace way = sign.getFace(getBackBlock(sign));
         boolean found = false;
         for (int i = 0; i < searchRadius; i++) {
+            if (found) {
+                break;
+            }
             if (isSign(otherBlock.getRelative(way))) {
                 otherBlock = otherBlock.getRelative(way);
                 org.bukkit.block.Sign otherSign = (org.bukkit.block.Sign) otherBlock.getState(false);
@@ -139,8 +142,9 @@ public final class SignUtil {
                         break;
                     }
                 }
-            } else
+            } else {
                 otherBlock = otherBlock.getRelative(way);
+            }
         }
         if (!found) return null;
         return otherBlock;

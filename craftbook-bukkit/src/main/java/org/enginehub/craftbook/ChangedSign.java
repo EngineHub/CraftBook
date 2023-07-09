@@ -171,7 +171,7 @@ public class ChangedSign {
 
     public void flushLines() {
         this.sign = null;
-        this.lines = this.getSignSide().lines().toArray(new Component[lines.length]);
+        this.lines = this.getSignSide().lines().toArray(new Component[0]);
 
         if (this.oldLines == null) {
             this.oldLines = new Component[lines.length];
