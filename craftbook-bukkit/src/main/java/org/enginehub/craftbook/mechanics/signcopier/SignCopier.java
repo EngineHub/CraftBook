@@ -150,7 +150,6 @@ public class SignCopier extends AbstractCraftBookMechanic {
             return;
         }
 
-        // TODO Make this support both sides once it becomes possible in the Paper API
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             Sign sign = event.getSign().getSign();
             Side side = event.getSide();

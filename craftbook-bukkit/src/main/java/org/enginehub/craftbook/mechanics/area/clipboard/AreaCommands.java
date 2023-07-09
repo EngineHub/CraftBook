@@ -32,7 +32,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.exception.CraftBookException;
 import org.enginehub.craftbook.mechanics.area.clipboard.AreaCommandsRegistration;
 import org.enginehub.craftbook.util.SignUtil;

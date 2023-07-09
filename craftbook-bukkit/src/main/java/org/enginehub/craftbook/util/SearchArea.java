@@ -28,7 +28,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.ICMechanic;
 
 import java.util.ArrayList;
@@ -292,9 +291,9 @@ public final class SearchArea {
     }
 
     /**
-     * Checks if this SearchArea is a Radius & Center type, compared to other types.
+     * Checks if this SearchArea is a Radius and Center type, compared to other types.
      *
-     * @return If it is a Radius&Center type.
+     * @return If it is a Radius and Center type.
      */
     public boolean hasRadiusAndCenter() {
 
