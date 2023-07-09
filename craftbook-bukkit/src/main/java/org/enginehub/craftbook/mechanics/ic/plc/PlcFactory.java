@@ -15,6 +15,8 @@
 
 package org.enginehub.craftbook.mechanics.ic.plc;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
@@ -52,10 +54,10 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     public void verify(ChangedSign sign) throws ICVerificationException {
 
         new PlcIC<>(sign, lang); // Huge ugly hack!!
-        sign.setLine(2, "id:" + ThreadLocalRandom.current().nextInt());
-        if (!sign.getLine(3).isEmpty()) {
-            String line = sign.getLine(3);
-            if (!RegexUtil.PLC_NAME_PATTERN.matcher(line).matches())
+        sign.setLine(2, Component.text("id:" + ThreadLocalRandom.current().nextInt()));
+        String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
+        if (!line3.isEmpty()) {
+            if (!RegexUtil.PLC_NAME_PATTERN.matcher(line3).matches())
                 throw new ICVerificationException("illegal storage name");
         }
         sign.update(false);

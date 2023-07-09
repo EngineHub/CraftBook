@@ -20,8 +20,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 
 public final class LocationUtil {
 
@@ -85,10 +83,10 @@ public final class LocationUtil {
         return radius.getX() == radius.getZ() && radius.getX() == radius.getY() && isWithinSphericalRadius(l1, l2, radius.getX()) || (radius.getX() != radius.getY() || radius.getY() != radius.getZ() || radius.getX() != radius.getZ()) && isWithinRadiusPolygon(l1, l2, radius);
     }
 
-    public static Block getRelativeOffset(ChangedSign sign, int offsetX, int offsetY, int offsetZ) {
+    public static Block getRelativeOffset(Block sign, int offsetX, int offsetY, int offsetZ) {
 
-        return getRelativeOffset(SignUtil.getBackBlock(CraftBookBukkitUtil.toSign(sign).getBlock()),
-            SignUtil.getFacing(CraftBookBukkitUtil.toSign(sign).getBlock()),
+        return getRelativeOffset(SignUtil.getBackBlock(sign),
+            SignUtil.getFacing(sign),
             offsetX, offsetY, offsetZ);
     }
 

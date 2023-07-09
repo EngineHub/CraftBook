@@ -16,6 +16,7 @@
 package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -23,6 +24,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Powerable;
 import org.bukkit.block.data.type.WallSign;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -36,7 +38,6 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ItemSyntax;
 import org.enginehub.craftbook.util.ItemUtil;
@@ -50,9 +51,9 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
 
         // Must be Wall Sign
         if (b == null || !SignUtil.isWallSign(b)) return false;
-        ChangedSign s = CraftBookBukkitUtil.toChangedSign(b);
+        ChangedSign s = ChangedSign.create(b, Side.FRONT);
 
-        return s.getLine(1).equalsIgnoreCase("[X]");
+        return PlainTextComponentSerializer.plainText().serialize(s.getLine(1)).equalsIgnoreCase("[X]");
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -81,7 +82,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
             for (BlockFace face : LocationUtil.getDirectFaces()) {
                 testBlock = switchBlock.getRelative(face);
                 if (SignUtil.isWallSign(testBlock) && ((WallSign) testBlock.getBlockData()).getFacing() == face) {
-                    s = CraftBookBukkitUtil.toChangedSign(testBlock);
+                    s = ChangedSign.create(testBlock, Side.FRONT);
                     break;
                 }
             }
@@ -89,23 +90,26 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
             BlockFace face = eventFace.getOppositeFace();
             testBlock = switchBlock.getRelative(face);
             if (SignUtil.isWallSign(testBlock) && ((WallSign) testBlock.getBlockData()).getFacing() == face) {
-                s = CraftBookBukkitUtil.toChangedSign(testBlock);
+                s = ChangedSign.create(testBlock, Side.FRONT);
             }
         }
 
         if (s == null)
             return false;
 
-        if (s.getLine(1).equalsIgnoreCase("[X]")) {
+        String line1 = PlainTextComponentSerializer.plainText().serialize(s.getLine(1));
+        if (line1.equalsIgnoreCase("[X]")) {
 
             ItemStack itemID = null;
 
-            if (!s.getLine(0).trim().isEmpty()) {
-                itemID = ItemSyntax.getItem(s.getLine(0).trim());
+            String line0 = PlainTextComponentSerializer.plainText().serialize(s.getLine(0));
+            if (!line0.trim().isEmpty()) {
+                itemID = ItemSyntax.getItem(line0.trim());
             }
 
-            if (!s.getLine(2).trim().isEmpty())
-                if (!CraftBookPlugin.inst().inGroup(player, s.getLine(2).trim())) {
+            String line2 = PlainTextComponentSerializer.plainText().serialize(s.getLine(2));
+            if (!line2.trim().isEmpty())
+                if (!CraftBookPlugin.inst().inGroup(player, line2.trim())) {
                     lplayer.printError("mech.group");
                     return true;
                 }

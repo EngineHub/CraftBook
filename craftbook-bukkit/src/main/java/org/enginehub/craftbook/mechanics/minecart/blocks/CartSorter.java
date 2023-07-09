@@ -18,10 +18,12 @@ package org.enginehub.craftbook.mechanics.minecart.blocks;
 import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Rail;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
@@ -67,16 +69,22 @@ public class CartSorter extends CartBlockMechanism {
         if (!event.getBlocks().matches(getBlock())) return;
         if (event.isMinor()) return;
 
+        Side side = event.getBlocks().matches("sort");
         // validate
-        if (!event.getBlocks().matches("sort")) return;
-        ChangedSign sign = event.getBlocks().getChangedSign();
+        if (side == null) {
+            return;
+        }
+        ChangedSign sign = event.getBlocks().getChangedSign(side);
+
+        String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+        String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
 
         // pi(sign)hich sort conditions apply
         // (left dominates if both apply)
         Hand dir = Hand.STRAIGHT;
-        if (isSortApplicable(sign.getLine(2), event.getMinecart())) {
+        if (isSortApplicable(line2, event.getMinecart())) {
             dir = Hand.LEFT;
-        } else if (isSortApplicable(sign.getLine(3), event.getMinecart())) {
+        } else if (isSortApplicable(line3, event.getMinecart())) {
             dir = Hand.RIGHT;
         }
 

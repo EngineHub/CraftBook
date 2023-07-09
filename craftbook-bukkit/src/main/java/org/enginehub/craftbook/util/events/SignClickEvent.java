@@ -15,9 +15,10 @@
 
 package org.enginehub.craftbook.util.events;
 
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.Action;
@@ -35,14 +36,12 @@ public class SignClickEvent extends PlayerInteractEvent {
 
     private static final HandlerList handlers = new HandlerList();
 
-    private final ChangedSign sign;
-    private final CraftBookPlayer player;
+    private ChangedSign sign;
+    private Side side;
+    private CraftBookPlayer player;
 
     public SignClickEvent(Player who, Action action, ItemStack item, Block clickedBlock, BlockFace clickedFace, EquipmentSlot equipmentSlot, Vector interactionPoint) {
         super(who, action, item, clickedBlock, clickedFace, equipmentSlot, interactionPoint);
-
-        this.player = CraftBookPlugin.inst().wrapPlayer(who);
-        this.sign = new ChangedSign(clickedBlock, null, this.player);
     }
 
     @Nonnull
@@ -57,10 +56,23 @@ public class SignClickEvent extends PlayerInteractEvent {
     }
 
     public ChangedSign getSign() {
+        if (this.sign == null) {
+            this.sign = ChangedSign.create(this.getClickedBlock(), getSide(), null, getWrappedPlayer());
+        }
         return this.sign;
     }
 
+    public Side getSide() {
+        if (this.side == null) {
+            this.side = ((Sign) getClickedBlock().getState(false)).getInteractableSideFor(this.getInteractionPoint());
+        }
+        return this.side;
+    }
+
     public CraftBookPlayer getWrappedPlayer() {
+        if (this.player == null) {
+            this.player = CraftBookPlugin.inst().wrapPlayer(this.getPlayer());
+        }
         return this.player;
     }
 }

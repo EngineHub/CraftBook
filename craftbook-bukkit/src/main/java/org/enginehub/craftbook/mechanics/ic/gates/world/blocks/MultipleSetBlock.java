@@ -16,6 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -49,9 +50,9 @@ public class MultipleSetBlock extends AbstractIC {
     @Override
     public void load() {
 
-        String line3 = getSign().getLine(2).replace("+", "").toUpperCase(Locale.ENGLISH);
-        String line4 = getSign().getLine(3);
-        getSign().setLine(2, line3);
+        String line3 = getLine(2).replace("+", "").toUpperCase(Locale.ENGLISH);
+        String line4 = getLine(3);
+        getSign().setLine(2, Component.text(line3));
         getSign().update(false);
 
         String[] coords = RegexUtil.COLON_PATTERN.split(line3, 4);

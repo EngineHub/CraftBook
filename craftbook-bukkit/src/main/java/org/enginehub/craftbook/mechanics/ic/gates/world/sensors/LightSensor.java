@@ -15,10 +15,10 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.sensors;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -66,14 +66,14 @@ public class LightSensor extends AbstractSelfTriggeredIC {
         if (!getLine(3).isEmpty())
             centre = ICUtil.parseBlockLocation(getSign(), 3).getLocation();
         else
-            centre = SignUtil.getBackBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock()).getLocation().add(0, 1, 0);
+            centre = SignUtil.getBackBlock(getSign().getBlock()).getLocation().add(0, 1, 0);
 
         try {
-            min = Byte.parseByte(getSign().getLine(2));
+            min = Byte.parseByte(getLine(2));
         } catch (Exception e) {
             min = 10;
             try {
-                getSign().setLine(2, Integer.toString(min));
+                getSign().setLine(2, Component.text(min));
                 getSign().update(false);
             } catch (Exception ignored) {
             }

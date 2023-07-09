@@ -45,7 +45,7 @@ public abstract class SetBlock extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        force = getSign().getLine(3).toUpperCase(Locale.ENGLISH).trim();
+        force = getLine(3).toUpperCase(Locale.ENGLISH).trim();
 
         item = BlockParser.getBlock(getLine(2));
     }

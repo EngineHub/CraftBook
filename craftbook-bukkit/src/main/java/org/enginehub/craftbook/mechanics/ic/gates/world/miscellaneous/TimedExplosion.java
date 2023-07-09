@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -48,23 +49,23 @@ public class TimedExplosion extends AbstractIC {
     public void load() {
 
         if (getLine(3).length() > 0 && !getLine(3).contains(":")) {
-            getSign().setLine(2, getSign().getLine(2) + ":" + getSign().getLine(3));
+            getSign().setLine(2, Component.text(getLine(2) + ":" + getLine(3)));
             getSign().update(false);
         }
         try {
-            ticks = Integer.parseInt(RegexUtil.COLON_PATTERN.split(getSign().getLine(2).replace("!", ""))[0]);
+            ticks = Integer.parseInt(RegexUtil.COLON_PATTERN.split(getLine(2).replace("!", ""))[0]);
         } catch (Exception e) {
             ticks = -1;
         }
 
         try {
-            yield = Float.parseFloat(RegexUtil.COLON_PATTERN.split(getSign().getLine(2).replace("!", ""))[1]);
+            yield = Float.parseFloat(RegexUtil.COLON_PATTERN.split(getLine(2).replace("!", ""))[1]);
         } catch (Exception e) {
             yield = -1;
         }
 
         try {
-            flamey = getSign().getLine(2).endsWith("!");
+            flamey = getLine(2).endsWith("!");
         } catch (Exception ignored) {
         }
 

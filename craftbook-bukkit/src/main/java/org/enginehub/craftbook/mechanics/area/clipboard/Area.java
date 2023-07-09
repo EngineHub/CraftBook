@@ -21,6 +21,12 @@ import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.world.World;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -30,12 +36,10 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.SelfTriggerPingEvent;
 import org.enginehub.craftbook.util.events.SignClickEvent;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
@@ -51,6 +55,8 @@ import java.util.regex.Pattern;
 public class Area extends AbstractCraftBookMechanic {
 
     protected static Area instance;
+
+    private static final TextReplacementConfig DASH_REMOVER = TextReplacementConfig.builder().matchLiteral("-").replacement("").build();
 
     @Override
     public void enable() {
@@ -132,7 +138,8 @@ public class Area extends AbstractCraftBookMechanic {
 
         ChangedSign sign = event.getSign();
 
-        if (!sign.getLine(1).equals("[Area]") && !sign.getLine(1).equals("[SaveArea]")) return;
+        String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
+        if (!line1.equals("[Area]") && !line1.equals("[SaveArea]")) return;
 
         if (!player.hasPermission("craftbook.mech.area.use")) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
@@ -151,7 +158,7 @@ public class Area extends AbstractCraftBookMechanic {
             player.printError("mech.area.missing");
             return;
         }
-        save = sign.getLine(1).equals("[SaveArea]");
+        save = line1.equals("[SaveArea]");
 
         // toggle the area on or off
         toggle(sign, save);
@@ -169,22 +176,11 @@ public class Area extends AbstractCraftBookMechanic {
     }
 
     private static boolean isValidArea(ChangedSign sign) {
+        String namespace = PlainTextComponentSerializer.plainText().serialize(sign.getLine(0)).trim();
+        String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)).trim();
+        String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3)).trim();
 
-        String namespace = sign.getLine(0).trim();
-
-        return isValidArea(namespace, sign.getLine(2).trim().toLowerCase(Locale.ENGLISH), sign.getLine(3).trim().toLowerCase(Locale.ENGLISH));
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onSelfTriggerPing(SelfTriggerPingEvent event) {
-
-        if (SignUtil.isSign(event.getBlock())) {
-            ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
-            if (sign.getLine(1).equals("[Area]")) {
-                isValidArea(sign); //Perform a conversion,
-                sign.update(false);
-            }
-        }
+        return isValidArea(namespace, line2.toLowerCase(Locale.ENGLISH), line3.toLowerCase(Locale.ENGLISH));
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -197,14 +193,17 @@ public class Area extends AbstractCraftBookMechanic {
 
         boolean save;
 
-        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
+        Sign bukkitSign = (Sign) event.getBlock().getState(false);
+        Side side = bukkitSign.getInteractableSideFor(event.getSource().getLocation());
+        ChangedSign sign = ChangedSign.create(bukkitSign, side);
 
-        if (!sign.getLine(1).equals("[Area]") && !sign.getLine(1).equals("[SaveArea]")) return;
+        String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
+        if (!line1.equals("[Area]") && !line1.equals("[SaveArea]")) return;
 
         // check if the namespace and area exists
         if (!isValidArea(sign)) return;
 
-        save = sign.getLine(1).equals("[SaveArea]");
+        save = line1.equals("[SaveArea]");
 
         // toggle the area
         toggle(sign, save);
@@ -215,9 +214,9 @@ public class Area extends AbstractCraftBookMechanic {
         if (!checkSign(sign)) return false;
 
         try {
-            String namespace = sign.getLine(0);
-            String id = sign.getLine(2).replace("-", "").toLowerCase(Locale.ENGLISH);
-            String inactiveID = sign.getLine(3).replace("-", "").toLowerCase(Locale.ENGLISH);
+            String namespace = PlainTextComponentSerializer.plainText().serialize(sign.getLine(0));
+            String id = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2).replaceText(DASH_REMOVER)).toLowerCase(Locale.ENGLISH);
+            String inactiveID = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3).replaceText(DASH_REMOVER)).toLowerCase(Locale.ENGLISH);
 
             BlockArrayClipboard copy;
             World weWorld = BukkitAdapter.adapt(sign.getBlock().getWorld());
@@ -259,17 +258,27 @@ public class Area extends AbstractCraftBookMechanic {
         return false;
     }
 
-    public static boolean toggleCold(ChangedSign sign) {
-
-        if (!checkSign(sign)) return false;
+    public static boolean toggleCold(Block block) {
+        Sign bukkitSign = (Sign) block.getState(false);
+        ChangedSign sign = null;
+        for (Side side : Side.values()) {
+            ChangedSign testSign = ChangedSign.create(bukkitSign, side);
+            if (checkSign(testSign)) {
+                sign = testSign;
+                break;
+            }
+        }
+        if (sign == null) {
+            return false;
+        }
 
         boolean toggleOn = coldCheckToggleState(sign);
-        boolean save = sign.getLine(1).equalsIgnoreCase("[SaveArea]");
+        boolean save = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1)).equalsIgnoreCase("[SaveArea]");
 
         try {
-            String namespace = sign.getLine(0);
-            String id = sign.getLine(2).replace("-", "").toLowerCase(Locale.ENGLISH);
-            String inactiveID = sign.getLine(3).replace("-", "").toLowerCase(Locale.ENGLISH);
+            String namespace = PlainTextComponentSerializer.plainText().serialize(sign.getLine(0));
+            String id = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2).replaceText(DASH_REMOVER)).toLowerCase(Locale.ENGLISH);
+            String inactiveID = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3).replaceText(DASH_REMOVER)).toLowerCase(Locale.ENGLISH);
 
             BlockArrayClipboard copy;
             World weWorld = BukkitAdapter.adapt(sign.getBlock().getWorld());
@@ -311,11 +320,10 @@ public class Area extends AbstractCraftBookMechanic {
     }
 
     private static boolean checkSign(ChangedSign sign) {
+        String namespace = PlainTextComponentSerializer.plainText().serialize(sign.getLine(0));
+        String id = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)).toLowerCase(Locale.ENGLISH);
 
-        String namespace = sign.getLine(0);
-        String id = sign.getLine(2).toLowerCase(Locale.ENGLISH);
-
-        return !id.isEmpty() && namespace != null && !namespace.isEmpty();
+        return !id.isEmpty() && !namespace.isEmpty();
     }
 
     // pattern to check where the markers for on and off state are
@@ -327,9 +335,8 @@ public class Area extends AbstractCraftBookMechanic {
     }
 
     private static boolean coldCheckToggleState(ChangedSign sign) {
-
-        String line3 = sign.getLine(2).toLowerCase(Locale.ENGLISH);
-        String line4 = sign.getLine(3).toLowerCase(Locale.ENGLISH);
+        String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)).toLowerCase(Locale.ENGLISH);
+        String line4 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3)).toLowerCase(Locale.ENGLISH);
         return pattern.matcher(line3).matches() || !(line4.equals("--") || pattern.matcher(line4).matches());
     }
 
@@ -337,8 +344,8 @@ public class Area extends AbstractCraftBookMechanic {
 
         int toToggleOn = state ? 2 : 3;
         int toToggleOff = state ? 3 : 2;
-        sign.setLine(toToggleOff, sign.getLine(toToggleOff).replace("-", ""));
-        sign.setLine(toToggleOn, '-' + sign.getLine(toToggleOn) + '-');
+        sign.setLine(toToggleOff, sign.getLine(toToggleOff).replaceText(DASH_REMOVER));
+        sign.setLine(toToggleOn, Component.text('-').append(sign.getLine(toToggleOn)).append(Component.text('-')));
         sign.update(false);
     }
 

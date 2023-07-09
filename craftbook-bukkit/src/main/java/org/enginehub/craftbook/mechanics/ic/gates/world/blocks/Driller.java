@@ -17,6 +17,8 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.math.BlockVector3;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -70,14 +72,14 @@ public class Driller extends AbstractSelfTriggeredIC {
 
         signDrillSize = ((Factory) getFactory()).drillSize;
 
-        if (!getSign().getLine(2).isEmpty()) {
-            signDrillSize = Math.min(signDrillSize, Integer.parseInt(getSign().getLine(2)));
+        if (!getLine(2).isEmpty()) {
+            signDrillSize = Math.min(signDrillSize, Integer.parseInt(getLine(2)));
         }
 
         signMaxDepth = ((Factory) getFactory()).maxDrillDepth;
 
-        if (!getSign().getLine(3).isEmpty()) {
-            signMaxDepth = Math.min(signMaxDepth, Integer.parseInt(getSign().getLine(3)));
+        if (!getLine(3).isEmpty()) {
+            signMaxDepth = Math.min(signMaxDepth, Integer.parseInt(getLine(3)));
         }
     }
 
@@ -169,11 +171,13 @@ public class Driller extends AbstractSelfTriggeredIC {
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
-                if (!sign.getLine(2).isEmpty()) {
-                    sign.setLine(2, String.valueOf(Math.min(drillSize, Integer.parseInt(sign.getLine(2)))));
+                String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+                if (!line2.isEmpty()) {
+                    sign.setLine(2, Component.text(Math.min(drillSize, Integer.parseInt(line2))));
                 }
-                if (!sign.getLine(3).isEmpty()) {
-                    sign.setLine(3, String.valueOf(Math.min(maxDrillDepth, Integer.parseInt(sign.getLine(3)))));
+                String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
+                if (!line3.isEmpty()) {
+                    sign.setLine(3, Component.text(Math.min(maxDrillDepth, Integer.parseInt(line3))));
                 }
             } catch (Exception e) {
                 throw new ICVerificationException("Failed to parse numbers.");

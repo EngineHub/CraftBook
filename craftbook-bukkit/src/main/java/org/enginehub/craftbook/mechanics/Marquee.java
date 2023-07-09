@@ -17,6 +17,7 @@ package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
@@ -50,7 +51,8 @@ public class Marquee extends AbstractCraftBookMechanic {
         }
 
         ChangedSign sign = event.getSign();
-        if (!sign.getLine(1).equals("[Marquee]")) {
+        String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
+        if (!line1.equals("[Marquee]")) {
             return;
         }
 
@@ -72,7 +74,9 @@ public class Marquee extends AbstractCraftBookMechanic {
         VariableKey variableKey;
         try {
             // Pass in the potentially stored owner, and use as default if enabled and available
-            variableKey = VariableKey.of(sign.getLine(3), sign.getLine(2), OwnedSignHelper.getOwner(sign.getSign()));
+            String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
+            String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+            variableKey = VariableKey.of(line3, line2, OwnedSignHelper.getOwner(sign.getSign()));
         } catch (VariableException e) {
             lplayer.printError(e.getRichMessage());
             event.setCancelled(true);
@@ -154,7 +158,7 @@ public class Marquee extends AbstractCraftBookMechanic {
 
             // Ensure this is still a marquee sign and wasn't cancelled.
             Sign sign = (Sign) event.getBlock().getState(false);
-            if (!sign.getLine(1).equals("[Marquee]")) {
+            if (!sign.getSide(event.getSide()).getLine(1).equals("[Marquee]")) {
                 return;
             }
 

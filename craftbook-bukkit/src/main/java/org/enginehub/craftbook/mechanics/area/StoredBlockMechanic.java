@@ -33,10 +33,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.mechanics.pipe.PipeFinishEvent;
@@ -90,9 +88,9 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
             return;
         }
 
-        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getOrigin());
+        Sign sign = (Sign) event.getOrigin().getState(false);
 
-        if (!isApplicableSign(sign.getLine(1))) {
+        if (!isApplicableSign(sign)) {
             return;
         }
 
@@ -105,7 +103,7 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
                     continue;
                 }
 
-                addToStoredBlockCount(sign.getSign(), stack.getAmount());
+                addToStoredBlockCount(sign, stack.getAmount());
             }
 
             event.setItems(leftovers);
@@ -120,9 +118,9 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
             return;
         }
 
-        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getPuttingBlock());
+        Sign sign = (Sign) event.getPuttingBlock().getState(false);
 
-        if (!isApplicableSign(sign.getLine(1))) {
+        if (!isApplicableSign(sign)) {
             return;
         }
 
@@ -135,7 +133,7 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
                     continue;
                 }
 
-                addToStoredBlockCount(sign.getSign(), stack.getAmount());
+                addToStoredBlockCount(sign, stack.getAmount());
             }
 
             event.setItems(leftovers);
@@ -154,19 +152,19 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
             return;
         }
 
-        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getSuckedBlock());
+        Sign sign = (Sign) event.getSuckedBlock().getState(false);
 
-        if (!isApplicableSign(sign.getLine(1))) {
+        if (!isApplicableSign(sign)) {
             return;
         }
 
         List<ItemStack> items = event.getItems();
         try {
             Material base = getOrSetStoredType(event.getSuckedBlock());
-            int blocks = getStoredBlockCount(sign.getSign());
+            int blocks = getStoredBlockCount(sign);
             if (blocks > 0) {
                 items.add(new ItemStack(base, blocks));
-                setStoredBlockCount(sign.getSign(), 0);
+                setStoredBlockCount(sign, 0);
             }
             event.setItems(items);
         } catch (InvalidMechanismException e) {

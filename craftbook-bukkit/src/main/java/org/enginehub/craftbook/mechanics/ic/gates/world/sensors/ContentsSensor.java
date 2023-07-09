@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.sensors;
 
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -130,7 +131,7 @@ public class ContentsSensor extends AbstractSelfTriggeredIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            ItemStack item = ItemSyntax.getItem(sign.getLine(2));
+            ItemStack item = ItemSyntax.getItem(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)));
             if (item == null)
                 throw new ICVerificationException("Invalid item to detect!");
         }

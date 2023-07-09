@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -52,16 +53,16 @@ public class FireShooter extends AbstractIC {
     public void load() {
 
         try {
-            String[] velocity = RegexUtil.COLON_PATTERN.split(getSign().getLine(2).trim());
+            String[] velocity = RegexUtil.COLON_PATTERN.split(getLine(2).trim());
             speed = Double.parseDouble(velocity[0]);
             spread = Double.parseDouble(velocity[1]);
-            vert = Double.parseDouble(getSign().getLine(3).trim());
+            vert = Double.parseDouble(getLine(3).trim());
         } catch (Exception e) {
             speed = 1.6f;
             spread = 12;
             vert = 0.2f;
-            getSign().setLine(2, speed + ":" + spread);
-            getSign().setLine(3, String.valueOf(vert));
+            getSign().setLine(2, Component.text(speed + ":" + spread));
+            getSign().setLine(3, Component.text(vert));
             getSign().update(false);
         }
 

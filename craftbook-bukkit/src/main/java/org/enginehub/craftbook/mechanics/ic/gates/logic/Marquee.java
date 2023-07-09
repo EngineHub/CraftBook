@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
@@ -51,11 +52,11 @@ public class Marquee extends AbstractIC {
         boolean reverse = false;
         int next = 0;
         try {
-            String[] st = RegexUtil.RIGHT_BRACKET_PATTERN.split(getSign().getLine(1), 2);
+            String[] st = RegexUtil.RIGHT_BRACKET_PATTERN.split(getLine(1), 2);
             if (st.length > 1) {
                 reverse = st[1].equalsIgnoreCase("r");
             }
-            next = Integer.parseInt(getSign().getLine(2));
+            next = Integer.parseInt(getLine(2));
         } catch (Exception ignored) {
         }
 
@@ -91,7 +92,7 @@ public class Marquee extends AbstractIC {
         }
 
         // set the next output and update sign
-        getSign().setLine(2, Integer.toString(next));
+        getSign().setLine(2, Component.text(next));
         getSign().update(false);
 
     }

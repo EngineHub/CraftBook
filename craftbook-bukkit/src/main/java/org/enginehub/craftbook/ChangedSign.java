@@ -18,53 +18,61 @@ package org.enginehub.craftbook;
 import com.google.common.base.Preconditions;
 import com.sk89q.worldedit.entity.Player;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
+import org.bukkit.block.sign.SignSide;
 import org.enginehub.craftbook.mechanics.variables.VariableKey;
 import org.enginehub.craftbook.mechanics.variables.VariableManager;
 import org.enginehub.craftbook.util.ParsingUtil;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/**
+ * A ChangedSign represents a single side of a sign block.
+ */
 public class ChangedSign {
-
     private final Block block;
-    private Sign sign;
-    private String[] lines;
-    private String[] oldLines;
+    private final Side side;
 
-    public ChangedSign(Block block, String[] lines, CraftBookPlayer player) {
-        this(block, lines);
+    private Sign sign;
+    private Component[] lines;
+    private Component[] oldLines;
+
+    private ChangedSign(Block block, Side side, Component[] lines, CraftBookPlayer player) {
+        this.block = block;
+        this.side = side;
+
+        if (lines == null) {
+            this.flushLines();
+        } else {
+            this.lines = lines;
+            this.oldLines = new Component[this.lines.length];
+            System.arraycopy(this.lines, 0, this.oldLines, 0, this.lines.length);
+        }
 
         if (player != null) {
             checkPlayerVariablePermissions(player);
         }
     }
 
-    public ChangedSign(Block block, String[] lines) {
-        Preconditions.checkNotNull(block, "block");
-
-        this.block = block;
-
-        if (lines == null) {
-            this.flushLines();
-        } else {
-            this.lines = lines;
-            this.oldLines = new String[this.lines.length];
-            System.arraycopy(this.lines, 0, this.oldLines, 0, this.lines.length);
-        }
-    }
-
     public void checkPlayerVariablePermissions(CraftBookPlayer player) {
         if (this.lines != null && VariableManager.instance != null) {
             for (int i = 0; i < 4; i++) {
-                String line = this.lines[i];
+                Component line = this.lines[i];
                 for (VariableKey variableKey : VariableManager.getPossibleVariables(line, player)) {
                     if (!variableKey.hasPermission(player, "use")) {
-                        setLine(i, line.replace('%' + variableKey.getOriginalForm() + '%', ""));
+                        TextReplacementConfig config = TextReplacementConfig.builder()
+                            .matchLiteral("%" + variableKey.getOriginalForm() + "%")
+                            .replacement("").build();
+                        setLine(i, line.replaceText(config));
                     }
                 }
             }
@@ -82,8 +90,15 @@ public class ChangedSign {
         return sign;
     }
 
-    public Material getType() {
+    public SignSide getSignSide() {
+        return getSign().getSide(this.side);
+    }
 
+    public Side getSide() {
+        return this.side;
+    }
+
+    public Material getType() {
         return block.getType();
     }
 
@@ -99,23 +114,23 @@ public class ChangedSign {
         return this.block.getZ();
     }
 
-    public String[] getLines() {
+    public Component[] getLines() {
         return this.lines;
     }
 
-    public String getLine(int index) throws IndexOutOfBoundsException {
+    public Component getLine(int index) throws IndexOutOfBoundsException {
         return this.getLine(index, null);
     }
 
-    public String getLine(int index, @Nullable Player player) throws IndexOutOfBoundsException {
+    public Component getLine(int index, @Nullable Player player) throws IndexOutOfBoundsException {
         return ParsingUtil.parseLine(this.lines[index], player);
     }
 
-    public String getRawLine(int index) throws IndexOutOfBoundsException {
+    public Component getRawLine(int index) throws IndexOutOfBoundsException {
         return this.lines[index];
     }
 
-    public void setLine(int index, String line) throws IndexOutOfBoundsException {
+    public void setLine(int index, Component line) throws IndexOutOfBoundsException {
         this.lines[index] = line;
     }
 
@@ -129,18 +144,18 @@ public class ChangedSign {
         }
 
         for (int i = 0; i < 4; i++) {
-            getSign().line(i, Component.text(lines[i]));
+            getSignSide().line(i, lines[i]);
         }
         System.arraycopy(this.lines, 0, this.oldLines, 0, this.lines.length);
 
         return getSign().update(force, false);
     }
 
-    public void setLines(String[] lines) {
+    public void setLines(Component[] lines) {
         this.lines = lines;
     }
 
-    public void setOldLines(String[] oldLines) {
+    public void setOldLines(Component[] oldLines) {
         this.oldLines = oldLines;
     }
 
@@ -156,10 +171,10 @@ public class ChangedSign {
 
     public void flushLines() {
         this.sign = null;
-        this.lines = this.getSign().getLines();
+        this.lines = this.getSignSide().lines().toArray(new Component[lines.length]);
 
         if (this.oldLines == null) {
-            this.oldLines = new String[lines.length];
+            this.oldLines = new Component[lines.length];
         }
 
         System.arraycopy(this.lines, 0, this.oldLines, 0, this.lines.length);
@@ -178,6 +193,7 @@ public class ChangedSign {
     public boolean equals(Object o) {
         if (o instanceof ChangedSign other) {
             return Objects.equals(other.getType(), getType())
+                && other.getSide() == getSide()
                 && other.getX() == getX()
                 && other.getY() == getY()
                 && other.getZ() == getZ()
@@ -190,11 +206,30 @@ public class ChangedSign {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getType(), Arrays.hashCode(this.lines), getX(), getY(), getZ(), block.getWorld().getUID());
+        return Objects.hash(getType(), side, Arrays.hashCode(this.lines), getX(), getY(), getZ(), block.getWorld().getUID());
     }
 
     @Override
     public String toString() {
-        return lines[0] + '|' + lines[1] + '|' + lines[2] + '|' + lines[3];
+        return Arrays.stream(this.lines).map(PlainTextComponentSerializer.plainText()::serialize).collect(Collectors.joining("|"));
+    }
+
+    public static ChangedSign create(@Nonnull Sign sign, @Nonnull Side side) {
+        return create(sign.getBlock(), side, sign.getSide(side).lines().toArray(new Component[0]), null);
+    }
+
+    public static ChangedSign create(@Nonnull Sign sign, @Nonnull Side side, @Nullable CraftBookPlayer player) {
+        return create(sign.getBlock(), side, sign.getSide(side).lines().toArray(new Component[0]), player);
+    }
+
+    public static ChangedSign create(@Nonnull Block block, @Nonnull Side side) {
+        return create(block, side, null, null);
+    }
+
+    public static ChangedSign create(@Nonnull Block block, @Nonnull Side side, @Nullable Component[] lines, @Nullable CraftBookPlayer player) {
+        Preconditions.checkNotNull(block, "block");
+        Preconditions.checkNotNull(side, "side");
+
+        return new ChangedSign(block, side, lines, player);
     }
 }

@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -42,7 +43,7 @@ public class SoundEffect extends AbstractIC {
     @Override
     public void load() {
 
-        String[] split = RegexUtil.COLON_PATTERN.split(getSign().getLine(2));
+        String[] split = RegexUtil.COLON_PATTERN.split(getLine(2));
         try {
             volume = Float.parseFloat(split[0]) / 100f;
         } catch (Exception e) {
@@ -54,15 +55,15 @@ public class SoundEffect extends AbstractIC {
             pitch = 0;
         }
 
-        String soundName = getSign().getLine(3).trim();
+        String soundName = getLine(3).trim();
         try {
             sound = Sound.valueOf(soundName);
         } catch (Exception e) {
         }
-        if (sound == null && getSign().getLine(3).trim().length() == 15) {
+        if (sound == null && getLine(3).trim().length() == 15) {
             for (Sound s : Sound.values()) {
 
-                if (s.name().length() > 15 && s.name().startsWith(getSign().getLine(3))) {
+                if (s.name().length() > 15 && s.name().startsWith(getLine(3))) {
                     sound = s;
                     break;
                 }
@@ -125,15 +126,16 @@ public class SoundEffect extends AbstractIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
+            String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
             Sound sound = null;
             try {
-                sound = Sound.valueOf(sign.getLine(3).trim());
+                sound = Sound.valueOf(line3.trim());
             } catch (Exception e) {
             }
-            if (sound == null && sign.getLine(3).trim().length() == 15) {
+            if (sound == null && line3.trim().length() == 15) {
                 for (Sound s : Sound.values()) {
 
-                    if (s.name().length() > 15 && s.name().startsWith(sign.getLine(3))) {
+                    if (s.name().length() > 15 && s.name().startsWith(line3)) {
                         sound = s;
                         break;
                     }

@@ -63,7 +63,7 @@ public class MemoryAccess extends AbstractIC {
     @Override
     public void load() {
 
-        f = new File(ICManager.inst().getRomFolder(), getSign().getLine(2) + ".dat");
+        f = new File(ICManager.inst().getRomFolder(), getLine(2) + ".dat");
         if (!f.exists()) {
             try {
                 f.createNewFile();

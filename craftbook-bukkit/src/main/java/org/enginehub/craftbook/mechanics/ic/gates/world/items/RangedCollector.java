@@ -17,6 +17,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.items;
 
 import com.google.common.collect.Lists;
 import com.sk89q.worldedit.math.Vector3;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -94,10 +95,10 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
         if (radius.getX() == radius.getY() && radius.getY() == radius.getZ())
             radiusString = String.valueOf(radius.getX());
         if (getLine(2).contains("=")) {
-            getSign().setLine(2, radiusString + "=" + RegexUtil.EQUALS_PATTERN.split(getLine(2))[1]);
+            getSign().setLine(2, Component.text(radiusString + "=" + RegexUtil.EQUALS_PATTERN.split(getLine(2))[1]));
             centre = ICUtil.parseBlockLocation(getSign(), 2).getLocation();
         } else {
-            getSign().setLine(2, radiusString);
+            getSign().setLine(2, Component.text(radiusString));
             centre = getBackBlock().getLocation();
         }
 

@@ -15,6 +15,8 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -94,18 +96,18 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
         //Converter.
         boolean converting = false;
         if (getRawLine(3).toLowerCase().endsWith("p") && (!getRawLine(2).contains("=") || converting)) {
-            getSign().setLine(2, getRawLine(2) + (!getRawLine(2).contains("=") ? "=p" : "p"));
-            getSign().setLine(3, getRawLine(3).substring(0, getRawLine(3).length() - 1));
+            getSign().setLine(2, Component.text(getRawLine(2) + (!getRawLine(2).contains("=") ? "=p" : "p")));
+            getSign().setLine(3, Component.text(getRawLine(3).substring(0, getRawLine(3).length() - 1)));
             converting = true;
         }
         if (getRawLine(3).toLowerCase().endsWith("m") && (!getRawLine(2).contains("=") || converting)) {
-            getSign().setLine(2, getRawLine(2) + (!getRawLine(2).contains("=") ? "=m" : "m"));
-            getSign().setLine(3, getRawLine(3).substring(0, getRawLine(3).length() - 1));
+            getSign().setLine(2, Component.text(getRawLine(2) + (!getRawLine(2).contains("=") ? "=m" : "m")));
+            getSign().setLine(3, Component.text(getRawLine(3).substring(0, getRawLine(3).length() - 1)));
             converting = true;
         }
         if (getRawLine(3).toLowerCase().endsWith("p") && (!getRawLine(2).contains("=") || converting)) {
-            getSign().setLine(2, getRawLine(2) + (!getRawLine(2).contains("=") ? "=p" : "p"));
-            getSign().setLine(3, getRawLine(3).substring(0, getRawLine(3).length() - 1));
+            getSign().setLine(2, Component.text(getRawLine(2) + (!getRawLine(2).contains("=") ? "=p" : "p")));
+            getSign().setLine(3, Component.text(getRawLine(3).substring(0, getRawLine(3).length() - 1)));
             converting = true;
         }
         if (converting)
@@ -158,7 +160,7 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
-                String[] bits = RegexUtil.COLON_PATTERN.split(sign.getLine(2), 3);
+                String[] bits = RegexUtil.COLON_PATTERN.split(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)), 3);
                 int effectId = Integer.parseInt(bits[0]);
 
                 if (PotionEffectType.getById(effectId) == null)

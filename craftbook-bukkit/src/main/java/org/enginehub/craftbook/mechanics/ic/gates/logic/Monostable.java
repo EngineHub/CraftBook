@@ -15,6 +15,8 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -57,7 +59,7 @@ public class Monostable extends AbstractSelfTriggeredIC {
     @Override
     public void trigger(ChipState chip) {
 
-        String setting = getSign().getLine(2).toUpperCase(Locale.ENGLISH);
+        String setting = getLine(2).toUpperCase(Locale.ENGLISH);
         boolean triggered = chip.getInput(0);
         if (triggered && setting.contains("H") || !triggered && setting.contains("L")) {
             // Trigger condition!
@@ -65,7 +67,7 @@ public class Monostable extends AbstractSelfTriggeredIC {
             if (colon <= 0) return;
 
             chip.setOutput(0, true);
-            getSign().setLine(3, setting.substring(0, colon));
+            getSign().setLine(3, Component.text(setting.substring(0, colon)));
             getSign().update(false);
         }
     }
@@ -76,7 +78,7 @@ public class Monostable extends AbstractSelfTriggeredIC {
         int tick;
 
         try {
-            tick = Integer.parseInt(getSign().getLine(3));
+            tick = Integer.parseInt(getLine(3));
         } catch (NumberFormatException e) {
             tick = 0;
         }
@@ -87,7 +89,7 @@ public class Monostable extends AbstractSelfTriggeredIC {
             tick--;
         }
 
-        getSign().setLine(3, Integer.toString(tick));
+        getSign().setLine(3, Component.text(tick));
         getSign().update(false);
     }
 
@@ -118,7 +120,7 @@ public class Monostable extends AbstractSelfTriggeredIC {
             boolean lo;
 
             try {
-                String set = sign.getLine(2).toUpperCase(Locale.ENGLISH);
+                String set = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)).toUpperCase(Locale.ENGLISH);
 
                 if (!set.contains(":")) throw new ICVerificationException("Invalid syntax");
 
@@ -139,8 +141,8 @@ public class Monostable extends AbstractSelfTriggeredIC {
             ticks = Math.max(ticks, 2);
             ticks = Math.min(ticks, 6000);
 
-            sign.setLine(2, ticks + ":" + (hi ? "H" : "") + (lo ? "L" : ""));
-            sign.setLine(3, "0");
+            sign.setLine(2, Component.text(ticks + ":" + (hi ? "H" : "") + (lo ? "L" : "")));
+            sign.setLine(3, Component.text("0"));
             sign.update(false);
         }
     }

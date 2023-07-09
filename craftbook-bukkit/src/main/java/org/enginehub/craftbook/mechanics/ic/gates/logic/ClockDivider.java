@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
@@ -49,11 +50,11 @@ public class ClockDivider extends AbstractIC {
         int count = 0;
 
         try {
-            reset = Integer.parseInt(getSign().getLine(2));
+            reset = Integer.parseInt(getLine(2));
         } catch (Exception ignored) {
         }
         try {
-            count = Integer.parseInt(getSign().getLine(3));
+            count = Integer.parseInt(getLine(3));
         } catch (Exception ignored) {
         }
         reset = Math.min(100000, Math.max(1, reset));
@@ -63,14 +64,14 @@ public class ClockDivider extends AbstractIC {
 
         // check if counter is about to reset, if it isn't, save and return
         if (count < reset) {
-            getSign().setLine(3, Integer.toString(count));
+            getSign().setLine(3, Component.text(count));
             return;
         }
         // if time to reset, toggle state
         chip.setOutput(0, !chip.getOutput(0));
         // reset count
         count = 0;
-        getSign().setLine(3, Integer.toString(count));
+        getSign().setLine(3, Component.text(count));
         getSign().update(false);
     }
 

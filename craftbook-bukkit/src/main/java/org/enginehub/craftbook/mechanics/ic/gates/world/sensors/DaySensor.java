@@ -62,12 +62,12 @@ public class DaySensor extends AbstractSelfTriggeredIC {
     public void load() {
 
         try {
-            night = Long.parseLong(getSign().getLine(3));
+            night = Long.parseLong(getLine(3));
         } catch (Exception ignored) {
             night = 13000L;
         }
         try {
-            day = Long.parseLong(getSign().getLine(2));
+            day = Long.parseLong(getLine(2));
         } catch (Exception ignored) {
             day = 0L;
         }

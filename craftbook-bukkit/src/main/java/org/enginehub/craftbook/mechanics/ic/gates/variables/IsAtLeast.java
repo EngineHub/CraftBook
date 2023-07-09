@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.variables;
 
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
@@ -131,7 +132,7 @@ public class IsAtLeast extends AbstractSelfTriggeredIC {
         @Override
         public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
             try {
-                VariableKey variableKey = VariableKey.fromString(sign.getLine(2), player);
+                VariableKey variableKey = VariableKey.fromString(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)), player);
                 if (variableKey != null && !variableKey.hasPermission(player, "use")) {
                     throw new ICVerificationException("You do not have permissions to use " + variableKey.toString() + "");
                 }
@@ -143,11 +144,11 @@ public class IsAtLeast extends AbstractSelfTriggeredIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
             try {
-                VariableKey variableKey = VariableKey.fromString(sign.getLine(2), null);
+                VariableKey variableKey = VariableKey.fromString(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)), null);
                 if (variableKey == null || !VariableManager.instance.hasVariable(variableKey)) {
                     throw new ICVerificationException("Unknown Variable!");
                 }
-                Double.parseDouble(sign.getLine(3));
+                Double.parseDouble(PlainTextComponentSerializer.plainText().serialize(sign.getLine(3)));
             } catch (NumberFormatException e) {
                 throw new ICVerificationException("Amount must be a number!");
             } catch (VariableException e) {

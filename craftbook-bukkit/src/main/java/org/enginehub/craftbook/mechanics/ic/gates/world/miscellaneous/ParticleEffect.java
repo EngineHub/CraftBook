@@ -15,6 +15,8 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -75,7 +77,7 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        String[] eff = RegexUtil.COLON_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[0], 2);
+        String[] eff = RegexUtil.COLON_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(getLine(2))[0], 2);
         try {
             effectID = Integer.parseInt(eff[0]);
         } catch (Exception e) {
@@ -92,14 +94,14 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
         }
 
         try {
-            times = Integer.parseInt(getSign().getLine(3));
+            times = Integer.parseInt(getLine(3));
         } catch (Exception ignored) {
             times = 1;
         }
         if (getLine(2).contains("=")) {
             String extra = getLine(2).split("=")[1];
-            getSign().setLine(2, getLine(2).split("=")[0]);
-            getSign().setLine(3, getLine(3) + "=" + extra);
+            getSign().setLine(2, Component.text(getLine(2).split("=")[0]));
+            getSign().setLine(3, Component.text(getLine(3) + "=" + extra));
             getSign().update(false);
         }
         if (getLine(3).contains("="))
@@ -146,7 +148,7 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
-                String[] eff = RegexUtil.COLON_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(sign.getLine(2))[0], 2);
+                String[] eff = RegexUtil.COLON_PATTERN.split(RegexUtil.EQUALS_PATTERN.split(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)))[0], 2);
                 int effectID = 0, effectData;
                 try {
                     effectID = Integer.parseInt(eff[0]);

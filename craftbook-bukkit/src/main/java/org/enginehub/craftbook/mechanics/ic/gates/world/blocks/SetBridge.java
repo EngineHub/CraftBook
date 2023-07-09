@@ -61,7 +61,7 @@ public class SetBridge extends AbstractIC {
     public void load() {
         center = getBackBlock();
         faceing = SignUtil.getFacing(CraftBookBukkitUtil.toSign(getSign()).getBlock());
-        String line = getSign().getLine(2);
+        String line = getLine(2);
         if (!line.isEmpty()) {
             String[] split = RegexUtil.MINUS_PATTERN.split(line);
             // parse the material data
@@ -72,7 +72,7 @@ public class SetBridge extends AbstractIC {
             onBlock = BukkitAdapter.adapt(BlockParser.getBlock(split[0]));
         }
         // parse the coordinates
-        line = getSign().getLine(3);
+        line = getLine(3);
         if (!line.trim().isEmpty()) {
             boolean relativeOffset = !line.contains("!");
             if (!relativeOffset) {
@@ -100,7 +100,7 @@ public class SetBridge extends AbstractIC {
                 depth = 1;
             }
             if (relativeOffset) {
-                center = LocationUtil.getRelativeOffset(getSign(), offsetX, offsetY, offsetZ);
+                center = LocationUtil.getRelativeOffset(getSign().getBlock(), offsetX, offsetY, offsetZ);
             } else {
                 center = center.getRelative(offsetX, offsetY, offsetZ);
             }

@@ -52,8 +52,8 @@ public class WeatherControlAdvanced extends AbstractIC {
         int thunderDuration = duration;
 
         try {
-            duration = Integer.parseInt(getSign().getLine(2));
-            thunderDuration = Integer.parseInt(getSign().getLine(3));
+            duration = Integer.parseInt(getLine(2));
+            thunderDuration = Integer.parseInt(getLine(3));
         } catch (Exception ignored) {
         }
 

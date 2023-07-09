@@ -18,6 +18,8 @@ package org.enginehub.craftbook.mechanics.minecart.blocks;
 import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.BlockInventoryHolder;
@@ -54,12 +56,13 @@ public class CartDeposit extends CartBlockMechanism {
 
         // collect/deposit set?
         if (!event.getBlocks().hasSign()) return;
-        if (!event.getBlocks().matches("collect") && !event.getBlocks().matches("deposit")) return;
-        boolean collecting = event.getBlocks().matches("collect");
+        Side side = event.getBlocks().matches("collect", "deposit");
+        if (side == null) return;
+        boolean collecting = event.getBlocks().matches("collect", side);
 
         // go
         List<Tuple2<ItemInfo, Integer>> items = new ArrayList<>();
-        for (String data : RegexUtil.COMMA_PATTERN.split(event.getBlocks().getChangedSign().getLine(2))) {
+        for (String data : RegexUtil.COMMA_PATTERN.split(PlainTextComponentSerializer.plainText().serialize(event.getBlocks().getChangedSign(side).getLine(2)))) {
             int itemID = -1;
             short itemData = -1;
             int amount = -1;

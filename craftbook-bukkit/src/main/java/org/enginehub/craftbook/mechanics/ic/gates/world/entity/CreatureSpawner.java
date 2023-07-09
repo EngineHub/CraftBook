@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.entity;
 
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -52,13 +53,13 @@ public class CreatureSpawner extends AbstractIC {
     @Override
     public void load() {
 
-        type = EntityType.fromName(getSign().getLine(2).trim().toLowerCase(Locale.ENGLISH));
+        type = EntityType.fromName(getLine(2).trim().toLowerCase(Locale.ENGLISH));
         if (type == null) {
-            type = EntityType.valueOf(getSign().getLine(2).trim().toUpperCase(Locale.ENGLISH));
+            type = EntityType.valueOf(getLine(2).trim().toUpperCase(Locale.ENGLISH));
             if (type == null)
                 type = EntityType.PIG;
         }
-        String line = getSign().getLine(3).trim();
+        String line = getLine(3).trim();
         // parse the amount or rider type
         try {
             String[] entityInf = RegexUtil.ASTERISK_PATTERN.split(line, 2);
@@ -135,10 +136,10 @@ public class CreatureSpawner extends AbstractIC {
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
-
-            EntityType type = EntityType.fromName(sign.getLine(2).trim().toLowerCase(Locale.ENGLISH));
+            String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+            EntityType type = EntityType.fromName(line2.trim().toLowerCase(Locale.ENGLISH));
             if (type == null)
-                type = EntityType.valueOf(sign.getLine(2).trim().toUpperCase(Locale.ENGLISH));
+                type = EntityType.valueOf(line2.trim().toUpperCase(Locale.ENGLISH));
             if (type == null)
                 throw new ICVerificationException("Invalid Entity! See bukkit EntityType list!");
             else if (!type.isSpawnable())

@@ -102,7 +102,7 @@ public class Tune extends AbstractSelfTriggeredIC {
             tune = split[1];
         } else {
 
-            tune = getSign().getLine(2);
+            tune = getLine(2);
             delay = 2;
         }
 

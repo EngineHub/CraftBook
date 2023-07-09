@@ -59,7 +59,7 @@ public class LiquidFlood extends AbstractSelfTriggeredIC {
         centre = ICUtil.parseBlockLocation(getSign()).getLocation();
         radius = ICUtil.parseRadius(getSign()).toBlockPoint();
 
-        liquid = getSign().getLine(2).equalsIgnoreCase("lava") ? "lava" : "water";
+        liquid = getLine(2).equalsIgnoreCase("lava") ? "lava" : "water";
     }
 
     public void doStuff(ChipState chip) {

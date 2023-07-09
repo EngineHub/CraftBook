@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
@@ -50,7 +51,7 @@ public class CombinationLock extends AbstractIC {
     public void trigger(ChipState state) {
 
         try {
-            char[] data = getSign().getLine(2).toCharArray();
+            char[] data = getLine(2).toCharArray();
             checkCombo:
             {
                 if (state.getInput(0) != (data[1] == 'X'))
@@ -85,7 +86,7 @@ public class CombinationLock extends AbstractIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if (sign.getLine(2) == null && sign.getLine(2).isEmpty())
+            if (sign.getLine(2) == null && PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)).isEmpty())
                 throw new ICVerificationException("Line three needs to be a combination");
         }
 

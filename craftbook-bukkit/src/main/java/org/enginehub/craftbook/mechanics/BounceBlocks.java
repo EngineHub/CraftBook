@@ -21,8 +21,10 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
@@ -33,7 +35,6 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.RegexUtil;
@@ -107,45 +108,49 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
                 Block sign = block.getRelative(BlockFace.DOWN);
 
                 if (SignUtil.isSign(sign)) {
-                    final ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
+                    for (Side side : Side.values()) {
+                        final ChangedSign s = ChangedSign.create(sign, side);
 
-                    if (s.getLine(1).equals("[Jump]")) {
+                        String signLine1 = PlainTextComponentSerializer.plainText().serialize(s.getLine(1));
+                        if (signLine1.equals("[Jump]")) {
+                            String signLine2 = PlainTextComponentSerializer.plainText().serialize(s.getLine(2, CraftBookPlugin.inst().wrapPlayer(event.getPlayer())));
 
-                        CraftBookPlugin.logDebugMessage("Jump sign found where player jumped!", "bounce-blocks");
+                            CraftBookPlugin.logDebugMessage("Jump sign found where player jumped!", "bounce-blocks");
 
-                        double x = 0, y, z = 0;
-                        boolean straight = s.getLine(2).startsWith("!");
+                            double x = 0, y, z = 0;
+                            boolean straight = signLine2.startsWith("!");
 
-                        String[] bits = RegexUtil.COMMA_PATTERN.split(s.getLine(2).replace("!", ""));
-                        if (bits.length == 0) {
-                            y = 0.5;
-                        } else if (bits.length == 1) {
-                            try {
-                                y = Double.parseDouble(bits[0]);
-                            } catch (NumberFormatException e) {
+                            String[] bits = RegexUtil.COMMA_PATTERN.split(signLine2.replace("!", ""));
+                            if (bits.length == 0) {
                                 y = 0.5;
+                            } else if (bits.length == 1) {
+                                try {
+                                    y = Double.parseDouble(bits[0]);
+                                } catch (NumberFormatException e) {
+                                    y = 0.5;
+                                }
+                            } else {
+                                x = Double.parseDouble(bits[0]);
+                                y = Double.parseDouble(bits[1]);
+                                z = Double.parseDouble(bits[2]);
                             }
-                        } else {
-                            x = Double.parseDouble(bits[0]);
-                            y = Double.parseDouble(bits[1]);
-                            z = Double.parseDouble(bits[2]);
+
+                            if (!straight) {
+
+                                Vector facing = event.getTo().getDirection();
+
+                                //Find out the angle they are facing. This is completely to do with horizontals. No verticals are taken into account.
+                                double angle = Math.atan2(facing.getX(), facing.getZ());
+
+                                x = Math.sin(angle) * x;
+                                z = Math.cos(angle) * z;
+                            }
+
+                            event.getPlayer().setVelocity(new Vector(x, y, z));
+                            event.getPlayer().setFallDistance(-20f);
                         }
-
-                        if (!straight) {
-
-                            Vector facing = event.getTo().getDirection();
-
-                            //Find out the angle they are facing. This is completely to do with horizontals. No verticals are taken into account.
-                            double angle = Math.atan2(facing.getX(), facing.getZ());
-
-                            x = Math.sin(angle) * x;
-                            z = Math.cos(angle) * z;
-                        }
-
-                        event.getPlayer().setVelocity(new Vector(x, y, z));
-                        event.getPlayer().setFallDistance(-20f);
+                        return;
                     }
-                    return;
                 }
             }
 
@@ -175,7 +180,6 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
-
         if (!EventUtil.passesFilter(event)) return;
 
         if (!event.getLine(1).equalsIgnoreCase("[jump]")) return;

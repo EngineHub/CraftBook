@@ -20,8 +20,10 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import io.papermc.paper.entity.TeleportFlag;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.ChangedSign;
@@ -38,14 +40,22 @@ public class CartTeleporter extends CartBlockMechanism {
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
-        if (event.isMinor() || !event.getBlocks().matches(getBlock()) || !event.getBlocks().hasSign() || !event.getBlocks().matches("telecart")) {
+        if (event.isMinor() || !event.getBlocks().matches(getBlock()) || !event.getBlocks().hasSign()) {
             return;
         }
 
+        Side side = event.getBlocks().matches("telecart");
+        if (side == null) {
+            return;
+        }
+        ChangedSign sign = event.getBlocks().getChangedSign(side);
+
+        String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)).trim();
+        String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3)).trim();
         World world = event.getMinecart().getWorld();
-        String[] pts = RegexUtil.COMMA_PATTERN.split(event.getBlocks().getChangedSign().getLine(2).trim(), 3);
-        if (!event.getBlocks().getChangedSign().getLine(3).trim().isEmpty()) {
-            world = event.getMinecart().getServer().getWorld(event.getBlocks().getChangedSign().getLine(3).trim());
+        String[] pts = RegexUtil.COMMA_PATTERN.split(line2, 3);
+        if (!line3.isEmpty()) {
+            world = event.getMinecart().getServer().getWorld(line3);
         }
 
         double x;
@@ -71,7 +81,7 @@ public class CartTeleporter extends CartBlockMechanism {
 
     @Override
     public boolean verify(ChangedSign sign, CraftBookPlayer player) {
-        String[] pts = RegexUtil.COMMA_PATTERN.split(sign.getLine(2).trim(), 3);
+        String[] pts = RegexUtil.COMMA_PATTERN.split(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)).trim(), 3);
         try {
             Double.parseDouble(pts[0].trim());
             Double.parseDouble(pts[1].trim());

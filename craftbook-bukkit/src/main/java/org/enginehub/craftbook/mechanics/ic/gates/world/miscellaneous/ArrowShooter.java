@@ -15,13 +15,13 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -46,16 +46,16 @@ public class ArrowShooter extends AbstractIC {
     public void load() {
 
         try {
-            String[] velocity = RegexUtil.COLON_PATTERN.split(getSign().getLine(2).trim());
+            String[] velocity = RegexUtil.COLON_PATTERN.split(getLine(2).trim());
             speed = Double.parseDouble(velocity[0]);
             spread = Double.parseDouble(velocity[1]);
-            vert = Double.parseDouble(getSign().getLine(3).trim());
+            vert = Double.parseDouble(getLine(3).trim());
         } catch (Exception e) {
             speed = 1.6f;
             spread = 12;
             vert = 0.2f;
-            getSign().setLine(2, speed + ":" + spread);
-            getSign().setLine(3, String.valueOf(vert));
+            getSign().setLine(2, Component.text(speed + ":" + spread));
+            getSign().setLine(3, Component.text(vert));
             getSign().update(false);
         }
 
@@ -98,14 +98,14 @@ public class ArrowShooter extends AbstractIC {
 
     public void shootArrows(int n) {
 
-        Block signBlock = CraftBookBukkitUtil.toSign(getSign()).getBlock();
+        Block signBlock = getSign().getBlock();
         BlockFace face = SignUtil.getBack(signBlock);
         Block targetDir = signBlock.getRelative(face).getRelative(face);
 
         double x = targetDir.getX() - signBlock.getX();
         double z = targetDir.getZ() - signBlock.getZ();
         Vector velocity = new Vector(x, vert, z);
-        Location shootLoc = new Location(CraftBookBukkitUtil.toSign(getSign()).getWorld(), targetDir.getX() + 0.5,
+        Location shootLoc = new Location(getSign().getBlock().getWorld(), targetDir.getX() + 0.5,
             targetDir.getY() + 0.5,
             targetDir.getZ() + 0.5);
 
@@ -113,7 +113,7 @@ public class ArrowShooter extends AbstractIC {
             return;
 
         for (short i = 0; i < n; i++)
-            CraftBookBukkitUtil.toSign(getSign()).getWorld().spawnArrow(shootLoc, velocity, (float) speed, (float) spread);
+            getSign().getBlock().getWorld().spawnArrow(shootLoc, velocity, (float) speed, (float) spread);
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {

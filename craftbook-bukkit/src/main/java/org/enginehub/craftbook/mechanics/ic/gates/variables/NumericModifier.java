@@ -16,6 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.variables;
 
 import com.google.common.base.Preconditions;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
@@ -202,11 +203,12 @@ public class NumericModifier extends AbstractIC {
 
         @Override
         public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
-            VariableKey variableKey = null;
+            VariableKey variableKey;
             try {
-                variableKey = VariableKey.fromString(sign.getLine(2), player);
+                String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+                variableKey = VariableKey.fromString(line2, player);
                 if (variableKey != null && !variableKey.hasPermission(player, "use")) {
-                    throw new ICVerificationException("You do not have permissions to use " + variableKey.toString() + "!");
+                    throw new ICVerificationException("You do not have permissions to use " + variableKey + "!");
                 }
             } catch (VariableException e) {
                 throw new ICVerificationException(e.getMessage(), e);
@@ -216,12 +218,14 @@ public class NumericModifier extends AbstractIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
             try {
-                VariableKey variableKey = VariableKey.fromString(sign.getLine(2), null);
+                String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+                VariableKey variableKey = VariableKey.fromString(line2, null);
                 if (variableKey == null || !VariableManager.instance.hasVariable(variableKey)) {
                     throw new ICVerificationException("Unknown Variable!");
                 }
-                Preconditions.checkNotNull(MathFunction.parseFunction(sign.getLine(3).split(":")[0]));
-                Double.parseDouble(sign.getLine(3).split(":")[1]);
+                String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
+                Preconditions.checkNotNull(MathFunction.parseFunction(line3.split(":")[0]));
+                Double.parseDouble(line3.split(":")[1]);
             } catch (NumberFormatException e) {
                 throw new ICVerificationException("Amount must be a number!");
             } catch (IllegalArgumentException e) {

@@ -28,7 +28,9 @@ import org.bukkit.Location;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.block.data.type.Switch;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -42,7 +44,6 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.RegexUtil;
@@ -51,6 +52,7 @@ import org.enginehub.craftbook.util.events.SignClickEvent;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 import java.util.Locale;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -272,7 +274,7 @@ public class Elevator extends AbstractCraftBookMechanic {
             destination = destination.getRelative(shift);
             LiftType destinationLiftType = findLift(destination);
             if (destinationLiftType != null
-                && isValidLift(CraftBookBukkitUtil.toChangedSign(clickedBlock), CraftBookBukkitUtil.toChangedSign(destination))) {
+                && isValidLift(clickedBlock, destination)) {
                 break; // found it!
             }
 
@@ -355,20 +357,32 @@ public class Elevator extends AbstractCraftBookMechanic {
     public static void teleportFinish(CraftBookPlayer player, Block destination, BlockFace shift) {
         ChangedSign destinationSign = null;
         if (!SignUtil.isSign(destination)) {
-            if (Tag.BUTTONS.isTagged(destination.getType())) {
-                Switch attachable = (Switch) destination.getBlockData();
+            if (Tag.BUTTONS.isTagged(destination.getType()) && destination.getBlockData() instanceof Switch attachable) {
                 if (SignUtil.isSign(destination.getRelative(attachable.getFacing().getOppositeFace(), 2))) {
-                    destinationSign = CraftBookBukkitUtil.toChangedSign(destination.getRelative(attachable.getFacing().getOppositeFace(), 2));
+                    Sign sign = (Sign) destination.getRelative(attachable.getFacing().getOppositeFace(), 2).getState(false);
+                    for (Side side : Side.values()) {
+                        if (LiftType.fromLabel(sign.getSide(side).getLine(1)) != null) {
+                            destinationSign = ChangedSign.create(sign, side);
+                            break;
+                        }
+                    }
                 }
             }
-            if (destinationSign == null) {
-                return;
-            }
         } else {
-            destinationSign = CraftBookBukkitUtil.toChangedSign(destination);
+            Sign sign = (Sign) destination.getState(false);
+            for (Side side : Side.values()) {
+                if (LiftType.fromLabel(sign.getSide(side).getLine(1)) != null) {
+                    destinationSign = ChangedSign.create(sign, side);
+                    break;
+                }
+            }
+        }
+        if (destinationSign == null) {
+            // Can't find the sign - just ignore the welcome message
+            return;
         }
 
-        String title = destinationSign.getLine(0);
+        String title = PlainTextComponentSerializer.plainText().serialize(destinationSign.getLine(0));
         if (!title.isEmpty()) {
             player.printInfo(TranslatableComponent.of("craftbook.elevator.floor-notice", TextComponent.of(title, TextColor.WHITE)));
         } else {
@@ -379,21 +393,26 @@ public class Elevator extends AbstractCraftBookMechanic {
         }
     }
 
-    public static boolean isValidLift(ChangedSign start, ChangedSign stop) {
-        if (start == null || stop == null) {
+    public static boolean isValidLift(@Nonnull Block start, @Nonnull Block stop) {
+        if (!SignUtil.isSign(start) || !SignUtil.isSign(stop)) {
             return true;
         }
 
-        if (start.getLine(2).toLowerCase(Locale.ROOT).startsWith("to:")) {
-            try {
-                return stop.getLine(0).equalsIgnoreCase(RegexUtil.COLON_PATTERN.split(start.getLine(2))[0].trim());
-            } catch (Exception e) {
-                start.setLine(2, "");
-                return false;
+        Sign startSign = (Sign) start.getState(false);
+        for (Side side : Side.values()) {
+            if (startSign.getSide(side).getLine(2).toLowerCase(Locale.ROOT).startsWith("to:")) {
+                Sign stopSign = (Sign) stop.getState(false);
+
+                try {
+                    return stopSign.getSide(side).getLine(0).equalsIgnoreCase(RegexUtil.COLON_PATTERN.split(startSign.getSide(side).getLine(2))[0].trim());
+                } catch (Exception e) {
+                    startSign.getSide(side).line(2, Component.text(""));
+                    return false;
+                }
             }
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     @Nullable
@@ -403,15 +422,27 @@ public class Elevator extends AbstractCraftBookMechanic {
                 Switch b = (Switch) block.getBlockData();
                 Block opposite = block.getRelative(b.getFacing().getOppositeFace(), 2);
                 if (SignUtil.isSign(opposite)) {
-                    ChangedSign sign = new ChangedSign(opposite, null);
-                    return LiftType.fromLabel(sign.getLine(1));
+                    Sign sign = (Sign) opposite.getState(false);
+                    for (Side side : Side.values()) {
+                        LiftType type = LiftType.fromLabel(sign.getSide(side).getLine(1));
+                        if (type != null) {
+                            return type;
+                        }
+                    }
                 }
             }
             return null;
         }
 
-        ChangedSign sign = new ChangedSign(block, null);
-        return LiftType.fromLabel(sign.getLine(1));
+        Sign sign = (Sign) block.getState(false);
+        for (Side side : Side.values()) {
+            LiftType type = LiftType.fromLabel(sign.getSide(side).getLine(1));
+            if (type != null) {
+                return type;
+            }
+        }
+
+        return null;
     }
 
     private boolean elevatorAllowRedstone;

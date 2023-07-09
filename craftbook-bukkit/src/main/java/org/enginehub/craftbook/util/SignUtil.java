@@ -21,8 +21,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Sign;
 import org.bukkit.block.data.type.WallSign;
+import org.bukkit.block.sign.Side;
 import org.bukkit.event.block.SignChangeEvent;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 
 /**
  * <p>
@@ -35,7 +35,7 @@ import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
  * for you -- since BlockFace has no such directions, those will be rounded to the nearest ordinal
  * direction. (If the
  * term "further direction"
- * confuses you, see https://secure.wikimedia.org/wikipedia/en/wiki/Cardinal_directions).
+ * confuses you, see <a href="https://secure.wikimedia.org/wikipedia/en/wiki/Cardinal_directions">this page</a>).
  * </p>
  * <p>
  * This is direly close to being a replicate of things you can access via org.bukkit.material.Sign
@@ -132,9 +132,12 @@ public final class SignUtil {
         for (int i = 0; i < searchRadius; i++) {
             if (isSign(otherBlock.getRelative(way))) {
                 otherBlock = otherBlock.getRelative(way);
-                if (CraftBookBukkitUtil.toChangedSign(otherBlock).getLine(1).equalsIgnoreCase(criterea)) {
-                    found = true;
-                    break;
+                org.bukkit.block.Sign otherSign = (org.bukkit.block.Sign) otherBlock.getState(false);
+                for (Side side : Side.values()) {
+                    if (otherSign.getSide(side).getLine(1).equalsIgnoreCase(criterea)) {
+                        found = true;
+                        break;
+                    }
                 }
             } else
                 otherBlock = otherBlock.getRelative(way);

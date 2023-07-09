@@ -16,7 +16,10 @@
 package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -26,7 +29,6 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ParsingUtil;
@@ -62,9 +64,11 @@ public class CommandSigns extends AbstractCraftBookMechanic {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         ChangedSign s = event.getSign();
 
-        if (!s.getLine(1).equals("[Command]")) return;
+        String line1 = PlainTextComponentSerializer.plainText().serialize(s.getLine(1));
+        if (!line1.equals("[Command]")) return;
 
-        if (s.getLine(0).equals("EXPANSION")) return;
+        String line0 = PlainTextComponentSerializer.plainText().serialize(s.getLine(0));
+        if (line0.equals("EXPANSION")) return;
 
         CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
@@ -93,26 +97,34 @@ public class CommandSigns extends AbstractCraftBookMechanic {
 
         if (!EventUtil.passesFilter(event)) return;
 
-        ChangedSign s = CraftBookBukkitUtil.toChangedSign(event.getBlock());
+        Sign bukkitSign = (Sign) event.getBlock().getState(false);
+        Side side = bukkitSign.getInteractableSideFor(event.getSource().getLocation());
+        ChangedSign s = ChangedSign.create(bukkitSign, side);
 
-        if (!s.getLine(1).equals("[Command]")) return;
+        String line1 = PlainTextComponentSerializer.plainText().serialize(s.getLine(1));
+        if (!line1.equals("[Command]")) return;
 
-        if (s.getLine(0).equals("EXPANSION")) return;
+        String line0 = PlainTextComponentSerializer.plainText().serialize(s.getLine(0));
+        if (line0.equals("EXPANSION")) return;
 
         runCommandSign(s, null);
     }
 
     public static void runCommandSign(ChangedSign sign, CraftBookPlayer player) {
-
-        StringBuilder command = new StringBuilder(sign.getLine(2).replace("/", "") + sign.getLine(3));
+        String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+        String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
+        StringBuilder command = new StringBuilder(line2.replace("/", "") + line3);
 
         while (BlockUtil.areBlocksIdentical(sign.getBlock(), sign.getBlock().getRelative(0, -1, 0))) {
+            sign = ChangedSign.create(sign.getBlock().getRelative(0, -1, 0), sign.getSide());
+            String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
+            if (!line1.equals("[Command]")) break;
+            String line0 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(0));
+            if (!line0.equals("EXPANSION")) break;
 
-            sign = CraftBookBukkitUtil.toChangedSign(sign.getBlock().getRelative(0, -1, 0));
-            if (!sign.getLine(1).equals("[Command]")) break;
-            if (!sign.getLine(0).equals("EXPANSION")) break;
-
-            command.append(sign.getLine(2)).append(sign.getLine(3));
+            line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+            line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
+            command.append(line2).append(line3);
         }
 
         if (player == null) {

@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.Tag;
@@ -26,7 +27,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -298,7 +298,7 @@ public class Planter extends AbstractSelfTriggeredIC {
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
-            if (!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(3)))
+            if (!SearchArea.isValidArea(sign.getBlock(), PlainTextComponentSerializer.plainText().serialize(sign.getLine(3))))
                 throw new ICVerificationException("Invalid SearchArea on 4th line!");
         }
     }

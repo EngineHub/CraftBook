@@ -24,6 +24,8 @@ import com.sk89q.worldedit.regions.EllipsoidRegion;
 import com.sk89q.worldedit.regions.RegionSelector;
 import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
 import com.sk89q.worldedit.regions.selector.SphereRegionSelector;
+import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -97,14 +99,17 @@ public final class ICUtil {
         return false;
     }
 
+    private static final TextReplacementConfig OFF_REMOVER = TextReplacementConfig.builder().matchLiteral("[off]").replacement("").build();
+    private static final TextReplacementConfig RAD_REMOVER = TextReplacementConfig.builder().matchLiteral("[rad]").replacement("").build();
+
     public static void parseSignFlags(CraftBookPlayer player, ChangedSign sign) {
 
         for (int i = 2; i < 4; i++) {
-
-            if (sign.getLine(i).contains("[off]")) {
+            String line = PlainTextComponentSerializer.plainText().serialize(sign.getLine(i));
+            if (line.contains("[off]")) {
 
                 if (CraftBookPlugin.plugins.getWorldEdit() == null) {
-                    sign.setLine(i, sign.getLine(i).replace("[off]", ""));
+                    sign.setLine(i, sign.getLine(i).replaceText(OFF_REMOVER));
                     player.printError("worldedit.ic.notfound");
                 } else {
                     RegionSelector selector = WorldEdit.getInstance().getSessionManager().get(player).getRegionSelector(player.getWorld());
@@ -132,7 +137,8 @@ public final class ICUtil {
                             if (z.endsWith(".0"))
                                 z = z.replace(".0", "");
 
-                            sign.setLine(i, sign.getLine(i).replace("[off]", "&" + x + ":" + y + ":" + z));
+                            TextReplacementConfig offsetReplacer = TextReplacementConfig.builder().matchLiteral("[off]").replacement("&" + x + ":" + y + ":" + z).build();
+                            sign.setLine(i, sign.getLine(i).replaceText(offsetReplacer));
                         } else if (selector instanceof SphereRegionSelector) {
                             Vector3 centre = selector.getRegion().getCenter();
                             Vector3 offset = centre.subtract(BukkitAdapter.adapt(sign.getBlock().getLocation()).toVector());
@@ -151,9 +157,10 @@ public final class ICUtil {
                             if (z.endsWith(".0"))
                                 z = z.replace(".0", "");
 
-                            sign.setLine(i, sign.getLine(i).replace("[off]", "&" + x + ":" + y + ":" + z));
+                            TextReplacementConfig offsetReplacer = TextReplacementConfig.builder().matchLiteral("[off]").replacement("&" + x + ":" + y + ":" + z).build();
+                            sign.setLine(i, sign.getLine(i).replaceText(offsetReplacer));
                         } else { // Unsupported.
-                            sign.setLine(i, sign.getLine(i).replace("[off]", ""));
+                            sign.setLine(i, sign.getLine(i).replaceText(OFF_REMOVER));
                             player.printError("worldedit.ic.unsupported");
                         }
                     } catch (IncompleteRegionException e) {
@@ -162,10 +169,10 @@ public final class ICUtil {
                 }
             }
 
-            if (sign.getLine(i).contains("[rad]")) {
+            if (line.contains("[rad]")) {
 
                 if (CraftBookPlugin.plugins.getWorldEdit() == null) {
-                    sign.setLine(i, sign.getLine(i).replace("[rad]", ""));
+                    sign.setLine(i, sign.getLine(i).replaceText(RAD_REMOVER));
                     player.printError("worldedit.ic.notfound");
                 } else {
                     RegionSelector selector = WorldEdit.getInstance().getSessionManager().get(player).getRegionSelector(player.getWorld());
@@ -187,7 +194,8 @@ public final class ICUtil {
                             if (z.endsWith(".0"))
                                 z = z.replace(".0", "");
 
-                            sign.setLine(i, sign.getLine(i).replace("[rad]", x + "," + y + "," + z));
+                            TextReplacementConfig radReplacer = TextReplacementConfig.builder().matchLiteral("[rad]").replacement(x + "," + y + "," + z).build();
+                            sign.setLine(i, sign.getLine(i).replaceText(radReplacer));
                         } else if (selector instanceof SphereRegionSelector) {
 
                             String x;
@@ -198,9 +206,10 @@ public final class ICUtil {
                             if (x.endsWith(".0"))
                                 x = x.replace(".0", "");
 
-                            sign.setLine(i, sign.getLine(i).replace("[rad]", x));
+                            TextReplacementConfig radReplacer = TextReplacementConfig.builder().matchLiteral("[rad]").replacement(x).build();
+                            sign.setLine(i, sign.getLine(i).replaceText(radReplacer));
                         } else { // Unsupported.
-                            sign.setLine(i, sign.getLine(i).replace("[rad]", ""));
+                            sign.setLine(i, sign.getLine(i).replaceText(RAD_REMOVER));
                             player.printError("worldedit.ic.unsupported");
                         }
                     } catch (IncompleteRegionException e) {
@@ -231,9 +240,8 @@ public final class ICUtil {
         return Vector3.at(offsetX, offsetY, offsetZ);
     }
 
-    public static Block parseBlockLocation(ChangedSign sign, String line, LocationCheckType relative) {
-
-        Block target = SignUtil.getBackBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
+    public static Block parseBlockLocation(Block sign, String line, LocationCheckType relative) {
+        Block target = SignUtil.getBackBlock(sign);
 
         if (line.contains("!"))
             relative = LocationCheckType.getTypeFromChar('!');
@@ -263,7 +271,7 @@ public final class ICUtil {
 
     public static Block parseBlockLocation(ChangedSign sign, int lPos, LocationCheckType relative) {
 
-        return parseBlockLocation(sign, sign.getLine(lPos), relative);
+        return parseBlockLocation(sign.getBlock(), PlainTextComponentSerializer.plainText().serialize(sign.getLine(lPos)), relative);
     }
 
     public static Block parseBlockLocation(ChangedSign sign, int lPos) {
@@ -284,7 +292,7 @@ public final class ICUtil {
     public static void verifySignLocationSyntax(ChangedSign sign, int i) throws ICVerificationException {
 
         try {
-            String line = sign.getLine(i);
+            String line = PlainTextComponentSerializer.plainText().serialize(sign.getLine(i));
             String[] strings;
             line = line.replace("!", "").replace("^", "").replace("&", "");
             if (line.contains("=")) {
@@ -315,7 +323,7 @@ public final class ICUtil {
     }
 
     public static Vector3 parseRadius(ChangedSign sign, int lPos) {
-        return parseRadius(sign.getLine(lPos));
+        return parseRadius(PlainTextComponentSerializer.plainText().serialize(sign.getLine(lPos)));
     }
 
     public static Vector3 parseRadius(String line) {

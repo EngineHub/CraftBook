@@ -15,6 +15,9 @@
 
 package org.enginehub.craftbook.mechanics.ic.plc;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -99,13 +102,12 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     }
 
     private boolean isShared() {
-
-        return !sign.getLine(3).isEmpty() && sign.getLine(3).startsWith("id:");
+        String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
+        return line3.startsWith("id:");
     }
 
     private String getID() {
-
-        return sign.getLine(2);
+        return PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
     }
 
     private String getFileName() {
@@ -255,15 +257,15 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
         for (int y = 0; y < w.getMaxHeight(); y++) {
             if (y != l.getBlockY()) if (SignUtil.isSign(w.getBlockAt(x, y, z))) {
-                ChangedSign s = CraftBookBukkitUtil.toChangedSign(w.getBlockAt(x, y, z));
-                if (s.getLine(1).equalsIgnoreCase("[Code Block]")) {
+                ChangedSign s = ChangedSign.create(w.getBlockAt(x, y, z), this.sign.getSide());
+                if (PlainTextComponentSerializer.plainText().serialize(s.getLine(1)).equalsIgnoreCase("[Code Block]")) {
                     y--;
                     Block b = w.getBlockAt(x, y, z);
                     StringBuilder code = new StringBuilder();
                     while (SignUtil.isSign(b)) {
-                        s = CraftBookBukkitUtil.toChangedSign(b);
+                        s = ChangedSign.create(b, this.sign.getSide());
                         for (int li = 0; li < 4 && y != l.getBlockY(); li++) {
-                            code.append(s.getLine(li)).append('\n');
+                            code.append(PlainTextComponentSerializer.plainText().serialize(s.getLine(li))).append('\n');
                         }
                         b = w.getBlockAt(x, --y, z);
                     }
@@ -288,8 +290,8 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
     public void error(String shortMessage, String detailedMessage) {
 
-        sign.setLine(2, ChatColor.RED + "!Error!");
-        sign.setLine(3, shortMessage);
+        sign.setLine(2, Component.text("!Error!").color(NamedTextColor.RED));
+        sign.setLine(3, Component.text(shortMessage));
         sign.update(false);
 
         error = true;

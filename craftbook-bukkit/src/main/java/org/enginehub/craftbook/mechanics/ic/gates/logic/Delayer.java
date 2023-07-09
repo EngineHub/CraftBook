@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.scheduler.BukkitTask;
@@ -44,10 +45,10 @@ public class Delayer extends AbstractIC {
 
     @Override
     public void load() {
-        delay = Long.parseLong(getSign().getLine(2));
-        tickDelay = Boolean.parseBoolean(getSign().getLine(3).split(":")[0]);
+        delay = Long.parseLong(getLine(2));
+        tickDelay = Boolean.parseBoolean(getLine(3).split(":")[0]);
         if (getLine(3).contains(":"))
-            stayOnLow = Boolean.parseBoolean(getSign().getLine(3).split(":")[1]);
+            stayOnLow = Boolean.parseBoolean(getLine(3).split(":")[1]);
     }
 
     @Override
@@ -93,7 +94,7 @@ public class Delayer extends AbstractIC {
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
-                Integer.parseInt(sign.getLine(2));
+                Integer.parseInt(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)));
             } catch (Exception ignored) {
                 throw new ICVerificationException("The third line needs to be a number.");
             }

@@ -35,6 +35,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -103,7 +104,7 @@ public class Door extends CuboidToggleMechanic {
             return;
         }
 
-        if (!isApplicableSign(event.getSign().getLine(1))) {
+        if (!isApplicableSign(event.getSign().getSign())) {
             return;
         }
 
@@ -158,7 +159,7 @@ public class Door extends CuboidToggleMechanic {
 
             event.setCancelled(true);
 
-            if (flipState(event.getClickedBlock())) {
+            if (flipState(event.getClickedBlock(), event.getSign())) {
                 player.printInfo(TranslatableComponent.of("craftbook.door.toggle"));
             }
         } catch (InvalidMechanismException e) {
@@ -170,29 +171,30 @@ public class Door extends CuboidToggleMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
-        if (!allowRedstone || event.isMinor() || !EventUtil.passesFilter(event)) {
+        if (!allowRedstone || event.isMinor() || !EventUtil.passesFilter(event) || !SignUtil.isSign(event.getBlock())) {
             return;
         }
 
-        if (!SignUtil.isSign(event.getBlock()) || !isApplicableSign(CraftBookBukkitUtil.toChangedSign(event.getBlock()).getLine(1))) {
+        Sign bukkitSign = (Sign) event.getBlock().getState(false);
+        if (!isApplicableSign(bukkitSign)) {
             return;
         }
+        Side side = bukkitSign.getInteractableSideFor(event.getSource().getLocation());
+        ChangedSign sign = ChangedSign.create(bukkitSign, side);
 
         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
             try {
-                flipState(event.getBlock());
+                flipState(event.getBlock(), sign);
             } catch (InvalidMechanismException ignored) {
                 // Ignore this as we can't print it
             }
         }, 2L);
     }
 
-    public boolean flipState(Block trigger) throws InvalidMechanismException {
+    public boolean flipState(Block trigger, ChangedSign sign) throws InvalidMechanismException {
         if (!SignUtil.isCardinal(trigger)) {
             return false;
         }
-
-        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(trigger);
 
         // Attempt to detect whether the door is above or below the sign,
         // first assuming that the bridge is above
@@ -212,10 +214,11 @@ public class Door extends CuboidToggleMechanic {
         }
 
         // Check the other side's base blocks for matching type
-        Block distalBaseCenter = null;
-        if (sign.getLine(1).equalsIgnoreCase("[Door Up]")) {
+        Block distalBaseCenter;
+        String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
+        if (line1.equalsIgnoreCase("[Door Up]")) {
             distalBaseCenter = farSide.getRelative(BlockFace.DOWN);
-        } else if (sign.getLine(1).equalsIgnoreCase("[Door Down]")) {
+        } else if (line1.equalsIgnoreCase("[Door Down]")) {
             distalBaseCenter = farSide.getRelative(BlockFace.UP);
         } else {
             throw new InvalidMechanismException(TranslatableComponent.of("craftbook.door.missing-other-sign"));
@@ -233,7 +236,7 @@ public class Door extends CuboidToggleMechanic {
         // efficiency choice :/
         Material hingeType;
 
-        if (sign.getLine(1).equals("[Door Up]")) {
+        if (line1.equals("[Door Up]")) {
             hingeType = proximalBaseCenter.getRelative(BlockFace.UP).getType();
         } else {
             hingeType = proximalBaseCenter.getRelative(BlockFace.DOWN).getType();
@@ -259,14 +262,26 @@ public class Door extends CuboidToggleMechanic {
     public Block getFarSign(Block nearSign) {
         // Find the other side
         Block otherSide = null;
+        BlockFace direction = null;
 
-        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(nearSign);
+        Sign bukkitSign = (Sign) nearSign.getState(false);
 
-        if (sign.getLine(1).equals("[Door Up]")) {
-            otherSide = nearSign.getRelative(BlockFace.UP);
-        } else if (sign.getLine(1).equals("[Door Down]")) {
-            otherSide = nearSign.getRelative(BlockFace.DOWN);
+        for (Side side : Side.values()) {
+            String line1 = PlainTextComponentSerializer.plainText().serialize(bukkitSign.getSide(side).line(1));
+            if (line1.equals("[Door Up]")) {
+                direction = BlockFace.UP;
+            } else if (line1.equals("[Door Down]")) {
+                direction = BlockFace.DOWN;
+            }
+            if (direction != null) {
+                otherSide = nearSign.getRelative(direction);
+                break;
+            }
         }
+        if (otherSide == null) {
+            return null;
+        }
+
         for (int i = 0; i <= maxLength; i++) {
             // about the loop index:
             // i = 0 is the first block after the proximal base
@@ -275,18 +290,16 @@ public class Door extends CuboidToggleMechanic {
             // allowed to find the distal signpost
 
             if (SignUtil.isSign(otherSide)) {
-                String otherSignText = CraftBookBukkitUtil.toChangedSign(otherSide).getLine(1);
-                if (isApplicableSign(otherSignText))
-                    break;
-                if ("[Door]".equals(otherSignText))
-                    break;
+                Sign otherSign = (Sign) otherSide.getState(false);
+                for (Side side : Side.values()) {
+                    String line1 = PlainTextComponentSerializer.plainText().serialize(otherSign.getSide(side).line(1));
+                    if (isApplicableSign(line1) || "[Door]".equals(line1)) {
+                        return otherSide;
+                    }
+                }
             }
 
-            if (sign.getLine(1).equals("[Door Up]")) {
-                otherSide = otherSide.getRelative(BlockFace.UP);
-            } else if (sign.getLine(1).equals("[Door Down]")) {
-                otherSide = otherSide.getRelative(BlockFace.DOWN);
-            }
+            otherSide = otherSide.getRelative(direction);
         }
 
         return otherSide;
@@ -294,15 +307,21 @@ public class Door extends CuboidToggleMechanic {
 
     @Override
     public Block getBlockBase(Block sign) throws InvalidMechanismException {
-        ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
+        Block proximalBaseCenter = null;
+        Sign bukkitSign = (Sign) sign.getState(false);
 
-        Block proximalBaseCenter;
+        for (Side side : Side.values()) {
+            String line1 = PlainTextComponentSerializer.plainText().serialize(bukkitSign.getSide(side).line(1));
+            if (line1.equalsIgnoreCase("[Door Up]")) {
+                proximalBaseCenter = sign.getRelative(BlockFace.UP);
+                break;
+            } else if (line1.equalsIgnoreCase("[Door Down]")) {
+                proximalBaseCenter = sign.getRelative(BlockFace.DOWN);
+                break;
+            }
+        }
 
-        if (s.getLine(1).equalsIgnoreCase("[Door Up]")) {
-            proximalBaseCenter = sign.getRelative(BlockFace.UP);
-        } else if (s.getLine(1).equalsIgnoreCase("[Door Down]")) {
-            proximalBaseCenter = sign.getRelative(BlockFace.DOWN);
-        } else {
+        if (proximalBaseCenter == null) {
             // This can never happen.
             throw new IllegalStateException("Sign passed as a door sign is not a door sign");
         }

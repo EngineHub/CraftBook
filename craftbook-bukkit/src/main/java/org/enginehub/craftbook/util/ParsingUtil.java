@@ -18,6 +18,9 @@ package org.enginehub.craftbook.util;
 import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.world.World;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.enginehub.craftbook.mechanics.variables.VariableManager;
 
 import javax.annotation.Nullable;
@@ -36,7 +39,20 @@ public final class ParsingUtil {
      * @param player The player associated with the line
      * @return The same line, with parsing completed
      */
+    @Deprecated
     public static String parseLine(String line, @Nullable Player player) {
+        checkNotNull(line);
+        return PlainTextComponentSerializer.plainText().serialize(parseLine(PlainTextComponentSerializer.plainText().deserialize(line), player));
+    }
+
+    /**
+     * Parses a line with all tags possible with given arguments.
+     *
+     * @param line The base line to start with.
+     * @param player The player associated with the line
+     * @return The same line, with parsing completed
+     */
+    public static Component parseLine(Component line, @Nullable Player player) {
         checkNotNull(line);
         if (player != null) {
             line = parsePlayerTags(line, player);
@@ -48,20 +64,31 @@ public final class ParsingUtil {
         return line;
     }
 
-    private static String parsePlayerTags(String line, Player player) {
+    private static Component parsePlayerTags(Component line, Player player) {
         Location location = player.getLocation();
 
-        line = line.replace("@p.l", location.getX() + "," + location.getY() + "," + location.getZ());
-        line = line.replace("@p.c", location.getX() + " " + location.getY() + " " + location.getZ());
-        line = line.replace("@p.x", String.valueOf(location.getX()));
-        line = line.replace("@p.y", String.valueOf(location.getY()));
-        line = line.replace("@p.z", String.valueOf(location.getZ()));
-        line = line.replace("@p.bx", String.valueOf(location.getBlockX()));
-        line = line.replace("@p.by", String.valueOf(location.getBlockY()));
-        line = line.replace("@p.bz", String.valueOf(location.getBlockZ()));
-        line = line.replace("@p.w", ((World) location.getExtent()).getName());
-        line = line.replace("@p.u", player.getUniqueId().toString());
-        line = line.replace("@p", player.getName());
+        line = line.replaceText(TextReplacementConfig.builder().matchLiteral("@p.l")
+            .replacement(location.getX() + "," + location.getY() + "," + location.getZ()).build());
+        line = line.replaceText(TextReplacementConfig.builder().matchLiteral("@p.c")
+            .replacement(location.getX() + " " + location.getY() + " " + location.getZ()).build());
+        line = line.replaceText(TextReplacementConfig.builder().matchLiteral("@p.x")
+            .replacement(String.valueOf(location.getX())).build());
+        line = line.replaceText(TextReplacementConfig.builder().matchLiteral("@p.y")
+            .replacement(String.valueOf(location.getY())).build());
+        line = line.replaceText(TextReplacementConfig.builder().matchLiteral("@p.z")
+            .replacement(String.valueOf(location.getZ())).build());
+        line = line.replaceText(TextReplacementConfig.builder().matchLiteral("@p.bx")
+            .replacement(String.valueOf(location.getBlockX())).build());
+        line = line.replaceText(TextReplacementConfig.builder().matchLiteral("@p.by")
+            .replacement(String.valueOf(location.getBlockY())).build());
+        line = line.replaceText(TextReplacementConfig.builder().matchLiteral("@p.bz")
+            .replacement(String.valueOf(location.getBlockZ())).build());
+        line = line.replaceText(TextReplacementConfig.builder().matchLiteral("@p.w")
+            .replacement(((World) location.getExtent()).getName()).build());
+        line = line.replaceText(TextReplacementConfig.builder().matchLiteral("@p.u")
+            .replacement(player.getUniqueId().toString()).build());
+        line = line.replaceText(TextReplacementConfig.builder().matchLiteral("@p")
+            .replacement(player.getName()).build());
 
         return line;
     }

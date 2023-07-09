@@ -15,9 +15,11 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.entity;
 
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -67,8 +69,8 @@ public class AdvancedEntitySpawner extends AbstractIC {
 
     @Override
     public void load() {
-
-        String[] splitLine3 = RegexUtil.ASTERISK_PATTERN.split(getSign().getLine(3).trim());
+        String line3 = getLine(3);
+        String[] splitLine3 = RegexUtil.ASTERISK_PATTERN.split(line3.trim());
         try {
             type = EntityType.valueOf(splitLine3[0].trim().toLowerCase(Locale.ENGLISH));
         } catch (IllegalArgumentException e) {
@@ -95,24 +97,24 @@ public class AdvancedEntitySpawner extends AbstractIC {
             return;
 
         if (!chip.getInput(0)) return;
-        Block left = SignUtil.getLeftBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock());
+        Block left = SignUtil.getLeftBlock(getSign().getBlock());
         ChangedSign effectSign = null;
         if (SignUtil.isWallSign(left))
-            effectSign = CraftBookBukkitUtil.toChangedSign(left);
+            effectSign = ChangedSign.create(left, Side.FRONT);
 
-        Block right = SignUtil.getRightBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock());
+        Block right = SignUtil.getRightBlock(getSign().getBlock());
         ChangedSign armourSign = null;
         if (SignUtil.isWallSign(right))
-            armourSign = CraftBookBukkitUtil.toChangedSign(right);
+            armourSign = ChangedSign.create(right, Side.FRONT);
 
         for (int i = 0; i < amount; i++) {
-            Entity ent = CraftBookBukkitUtil.toSign(getSign()).getWorld().spawn(location, type.getEntityClass());
+            Entity ent = getSign().getBlock().getWorld().spawn(location, type.getEntityClass());
 
             if (armourSign != null) { // Apply armor
                 if (ent instanceof LivingEntity) {
 
                     for (int s = 0; s < 4; s++) {
-                        String bit = armourSign.getLine(s);
+                        String bit = PlainTextComponentSerializer.plainText().serialize(armourSign.getLine(s));
 
                         ItemStack slot = ItemUtil.makeItemValid(ItemSyntax.getItem(bit));
 
@@ -138,7 +140,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
 
             while (effectSign != null) { // Apply effects
                 for (int s = 0; s < 4; s++) {
-                    String bit = effectSign.getLine(s);
+                    String bit = PlainTextComponentSerializer.plainText().serialize(effectSign.getLine(s));
                     if (bit == null || bit.trim().isEmpty()) continue;
 
                     String[] data = RegexUtil.COLON_PATTERN.split(bit);
@@ -176,17 +178,16 @@ public class AdvancedEntitySpawner extends AbstractIC {
                     }
                 }
                 if (upwards == null) {
-                    if (SignUtil.isWallSign(CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0, 1, 0))) {
-                        effectSign = CraftBookBukkitUtil.toChangedSign(CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0, 1, 0));
+                    if (SignUtil.isWallSign(effectSign.getBlock().getRelative(0, 1, 0))) {
+                        effectSign = ChangedSign.create(effectSign.getBlock().getRelative(0, 1, 0), effectSign.getSide());
                         upwards = true;
-                    } else if (SignUtil.isWallSign(CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0, -1, 0))) {
-                        effectSign = CraftBookBukkitUtil.toChangedSign(CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0, -1, 0));
+                    } else if (SignUtil.isWallSign(effectSign.getBlock().getRelative(0, -1, 0))) {
+                        effectSign = ChangedSign.create(effectSign.getBlock().getRelative(0, -1, 0), effectSign.getSide());
                         upwards = false;
                     } else break;
                 } else {
-                    if (SignUtil.isWallSign(CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0, upwards ? 1 : -1, 0)))
-                        effectSign = CraftBookBukkitUtil
-                            .toChangedSign(CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0, upwards ? 1 : -1, 0));
+                    if (SignUtil.isWallSign(effectSign.getBlock().getRelative(0, upwards ? 1 : -1, 0)))
+                        effectSign = ChangedSign.create(effectSign.getBlock().getRelative(0, upwards ? 1 : -1, 0), effectSign.getSide());
                     else break;
                 }
             }
@@ -220,8 +221,8 @@ public class AdvancedEntitySpawner extends AbstractIC {
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
-
-            String[] splitLine3 = RegexUtil.ASTERISK_PATTERN.split(sign.getLine(3).trim());
+            String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
+            String[] splitLine3 = RegexUtil.ASTERISK_PATTERN.split(line3.trim());
             EntityType type = EntityType.fromName(splitLine3[0].trim().toLowerCase(Locale.ENGLISH));
             if (type == null)
                 try {

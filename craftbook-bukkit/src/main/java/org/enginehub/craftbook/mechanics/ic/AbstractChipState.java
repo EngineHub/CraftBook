@@ -45,7 +45,7 @@ public abstract class AbstractChipState implements ChipState {
         this.sign = sign;
         this.source = source;
         this.selfTriggered = selfTriggered;
-        icBlock = SignUtil.getBackBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
+        icBlock = SignUtil.getBackBlock(sign.getBlock());
     }
 
     protected abstract Block getBlock(int pin);

@@ -19,8 +19,12 @@ import com.google.common.collect.Lists;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extension.platform.Actor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -31,7 +35,6 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
 import org.enginehub.craftbook.mechanics.pipe.PipePutEvent;
 import org.enginehub.craftbook.st.BukkitSelfTriggerManager;
@@ -105,35 +108,36 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
         // if we're not looking at a wall sign, it can't be an IC.
         if (!SignUtil.isWallSign(block)) return null;
-        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(block);
+        ChangedSign sign = ChangedSign.create(block, Side.FRONT);
+        String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
 
         // detect the text on the sign to see if it's any kind of IC at all.
-        Matcher matcher = RegexUtil.IC_PATTERN.matcher(sign.getLine(1));
+        Matcher matcher = RegexUtil.IC_PATTERN.matcher(line1);
         if (!matcher.matches()) return null;
 
         String prefix = matcher.group(2);
         // TODO: remove after some time to stop converting existing MCA ICs
         // convert existing MCA ICs to the new [MCXXXX]A syntax
         if (prefix.equalsIgnoreCase("MCA")) {
-            sign.setLine(1, (sign.getLine(1).toLowerCase(Locale.ENGLISH).replace("mca", "mc") + "a").toUpperCase(Locale.ENGLISH));
+            sign.setLine(1, Component.text((line1.toLowerCase(Locale.ENGLISH).replace("mca", "mc") + "a").toUpperCase(Locale.ENGLISH)));
             sign.update(false);
 
             return setupIC(block, create);
         }
-        if (sign.getLine(1).toLowerCase(Locale.ENGLISH).startsWith("[mc0")) {
-            if (sign.getLine(1).equalsIgnoreCase("[mc0420]"))
-                sign.setLine(1, "[MC1421]S");
-            else if (sign.getLine(1).equalsIgnoreCase("[mc0421]"))
-                sign.setLine(1, "[MC1422]S");
+        if (line1.toLowerCase(Locale.ENGLISH).startsWith("[mc0")) {
+            if (line1.equalsIgnoreCase("[mc0420]"))
+                sign.setLine(1, Component.text("[MC1421]S"));
+            else if (line1.equalsIgnoreCase("[mc0421]"))
+                sign.setLine(1, Component.text("[MC1422]S"));
             else
-                sign.setLine(1, (sign.getLine(1).toLowerCase(Locale.ENGLISH).replace("mc0", "mc1") + "s").toUpperCase(Locale.ENGLISH));
+                sign.setLine(1, Component.text((line1.toLowerCase(Locale.ENGLISH).replace("mc0", "mc1") + "s").toUpperCase(Locale.ENGLISH)));
             sign.update(false);
 
             return setupIC(block, create);
         }
 
-        if (sign.getLine(1).toLowerCase(Locale.ENGLISH).startsWith("[mcz")) {
-            sign.setLine(1, (sign.getLine(1).toLowerCase(Locale.ENGLISH).replace("mcz", "mcx") + "s").toUpperCase(Locale.ENGLISH));
+        if (line1.toLowerCase(Locale.ENGLISH).startsWith("[mcz")) {
+            sign.setLine(1, Component.text((line1.toLowerCase(Locale.ENGLISH).replace("mcz", "mcx") + "s").toUpperCase(Locale.ENGLISH)));
             sign.update(false);
 
             return setupIC(block, create);
@@ -156,6 +160,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             return null;
         }
 
+        String line0 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(0));
         IC ic;
         // check if the ic is cached and get that single instance instead of creating a new one
         if (ICManager.isCachedIC(block.getLocation())) {
@@ -164,8 +169,8 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
                 ICManager.removeCachedIC(block.getLocation());
                 ic = registration.getFactory().create(sign);
-                if (!sign.getLine(0).equals(ic.getSignTitle()) && !sign.getLine(0).startsWith("=")) {
-                    sign.setLine(0, ic.getSignTitle());
+                if (!line0.equals(ic.getSignTitle()) && !line0.startsWith("=")) {
+                    sign.setLine(0, Component.text(ic.getSignTitle()));
                     sign.update(false);
                 }
                 ic.load();
@@ -174,8 +179,8 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             }
         } else if (create) {
             ic = registration.getFactory().create(sign);
-            if (!sign.getLine(0).equals(ic.getSignTitle()) && !sign.getLine(0).startsWith("=")) {
-                sign.setLine(0, ic.getSignTitle());
+            if (!line0.equals(ic.getSignTitle()) && !line0.startsWith("=")) {
+                sign.setLine(0, Component.text(ic.getSignTitle()));
                 sign.update(false);
             }
             ic.load();
@@ -185,7 +190,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             return null;
         // extract the suffix
         String suffix = "";
-        String[] str = RegexUtil.RIGHT_BRACKET_PATTERN.split(sign.getLine(1));
+        String[] str = RegexUtil.RIGHT_BRACKET_PATTERN.split(line1);
         if (str.length > 1) {
             suffix = str[1];
         }
@@ -201,7 +206,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         }
 
         // okay, everything checked out. we can finally make it.
-        if (ic instanceof SelfTriggeredIC && (sign.getLine(1).trim().toUpperCase(Locale.ENGLISH).endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST())) {
+        if (ic instanceof SelfTriggeredIC && (line1.trim().toUpperCase(Locale.ENGLISH).endsWith("S") || ((SelfTriggeredIC) ic).isAlwaysST())) {
             if (disableSelfTriggered)
                 return null;
             ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).registerSelfTrigger(block.getLocation());
@@ -238,7 +243,10 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
                 if (!SignUtil.isWallSign(block)) return;
                 try {
-                    ChipState chipState = ((ICFamily) icData[1]).detect(BukkitAdapter.adapt(source.getLocation()), CraftBookBukkitUtil.toChangedSign(block));
+                    Sign bukkitSign = (Sign) event.getBlock().getState(false);
+                    Side side = bukkitSign.getInteractableSideFor(event.getSource().getLocation());
+                    ChangedSign sign = ChangedSign.create(block, side, bukkitSign.getSide(side).lines().toArray(new Component[0]), null);
+                    ChipState chipState = ((ICFamily) icData[1]).detect(BukkitAdapter.adapt(source.getLocation()), sign);
                     int cnt = 0;
                     for (int i = 0; i < chipState.getInputCount(); i++) {
                         if (chipState.isTriggered(i)) {
@@ -451,7 +459,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             }
 
             Bukkit.getServer().getScheduler().runTask(CraftBookPlugin.inst(), () -> {
-                ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock(), event.getLines(), null);
+                ChangedSign sign = ChangedSign.create(event.getBlock(), event.getSide(), event.lines().toArray(new Component[0]), null);
 
                 //WorldEdit offset/radius tools.
                 ICUtil.parseSignFlags(player, sign);
@@ -468,9 +476,9 @@ public class ICMechanic extends AbstractCraftBookMechanic {
                 IC ic = registration.getFactory().create(sign);
                 ic.load();
 
-                sign.setLine(1, "[" + registration.getId() + "]" + suffix);
+                sign.setLine(1, Component.text("[" + registration.getId() + "]" + suffix));
                 if (!shortHand)
-                    sign.setLine(0, ic.getSignTitle());
+                    sign.setLine(0, Component.text(ic.getSignTitle()));
 
                 sign.update(false);
 

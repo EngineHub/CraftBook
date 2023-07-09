@@ -59,7 +59,7 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
     public void load() {
 
         try {
-            amount = Integer.parseInt(getSign().getLine(2));
+            amount = Integer.parseInt(getLine(2));
         } catch (Exception e) {
             amount = 1;
         }

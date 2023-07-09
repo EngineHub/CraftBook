@@ -15,11 +15,11 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.sensors;
 
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -90,7 +90,7 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
 
         nameLine = NAME_STRIPPER.matcher(getLine(3)).replaceAll(Matcher.quoteReplacement("")).trim();
 
-        area = SearchArea.createArea(CraftBookBukkitUtil.toSign(getSign()).getBlock(), getLine(2));
+        area = SearchArea.createArea(getSign().getBlock(), getLine(2));
     }
 
     private boolean isDetected() {
@@ -130,7 +130,7 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if (!SearchArea.createArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)).isValid())
+            if (!SearchArea.createArea(sign.getBlock(), PlainTextComponentSerializer.plainText().serialize(sign.getLine(2))).isValid())
                 throw new ICVerificationException("Invalid SearchArea on line 3!");
         }
 

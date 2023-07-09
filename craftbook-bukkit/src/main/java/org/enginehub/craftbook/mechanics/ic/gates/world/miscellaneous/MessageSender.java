@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
@@ -139,7 +140,7 @@ public class MessageSender extends AbstractIC {
         @Override
         public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
 
-            if (!sign.getLine(2).equalsIgnoreCase(player.getName()))
+            if (!PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)).equalsIgnoreCase(player.getName()))
                 if (!ICMechanic.hasRestrictedPermissions(player, this, "mc1510"))
                     throw new ICVerificationException("You don't have permission to use other players!");
         }

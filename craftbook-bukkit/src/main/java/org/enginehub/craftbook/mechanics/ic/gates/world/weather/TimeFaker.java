@@ -91,7 +91,7 @@ public class TimeFaker extends AbstractSelfTriggeredIC {
         area = SearchArea.createArea(getLocation().getBlock(), getLine(2));
 
         try {
-            time = Long.parseLong(getSign().getLine(3));
+            time = Long.parseLong(getLine(3));
         } catch (Exception e) {
             if (time == 0) time = 13000L;
         }

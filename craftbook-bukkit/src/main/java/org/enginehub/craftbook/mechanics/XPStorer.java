@@ -29,6 +29,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.ThrownExpBottle;
@@ -238,13 +240,15 @@ public class XPStorer extends AbstractCraftBookMechanic {
             return;
         }
 
-        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
+        Sign sign = (Sign) event.getBlock().getState(false);
 
-        if (!sign.getLine(1).equals("[XP]")) {
-            return;
+        for (Side side : Side.values()) {
+            if (!sign.getSide(side).getLine(1).equals("[XP]")) {
+                return;
+            }
+
+            event.setHandled(true);
         }
-
-        event.setHandled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -253,9 +257,19 @@ public class XPStorer extends AbstractCraftBookMechanic {
             return;
         }
 
-        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
+        Sign bukkitSign = (Sign) event.getBlock().getState(false);
+        ChangedSign sign = null;
 
-        if (!sign.getLine(1).equals("[XP]")) {
+        for (Side side : Side.values()) {
+            String line1 = PlainTextComponentSerializer.plainText().serialize(bukkitSign.line(1));
+            if (!line1.equals("[XP]")) {
+                continue;
+            }
+            sign = ChangedSign.create(event.getBlock(), side, bukkitSign.lines().toArray(new Component[0]), null);
+            break;
+        }
+        if (sign == null) {
+            // None found
             return;
         }
 
@@ -263,9 +277,10 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         int signRadius = maxRadius;
         try {
-            signRadius = Math.max(maxRadius, Integer.parseInt(sign.getLine(2)));
+            String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+            signRadius = Math.max(maxRadius, Integer.parseInt(line2));
         } catch (Exception ignored) {
-            sign.setLine(2, String.valueOf(signRadius));
+            sign.setLine(2, Component.text(signRadius));
             sign.update(false);
         }
 

@@ -82,7 +82,7 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
         area = SearchArea.createArea(CraftBookBukkitUtil.toSign(getSign()).getBlock(), getLine(2));
 
         try {
-            damage = Integer.parseInt(RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[2]);
+            damage = Integer.parseInt(RegexUtil.EQUALS_PATTERN.split(getLine(2))[2]);
         } catch (Exception ignored) {
             damage = 2;
         }

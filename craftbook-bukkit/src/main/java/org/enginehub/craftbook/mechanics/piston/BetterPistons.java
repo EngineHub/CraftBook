@@ -29,14 +29,18 @@ import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import io.papermc.paper.entity.TeleportFlag;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Chest;
 import org.bukkit.block.data.type.Piston;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
@@ -53,7 +57,6 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.EntityUtil;
 import org.enginehub.craftbook.util.EventUtil;
@@ -93,7 +96,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
 
             for (PistonType testType : PistonType.values()) {
                 if (isEnabled(testType) && event.getLine(1).equalsIgnoreCase(testType.getSignText())) {
-                    event.setLine(1, testType.getSignText());
+                    event.line(1, Component.text(testType.getSignText()));
                     type = testType;
                     break;
                 }
@@ -110,7 +113,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                 } catch (Exception ignored) {
                 }
                 velocity = Math.min(Math.max(velocity, -maxBounceVelocity), maxBounceVelocity);
-                event.setLine(2, String.valueOf(velocity));
+                event.line(2, Component.text(velocity));
             }
 
             if (!player.hasPermission("craftbook.betterpistons." + type.name().toLowerCase(Locale.ENGLISH) + ".create")) {
@@ -199,15 +202,17 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             Block sign = event.getBlock();
             do {
                 sign = sign.getRelative(face);
-                ChangedSign signState = CraftBookBukkitUtil.toChangedSign(sign);
+                Sign bukkitSign = (Sign) sign.getState(false);
 
-                PistonType type = PistonType.getFromSign(signState);
-
-                if (type != null) {
-                    switch (type) {
-                        case CRUSH -> crush(event.getBlock(), piston);
-                        case BOUNCE -> bounce(event.getBlock(), piston, signState);
-                        case SUPER_PUSH -> superPush(event.getBlock(), piston, signState);
+                for (Side side : Side.values()) {
+                    PistonType type = PistonType.getFromSign(bukkitSign.getSide(side));
+                    if (type != null) {
+                        ChangedSign signState = ChangedSign.create(bukkitSign, side);
+                        switch (type) {
+                            case CRUSH -> crush(event.getBlock(), piston);
+                            case BOUNCE -> bounce(event.getBlock(), piston, signState);
+                            case SUPER_PUSH -> superPush(event.getBlock(), piston, signState);
+                        }
                     }
                 }
             } while (SignUtil.isSign(sign.getRelative(face)) && SignUtil.getFacing(sign) == facing);
@@ -248,16 +253,19 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             Block sign = event.getBlock();
             do {
                 sign = sign.getRelative(face);
-                ChangedSign signState = CraftBookBukkitUtil.toChangedSign(sign);
+                Sign bukkitSign = (Sign) sign.getState(false);
 
-                PistonType type = PistonType.getFromSign(signState);
+                for (Side side : Side.values()) {
+                    PistonType type = PistonType.getFromSign(bukkitSign.getSide(side));
+                    if (type == PistonType.SUPER_STICKY) {
+                        superSticky(event.getBlock(), event.getDirection(), ChangedSign.create(bukkitSign, side));
 
-                if (type == PistonType.SUPER_STICKY) {
-                    superSticky(event.getBlock(), event.getDirection(), signState);
-
-                    // Only one type - eject once we've ran it.
-                    break;
+                        // Only one type - eject once we've ran it.
+                        break;
+                    }
                 }
+
+
             } while (SignUtil.isSign(sign.getRelative(face)) && SignUtil.getFacing(sign) == facing);
         }
     }
@@ -287,10 +295,11 @@ public class BetterPistons extends AbstractCraftBookMechanic {
 
         double multiplier;
         try {
-            multiplier = Double.parseDouble(signState.getLine(2));
+            String line2 = PlainTextComponentSerializer.plainText().serialize(signState.getLine(2));
+            multiplier = Double.parseDouble(line2);
         } catch (Exception ignored) {
             multiplier = 1;
-            signState.setLine(2, "1.0");
+            signState.setLine(2, Component.text("1.0"));
             signState.update(false);
         }
 
@@ -324,19 +333,21 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             int block = 10;
             int amount = 1;
             try {
-                String[] split = RegexUtil.COLON_PATTERN.split(signState.getLine(2));
+                String line2 = PlainTextComponentSerializer.plainText().serialize(signState.getLine(2));
+                String[] split = RegexUtil.COLON_PATTERN.split(line2);
                 block = Integer.parseInt(split[0]);
                 if (split.length > 1) {
                     amount = Integer.parseInt(split[1]);
                 }
             } catch (Exception ignored) {
-                signState.setLine(2, Math.min(maxDistance, 10) + ":1");
+                signState.setLine(2, Component.text(Math.min(maxDistance, 10) + ":1"));
                 signState.update(false);
             }
 
             block = Math.min(maxDistance, block);
 
-            final boolean air = signState.getLine(3).equalsIgnoreCase("AIR");
+            String line3 = PlainTextComponentSerializer.plainText().serialize(signState.getLine(3));
+            final boolean air = line3.equalsIgnoreCase("AIR");
 
             final int fblock = block;
 
@@ -390,13 +401,14 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             int block = 10;
             int amount = 1;
             try {
-                String[] split = RegexUtil.COLON_PATTERN.split(signState.getLine(2));
+                String line2 = PlainTextComponentSerializer.plainText().serialize(signState.getLine(2));
+                String[] split = RegexUtil.COLON_PATTERN.split(line2);
                 block = Integer.parseInt(split[0]);
                 if (split.length > 1) {
                     amount = Integer.parseInt(split[1]);
                 }
             } catch (Exception ignored) {
-                signState.setLine(2, Math.min(maxDistance, 10) + ":1");
+                signState.setLine(2, Component.text(Math.min(maxDistance, 10) + ":1"));
                 signState.update(false);
             }
 

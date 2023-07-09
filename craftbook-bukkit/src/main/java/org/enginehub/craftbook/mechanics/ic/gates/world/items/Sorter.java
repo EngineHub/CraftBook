@@ -58,9 +58,9 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
     public void load() {
 
         chestBlock = getBackBlock().getRelative(0, 1, 0);
-        inverted = getSign().getLine(2).equalsIgnoreCase("invert");
+        inverted = getLine(2).equalsIgnoreCase("invert");
 
-        for (String line4 : RegexUtil.PIPE_PATTERN.split(getSign().getLine(3))) {
+        for (String line4 : RegexUtil.PIPE_PATTERN.split(getLine(3))) {
             if (line4.equalsIgnoreCase("!D"))
                 ignoreDurability = true;
             if (line4.equalsIgnoreCase("!E"))

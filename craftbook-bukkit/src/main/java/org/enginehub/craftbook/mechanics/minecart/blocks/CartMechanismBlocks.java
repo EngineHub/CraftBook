@@ -17,16 +17,18 @@ package org.enginehub.craftbook.mechanics.minecart.blocks;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.block.BaseBlock;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.MultipleFacing;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.util.BoundingBox;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.minecart.RailUtil;
 import org.enginehub.craftbook.util.SignUtil;
 
@@ -54,16 +56,33 @@ import javax.annotation.Nullable;
 public record CartMechanismBlocks(Block rail, Block base, Block sign) {
 
     /**
-     * Determines if the given sign includes the given text.
+     * Determines if the given sign includes any of the given text.
      *
      * @param testText The text on the sign to test against.
-     * @return true if the bracketed keyword on the sign matches the given testText; false otherwise
+     * @return a Side if the bracketed keyword on the sign matches the given testText; null otherwise
      *     or if no sign.
      */
-    public boolean matches(String testText) {
-        // the astute will notice there's a problem coming up here with the one dang thing that had to go and break
-        // the mold with second line definer.
-        return hasSign() && getChangedSign().getLine(1).equalsIgnoreCase("[" + testText + "]");
+    @Nullable
+    public Side matches(String ... testText) {
+        if (!hasSign()) {
+            return null;
+        }
+        Sign bukkitSign = (Sign) sign.getState(false);
+        for (Side side : Side.values()) {
+            for (String test : testText) {
+                if (bukkitSign.getSide(side).getLine(1).equalsIgnoreCase("[" + test + "]")) {
+                    return side;
+                }
+            }
+        }
+        return null;
+    }
+
+    public boolean matches(String testText, Side side) {
+        if (!hasSign()) {
+            return false;
+        }
+        return PlainTextComponentSerializer.plainText().serialize(getChangedSign(side).getLine(1)).equalsIgnoreCase("[" + testText + "]");
     }
 
     /**
@@ -88,8 +107,8 @@ public record CartMechanismBlocks(Block rail, Block base, Block sign) {
         return base != null;
     }
 
-    public ChangedSign getChangedSign() {
-        return hasSign() ? CraftBookBukkitUtil.toChangedSign(sign) : null;
+    public ChangedSign getChangedSign(Side side) {
+        return hasSign() ? ChangedSign.create(sign, side) : null;
     }
 
     /**

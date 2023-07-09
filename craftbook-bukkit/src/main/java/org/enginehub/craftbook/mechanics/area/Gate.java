@@ -33,6 +33,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -41,7 +42,6 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
@@ -76,7 +76,7 @@ public class Gate extends StoredBlockMechanic {
      * @return true if a gate was found and blocks were changed; false otherwise.
      * @throws InvalidMechanismException if something went wrong with the gate
      */
-    public boolean toggleGates(Block block, Boolean close) throws InvalidMechanismException {
+    public boolean toggleGates(Block block, ChangedSign sign, Boolean close) throws InvalidMechanismException {
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
@@ -85,7 +85,6 @@ public class Gate extends StoredBlockMechanic {
 
         Set<GateColumn> visitedColumns = new HashSet<>();
 
-        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(block);
         Material type = getOrSetStoredType(sign.getBlock());
 
         // Toggle nearby gates
@@ -182,7 +181,7 @@ public class Gate extends StoredBlockMechanic {
 
         Sign otherSign = null;
 
-        Block ot = SignUtil.getNextSign(sign.getBlock(), sign.getLine(1), 4);
+        Block ot = SignUtil.getNextSign(sign.getBlock(), PlainTextComponentSerializer.plainText().serialize(sign.getLine(1)), 4);
         if (ot != null) {
             otherSign = (Sign) ot.getState(false);
         }
@@ -246,7 +245,7 @@ public class Gate extends StoredBlockMechanic {
             return;
         }
 
-        if (!isApplicableSign(event.getSign().getLine(1))) {
+        if (!isApplicableSign(event.getSign().getSign())) {
             return;
         }
 
@@ -301,7 +300,7 @@ public class Gate extends StoredBlockMechanic {
 
             event.setCancelled(true);
 
-            if (toggleGates(event.getClickedBlock(), null)) {
+            if (toggleGates(event.getClickedBlock(), event.getSign(), null)) {
                 player.printInfo(TranslatableComponent.of("craftbook.gate.toggle"));
             } else {
                 player.printError(TranslatableComponent.of("craftbook.gate.not-found"));
@@ -317,15 +316,18 @@ public class Gate extends StoredBlockMechanic {
             return;
         }
 
-        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
-        if (!isApplicableSign(sign.getLine(1))) {
+        Sign bukkitSign = (Sign) event.getBlock().getState(false);
+        if (!isApplicableSign(bukkitSign)) {
             return;
         }
+
+        Side side = bukkitSign.getInteractableSideFor(event.getSource().getLocation());
+        ChangedSign sign = ChangedSign.create(bukkitSign, side);
 
         CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(),
             () -> {
                 try {
-                    toggleGates(event.getBlock(), event.getNewCurrent() > 0);
+                    toggleGates(event.getBlock(), sign, event.getNewCurrent() > 0);
                 } catch (InvalidMechanismException ignored) {
                     // ignore these, there's no one to send them to.
                 }

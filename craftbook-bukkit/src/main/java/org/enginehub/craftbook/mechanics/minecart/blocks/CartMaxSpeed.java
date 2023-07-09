@@ -18,6 +18,8 @@ package org.enginehub.craftbook.mechanics.minecart.blocks;
 import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
@@ -39,10 +41,14 @@ public class CartMaxSpeed extends CartBlockMechanism {
             return;
         }
 
+        Side side = event.getBlocks().matches("maxspeed");
+
         double maxSpeed = 0.4D;
-        try {
-            maxSpeed = Double.parseDouble(event.getBlocks().getChangedSign().getLine(2));
-        } catch (Exception ignored) {
+        if (side != null) {
+            try {
+                maxSpeed = Double.parseDouble(PlainTextComponentSerializer.plainText().serialize(event.getBlocks().getChangedSign(side).getLine(2)));
+            } catch (Exception ignored) {
+            }
         }
 
         event.getMinecart().setMaxSpeed(maxSpeed);
@@ -51,8 +57,9 @@ public class CartMaxSpeed extends CartBlockMechanism {
     @Override
     public boolean verify(ChangedSign sign, CraftBookPlayer player) {
         try {
-            if (!sign.getLine(2).isEmpty()) {
-                Double.parseDouble(sign.getLine(2));
+            String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+            if (!line2.isEmpty()) {
+                Double.parseDouble(line2);
             }
         } catch (NumberFormatException e) {
             player.printError("Line 3 must be a number that represents the max speed!");

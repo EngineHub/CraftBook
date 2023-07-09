@@ -27,7 +27,9 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.block.data.Directional;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -127,14 +129,27 @@ public class Teleporter extends AbstractCraftBookMechanic {
         ChangedSign sign = null;
 
         if (SignUtil.isSign(event.getClickedBlock())) {
-            sign = CraftBookBukkitUtil.toChangedSign(event.getClickedBlock());
+            Sign bukkitSign = (Sign) event.getClickedBlock().getState(false);
+            sign = ChangedSign.create(
+                event.getClickedBlock(),
+                bukkitSign.getInteractableSideFor(event.getInteractionPoint()),
+                bukkitSign.lines().toArray(new Component[0]),
+                localPlayer
+            );
             block = event.getClickedBlock();
         } else if (Tag.BUTTONS.isTagged(event.getClickedBlock().getType())) {
             Directional b = (Directional) event.getClickedBlock().getBlockData();
             Block oppositeBlock = event.getClickedBlock().getRelative(b.getFacing().getOppositeFace(), 2);
             if (SignUtil.isSign(oppositeBlock)) {
-                sign = CraftBookBukkitUtil.toChangedSign(oppositeBlock);
-                block = oppositeBlock;
+                Sign bukkitSign = (Sign) oppositeBlock.getState(false);
+                for (Side side : Side.values()) {
+                    String line1 = PlainTextComponentSerializer.plainText().serialize(bukkitSign.getSide(side).line(1));
+                    if (line1.equals("[Teleporter]")) {
+                        block = oppositeBlock;
+                        sign = ChangedSign.create(block, side, bukkitSign.lines().toArray(new Component[0]), localPlayer);
+                        break;
+                    }
+                }
             }
         } else {
             return;
@@ -144,16 +159,18 @@ public class Teleporter extends AbstractCraftBookMechanic {
             return;
         }
 
-        if (!sign.getLine(1).equals("[Teleporter]")) {
+        String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
+        if (!line1.equals("[Teleporter]")) {
             return;
         }
 
-        if (sign.getLine(2).length() == 0) {
+        String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+        if (line2.length() == 0) {
             localPlayer.printError(TranslatableComponent.of("craftbook.teleporter.no-depart"));
             return;
         }
 
-        String[] pos = RegexUtil.COMMA_PATTERN.split(sign.getLine(2));
+        String[] pos = RegexUtil.COMMA_PATTERN.split(line2);
         if (pos.length <= 2) {
             localPlayer.printError(TranslatableComponent.of("craftbook.teleporter.invalid-destination"));
             return;
@@ -178,8 +195,15 @@ public class Teleporter extends AbstractCraftBookMechanic {
                 return;
             }
 
-            ChangedSign destSign = CraftBookBukkitUtil.toChangedSign(destination);
-            if (!destSign.getLine(1).equals("[Teleporter]")) {
+            Sign bukkitDestSign = (Sign) destination.getState(false);
+            boolean found = false;
+            for (Side side : Side.values()) {
+                if (bukkitDestSign.getSide(side).getLine(1).equals("[Teleporter]")) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
                 localPlayer.printError(TranslatableComponent.of("craftbook.teleporter.no-sign"));
                 return;
             }

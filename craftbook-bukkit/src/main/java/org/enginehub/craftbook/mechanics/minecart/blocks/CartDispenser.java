@@ -19,11 +19,13 @@ import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
@@ -80,7 +82,8 @@ public class CartDispenser extends CartBlockMechanism {
 
     @Override
     public boolean verify(ChangedSign sign, CraftBookPlayer player) {
-        boolean inf = "inf".equalsIgnoreCase(sign.getLine(2));
+        String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+        boolean inf = "inf".equalsIgnoreCase(line2);
 
         if (inf && !player.hasPermission("craftbook.minecartdispenser.infinite")) {
             player.printError(TranslatableComponent.of("craftbook.minecartdispenser.infinite-permissions"));
@@ -101,17 +104,24 @@ public class CartDispenser extends CartBlockMechanism {
     }
 
     private void performMechanic(Minecart cart, CartMechanismBlocks blocks) {
-        if (!blocks.matches(getBlock()) || !blocks.matches("dispenser")) {
+        if (!blocks.matches(getBlock())) {
+            return;
+        }
+        Side side = blocks.matches("dispenser");
+        if (side == null) {
             return;
         }
 
-        ChangedSign sign = blocks.getChangedSign();
+        ChangedSign sign = blocks.getChangedSign(side);
 
         Power pow = isActive(blocks);
-        EntityType type = parseMinecartType(sign.getLine(0));
-        boolean inf = "inf".equalsIgnoreCase(sign.getLine(2));
-        boolean canCollect = cart != null && !sign.getLine(3).toLowerCase(Locale.ENGLISH).contains("dispense");
-        boolean canDispense = cart == null && !sign.getLine(3).toLowerCase(Locale.ENGLISH).contains("collect");
+        String line0 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(0));
+        String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+        String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
+        EntityType type = parseMinecartType(line0);
+        boolean inf = "inf".equalsIgnoreCase(line2);
+        boolean canCollect = cart != null && !line3.toLowerCase(Locale.ENGLISH).contains("dispense");
+        boolean canDispense = cart == null && !line3.toLowerCase(Locale.ENGLISH).contains("collect");
 
         if (!canCollect && !canDispense) {
             // We can't do either, don't bother trying.

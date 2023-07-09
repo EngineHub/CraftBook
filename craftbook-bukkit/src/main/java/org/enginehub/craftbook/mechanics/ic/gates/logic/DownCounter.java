@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
@@ -51,7 +52,7 @@ public class DownCounter extends AbstractIC {
     public void load() {
 
         // Get IC configuration data from line 3 of sign
-        String line2 = getSign().getLine(2);
+        String line2 = getLine(2);
         String[] config = RegexUtil.COLON_PATTERN.split(line2);
 
         resetVal = 0;
@@ -65,7 +66,7 @@ public class DownCounter extends AbstractIC {
             inf = false;
         } catch (Exception ignored) {
         }
-        getSign().setLine(2, resetVal + (inf ? ":INF" : ""));
+        getSign().setLine(2, Component.text(resetVal + (inf ? ":INF" : "")));
         getSign().update(false);
     }
 
@@ -84,7 +85,7 @@ public class DownCounter extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
         // Get current counter value from line 4 of sign
-        String line3 = getSign().getLine(3);
+        String line3 = getLine(3);
         int curVal;
 
         try {
@@ -117,7 +118,7 @@ public class DownCounter extends AbstractIC {
 
         // Update counter value stored on sign if it's changed
         if (curVal != oldVal) {
-            getSign().setLine(3, String.valueOf(curVal));
+            getSign().setLine(3, Component.text(curVal));
         }
 
         getSign().update(false);

@@ -20,10 +20,12 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import io.papermc.paper.entity.TeleportFlag;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
@@ -32,7 +34,6 @@ import org.bukkit.util.Vector;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.RedstoneUtil;
@@ -48,14 +49,18 @@ public class CartLift extends CartBlockMechanism {
     public void onVehicleImpact(CartBlockImpactEvent event) {
         if (event.isMinor()
             || !event.getBlocks().matches(getBlock())
-            || RedstoneUtil.Power.OFF == isActive(event.getBlocks())
-            || !(event.getBlocks().matches("cartlift up") || event.getBlocks().matches("cartlift down"))) {
+            || RedstoneUtil.Power.OFF == isActive(event.getBlocks())) {
+            return;
+        }
+
+        Side side = event.getBlocks().matches("cartlift up", "cartlift down");
+        if (side == null) {
             return;
         }
 
         Minecart cart = event.getMinecart();
 
-        boolean up = event.getBlocks().matches("cartlift up");
+        boolean up = event.getBlocks().matches("cartlift up", side);
         Block destination = event.getBlocks().sign();
         Material baseType = event.getBlocks().base().getType();
 
@@ -72,8 +77,8 @@ public class CartLift extends CartBlockMechanism {
             destination = destination.getRelative(face);
 
             if (SignUtil.isSign(destination) && baseType == destination.getRelative(BlockFace.UP, 1).getType()) {
-                ChangedSign state = CraftBookBukkitUtil.toChangedSign(destination);
-                String testLine = state.getLine(1);
+                ChangedSign state = ChangedSign.create(destination, side);
+                String testLine = PlainTextComponentSerializer.plainText().serialize(state.getLine(1));
 
                 if (testLine.equalsIgnoreCase("[CartLift Up]") || testLine.equalsIgnoreCase("[CartLift Down]") || testLine.equalsIgnoreCase("[CartLift]")) {
                     destination = destination.getRelative(BlockFace.UP, 2);

@@ -53,15 +53,15 @@ public class WeatherControl extends AbstractIC {
         int duration = 24000;
         int thunderDuration = duration;
         try {
-            String[] st = RegexUtil.RIGHT_BRACKET_PATTERN.split(getSign().getLine(1), 2);
+            String[] st = RegexUtil.RIGHT_BRACKET_PATTERN.split(getLine(1), 2);
             if (st.length > 1) {
                 tstorm = st[1].equalsIgnoreCase("t");
             }
-            duration = Integer.parseInt(getSign().getLine(2));
+            duration = Integer.parseInt(getLine(2));
         } catch (Exception ignored) {
         }
         try {
-            thunderDuration = Integer.parseInt(getSign().getLine(3));
+            thunderDuration = Integer.parseInt(getLine(3));
         } catch (Exception ignored) {
         }
 

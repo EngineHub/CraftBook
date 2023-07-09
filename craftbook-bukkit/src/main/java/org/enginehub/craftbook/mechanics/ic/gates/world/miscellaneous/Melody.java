@@ -16,6 +16,8 @@
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
@@ -93,11 +95,11 @@ public class Melody extends AbstractSelfTriggeredIC {
     public void load() {
 
         if (getLine(3).contains(":START"))
-            getSign().setLine(3, getLine(3).replace(":START", ";START"));
+            getSign().setLine(3, Component.text(getLine(3).replace(":START", ";START")));
         if (getLine(3).contains(":LOOP"))
-            getSign().setLine(3, getLine(3).replace(":LOOP", ";LOOP"));
+            getSign().setLine(3, Component.text(getLine(3).replace(":LOOP", ";LOOP")));
 
-        String[] split = RegexUtil.SEMICOLON_PATTERN.split(getSign().getLine(3));
+        String[] split = RegexUtil.SEMICOLON_PATTERN.split(getLine(3));
 
         if (!getLine(3).isEmpty()) {
             if (SearchArea.isValidArea(getLocation().getBlock(), split[0]))
@@ -111,7 +113,7 @@ public class Melody extends AbstractSelfTriggeredIC {
             else if (split[i].toUpperCase(Locale.ENGLISH).contains("LOOP")) loop = true;
         }
 
-        midiName = getSign().getLine(2);
+        midiName = getLine(2);
 
         File[] trialPaths = {
             new File(ICManager.inst().getMidiFolder(), midiName),
@@ -278,7 +280,7 @@ public class Melody extends AbstractSelfTriggeredIC {
         @Override
         public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
 
-            if (sign.getLine(3).trim().isEmpty())
+            if (PlainTextComponentSerializer.plainText().serialize(sign.getLine(3)).trim().isEmpty())
                 if (!ICMechanic.hasRestrictedPermissions(player, this, "mc1270"))
                     throw new ICVerificationException("You don't have permission to globally broadcast!");
         }

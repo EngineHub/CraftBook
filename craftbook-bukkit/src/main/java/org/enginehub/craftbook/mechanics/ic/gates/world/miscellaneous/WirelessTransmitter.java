@@ -17,6 +17,8 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.util.yaml.YAMLProcessor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -55,9 +57,9 @@ public class WirelessTransmitter extends AbstractIC {
     @Override
     public void load() {
 
-        band = getSign().getLine(2);
+        band = getLine(2);
         if (!getLine(3).trim().isEmpty()) {
-            band = band + getSign().getLine(3);
+            band = band + getLine(3);
         }
     }
 
@@ -142,11 +144,11 @@ public class WirelessTransmitter extends AbstractIC {
 
         @Override
         public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
-
-            if (requirename && (sign.getLine(3).isEmpty() || !ICMechanic.hasRestrictedPermissions(player, this, "MC1110")))
-                sign.setLine(3, player.getCraftBookId());
-            else if (!sign.getLine(3).isEmpty() && !ICMechanic.hasRestrictedPermissions(player, this, "MC1110"))
-                sign.setLine(3, player.getCraftBookId());
+            String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
+            if (requirename && (line3.isEmpty() || !ICMechanic.hasRestrictedPermissions(player, this, "MC1110")))
+                sign.setLine(3, Component.text(player.getCraftBookId()));
+            else if (!line3.isEmpty() && !ICMechanic.hasRestrictedPermissions(player, this, "MC1110"))
+                sign.setLine(3, Component.text(player.getCraftBookId()));
             sign.update(false);
         }
 

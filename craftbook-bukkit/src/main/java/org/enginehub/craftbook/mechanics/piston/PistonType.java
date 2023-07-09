@@ -16,6 +16,8 @@
 package org.enginehub.craftbook.mechanics.piston;
 
 import org.bukkit.Material;
+import org.bukkit.block.Sign;
+import org.bukkit.block.sign.SignSide;
 import org.enginehub.craftbook.ChangedSign;
 
 import java.util.EnumSet;
@@ -64,7 +66,7 @@ public enum PistonType {
      * @return The type, if any
      */
     @Nullable
-    static PistonType getFromSign(ChangedSign sign) {
+    static PistonType getFromSign(SignSide sign) {
         if (sign == null) {
             // TODO Remove
             return null;

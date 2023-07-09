@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -130,8 +131,8 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
-
-            if (sign.getLine(2).trim().isEmpty() || !new File(ICManager.inst().getFireworkFolder(), sign.getLine(2).trim() + ".txt").exists() && !new File(ICManager.inst().getFireworkFolder(), sign.getLine(2).trim() + ".fwk").exists())
+            String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+            if (line2.trim().isEmpty() || !new File(ICManager.inst().getFireworkFolder(), line2.trim() + ".txt").exists() && !new File(ICManager.inst().getFireworkFolder(), line2.trim() + ".fwk").exists())
                 throw new ICVerificationException("A valid firework show is required on line 3!");
         }
 

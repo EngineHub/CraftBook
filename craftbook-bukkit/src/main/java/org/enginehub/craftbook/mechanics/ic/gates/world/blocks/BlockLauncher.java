@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -76,7 +77,7 @@ public class BlockLauncher extends AbstractIC {
         if (getLine(3).isEmpty())
             velocity = new Vector(0, 0.5, 0);
         else {
-            String[] split2 = RegexUtil.COLON_PATTERN.split(getSign().getLine(3));
+            String[] split2 = RegexUtil.COLON_PATTERN.split(getLine(3));
             velocity = new Vector(Double.parseDouble(split2[0]), Double.parseDouble(split2[1]), Double.parseDouble(split2[2]));
         }
     }
@@ -122,9 +123,10 @@ public class BlockLauncher extends AbstractIC {
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
-            if (!sign.getLine(3).isEmpty()) {
+            String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
+            if (!line3.isEmpty()) {
                 try {
-                    String[] split2 = RegexUtil.COLON_PATTERN.split(sign.getLine(3));
+                    String[] split2 = RegexUtil.COLON_PATTERN.split(line3);
                     new Vector(Double.parseDouble(split2[0]), Double.parseDouble(split2[1]), Double.parseDouble(split2[2]));
                 } catch (Exception ignored) {
                     throw new ICVerificationException("Velocity must be in x:y:z format!");

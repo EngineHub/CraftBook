@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
@@ -39,7 +40,8 @@ public class CartReverser extends CartBlockMechanism {
             return;
         }
 
-        if (!event.getBlocks().hasSign() || !event.getBlocks().matches("reverse")) {
+        Side side = event.getBlocks().matches("reverse");
+        if (!event.getBlocks().hasSign() || side == null) {
             reverseCart(event.getMinecart());
             return;
         }

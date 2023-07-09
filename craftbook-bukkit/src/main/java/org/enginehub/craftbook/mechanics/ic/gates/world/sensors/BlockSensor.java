@@ -18,6 +18,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.sensors;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.enginehub.craftbook.ChangedSign;
@@ -104,7 +105,7 @@ public class BlockSensor extends AbstractSelfTriggeredIC {
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
-                String[] split = RegexUtil.COLON_PATTERN.split(sign.getLine(3), 2);
+                String[] split = RegexUtil.COLON_PATTERN.split(PlainTextComponentSerializer.plainText().serialize(sign.getLine(3)), 2);
                 Integer.parseInt(split[0]);
             } catch (Exception ignored) {
                 throw new ICVerificationException("You need to specify a block in line four.");

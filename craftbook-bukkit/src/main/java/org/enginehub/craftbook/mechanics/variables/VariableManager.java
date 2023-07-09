@@ -29,7 +29,6 @@ import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
@@ -176,7 +175,8 @@ public class VariableManager extends AbstractCraftBookMechanic {
     }
 
     private boolean signHasVariable(VariableKey variableKey, ChangedSign sign) {
-        for (String line : sign.getLines()) {
+        for (Component comp : sign.getLines()) {
+            String line = PlainTextComponentSerializer.plainText().serialize(comp);
             if (line.contains("%" + variableKey.toString() + "%")) {
                 return true;
             } else if (variableKey.getNamespace().equals(GLOBAL_NAMESPACE)

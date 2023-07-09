@@ -72,14 +72,14 @@ public class EntityCannon extends AbstractSelfTriggeredIC {
 
         location = CraftBookBukkitUtil.toSign(getSign()).getLocation();
 
-        if (!getSign().getLine(3).isEmpty())
-            type = EntityType.fromString(getSign().getLine(3));
+        if (!getLine(3).isEmpty())
+            type = EntityType.fromString(getLine(3));
 
         if (type == null)
             type = EntityType.MOB_HOSTILE;
 
         try {
-            String[] split = RegexUtil.COLON_PATTERN.split(getSign().getLine(2));
+            String[] split = RegexUtil.COLON_PATTERN.split(getLine(2));
             x = Double.parseDouble(split[0]);
             y = Double.parseDouble(split[1]);
             z = Double.parseDouble(split[2]);

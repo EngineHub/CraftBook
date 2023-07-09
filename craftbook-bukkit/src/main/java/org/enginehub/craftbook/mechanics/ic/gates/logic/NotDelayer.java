@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.scheduler.BukkitTask;
@@ -54,7 +55,7 @@ public class NotDelayer extends AbstractIC {
     @Override
     public void trigger(final ChipState chip) {
 
-        long delay = Long.parseLong(getSign().getLine(2));
+        long delay = Long.parseLong(getLine(2));
         if (chip.getInput(0)) {
             taskId = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
 
@@ -95,7 +96,7 @@ public class NotDelayer extends AbstractIC {
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
-                Integer.parseInt(sign.getLine(2));
+                Integer.parseInt(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)));
             } catch (Exception ignored) {
                 throw new ICVerificationException("The third line needs to be a number.");
             }

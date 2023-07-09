@@ -36,7 +36,6 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
@@ -99,13 +98,15 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
 
         Block block = event.getBlock();
         if (SignUtil.isSign(block)) {
-            ChangedSign sign = CraftBookBukkitUtil.toChangedSign(block);
+            Sign bukktiSign = (Sign) block.getState(false);
+            ChangedSign sign = ChangedSign.create(block, bukktiSign.getInteractableSideFor(event.getSource().getLocation()));
 
-            if (!sign.getLine(1).equals("[Chunk]")) {
+            String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
+            if (!line1.equals("[Chunk]")) {
                 return;
             }
 
-            sign.setLine(3, event.isOn() ? "" : "OFF");
+            sign.setLine(3, Component.text(event.isOn() ? "" : "OFF"));
             sign.update(false);
 
             updateChunkTicket(event.getBlock().getChunk());
@@ -119,16 +120,19 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
         }
 
         if (SignUtil.isSign(event.getBlock())) {
-            ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
+            Sign sign = (Sign) event.getBlock().getState(false);
 
-            if (!sign.getLine(1).equals("[Chunk]")) {
-                return;
+            for (Side side : Side.values()) {
+                if (!sign.getSide(side).getLine(1).equals("[Chunk]")) {
+                    continue;
+                }
+
+                Bukkit.getRegionScheduler().execute(
+                    CraftBookPlugin.inst(),
+                    event.getBlock().getLocation(),
+                    () -> updateChunkTicket(event.getBlock().getChunk())
+                );
             }
-
-            Bukkit.getScheduler().runTask(
-                CraftBookPlugin.inst(),
-                () -> updateChunkTicket(event.getBlock().getChunk())
-            );
         }
     }
 

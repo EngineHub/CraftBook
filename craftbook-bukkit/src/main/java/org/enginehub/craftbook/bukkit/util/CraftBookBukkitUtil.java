@@ -16,27 +16,13 @@
 package org.enginehub.craftbook.bukkit.util;
 
 import com.sk89q.worldedit.math.BlockVector3;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.util.SignUtil;
 
 public final class CraftBookBukkitUtil {
 
     private CraftBookBukkitUtil() {
-    }
-
-    public static ChangedSign toChangedSign(Block sign) {
-        return toChangedSign(sign, null, null);
-    }
-
-    public static ChangedSign toChangedSign(Block block, String[] lines, CraftBookPlayer player) {
-        if (!SignUtil.isSign(block)) {
-            return null;
-        }
-        return new ChangedSign(block, lines, player);
     }
 
     public static Sign toSign(ChangedSign sign) {

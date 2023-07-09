@@ -15,6 +15,8 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
@@ -50,8 +52,8 @@ public class Pulser extends AbstractIC {
     @Override
     public void load() {
 
-        String line2 = getSign().getLine(2);
-        String line3 = getSign().getLine(3);
+        String line2 = getLine(2);
+        String line3 = getLine(3);
         if (!(line2 == null) && !line2.isEmpty()) {
             String[] split = RegexUtil.COLON_PATTERN.split(line2, 2);
             pulseLength = Integer.parseInt(split[0]);
@@ -70,8 +72,8 @@ public class Pulser extends AbstractIC {
             pulseCount = 1;
             pauseLength = 5;
         }
-        getSign().setLine(2, pulseLength + ":" + startDelay);
-        getSign().setLine(3, pulseCount + ":" + pauseLength);
+        getSign().setLine(2, Component.text(pulseLength + ":" + startDelay));
+        getSign().setLine(3, Component.text(pulseCount + ":" + pauseLength));
         getSign().update(false);
     }
 
@@ -216,9 +218,9 @@ public class Pulser extends AbstractIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            String line2 = sign.getLine(2);
-            String line3 = sign.getLine(3);
-            if (!(line2 == null) && !line2.isEmpty()) {
+            String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+            String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
+            if (!line2.isEmpty()) {
                 try {
                     String[] split = RegexUtil.COLON_PATTERN.split(line2, 2);
                     Integer.parseInt(split[0]);
@@ -227,7 +229,7 @@ public class Pulser extends AbstractIC {
                     throw new ICVerificationException("You can only write numbers in line 3. See /icdocs for help");
                 }
             }
-            if (!(line3 == null) && !line3.isEmpty()) {
+            if (!line3.isEmpty()) {
                 try {
                     String[] split = RegexUtil.COLON_PATTERN.split(line3, 2);
                     Integer.parseInt(split[0]);

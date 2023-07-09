@@ -49,7 +49,7 @@ public class ItemDispenser extends AbstractIC {
             item = new ItemStack(Material.STONE, 1);
 
         try {
-            amount = Math.max(1, Integer.parseInt(getSign().getLine(3)));
+            amount = Math.max(1, Integer.parseInt(getLine(3)));
         } catch (Exception ignored) {
             amount = 1;
         }

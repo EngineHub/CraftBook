@@ -250,7 +250,7 @@ public class AreaCommands {
         if (!SignUtil.isSign(block))
             throw new CraftBookException("No sign found at the specified location.");
 
-        if (!Area.toggleCold(CraftBookBukkitUtil.toChangedSign(block))) {
+        if (!Area.toggleCold(block)) {
             throw new CraftBookException("Failed to toggle an area at the specified location.");
         }
         if (!silent) {

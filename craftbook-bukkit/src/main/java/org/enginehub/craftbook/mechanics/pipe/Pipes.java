@@ -19,6 +19,8 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -27,9 +29,11 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dropper;
 import org.bukkit.block.Furnace;
 import org.bukkit.block.Jukebox;
+import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.Piston;
+import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
@@ -41,7 +45,6 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
@@ -136,9 +139,13 @@ public class Pipes extends AbstractCraftBookMechanic {
                 continue;
             if (!SignUtil.isStandingSign(block.getRelative(face)) && !SignUtil.getBackBlock(block.getRelative(face)).getLocation().equals(block.getLocation()))
                 continue;
-            ChangedSign sign = CraftBookBukkitUtil.toChangedSign(block.getRelative(face));
-            if (sign != null && sign.getLine(1).equalsIgnoreCase("[Pipe]"))
-                return sign;
+            Block relativeBlock = block.getRelative(face);
+            Sign sign = (Sign) relativeBlock.getState(false);
+            for (Side side : Side.values()) {
+                if (sign.getSide(side).getLine(1).equalsIgnoreCase("[Pipe]")) {
+                    return ChangedSign.create(relativeBlock, side, sign.lines().toArray(new Component[0]), null);
+                }
+            }
         }
 
         return null;
@@ -160,10 +167,10 @@ public class Pipes extends AbstractCraftBookMechanic {
                 HashSet<ItemStack> pExceptions = new HashSet<>();
 
                 if (sign != null) {
-                    for (String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
+                    for (String line3 : RegexUtil.COMMA_PATTERN.split(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)))) {
                         pFilters.add(ItemSyntax.getItem(line3.trim()));
                     }
-                    for (String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
+                    for (String line4 : RegexUtil.COMMA_PATTERN.split(PlainTextComponentSerializer.plainText().serialize(sign.getLine(3)))) {
                         pExceptions.add(ItemSyntax.getItem(line4.trim()));
                     }
 
@@ -216,10 +223,10 @@ public class Pipes extends AbstractCraftBookMechanic {
                 HashSet<ItemStack> pExceptions = new HashSet<>();
 
                 if (sign != null) {
-                    for (String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
+                    for (String line3 : RegexUtil.COMMA_PATTERN.split(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)))) {
                         pFilters.add(ItemSyntax.getItem(line3.trim()));
                     }
-                    for (String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
+                    for (String line4 : RegexUtil.COMMA_PATTERN.split(PlainTextComponentSerializer.plainText().serialize(sign.getLine(3)))) {
                         pExceptions.add(ItemSyntax.getItem(line4.trim()));
                     }
 
@@ -344,10 +351,10 @@ public class Pipes extends AbstractCraftBookMechanic {
         ChangedSign sign = getSignOnPiston(block);
 
         if (sign != null) {
-            for (String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
+            for (String line3 : RegexUtil.COMMA_PATTERN.split(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)))) {
                 filters.add(ItemSyntax.getItem(line3.trim()));
             }
-            for (String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
+            for (String line4 : RegexUtil.COMMA_PATTERN.split(PlainTextComponentSerializer.plainText().serialize(sign.getLine(3)))) {
                 exceptions.add(ItemSyntax.getItem(line4.trim()));
             }
         }

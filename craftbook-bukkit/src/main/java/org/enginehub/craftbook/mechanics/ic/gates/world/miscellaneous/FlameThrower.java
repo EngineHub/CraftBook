@@ -16,13 +16,13 @@
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -79,7 +79,7 @@ public class FlameThrower extends AbstractIC {
 
     public void sendFlames(final boolean make) {
 
-        final Block block = CraftBookBukkitUtil.toSign(getSign()).getBlock();
+        final Block block = getSign().getBlock();
         final BlockFace direction = SignUtil.getBack(block);
 
         if (delay <= 0) {
@@ -147,7 +147,7 @@ public class FlameThrower extends AbstractIC {
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             try {
-                int distance = Integer.parseInt(sign.getLine(2));
+                int distance = Integer.parseInt(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)));
                 if (distance > maxRange) throw new ICVerificationException("Distance too great!");
 
             } catch (Exception ignored) {

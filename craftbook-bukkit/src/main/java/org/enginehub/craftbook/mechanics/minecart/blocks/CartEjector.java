@@ -41,7 +41,7 @@ public class CartEjector extends CartBlockMechanism {
         List<Entity> passengers = event.getMinecart().getPassengers();
         event.getMinecart().eject();
 
-        if (event.getBlocks().matches("eject")) {
+        if (event.getBlocks().matches("eject") != null) {
             Block ejectTarget = event.getBlocks().rail().getRelative(SignUtil.getFront(event.getBlocks().sign()));
             for (Entity ent : passengers) {
                 ent.teleport(ejectTarget.getLocation().toCenterLocation());

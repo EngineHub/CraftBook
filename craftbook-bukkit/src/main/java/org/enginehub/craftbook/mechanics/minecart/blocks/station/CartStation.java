@@ -19,7 +19,9 @@ import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import io.papermc.paper.entity.TeleportFlag;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Location;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
@@ -103,12 +105,17 @@ public class CartStation extends CartBlockMechanism {
     }
 
     private void stationInteraction(Minecart cart, CartMechanismBlocks blocks, boolean powerChange) {
-        if (cart == null || !blocks.matches(getBlock()) || !blocks.matches("station")) {
+        if (cart == null || !blocks.matches(getBlock())) {
             return;
         }
 
-        ChangedSign sign = blocks.getChangedSign();
-        boolean autoStart = sign.getLine(2).equalsIgnoreCase("AUTOSTART");
+        Side side = blocks.matches("station");
+        if (side == null) {
+            return;
+        }
+
+        ChangedSign sign = blocks.getChangedSign(side);
+        boolean autoStart = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)).equalsIgnoreCase("AUTOSTART");
 
         if (!powerChange && !autoStart) {
             return;

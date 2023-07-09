@@ -106,7 +106,7 @@ public final class SearchArea {
             Location offset = SignUtil.getBackBlock(block).getLocation();
             Vector3 radius = ICUtil.parseRadius(locationParts[0]);
             if (locationParts.length > 1)
-                offset = ICUtil.parseBlockLocation(CraftBookBukkitUtil.toChangedSign(block), locationParts[1], ICMechanic.instance.defaultCoordinates).getLocation();
+                offset = ICUtil.parseBlockLocation(block, locationParts[1], ICMechanic.instance.defaultCoordinates).getLocation();
 
             return new SearchArea(offset, radius);
         }

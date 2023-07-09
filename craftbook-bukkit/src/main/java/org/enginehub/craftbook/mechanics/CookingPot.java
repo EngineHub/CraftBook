@@ -24,6 +24,8 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -37,7 +39,6 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.st.BukkitSelfTriggerManager;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ItemUtil;
@@ -93,13 +94,16 @@ public class CookingPot extends AbstractCraftBookMechanic {
             return;
         }
 
-        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
+        Sign sign = (Sign) event.getBlock().getState(false);
 
-        if (!sign.getLine(1).equals("[Cook]")) {
-            return;
+        for (Side side : Side.values()) {
+            if (!sign.getSide(side).getLine(1).equals("[Cook]")) {
+                continue;
+            }
+
+            event.setHandled(true);
+            break;
         }
-
-        event.setHandled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -108,30 +112,39 @@ public class CookingPot extends AbstractCraftBookMechanic {
             return;
         }
 
-        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
+        ChangedSign sign = null;
+        Sign bukkitSign = (Sign) event.getBlock().getState(false);
 
-        if (!sign.getLine(1).equals("[Cook]")) {
+        for (Side side : Side.values()) {
+            if (bukkitSign.getSide(side).getLine(1).equals("[Cook]")) {
+                sign = ChangedSign.create(bukkitSign, side, null);
+                break;
+            }
+        }
+        if (sign == null) {
             return;
         }
 
         event.setHandled(true);
 
-        if (emptyCooldown && sign.getLine(0).equals("COOLDOWN")) {
+        String line0 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(0));
+        if (emptyCooldown && line0.equals("COOLDOWN")) {
             if (ThreadLocalRandom.current().nextInt(100) != 0) {
                 // Ticks 10 times per second. This will re-check every 10 seconds on average.
                 return;
             }
 
-            sign.setLine(0, "");
+            sign.setLine(0, Component.text(""));
             sign.update(false);
         }
 
         int currentCookProgress = 0, previousCookProgress;
 
         try {
-            currentCookProgress = Math.max(0, Integer.parseInt(sign.getLine(2)));
+            String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+            currentCookProgress = Math.max(0, Integer.parseInt(line2));
         } catch (Exception e) {
-            sign.setLine(2, String.valueOf(0));
+            sign.setLine(2, Component.text(0));
         }
 
         previousCookProgress = currentCookProgress;
@@ -152,7 +165,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
                 if (items.size() == 0) {
                     if (emptyCooldown) {
-                        sign.setLine(0, "COOLDOWN");
+                        sign.setLine(0, Component.text("COOLDOWN"));
                         sign.update(false);
                     }
                     return;
@@ -198,7 +211,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
         }
 
         if (previousCookProgress != currentCookProgress) {
-            sign.setLine(2, String.valueOf(currentCookProgress));
+            sign.setLine(2, Component.text(currentCookProgress));
         }
 
         sign.update(false);
@@ -212,7 +225,8 @@ public class CookingPot extends AbstractCraftBookMechanic {
 
         ChangedSign sign = event.getSign();
 
-        if (!sign.getLine(1).equals("[Cook]")) {
+        String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
+        if (!line1.equals("[Cook]")) {
             return;
         }
 
@@ -263,13 +277,17 @@ public class CookingPot extends AbstractCraftBookMechanic {
             return;
         }
 
-        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
+        Sign sign = (Sign) event.getBlock().getState(false);
 
-        if (!sign.getLine(1).equals("[Cook]")) {
+        for (Side side : Side.values()) {
+            String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getSide(side).line(1));
+            if (!line1.equals("[Cook]")) {
+                continue;
+            }
+
+            ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).unregisterSelfTrigger(event.getBlock().getLocation(), UnregisterReason.BREAK);
             return;
         }
-
-        ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).unregisterSelfTrigger(event.getBlock().getLocation(), UnregisterReason.BREAK);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -278,15 +296,17 @@ public class CookingPot extends AbstractCraftBookMechanic {
             return;
         }
 
-        ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
+        Sign bukkitSign = (Sign) event.getBlock().getState(false);
+        Side side = bukkitSign.getInteractableSideFor(event.getSource().getLocation());
 
-        if (!sign.getLine(1).equals("[Cook]")) {
+        if (!bukkitSign.getSide(side).getLine(1).equals("[Cook]")) {
             return;
         }
 
         ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).registerSelfTrigger(event.getBlock().getLocation());
 
         if (event.isOn() && !event.isMinor()) {
+            ChangedSign sign = ChangedSign.create(bukkitSign, side);
             increaseFuelLevel(sign, event.getNewCurrent());
             sign.update(false);
         }
@@ -297,7 +317,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
             amount = Math.max(amount, 1);
         }
 
-        sign.setLine(3, String.valueOf(amount));
+        sign.setLine(3, Component.text(amount));
     }
 
     public void increaseFuelLevel(ChangedSign sign, int amount) {
@@ -308,7 +328,8 @@ public class CookingPot extends AbstractCraftBookMechanic {
         int multiplier;
 
         try {
-            multiplier = Integer.parseInt(sign.getLine(3));
+            String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
+            multiplier = Integer.parseInt(line3);
         } catch (Exception e) {
             multiplier = requireFuel ? 0 : 1;
             setFuelLevel(sign, multiplier);

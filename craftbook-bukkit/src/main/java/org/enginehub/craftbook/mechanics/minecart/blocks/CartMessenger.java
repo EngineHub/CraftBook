@@ -18,6 +18,9 @@ package org.enginehub.craftbook.mechanics.minecart.blocks;
 import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.enginehub.craftbook.ChangedSign;
@@ -41,34 +44,47 @@ public class CartMessenger extends CartBlockMechanism {
         }
 
         // go
-        if (event.getMinecart().getPassenger() instanceof Player) {
-            Player p = (Player) event.getMinecart().getPassenger();
-            ChangedSign s = event.getBlocks().getChangedSign();
-            if (!s.getLine(0).equalsIgnoreCase("[print]") && !s.getLine(1).equalsIgnoreCase("[print]"))
+        if (event.getMinecart().getPassenger() instanceof Player p) {
+            Side side = event.getBlocks().matches("print");
+            if (side == null) {
+                Sign bukkitSign = (Sign) event.getBlocks().sign().getState(false);
+                for (Side testSide : Side.values()) {
+                    if (bukkitSign.getSide(testSide).getLine(0).equalsIgnoreCase("[print]")) {
+                        side = testSide;
+                    }
+                }
+            }
+            if (side == null) {
                 return;
+            }
+
+            ChangedSign s = event.getBlocks().getChangedSign(side);
 
             ArrayList<String> messages = new ArrayList<>();
 
             boolean stack = false;
 
-            if (s.getLine(1) != null && !s.getLine(1).isEmpty() && !s.getLine(1).equalsIgnoreCase("[print]")) {
-                messages.add(s.getLine(1));
-                stack = s.getLine(1).endsWith("+") || s.getLine(1).endsWith(" ");
+            String line1 = PlainTextComponentSerializer.plainText().serialize(s.getLine(1));
+            if (!line1.isEmpty() && !line1.equalsIgnoreCase("[print]")) {
+                messages.add(line1);
+                stack = line1.endsWith("+") || line1.endsWith(" ");
             }
-            if (s.getLine(2) != null && !s.getLine(2).isEmpty()) {
+            String line2 = PlainTextComponentSerializer.plainText().serialize(s.getLine(2));
+            if (!line2.isEmpty()) {
                 if (stack) {
-                    messages.set(messages.size() - 1, messages.get(messages.size() - 1) + s.getLine(2));
-                    stack = s.getLine(2).endsWith("+") || s.getLine(2).endsWith(" ");
+                    messages.set(messages.size() - 1, messages.get(messages.size() - 1) + line2);
+                    stack = line2.endsWith("+") || line2.endsWith(" ");
                 } else {
-                    messages.add(s.getLine(2));
-                    stack = s.getLine(2).endsWith("+") || s.getLine(2).endsWith(" ");
+                    messages.add(line2);
+                    stack = line2.endsWith("+") || line2.endsWith(" ");
                 }
             }
-            if (s.getLine(3) != null && !s.getLine(3).isEmpty()) {
+            String line3 = PlainTextComponentSerializer.plainText().serialize(s.getLine(3));
+            if (!line3.isEmpty()) {
                 if (stack) {
-                    messages.set(messages.size() - 1, messages.get(messages.size() - 1) + s.getLine(3));
+                    messages.set(messages.size() - 1, messages.get(messages.size() - 1) + line3);
                 } else {
-                    messages.add(s.getLine(3));
+                    messages.add(line3);
                 }
             }
 

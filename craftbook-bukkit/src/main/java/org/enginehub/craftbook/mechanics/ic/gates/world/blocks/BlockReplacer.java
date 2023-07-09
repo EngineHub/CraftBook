@@ -18,6 +18,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -157,7 +158,7 @@ public class BlockReplacer extends AbstractIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            String[] ids = RegexUtil.MINUS_PATTERN.split(sign.getLine(2));
+            String[] ids = RegexUtil.MINUS_PATTERN.split(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)));
 
             String[] onIds = RegexUtil.COLON_PATTERN.split(ids[0]);
             try {
@@ -185,7 +186,7 @@ public class BlockReplacer extends AbstractIC {
                 throw new ICVerificationException("Invalid off Data!");
             }
 
-            String[] data = RegexUtil.COLON_PATTERN.split(sign.getLine(3));
+            String[] data = RegexUtil.COLON_PATTERN.split(PlainTextComponentSerializer.plainText().serialize(sign.getLine(3)));
             try {
                 Integer.parseInt(data[0]);
             } catch (Exception e) {

@@ -152,29 +152,33 @@ public class SignCopier extends AbstractCraftBookMechanic {
 
         // TODO Make this support both sides once it becomes possible in the Paper API
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-            Sign sign = (Sign) block.getState(false);
+            Sign sign = event.getSign().getSign();
+            Side side = event.getSide();
 
-            signs.put(player.getUniqueId(), SignData.fromSign(sign.getSide(Side.FRONT)));
+            signs.put(player.getUniqueId(), SignData.fromSign(sign.getSide(side)));
 
             player.printInfo(TranslatableComponent.of("craftbook.signcopier.copy"));
             event.setCancelled(true);
         } else if (event.getAction().equals(Action.LEFT_CLICK_BLOCK) && signs.containsKey(player.getUniqueId())) {
-            Sign sign = (Sign) block.getState(false);
+            Sign sign = event.getSign().getSign();
+            Side side = event.getSide();
+            SignSide signSide = sign.getSide(side);
+
             SignData signData = signs.get(player.getUniqueId());
 
             // Validate that the sign can be placed here and notify plugins.
-            SignChangeEvent sev = new SignChangeEvent(block, event.getPlayer(), signData.lines);
+            SignChangeEvent sev = new SignChangeEvent(block, event.getPlayer(), signData.lines, side);
             Bukkit.getPluginManager().callEvent(sev);
 
             if (!sev.isCancelled() || !CraftBook.getInstance().getPlatform().getConfiguration().obeyPluginProtections) {
                 for (int i = 0; i < signData.lines.size(); i++) {
-                    sign.line(i, signData.lines.get(i));
+                    signSide.line(i, signData.lines.get(i));
                 }
                 if (copyColor && signData.color != null) {
-                    sign.setColor(signData.color);
+                    signSide.setColor(signData.color);
                 }
                 if (copyGlowing) {
-                    sign.setGlowingText(signData.glowing);
+                    signSide.setGlowingText(signData.glowing);
                 }
                 sign.update();
 

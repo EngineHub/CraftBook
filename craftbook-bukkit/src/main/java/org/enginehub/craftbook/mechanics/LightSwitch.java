@@ -80,7 +80,8 @@ public class LightSwitch extends AbstractCraftBookMechanic {
 
         ChangedSign sign = event.getSign();
 
-        if (!sign.getLine(1).equals("[I]")) {
+        String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
+        if (!line1.equals("[I]")) {
             return;
         }
 
@@ -112,13 +113,15 @@ public class LightSwitch extends AbstractCraftBookMechanic {
         int radius, maximum;
 
         try {
-            radius = Math.min(Integer.parseInt(sign.getLine(2)), maxRange);
+            String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+            radius = Math.min(Integer.parseInt(line2), maxRange);
         } catch (Exception ignored) {
             radius = Math.min(10, maxRange);
         }
 
         try {
-            maximum = Math.min(Integer.parseInt(sign.getLine(3)), maxLights);
+            String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
+            maximum = Math.min(Integer.parseInt(line3), maxLights);
         } catch (Exception ignored) {
             maximum = Math.min(maxLights, 20);
         }

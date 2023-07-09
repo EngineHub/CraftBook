@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.entity;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.enginehub.craftbook.ChangedSign;
@@ -54,15 +55,15 @@ public class PlayerTrap extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        if (getSign().getLine(2).contains("&")) {
-            getSign().setLine(2, getSign().getLine(2).replace("&", "="));
+        if (getLine(2).contains("&")) {
+            getSign().setLine(2, Component.text(getLine(2).replace("&", "=")));
             getSign().update(false);
         }
 
-        area = SearchArea.createArea(CraftBookBukkitUtil.toSign(getSign()).getBlock(), RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[0]);
+        area = SearchArea.createArea(CraftBookBukkitUtil.toSign(getSign()).getBlock(), RegexUtil.EQUALS_PATTERN.split(getLine(2))[0]);
 
         try {
-            damage = Integer.parseInt(RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
+            damage = Integer.parseInt(RegexUtil.EQUALS_PATTERN.split(getLine(2))[1]);
         } catch (Exception ignored) {
             damage = 2;
         }

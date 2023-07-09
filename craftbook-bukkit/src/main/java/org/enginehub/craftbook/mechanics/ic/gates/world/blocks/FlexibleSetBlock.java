@@ -16,6 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -55,9 +56,9 @@ public class FlexibleSetBlock extends AbstractIC {
         // axis is one of X, Y, Z
         // sign is optional or one of "+" or "-"
         // blockData is optional (along with its preceding colon
-        String line3 = getSign().getLine(2).toUpperCase(Locale.ENGLISH);
+        String line3 = getLine(2).toUpperCase(Locale.ENGLISH);
 
-        String line4 = getSign().getLine(3);
+        String line4 = getLine(3);
 
         String[] params = RegexUtil.COLON_PATTERN.split(line3, 2);
         if (params.length < 2) return;
@@ -159,7 +160,7 @@ public class FlexibleSetBlock extends AbstractIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            String line3 = sign.getLine(2).toUpperCase(Locale.ENGLISH);
+            String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)).toUpperCase(Locale.ENGLISH);
 
             String[] params = RegexUtil.COLON_PATTERN.split(line3, 2);
             if (params.length < 2)

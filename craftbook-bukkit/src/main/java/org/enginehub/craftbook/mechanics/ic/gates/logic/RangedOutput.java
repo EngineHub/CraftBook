@@ -70,12 +70,12 @@ public class RangedOutput extends AbstractSelfTriggeredIC {
 
     @Override
     public void load() {
-        String[] minmax = RegexUtil.MINUS_PATTERN.split(getSign().getLine(2));
+        String[] minmax = RegexUtil.MINUS_PATTERN.split(getLine(2));
         min = Integer.parseInt(minmax[0]);
         max = Integer.parseInt(minmax[1]);
 
         if (!getLine(3).isEmpty())
-            maxTicks = Integer.parseInt(getSign().getLine(3));
+            maxTicks = Integer.parseInt(getLine(3));
         else
             maxTicks = 10;
     }

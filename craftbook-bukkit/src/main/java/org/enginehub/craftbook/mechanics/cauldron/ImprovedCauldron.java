@@ -19,11 +19,13 @@ import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.HandSide;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Levelled;
 import org.bukkit.enchantments.Enchantment;
@@ -41,12 +43,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.BukkitCraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.LocationUtil;
@@ -111,8 +111,8 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
                 for (BlockFace face : faces) {
                     Block sign = block.getRelative(face);
                     if (SignUtil.isWallSign(sign)) {
-                        ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
-                        if (s.getLine(1).equals("[Cauldron]")) {
+                        Sign s = (Sign) sign.getState(false);
+                        if (PlainTextComponentSerializer.plainText().serialize(s.line(1)).equals("[Cauldron]")) {
                             found = true;
                             break;
                         }

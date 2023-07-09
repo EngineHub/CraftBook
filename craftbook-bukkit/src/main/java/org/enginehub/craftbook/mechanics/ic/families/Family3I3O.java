@@ -19,7 +19,6 @@ import com.sk89q.worldedit.util.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractChipState;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFamily;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -60,16 +59,16 @@ public class Family3I3O extends AbstractICFamily {
         @Override
         protected Block getBlock(int pin) {
 
-            BlockFace fback = SignUtil.getBack(CraftBookBukkitUtil.toSign(sign).getBlock());
-            Block backBlock = CraftBookBukkitUtil.toSign(sign).getBlock().getRelative(fback, 2);
+            BlockFace fback = SignUtil.getBack(sign.getBlock());
+            Block backBlock = sign.getBlock().getRelative(fback, 2);
 
             switch (pin) {
                 case 0:
-                    return SignUtil.getFrontBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
+                    return SignUtil.getFrontBlock(sign.getBlock());
                 case 1:
-                    return SignUtil.getLeftBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
+                    return SignUtil.getLeftBlock(sign.getBlock());
                 case 2:
-                    return SignUtil.getRightBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
+                    return SignUtil.getRightBlock(sign.getBlock());
                 case 3:
                     return backBlock.getRelative(fback);
                 case 4:
@@ -106,7 +105,7 @@ public class Family3I3O extends AbstractICFamily {
 
             Block block = getBlock(pin);
             if (block != null) {
-                ICUtil.setState(block, value, icBlock.getRelative(SignUtil.getBack(CraftBookBukkitUtil.toSign(sign).getBlock())));
+                ICUtil.setState(block, value, icBlock.getRelative(SignUtil.getBack(sign.getBlock())));
             }
         }
 

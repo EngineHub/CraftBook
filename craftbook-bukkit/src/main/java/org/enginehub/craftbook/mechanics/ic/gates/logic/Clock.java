@@ -16,6 +16,8 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -75,25 +77,25 @@ public class Clock extends AbstractSelfTriggeredIC {
             chip.setOutput(0, !chip.getOutput(0));
         }
 
-        getSign().setLine(3, Short.toString(tick));
+        getSign().setLine(3, Component.text(tick));
         getSign().update(false);
     }
 
     @Override
     public void load() {
         try {
-            reset = Short.parseShort(getSign().getLine(2));
+            reset = Short.parseShort(getLine(2));
         } catch (NumberFormatException e) {
             reset = 5;
-            getSign().setLine(2, Short.toString(reset));
+            getSign().setLine(2, Component.text(reset));
             getSign().update(false);
         }
 
         try {
-            tick = Short.parseShort(getSign().getLine(3));
+            tick = Short.parseShort(getLine(3));
         } catch (NumberFormatException e) {
             tick = 0;
-            getSign().setLine(3, Short.toString(tick));
+            getSign().setLine(3, Component.text(tick));
             getSign().update(false);
         }
     }
@@ -118,18 +120,18 @@ public class Clock extends AbstractSelfTriggeredIC {
 
             int interval;
             try {
-                interval = Integer.parseInt(sign.getLine(2));
+                interval = Integer.parseInt(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)));
             } catch (NumberFormatException e) {
                 throw new ICVerificationException("The third line must be a number between 5 and 100000.");
             }
 
             interval = Math.max(Math.min(interval, 100000), 5);
 
-            sign.setLine(2, Integer.toString(interval));
+            sign.setLine(2, Component.text(interval));
 
             int tick;
             try {
-                tick = Integer.parseInt(sign.getLine(3));
+                tick = Integer.parseInt(PlainTextComponentSerializer.plainText().serialize(sign.getLine(3)));
             } catch (NumberFormatException e) {
                 tick = 0;
             }
@@ -137,7 +139,7 @@ public class Clock extends AbstractSelfTriggeredIC {
             tick = Math.max(tick, 0);
             tick = Math.min(tick, interval);
 
-            sign.setLine(3, Integer.toString(tick));
+            sign.setLine(3, Component.text(tick));
             sign.update(false);
         }
 

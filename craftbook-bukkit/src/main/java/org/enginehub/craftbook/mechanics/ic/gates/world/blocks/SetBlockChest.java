@@ -22,6 +22,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -95,9 +96,10 @@ public class SetBlockChest extends SetBlock {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if (sign.getLine(2) == null || sign.getLine(2).isEmpty())
+            String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+            if (line2.isEmpty())
                 throw new ICVerificationException("A block must be provided on line 2!");
-            BlockStateHolder item = BlockParser.getBlock(sign.getLine(2));
+            BlockStateHolder item = BlockParser.getBlock(line2);
             if (item == null || !item.getBlockType().hasItemType())
                 throw new ICVerificationException("An invalid block was provided on line 2!");
             if (Blocks.containsFuzzy(blockBlacklist, item))

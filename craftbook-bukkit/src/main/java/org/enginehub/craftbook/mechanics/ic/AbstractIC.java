@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic;
 
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -22,7 +23,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SignUtil;
 
@@ -59,22 +59,20 @@ public abstract class AbstractIC implements IC {
 
     public Location getLocation() {
 
-        return CraftBookBukkitUtil.toSign(getSign()).getLocation();
+        return getSign().getBlock().getLocation();
     }
 
     public Block getBackBlock() {
 
-        return SignUtil.getBackBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
+        return SignUtil.getBackBlock(sign.getBlock());
     }
 
     public String getLine(int line) {
-
-        return sign.getLine(line);
+        return PlainTextComponentSerializer.plainText().serialize(sign.getLine(line));
     }
 
     public String getRawLine(int line) {
-
-        return sign.getRawLine(line);
+        return PlainTextComponentSerializer.plainText().serialize(sign.getRawLine(line));
     }
 
     public ICFactory getFactory() {
@@ -92,7 +90,7 @@ public abstract class AbstractIC implements IC {
 
         if (p.isSneaking()) {
             ICDocsParser.generateICDocs(CraftBookPlugin.inst().wrapPlayer(p),
-                RegexUtil.RIGHT_BRACKET_PATTERN.split(RegexUtil.LEFT_BRACKET_PATTERN.split(getSign().getLine(1))[1])[0]);
+                RegexUtil.RIGHT_BRACKET_PATTERN.split(RegexUtil.LEFT_BRACKET_PATTERN.split(getLine(1))[1])[0]);
         }
     }
 

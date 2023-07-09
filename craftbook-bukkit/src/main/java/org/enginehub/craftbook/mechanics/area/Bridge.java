@@ -35,6 +35,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -100,7 +101,7 @@ public class Bridge extends CuboidToggleMechanic {
             return;
         }
 
-        if (!isApplicableSign(event.getSign().getLine(1))) {
+        if (!isApplicableSign(event.getSign().getSign())) {
             return;
         }
 
@@ -171,7 +172,7 @@ public class Bridge extends CuboidToggleMechanic {
             return;
         }
 
-        if (!SignUtil.isSign(event.getBlock()) || !isApplicableSign(CraftBookBukkitUtil.toChangedSign(event.getBlock()).getLine(1))) {
+        if (!SignUtil.isSign(event.getBlock()) || !isApplicableSign((Sign) event.getBlock().getState(false))) {
             return;
         }
 
@@ -219,8 +220,16 @@ public class Bridge extends CuboidToggleMechanic {
             // allowed to find the distal signpost
 
             if (farSide.getType() == nearType) {
-                String otherSignText = CraftBookBukkitUtil.toChangedSign(farSide).getLine(1);
-                if ("[Bridge]".equalsIgnoreCase(otherSignText) || "[Bridge End]".equalsIgnoreCase(otherSignText)) {
+                Sign bukkitSign = (Sign) farSide.getState(false);
+                boolean found = false;
+                for (Side side : Side.values()) {
+                    String otherSignText = bukkitSign.getSide(side).getLine(1);
+                    if ("[Bridge]".equalsIgnoreCase(otherSignText) || "[Bridge End]".equalsIgnoreCase(otherSignText)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) {
                     break;
                 }
             }

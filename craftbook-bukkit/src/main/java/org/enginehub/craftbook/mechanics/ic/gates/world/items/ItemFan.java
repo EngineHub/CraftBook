@@ -39,7 +39,7 @@ public class ItemFan extends AbstractSelfTriggeredIC {
     public void load() {
 
         try {
-            force = Double.parseDouble(getSign().getLine(2));
+            force = Double.parseDouble(getLine(2));
         } catch (Exception ignored) {
             force = 1;
         }

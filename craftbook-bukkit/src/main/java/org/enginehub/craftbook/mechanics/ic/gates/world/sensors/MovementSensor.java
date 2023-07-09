@@ -16,6 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.world.sensors;
 
 import com.sk89q.worldedit.math.Vector3;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -55,14 +56,14 @@ public class MovementSensor extends AbstractSelfTriggeredIC {
     public void load() {
 
         // lets get the types to detect first
-        types = EntityType.getDetected(getSign().getLine(3).trim());
+        types = EntityType.getDetected(getLine(3).trim());
 
         // Add all if no params are specified
         if (types.isEmpty()) {
             types.add(EntityType.ANY);
         }
 
-        getSign().setLine(3, getSign().getLine(3).toUpperCase(Locale.ENGLISH));
+        getSign().setLine(3, Component.text(getLine(3).toUpperCase(Locale.ENGLISH)));
 
         // if the line contains a = the offset is given
         // the given string should look something like that:
@@ -71,11 +72,11 @@ public class MovementSensor extends AbstractSelfTriggeredIC {
         String radiusString = radius.getX() + "," + radius.getY() + "," + radius.getZ();
         if (radius.getX() == radius.getY() && radius.getY() == radius.getZ())
             radiusString = String.valueOf(radius.getX());
-        if (getSign().getLine(2).contains("=")) {
-            getSign().setLine(2, radiusString + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
+        if (getLine(2).contains("=")) {
+            getSign().setLine(2, Component.text(radiusString + "=" + RegexUtil.EQUALS_PATTERN.split(getLine(2))[1]));
             center = ICUtil.parseBlockLocation(getSign());
         } else {
-            getSign().setLine(2, radiusString);
+            getSign().setLine(2, Component.text(radiusString));
             center = getBackBlock();
         }
         getSign().update(false);

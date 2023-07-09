@@ -15,6 +15,8 @@
 
 package org.enginehub.craftbook.mechanics.ic.gates.world.items;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -124,14 +126,14 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
     public boolean goRight() {
 
         currentIndex++;
-        getSign().setLine(3, String.valueOf(currentIndex));
+        getSign().setLine(3, Component.text(currentIndex));
         if (currentIndex >= left && currentIndex < left + right)
             return true;
         else if (currentIndex < left)
             return false;
         else {
             currentIndex = 0;
-            getSign().setLine(3, String.valueOf(currentIndex));
+            getSign().setLine(3, Component.text(currentIndex));
         }
         return false;
     }
@@ -164,8 +166,9 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
             try {
-                Integer.parseInt(RegexUtil.COLON_PATTERN.split(sign.getLine(2))[0]);
-                Integer.parseInt(RegexUtil.COLON_PATTERN.split(sign.getLine(2))[1]);
+                String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+                Integer.parseInt(RegexUtil.COLON_PATTERN.split(line2)[0]);
+                Integer.parseInt(RegexUtil.COLON_PATTERN.split(line2)[1]);
             } catch (ArrayIndexOutOfBoundsException e) {
                 throw new ICVerificationException("You need to specify both left and right quantities!");
             } catch (NumberFormatException e) {

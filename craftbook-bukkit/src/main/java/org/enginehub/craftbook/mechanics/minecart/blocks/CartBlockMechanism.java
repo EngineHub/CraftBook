@@ -21,6 +21,7 @@ import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
@@ -31,7 +32,6 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
@@ -144,7 +144,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
         }
 
         Block block = event.getBlock();
-        String[] lines = event.getLines();
+        Component[] lines = event.lines().toArray(new Component[0]);
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         try {
@@ -152,7 +152,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
             String lineFound = null;
 
             for (String sign : getApplicableSigns()) {
-                if (lines[1].equalsIgnoreCase('[' + sign + ']')) {
+                if (PlainTextComponentSerializer.plainText().serialize(lines[1]).equalsIgnoreCase('[' + sign + ']')) {
                     found = true;
                     lineFound = sign;
                     break;
@@ -162,7 +162,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
             if (!found) {
                 return;
             }
-            if (!verify(CraftBookBukkitUtil.toChangedSign(event.getBlock(), lines, player), player)) {
+            if (!verify(ChangedSign.create(event.getBlock(), event.getSide(), lines, player), player)) {
                 block.breakNaturally();
                 event.setCancelled(true);
                 return;

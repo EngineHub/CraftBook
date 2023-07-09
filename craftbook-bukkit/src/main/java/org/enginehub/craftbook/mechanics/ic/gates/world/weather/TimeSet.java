@@ -48,7 +48,7 @@ public class TimeSet extends AbstractSelfTriggeredIC {
     public void load() {
 
         try {
-            time = Long.parseLong(getSign().getLine(2));
+            time = Long.parseLong(getLine(2));
         } catch (NumberFormatException ex) {
             time = -1;
         }

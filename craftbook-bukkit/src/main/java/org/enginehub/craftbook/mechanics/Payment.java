@@ -16,6 +16,7 @@
 package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
@@ -58,7 +59,8 @@ public class Payment extends AbstractCraftBookMechanic {
 
         ChangedSign sign = event.getSign();
 
-        if (!sign.getLine(1).equals("[Pay]")) return;
+        String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
+        if (!line1.equals("[Pay]")) return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
@@ -74,8 +76,8 @@ public class Payment extends AbstractCraftBookMechanic {
             return;
         }
 
-        double money = Double.parseDouble(sign.getLine(2));
-        String reciever = sign.getLine(3);
+        double money = Double.parseDouble(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)));
+        String reciever = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
 
         if (CraftBookPlugin.plugins.getEconomy().withdrawPlayer(event.getPlayer().getName(), money).transactionSuccess()) {
             if (CraftBookPlugin.plugins.getEconomy().depositPlayer(reciever, money).transactionSuccess()) {
