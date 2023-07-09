@@ -23,7 +23,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -105,14 +104,14 @@ public class FireShooter extends AbstractIC {
 
     public void shootFire(int n) {
 
-        Block signBlock = CraftBookBukkitUtil.toSign(getSign()).getBlock();
+        Block signBlock = getSign().getBlock();
         BlockFace face = SignUtil.getBack(signBlock);
         Block targetDir = signBlock.getRelative(face).getRelative(face);
 
         double x = targetDir.getX() - signBlock.getX();
         double z = targetDir.getZ() - signBlock.getZ();
         Location shootLoc = new Location(
-            CraftBookBukkitUtil.toSign(getSign()).getWorld(), targetDir.getX() + 0.5, targetDir.getY() + 0.5, targetDir.getZ() + 0.5);
+            getSign().getBlock().getWorld(), targetDir.getX() + 0.5, targetDir.getY() + 0.5, targetDir.getZ() + 0.5);
 
         if (!shootLoc.getChunk().isLoaded())
             return;
@@ -132,7 +131,7 @@ public class FireShooter extends AbstractIC {
             nz *= speed;
             float f3 = (float) Math.sqrt(nx * nx + nz * nz);
 
-            SmallFireball f = CraftBookBukkitUtil.toSign(getSign()).getWorld().spawn(shootLoc, SmallFireball.class);
+            SmallFireball f = getSign().getBlock().getWorld().spawn(shootLoc, SmallFireball.class);
             f.setVelocity(new Vector(nx, ny, nz));
             f.getLocation().setYaw((float) (Math.atan2(nx, nz) * 180.0D / 3.1415927410125732D));
             f.getLocation().setPitch((float) (Math.atan2(ny, f3) * 180.0D / 3.1415927410125732D));

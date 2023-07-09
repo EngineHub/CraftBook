@@ -17,7 +17,6 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.weather;
 
 import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -61,7 +60,7 @@ public class TimeSet extends AbstractSelfTriggeredIC {
 
         try {
             if (chip.getInput(0) && time >= 0) {
-                CraftBookBukkitUtil.toSign(getSign()).getWorld().setTime(time);
+                getSign().getBlock().getWorld().setTime(time);
             }
         } catch (Exception ignored) {
         }
@@ -72,7 +71,7 @@ public class TimeSet extends AbstractSelfTriggeredIC {
 
         try {
             if (chip.getInput(0) && time >= 0) {
-                CraftBookBukkitUtil.toSign(getSign()).getWorld().setTime(time);
+                getSign().getBlock().getWorld().setTime(time);
             }
         } catch (Exception ignored) {
         }

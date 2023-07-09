@@ -19,7 +19,6 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -60,7 +59,7 @@ public class PlayerTrap extends AbstractSelfTriggeredIC {
             getSign().update(false);
         }
 
-        area = SearchArea.createArea(CraftBookBukkitUtil.toSign(getSign()).getBlock(), RegexUtil.EQUALS_PATTERN.split(getLine(2))[0]);
+        area = SearchArea.createArea(getSign().getBlock(), RegexUtil.EQUALS_PATTERN.split(getLine(2))[0]);
 
         try {
             damage = Integer.parseInt(RegexUtil.EQUALS_PATTERN.split(getLine(2))[1]);

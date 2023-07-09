@@ -28,7 +28,6 @@ import org.bukkit.entity.Item;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -148,7 +147,7 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
                     continue;
                 }
 
-                BlockFace back = SignUtil.getBack(CraftBookBukkitUtil.toSign(getSign()).getBlock());
+                BlockFace back = SignUtil.getBack(getSign().getBlock());
                 Block pipe = getBackBlock().getRelative(back);
 
                 RangedCollectEvent event = new RangedCollectEvent(pipe, (Item) entity, new ArrayList<>(Collections.singletonList(stack)), getBackBlock());

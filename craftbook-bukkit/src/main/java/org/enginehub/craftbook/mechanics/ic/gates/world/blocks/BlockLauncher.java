@@ -100,11 +100,10 @@ public class BlockLauncher extends AbstractIC {
         }
         double y = above.getY() - 0.99D;
 
-        if (!new Location(CraftBookBukkitUtil.toSign(getSign()).getWorld(), above.getX() + 0.5D, y, above.getZ() + 0.5D).getChunk().isLoaded())
+        if (!new Location(getSign().getBlock().getWorld(), above.getX() + 0.5D, y, above.getZ() + 0.5D).getChunk().isLoaded())
             return;
 
-        FallingBlock block = CraftBookBukkitUtil
-            .toSign(getSign()).getWorld().spawnFallingBlock(new Location(CraftBookBukkitUtil.toSign(getSign()).getWorld(), above.getX() + 0.5D, y, above.getZ() + 0.5D), this.block.getType(), this.block.getData().getData());
+        FallingBlock block = getSign().getBlock().getWorld().spawnFallingBlock(new Location(getSign().getBlock().getWorld(), above.getX() + 0.5D, y, above.getZ() + 0.5D), this.block.getType(), this.block.getData().getData());
         block.setVelocity(velocity);
     }
 

@@ -29,7 +29,6 @@ import org.bukkit.scheduler.BukkitTask;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -218,7 +217,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 
             Map<String, List<FireworkEffect>> effects = new HashMap<>();
             String currentBuilding = null;
-            Location location = CraftBookBukkitUtil.toSign(getSign()).getLocation();
+            Location location = getSign().getBlock().getLocation();
             float duration = 0.5f;
             boolean preciseDuration = false;
             FireworkEffect.Builder builder = FireworkEffect.builder();
@@ -301,7 +300,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                         y = Double.parseDouble(args[1]);
                         z = Double.parseDouble(args[2]);
 
-                        location = CraftBookBukkitUtil.toSign(getSign()).getLocation().add(x, y, z);
+                        location = getSign().getBlock().getLocation().add(x, y, z);
                     } else if (line.startsWith("duration ")) {
 
                         String[] bits = RegexUtil.SPACE_PATTERN.split(line.replace("duration ", ""));
@@ -327,7 +326,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                             y = Double.parseDouble(args[1]);
                             z = Double.parseDouble(args[2]);
 
-                            sloc = CraftBookBukkitUtil.toSign(getSign()).getLocation().add(x, y, z);
+                            sloc = getSign().getBlock().getLocation().add(x, y, z);
                             if (bits.length > 2) {
                                 volume = Float.parseFloat(bits[2]);
                                 if (bits.length > 3)
@@ -419,7 +418,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                             //Offset data (0)
                             errorLocation = "Offset";
                             String[] offset = RegexUtil.COMMA_PATTERN.split(data[0]);
-                            Location location = CraftBookBukkitUtil.toSign(getSign()).getLocation();
+                            Location location = getSign().getBlock().getLocation();
                             location.add(Double.parseDouble(offset[0]), Double.parseDouble(offset[1]),
                                 Double.parseDouble(offset[2]));
 

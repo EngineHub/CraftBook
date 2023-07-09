@@ -17,7 +17,6 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.weather;
 
 import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -58,7 +57,7 @@ public class ServerTimeModulus extends AbstractIC {
      */
     private boolean isServerTimeOdd() {
 
-        long time = Math.abs(CraftBookBukkitUtil.toSign(getSign()).getBlock().getWorld().getTime()) % 2;
+        long time = Math.abs(getSign().getBlock().getWorld().getTime()) % 2;
         return time == 1;
     }
 

@@ -21,7 +21,6 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -91,7 +90,7 @@ public class LightningSummon extends AbstractIC {
                         int rx = center.getBlockX() - x;
                         int ry = center.getBlockY() - y;
                         int rz = center.getBlockZ() - z;
-                        Block b = CraftBookBukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
+                        Block b = getSign().getBlock().getWorld().getBlockAt(rx, ry, rz);
 
                         if (b.getType() != Material.AIR && ThreadLocalRandom.current().nextInt(100) <= chance)
                             b.getWorld().strikeLightning(b.getLocation());

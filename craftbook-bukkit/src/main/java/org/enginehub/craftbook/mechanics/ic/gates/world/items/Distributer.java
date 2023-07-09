@@ -24,7 +24,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -95,7 +94,7 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
 
         boolean returnValue = false;
 
-        for (Item item : ItemUtil.getItemsAtBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock())) {
+        for (Item item : ItemUtil.getItemsAtBlock(getSign().getBlock())) {
             if (distributeItemStack(item.getItemStack())) {
                 item.remove();
                 returnValue = true;
@@ -106,13 +105,13 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
 
     public boolean distributeItemStack(ItemStack item) {
 
-        BlockFace back = SignUtil.getBack(CraftBookBukkitUtil.toSign(getSign()).getBlock());
+        BlockFace back = SignUtil.getBack(getSign().getBlock());
         Block b;
 
         if (goRight())
-            b = SignUtil.getRightBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
+            b = SignUtil.getRightBlock(getSign().getBlock()).getRelative(back);
         else
-            b = SignUtil.getLeftBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
+            b = SignUtil.getLeftBlock(getSign().getBlock()).getRelative(back);
 
         PipeRequestEvent event = new PipeRequestEvent(b, new ArrayList<>(Collections.singletonList(item)), getBackBlock());
         Bukkit.getPluginManager().callEvent(event);

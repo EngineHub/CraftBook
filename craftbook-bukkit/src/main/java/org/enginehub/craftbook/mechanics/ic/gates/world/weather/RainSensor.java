@@ -17,7 +17,6 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.weather;
 
 import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -47,14 +46,14 @@ public class RainSensor extends AbstractSelfTriggeredIC {
     public void trigger(ChipState chip) {
 
         if (chip.getInput(0)) {
-            chip.setOutput(0, CraftBookBukkitUtil.toSign(getSign()).getWorld().hasStorm());
+            chip.setOutput(0, getSign().getBlock().getWorld().hasStorm());
         }
     }
 
     @Override
     public void think(ChipState chip) {
 
-        chip.setOutput(0, CraftBookBukkitUtil.toSign(getSign()).getWorld().hasStorm());
+        chip.setOutput(0, getSign().getBlock().getWorld().hasStorm());
     }
 
     public static class Factory extends AbstractICFactory {

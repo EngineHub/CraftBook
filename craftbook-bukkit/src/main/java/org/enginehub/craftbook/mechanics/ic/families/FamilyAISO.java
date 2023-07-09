@@ -19,7 +19,6 @@ import com.sk89q.worldedit.util.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractChipState;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFamily;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -67,14 +66,14 @@ public class FamilyAISO extends AbstractICFamily {
 
             switch (pin) {
                 case 0:
-                    return SignUtil.getFrontBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
+                    return SignUtil.getFrontBlock(sign.getBlock());
                 case 1:
-                    return SignUtil.getLeftBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
+                    return SignUtil.getLeftBlock(sign.getBlock());
                 case 2:
-                    return SignUtil.getRightBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
+                    return SignUtil.getRightBlock(sign.getBlock());
                 case 3:
-                    BlockFace face = SignUtil.getBack(CraftBookBukkitUtil.toSign(sign).getBlock());
-                    return CraftBookBukkitUtil.toSign(sign).getBlock().getRelative(face).getRelative(face);
+                    BlockFace face = SignUtil.getBack(sign.getBlock());
+                    return sign.getBlock().getRelative(face).getRelative(face);
                 default:
                     return null;
             }

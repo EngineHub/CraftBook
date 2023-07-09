@@ -43,7 +43,6 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
@@ -264,7 +263,7 @@ public class Bridge extends CuboidToggleMechanic {
             if (distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getType() != proximalOffsetType) {
                 throw new InvalidMechanismException(TranslatableComponent.of("craftbook.bridge.different-materials"));
             }
-            toggle.expand(CraftBookBukkitUtil.toVector(SignUtil.getLeft(trigger)), BlockVector3.ZERO);
+            toggle.expand(BlockUtil.toVector(SignUtil.getLeft(trigger)), BlockVector3.ZERO);
         }
 
         // Expand Right
@@ -277,11 +276,11 @@ public class Bridge extends CuboidToggleMechanic {
             if (distalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getType() != proximalOffsetType) {
                 throw new InvalidMechanismException(TranslatableComponent.of("craftbook.bridge.different-materials"));
             }
-            toggle.expand(CraftBookBukkitUtil.toVector(SignUtil.getRight(trigger)), BlockVector3.ZERO);
+            toggle.expand(BlockUtil.toVector(SignUtil.getRight(trigger)), BlockVector3.ZERO);
         }
 
         // Don't toggle the end points
-        toggle.contract(CraftBookBukkitUtil.toVector(SignUtil.getBack(trigger)), CraftBookBukkitUtil.toVector(SignUtil.getFront(trigger)));
+        toggle.contract(BlockUtil.toVector(SignUtil.getBack(trigger)), BlockUtil.toVector(SignUtil.getFront(trigger)));
 
         return toggle;
     }

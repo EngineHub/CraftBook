@@ -32,7 +32,6 @@ import org.bukkit.inventory.ShapelessRecipe;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.crafting.CustomCrafting;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -186,7 +185,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
             }
         }
 
-        for (Item item : ItemUtil.getItemsAtBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock())) {
+        for (Item item : ItemUtil.getItemsAtBlock(getSign().getBlock())) {
             boolean delete = true;
 
             ItemStack stack = item.getItemStack();

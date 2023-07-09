@@ -19,7 +19,6 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -69,7 +68,7 @@ public class PlayerInventorySensor extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        area = SearchArea.createArea(CraftBookBukkitUtil.toSign(getSign()).getBlock(), getLine(2));
+        area = SearchArea.createArea(getSign().getBlock(), getLine(2));
 
         String[] parts = RegexUtil.EQUALS_PATTERN.split(getLine(3));
         item = ItemUtil.makeItemValid(ItemSyntax.getItem(parts[0]));

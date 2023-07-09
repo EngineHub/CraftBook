@@ -39,7 +39,6 @@ import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.ICMechanic;
 import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
@@ -351,7 +350,7 @@ public final class ICUtil {
     }
 
     public static void collectItem(AbstractIC ic, BlockVector3 offset, ItemStack... items) {
-        Sign sign = CraftBookBukkitUtil.toSign(ic.getSign());
+        Sign sign = ic.getSign().getSign();
         Block backB = ic.getBackBlock();
         BlockFace back = SignUtil.getBack(sign.getBlock());
 

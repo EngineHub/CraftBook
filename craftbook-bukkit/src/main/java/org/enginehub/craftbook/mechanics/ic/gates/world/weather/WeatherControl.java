@@ -18,7 +18,6 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.weather;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -79,7 +78,7 @@ public class WeatherControl extends AbstractIC {
             thunderDuration = 1;
         }
 
-        World world = CraftBookBukkitUtil.toSign(getSign()).getWorld();
+        World world = getSign().getBlock().getWorld();
         if (chip.getInput(0)) {
             world.setStorm(true);
             world.setWeatherDuration(duration);

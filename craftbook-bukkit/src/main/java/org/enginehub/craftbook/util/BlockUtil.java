@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.util;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -136,5 +137,9 @@ public final class BlockUtil {
                         blocks.add(block.getRelative(x, y, z));
 
         return blocks.toArray(new Block[0]);
+    }
+
+    public static BlockVector3 toVector(BlockFace face) {
+        return BlockVector3.at(face.getModX(), face.getModY(), face.getModZ());
     }
 }

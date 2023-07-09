@@ -17,7 +17,6 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.weather;
 
 import org.bukkit.Server;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -56,7 +55,7 @@ public class TimeControlAdvanced extends AbstractIC {
                 time = (0 - 8 + 24) * 1000;
             }
 
-            CraftBookBukkitUtil.toSign(getSign()).getWorld().setTime(time);
+            getSign().getBlock().getWorld().setTime(time);
         }
     }
 

@@ -27,7 +27,6 @@ import org.bukkit.block.Furnace;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -107,7 +106,7 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
         int x = b.getX();
         int y = b.getY() + 1;
         int z = b.getZ();
-        Block bl = CraftBookBukkitUtil.toSign(getSign()).getBlock().getWorld().getBlockAt(x, y, z);
+        Block bl = getSign().getBlock().getWorld().getBlockAt(x, y, z);
         ItemStack stack = null;
         Inventory inv = null;
         if (bl.getType() == Material.CHEST) {
@@ -163,7 +162,7 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
         HashMap<Integer, ItemStack> over = inv.removeItem(item.clone());
         if (over.isEmpty()) {
 
-            BlockFace back = SignUtil.getBack(CraftBookBukkitUtil.toSign(getSign()).getBlock());
+            BlockFace back = SignUtil.getBack(getSign().getBlock());
             Block pipe = getBackBlock().getRelative(back);
 
             PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<>(Collections.singletonList(item.clone())), getBackBlock());
@@ -173,11 +172,11 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
                 return true;
 
             for (ItemStack stack : event.getItems())
-                CraftBookBukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(CraftBookBukkitUtil.toSign(getSign()).getLocation(), stack);
+                getSign().getBlock().getWorld().dropItemNaturally(getSign().getBlock().getLocation(), stack);
             return true;
         } else {
 
-            BlockFace back = SignUtil.getBack(CraftBookBukkitUtil.toSign(getSign()).getBlock());
+            BlockFace back = SignUtil.getBack(getSign().getBlock());
             Block pipe = getBackBlock().getRelative(back);
 
             PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<>(over.values()), getBackBlock());
@@ -189,8 +188,8 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
             for (ItemStack it : event.getItems()) {
 
                 if (item.getAmount() - it.getAmount() < 1) continue;
-                CraftBookBukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(
-                    CraftBookBukkitUtil.toSign(getSign()).getLocation(), new ItemStack(it.getType(), item.getAmount() - it.getAmount(), it.getDurability()));
+                getSign().getBlock().getWorld().dropItemNaturally(
+                    getSign().getBlock().getLocation(), new ItemStack(it.getType(), item.getAmount() - it.getAmount(), it.getDurability()));
                 return true;
             }
         }

@@ -23,7 +23,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -87,7 +86,7 @@ public class ContainerStocker extends AbstractSelfTriggeredIC {
 
         if (InventoryUtil.doesBlockHaveInventory(offset.getBlock())) {
 
-            BlockFace back = SignUtil.getBack(CraftBookBukkitUtil.toSign(getSign()).getBlock());
+            BlockFace back = SignUtil.getBack(getSign().getBlock());
             Block pipe = getBackBlock().getRelative(back);
 
             PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<>(Collections.singletonList(item.clone())), getBackBlock());

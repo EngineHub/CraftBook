@@ -20,7 +20,6 @@ import org.bukkit.Server;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -70,7 +69,7 @@ public class EntityCannon extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        location = CraftBookBukkitUtil.toSign(getSign()).getLocation();
+        location = getSign().getBlock().getLocation();
 
         if (!getLine(3).isEmpty())
             type = EntityType.fromString(getLine(3));

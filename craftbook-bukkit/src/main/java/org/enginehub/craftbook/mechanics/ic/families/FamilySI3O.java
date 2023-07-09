@@ -19,7 +19,6 @@ import com.sk89q.worldedit.util.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractChipState;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFamily;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -59,7 +58,7 @@ public class FamilySI3O extends AbstractICFamily {
         @Override
         protected Block getBlock(int pin) {
 
-            Block bsign = CraftBookBukkitUtil.toSign(sign).getBlock();
+            Block bsign = sign.getBlock();
             BlockFace fback = SignUtil.getBack(bsign);
 
             switch (pin) {

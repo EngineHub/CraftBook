@@ -44,7 +44,6 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
@@ -359,7 +358,7 @@ public class Door extends CuboidToggleMechanic {
             if (distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getType() != proximalOffsetType) {
                 throw new InvalidMechanismException(TranslatableComponent.of("craftbook.door.different-materials"));
             }
-            toggle.expand(CraftBookBukkitUtil.toVector(SignUtil.getLeft(trigger)), BlockVector3.ZERO);
+            toggle.expand(BlockUtil.toVector(SignUtil.getLeft(trigger)), BlockVector3.ZERO);
         }
 
         // Expand Right
@@ -372,11 +371,11 @@ public class Door extends CuboidToggleMechanic {
             if (distalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getType() != proximalOffsetType) {
                 throw new InvalidMechanismException(TranslatableComponent.of("craftbook.door.different-materials"));
             }
-            toggle.expand(CraftBookBukkitUtil.toVector(SignUtil.getRight(trigger)), BlockVector3.ZERO);
+            toggle.expand(BlockUtil.toVector(SignUtil.getRight(trigger)), BlockVector3.ZERO);
         }
 
         // Don't toggle the end points
-        toggle.contract(CraftBookBukkitUtil.toVector(BlockFace.UP), CraftBookBukkitUtil.toVector(BlockFace.DOWN));
+        toggle.contract(BlockUtil.toVector(BlockFace.UP), BlockUtil.toVector(BlockFace.DOWN));
 
         return toggle;
     }

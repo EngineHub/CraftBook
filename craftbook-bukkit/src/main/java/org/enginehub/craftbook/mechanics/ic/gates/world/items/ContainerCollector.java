@@ -23,7 +23,6 @@ import org.bukkit.entity.Item;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -89,7 +88,7 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
     protected boolean scanForItems() {
 
         boolean collected = false;
-        for (Item item : ItemUtil.getItemsAtBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock()))
+        for (Item item : ItemUtil.getItemsAtBlock(getSign().getBlock()))
             if (item.isValid() && !item.isDead())
                 if (collectItem(item))
                     collected = true;
@@ -111,7 +110,7 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
         if (doNotWant != null && ItemUtil.areItemsIdentical(doNotWant, stack))
             return false;
 
-        BlockFace back = SignUtil.getBack(CraftBookBukkitUtil.toSign(getSign()).getBlock());
+        BlockFace back = SignUtil.getBack(getSign().getBlock());
         Block pipe = getBackBlock().getRelative(back);
 
         PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<>(Collections.singletonList(stack)), getBackBlock());

@@ -27,7 +27,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -149,7 +148,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
                         EntityUtil.setEntityData(ent, bit.substring(2));
                     else if (data[0].equalsIgnoreCase("r")) {
                         EntityType rider = EntityType.fromName(data[1].trim());
-                        Entity rid = CraftBookBukkitUtil.toSign(getSign()).getWorld().spawnEntity(location, rider);
+                        Entity rid = getSign().getBlock().getWorld().spawnEntity(location, rider);
                         ent.setPassenger(rid);
                     } else if (data[0].equalsIgnoreCase("p") && ent instanceof LivingEntity) {
                         for (int a = 1; a < data.length; a++) {

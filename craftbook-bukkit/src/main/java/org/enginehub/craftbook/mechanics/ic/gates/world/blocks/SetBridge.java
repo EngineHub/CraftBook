@@ -21,7 +21,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -60,7 +59,7 @@ public class SetBridge extends AbstractIC {
     @Override
     public void load() {
         center = getBackBlock();
-        faceing = SignUtil.getFacing(CraftBookBukkitUtil.toSign(getSign()).getBlock());
+        faceing = SignUtil.getFacing(getSign().getBlock());
         String line = getLine(2);
         if (!line.isEmpty()) {
             String[] split = RegexUtil.MINUS_PATTERN.split(line);

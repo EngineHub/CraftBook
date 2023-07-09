@@ -21,7 +21,6 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -71,7 +70,7 @@ public class LiquidFlood extends AbstractSelfTriggeredIC {
                         int rx = centre.getBlockX() - x;
                         int ry = centre.getBlockY() - y;
                         int rz = centre.getBlockZ() - z;
-                        Block b = CraftBookBukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
+                        Block b = getSign().getBlock().getWorld().getBlockAt(rx, ry, rz);
                         if (b.getType() == Material.AIR || b.getType() == (liquid.equalsIgnoreCase("water") ? Material.WATER : Material.LAVA)) {
                             b.setType(liquid.equalsIgnoreCase("water") ? Material.WATER : Material.LAVA);
                         }
@@ -85,7 +84,7 @@ public class LiquidFlood extends AbstractSelfTriggeredIC {
                         int rx = centre.getBlockX() - x;
                         int ry = centre.getBlockY() - y;
                         int rz = centre.getBlockZ() - z;
-                        Block b = CraftBookBukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
+                        Block b = getSign().getBlock().getWorld().getBlockAt(rx, ry, rz);
                         if (b.getType() == (liquid.equalsIgnoreCase("water") ? Material.WATER : Material.LAVA)) {
                             b.setType(Material.AIR);
                         }

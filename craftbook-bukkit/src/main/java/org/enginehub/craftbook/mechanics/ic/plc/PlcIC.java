@@ -33,7 +33,6 @@ import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
@@ -241,8 +240,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     }
 
     private String getCode() throws CodeNotFoundException {
-
-        Sign sign = CraftBookBukkitUtil.toSign(this.sign);
+        Sign sign = this.sign.getSign();
 
         Block above = sign.getLocation().add(new Vector(0, 1, 0)).getBlock();
         if (above.getType() == Material.CHEST) return getBookCode(above);

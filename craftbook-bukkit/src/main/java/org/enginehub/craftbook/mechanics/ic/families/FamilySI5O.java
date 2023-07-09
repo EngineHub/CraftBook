@@ -19,7 +19,6 @@ import com.sk89q.worldedit.util.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.enginehub.craftbook.mechanics.ic.AbstractChipState;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFamily;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -55,13 +54,13 @@ public class FamilySI5O extends AbstractICFamily {
         @Override
         protected Block getBlock(int pin) {
 
-            BlockFace fback = SignUtil.getBack(CraftBookBukkitUtil.toSign(sign).getBlock());
-            Block backBlock = SignUtil.getBackBlock(CraftBookBukkitUtil.toSign(sign).getBlock()).getRelative(fback);
+            BlockFace fback = SignUtil.getBack(sign.getBlock());
+            Block backBlock = SignUtil.getBackBlock(sign.getBlock()).getRelative(fback);
             Block farBlock = backBlock.getRelative(fback);
 
             switch (pin) {
                 case 0:
-                    return SignUtil.getFrontBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
+                    return SignUtil.getFrontBlock(sign.getBlock());
                 case 1:
                     return farBlock.getRelative(fback);
                 case 2:
@@ -102,9 +101,9 @@ public class FamilySI5O extends AbstractICFamily {
             Block block = getBlock(pin);
             if (block != null) {
                 if (pin == 1 || pin == 2 || pin == 3)
-                    ICUtil.setState(block, value, icBlock.getRelative(SignUtil.getBack(CraftBookBukkitUtil.toSign(sign).getBlock()), 2));
+                    ICUtil.setState(block, value, icBlock.getRelative(SignUtil.getBack(sign.getBlock()), 2));
                 else
-                    ICUtil.setState(block, value, icBlock.getRelative(SignUtil.getBack(CraftBookBukkitUtil.toSign(sign).getBlock())));
+                    ICUtil.setState(block, value, icBlock.getRelative(SignUtil.getBack(sign.getBlock())));
             }
         }
 
