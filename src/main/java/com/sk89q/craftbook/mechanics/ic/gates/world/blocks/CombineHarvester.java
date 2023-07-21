@@ -95,6 +95,8 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
             case MELON:
             case PUMPKIN:
                 return true;
+            case BAMBOO:
+                return below == Material.BAMBOO;
             default:
                 return Tag.LOGS.isTagged(block.getType());
         }
