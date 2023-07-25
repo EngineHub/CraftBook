@@ -16,6 +16,7 @@
 package org.enginehub.craftbook.bukkit;
 
 import org.bukkit.Bukkit;
+import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -36,11 +37,12 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
-import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.util.RayTraceResult;
+import org.bukkit.util.Vector;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
@@ -96,7 +98,19 @@ final class MechanicListenerAdapter implements Listener {
                     signClickTimer.put(event.getPlayer().getUniqueId(), System.currentTimeMillis());
                 }
             }
-            SignClickEvent ev = new SignClickEvent(event.getPlayer(), action, event.getItem(), block, event.getBlockFace(), event.getHand(), event.getClickedPosition());
+            // Ignoring deprecation as we need this value to pass down.
+            @SuppressWarnings("deprecation")
+            Vector clickedPosition = event.getClickedPosition();
+            if (clickedPosition == null) {
+                RayTraceResult rayTraceResult = event.getPlayer().rayTraceBlocks(5.0, FluidCollisionMode.NEVER);
+                if (rayTraceResult != null) {
+                    clickedPosition = rayTraceResult.getHitPosition();
+                } else  {
+                    clickedPosition = new Vector(0.5, 0.5, 0.5);
+                }
+            }
+
+            SignClickEvent ev = new SignClickEvent(event.getPlayer(), action, event.getItem(), block, event.getBlockFace(), event.getHand(), clickedPosition);
             CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
             if (ev.useInteractedBlock() == Event.Result.DENY) {
                 event.setUseInteractedBlock(Event.Result.DENY);
