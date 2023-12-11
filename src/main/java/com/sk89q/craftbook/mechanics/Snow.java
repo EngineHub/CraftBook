@@ -564,7 +564,7 @@ public class Snow extends AbstractCraftBookMechanic {
     private static List<String> getDefaultReplacables() {
         return Lists.newArrayList(
                 BlockTypes.DEAD_BUSH.getId(),
-                BlockTypes.GRASS.getId(),
+                BlockTypes.SHORT_GRASS.getId(),
                 BlockTypes.DANDELION.getId(),
                 BlockTypes.POPPY.getId(),
                 BlockTypes.BROWN_MUSHROOM.getId(),
