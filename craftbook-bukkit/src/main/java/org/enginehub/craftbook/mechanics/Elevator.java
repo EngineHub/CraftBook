@@ -321,7 +321,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                 foundGround = true;
                 break;
             }
-            if (floor.getY() == 0) {
+            if (floor.getY() == player.getWorld().getMinY()) {
                 break;
             }
             floor = floor.setY(floor.getY() - 1);
