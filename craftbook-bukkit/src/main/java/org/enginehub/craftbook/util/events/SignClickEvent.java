@@ -64,7 +64,7 @@ public class SignClickEvent extends PlayerInteractEvent {
 
     public Side getSide() {
         if (this.side == null) {
-            this.side = ((Sign) getClickedBlock().getState(false)).getInteractableSideFor(this.getInteractionPoint());
+            this.side = ((Sign) getClickedBlock().getState(false)).getInteractableSideFor(this.getPlayer());
         }
         return this.side;
     }
