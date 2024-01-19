@@ -3,7 +3,6 @@ package com.sk89q.craftbook.util;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
@@ -44,7 +43,7 @@ public final class BlockUtil {
             case DEAD_BUSH:
             case END_PORTAL:
             case FIRE:
-            case GRASS:
+            case SHORT_GRASS:
             case LAVA:
             case WATER:
             case VINE:

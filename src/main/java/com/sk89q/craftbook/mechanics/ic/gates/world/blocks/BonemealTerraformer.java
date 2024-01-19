@@ -133,7 +133,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
             if (consumeBonemeal()) {
                 int t = CraftBookPlugin.inst().getRandom().nextInt(7);
                 if (t == 0) {
-                    b.getRelative(0, 1, 0).setType(Material.GRASS);
+                    b.getRelative(0, 1, 0).setType(Material.SHORT_GRASS);
                 } else if (t == 1) {
                     b.getRelative(0, 1, 0).setType(Material.DANDELION);
                 } else if (t == 2) {
@@ -141,7 +141,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
                 } else if (t == 3) {
                     b.getRelative(0, 1, 0).setType(Material.FERN);
                 } else {
-                    b.getRelative(0, 1, 0).setType(Material.GRASS);
+                    b.getRelative(0, 1, 0).setType(Material.SHORT_GRASS);
                 }
             }
             return;

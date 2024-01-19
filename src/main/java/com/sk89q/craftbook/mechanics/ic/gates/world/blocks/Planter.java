@@ -159,6 +159,8 @@ public class Planter extends AbstractSelfTriggeredIC {
             case LILY_PAD:
             case BEETROOT_SEEDS:
             case COCOA_BEANS:
+            case CRIMSON_FUNGUS:
+            case WARPED_FUNGUS:
                 return true;
             default:
                 return Tag.SAPLINGS.isTagged(item.getType());
@@ -166,27 +168,25 @@ public class Planter extends AbstractSelfTriggeredIC {
     }
 
     protected boolean itemPlantableAtBlock(ItemStack item, Block block) {
+        Material belowType = block.getRelative(0, -1, 0).getType();
 
         switch (item.getType()) {
-            case POPPY:
-            case DANDELION:
-                return block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK || block.getRelative(0, -1, 0).getType() == Material.PODZOL;
             case WHEAT_SEEDS:
             case MELON_SEEDS:
             case PUMPKIN_SEEDS:
             case POTATO:
             case CARROT:
             case BEETROOT_SEEDS:
-                return block.getRelative(0, -1, 0).getType() == Material.FARMLAND;
+                return belowType == Material.FARMLAND;
             case NETHER_WART:
-                return block.getRelative(0, -1, 0).getType() == Material.SOUL_SAND;
+                return belowType == Material.SOUL_SAND;
             case CACTUS:
-                return block.getRelative(0, -1, 0).getType() == Material.SAND;
+                return belowType == Material.SAND;
             case RED_MUSHROOM:
             case BROWN_MUSHROOM:
-                return block.getRelative(0, -1, 0).getType().isSolid();
+                return belowType.isSolid();
             case LILY_PAD:
-                return block.getRelative(0, -1, 0).getType() == Material.WATER;
+                return belowType == Material.WATER;
             case COCOA_BEANS:
                 BlockFace[] faces = new BlockFace[]{BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
                 for(BlockFace face : faces) {
@@ -194,9 +194,12 @@ public class Planter extends AbstractSelfTriggeredIC {
                         return true;
                 }
                 return false;
+            case CRIMSON_FUNGUS:
+            case WARPED_FUNGUS:
+                return belowType == Material.CRIMSON_NYLIUM || belowType == Material.WARPED_NYLIUM || Tag.DIRT.isTagged(belowType);
             default:
-                if (Tag.SAPLINGS.isTagged(item.getType())) {
-                    return block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK || block.getRelative(0, -1, 0).getType() == Material.PODZOL;
+                if (Tag.SAPLINGS.isTagged(item.getType()) || Tag.SMALL_FLOWERS.isTagged(item.getType())) {
+                    return Tag.DIRT.isTagged(belowType);
                 }
                 return false;
         }
@@ -246,6 +249,12 @@ public class Planter extends AbstractSelfTriggeredIC {
                     }
                 }
                 return false;
+            case CRIMSON_FUNGUS:
+                block.setType(Material.CRIMSON_FUNGUS);
+                return true;
+            case WARPED_FUNGUS:
+                block.setType(Material.WARPED_FUNGUS);
+                return true;
             default:
                 if (Tag.SAPLINGS.isTagged(item.getType())) {
                     block.setType(item.getType());
