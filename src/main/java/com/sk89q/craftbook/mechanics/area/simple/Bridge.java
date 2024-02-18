@@ -171,7 +171,7 @@ public class Bridge extends CuboidToggleMechanic {
         if (!SignUtil.isSign(event.getBlock())) return;
         if (!isApplicableSign(CraftBookBukkitUtil.toChangedSign(event.getBlock()).getLine(1))) return;
 
-        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
+        CraftBookPlugin.getScheduler().runTaskLater(() -> {
             try {
                 flipState(event.getBlock(), null);
             } catch (InvalidMechanismException e) {

@@ -1,11 +1,13 @@
 package com.sk89q.craftbook.util;
 
+import com.github.Anon8281.universalScheduler.UniversalRunnable;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.BukkitCraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.worldedit.math.Vector3;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -339,14 +341,14 @@ public final class LocationUtil {
         // Vehicle must eject the passenger first,
         // otherwise vehicle.teleport() will not have any effect.
         vehicle.eject();
-        vehicle.teleport(newLocation);
+        PaperLib.teleportAsync(vehicle, newLocation);
         return vehicle;
     }
 
 
     /**
      * Adds the player to the vehicle. Execution is delayed
-     * by six ticks through a {@link BukkitRunnable} because
+     * by six ticks through a {@link UniversalRunnable} because
      * it doesn't work otherwise.
      *
      * @param vehicle   The vehicle that will set the player as a passenger.
@@ -365,7 +367,7 @@ public final class LocationUtil {
 
         // vehicle.teleport() seems to have a delay. Calling vehicle.setPassenger()
         // without the delayed runnable will not set the passenger.
-        new BukkitRunnable(){
+        new UniversalRunnable(){
             @Override
             public void run () {
                 vehicle.addPassenger(bukkitPlayer);

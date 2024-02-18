@@ -32,7 +32,7 @@ public class ExitRemover extends AbstractCraftBookMechanic {
                 return;
         }
 
-        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
+        CraftBookPlugin.getScheduler().runTaskLater(() -> {
 
             if (event.getVehicle().isDead() || !event.getVehicle().isValid()) return;
 

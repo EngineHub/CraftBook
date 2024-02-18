@@ -241,7 +241,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             };
             // FIXME: these should be registered with a global scheduler so we can end up with one runnable actually
             // running per set of inputs in a given time window.
-            CraftBookPlugin.server().getScheduler().runTaskLater(CraftBookPlugin.inst(), runnable, 2);
+            CraftBookPlugin.getScheduler().runTaskLater(runnable, 2);
         }
     }
 

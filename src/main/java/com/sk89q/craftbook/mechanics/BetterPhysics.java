@@ -54,7 +54,7 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
 
     private static void checkForPhysics(Block block) {
         if(FallingLadders.isValid(block)) {
-            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new FallingLadders(block));
+            CraftBookPlugin.getScheduler().runTask(CraftBookPlugin.inst(), new FallingLadders(block));
         }
     }
 
