@@ -39,10 +39,16 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 public class Pipes extends AbstractCraftBookMechanic {
-    private Map<String, Long> lastFailedAttempt = new HashMap<>();
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
@@ -125,6 +131,7 @@ public class Pipes extends AbstractCraftBookMechanic {
     private void searchNearbyPipes(Block block, Set<Vector> visitedPipes, List<ItemStack> items) {
         Deque<Block> searchQueue = new ArrayDeque<>();
         searchQueue.addFirst(block);
+
         //Use the queue to search blocks.
         while (!searchQueue.isEmpty()) {
             Block bl = searchQueue.poll();
@@ -310,16 +317,9 @@ public class Pipes extends AbstractCraftBookMechanic {
                         || SignUtil.isWallSign(block);
         }
     }
-    private String getPipeKey(Block block) {
-        return block.getWorld().getName() + ":" + block.getX() + "," + block.getY() + "," + block.getZ();
-    }
 
     private void startPipe(Block block, List<ItemStack> items, boolean request) {
-        String pipeKey = getPipeKey(block);
-        long currentTime = System.currentTimeMillis();
-        if(lastFailedAttempt.containsKey(pipeKey) && (currentTime - lastFailedAttempt.get(pipeKey) < 5000)) {
-            return; // Skip if within 5 seconds.
-        }
+
         Set<ItemStack> filters = new HashSet<>();
         Set<ItemStack> exceptions = new HashSet<>();
 
@@ -379,14 +379,9 @@ public class Pipes extends AbstractCraftBookMechanic {
                 if (!items.isEmpty()) {
                     for (ItemStack item : items) {
                         if (item == null) continue;
-                        //System.out.println("1 " + items);
                         leftovers.addAll(((InventoryHolder) fac.getState()).getInventory().addItem(item).values());
-                        lastFailedAttempt.put(pipeKey, currentTime);
                     }
-                } else {
-                    lastFailedAttempt.remove(pipeKey);
                 }
-
             } else if (fac.getType() == Material.FURNACE || fac.getType() == Material.BLAST_FURNACE || fac.getType() == Material.SMOKER) {
 
                 Furnace f = (Furnace) fac.getState();
@@ -411,18 +406,12 @@ public class Pipes extends AbstractCraftBookMechanic {
                 if (!items.isEmpty()) {
                     for (ItemStack item : items) {
                         if (item == null) continue;
-                        //System.out.println("1 " + items);
-                        lastFailedAttempt.put(pipeKey, currentTime);
                         if(f.getInventory().getResult() == null)
                             f.getInventory().setResult(item);
                         else
                             leftovers.add(ItemUtil.addToStack(f.getInventory().getResult(), item));
                     }
-                } else {
-                    f.getInventory().setResult(null);
-                    lastFailedAttempt.remove(pipeKey);
-                }
-
+                } else f.getInventory().setResult(null);
             } else if (fac.getType() == Material.JUKEBOX) {
 
                 Jukebox juke = (Jukebox) fac.getState();
@@ -489,8 +478,6 @@ public class Pipes extends AbstractCraftBookMechanic {
 
             if(!EventUtil.passesFilter(event)) return;
 
-            //System.out.println("Pipe triggered");
-
             startPipe(event.getBlock(), new ArrayList<>(), false);
         }
     }
@@ -506,8 +493,6 @@ public class Pipes extends AbstractCraftBookMechanic {
                 return;
 
             if(!EventUtil.passesFilter(event)) return;
-
-            //System.out.println("Pipe triggered 2");
 
             startPipe(event.getBlock(), event.getItems(), true);
         }
