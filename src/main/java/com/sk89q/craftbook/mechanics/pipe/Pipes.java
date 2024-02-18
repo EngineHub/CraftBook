@@ -385,6 +385,10 @@ public class Pipes extends AbstractCraftBookMechanic {
             } else if (fac.getType() == Material.FURNACE || fac.getType() == Material.BLAST_FURNACE || fac.getType() == Material.SMOKER) {
 
                 Furnace f = (Furnace) fac.getState();
+
+                if (!ItemUtil.isStackValid(f.getInventory().getResult()))
+                    return;
+
                 if(!ItemUtil.doesItemPassFilters(f.getInventory().getResult(), filters, exceptions))
                     return;
                 items.add(f.getInventory().getResult());
