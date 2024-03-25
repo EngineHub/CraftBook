@@ -71,12 +71,12 @@ public class BukkitConfiguration extends YamlConfiguration {
         config.setComment("mechanics", "List of mechanics and whether they are enabled or not");
         MechanicType.REGISTRY.values()
             .stream()
-            .sorted(Comparator.comparing((MechanicType<?> t) -> t.getCategory().name()).thenComparing(MechanicType::getId))
+            .sorted(Comparator.comparing((MechanicType<?> t) -> t.getCategory().name()).thenComparing(MechanicType::id))
             .forEach(mechanicType -> {
-                String path = "mechanics." + mechanicType.getCategory().name().toLowerCase() + "." + mechanicType.getId();
-                boolean enabled = config.getBoolean(path, mechanicType.getId().equals("variables"));
+                String path = "mechanics." + mechanicType.getCategory().name().toLowerCase() + "." + mechanicType.id();
+                boolean enabled = config.getBoolean(path, mechanicType.id().equals("variables"));
                 if (enabled) {
-                    enabledMechanics.add(mechanicType.getId());
+                    enabledMechanics.add(mechanicType.id());
                 }
             });
 
@@ -119,8 +119,8 @@ public class BukkitConfiguration extends YamlConfiguration {
     @Override
     public void save() {
         for (MechanicType<?> availableMechanic : MechanicType.REGISTRY.values()) {
-            String path = "mechanics." + availableMechanic.getCategory().name().toLowerCase() + "." + availableMechanic.getId();
-            config.setProperty(path, enabledMechanics.contains(availableMechanic.getId()));
+            String path = "mechanics." + availableMechanic.getCategory().name().toLowerCase() + "." + availableMechanic.id();
+            config.setProperty(path, enabledMechanics.contains(availableMechanic.id()));
         }
 
         config.save();

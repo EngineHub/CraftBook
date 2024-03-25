@@ -33,7 +33,7 @@ public class MechanicListBox extends PaginationBox {
 
     private static final List<MechanicType<?>> MECHANICS = MechanicType.REGISTRY.values()
         .stream()
-        .sorted(Comparator.comparing(MechanicType::getId))
+        .sorted(Comparator.comparing(MechanicType::id))
         .toList();
 
     private final Actor actor;
@@ -68,12 +68,12 @@ public class MechanicListBox extends PaginationBox {
                 modifyComponent = TextComponent
                     .of("[Disable]", TextColor.RED)
                     .hoverEvent(HoverEvent.showText(TranslatableComponent.of("craftbook.mechanisms.click-to-disable")))
-                    .clickEvent(ClickEvent.runCommand("/cb mech disable " + mechanic.getId() + " -l " + getCurrentPage()));
+                    .clickEvent(ClickEvent.runCommand("/cb mech disable " + mechanic.id() + " -l " + getCurrentPage()));
             } else {
                 modifyComponent = TextComponent
                     .of("[Enable]", TextColor.GREEN)
                     .hoverEvent(HoverEvent.showText(TranslatableComponent.of("craftbook.mechanisms.click-to-enable")))
-                    .clickEvent(ClickEvent.runCommand("/cb mech enable " + mechanic.getId() + " -l " + getCurrentPage()));
+                    .clickEvent(ClickEvent.runCommand("/cb mech enable " + mechanic.id() + " -l " + getCurrentPage()));
             }
 
             int length = FontInfo.getPxLength(mechanic.getName());

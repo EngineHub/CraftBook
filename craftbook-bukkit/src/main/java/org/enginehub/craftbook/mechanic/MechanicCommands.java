@@ -77,7 +77,7 @@ public class MechanicCommands {
         CraftBookPlugin plugin = CraftBookPlugin.inst();
         try {
             CraftBook.getInstance().getPlatform().getMechanicManager().enableMechanic(mechanicType);
-            CraftBook.getInstance().getPlatform().getConfiguration().enabledMechanics.add(mechanicType.getId());
+            CraftBook.getInstance().getPlatform().getConfiguration().enabledMechanics.add(mechanicType.id());
             CraftBook.getInstance().getPlatform().getConfiguration().save();
 
             if (plugin.getCommandManager().getMechanicRegistrar().isDirty()) {
@@ -112,7 +112,7 @@ public class MechanicCommands {
         CraftBookPlugin plugin = CraftBookPlugin.inst();
         Optional<?> mech = CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(mechanicType);
         if (mech.isPresent() && CraftBook.getInstance().getPlatform().getMechanicManager().disableMechanic((CraftBookMechanic) mech.get())) {
-            CraftBook.getInstance().getPlatform().getConfiguration().enabledMechanics.remove(mechanicType.getId());
+            CraftBook.getInstance().getPlatform().getConfiguration().enabledMechanics.remove(mechanicType.id());
             CraftBook.getInstance().getPlatform().getConfiguration().save();
 
             if (plugin.getCommandManager().getMechanicRegistrar().isDirty()) {

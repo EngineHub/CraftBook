@@ -81,7 +81,7 @@ public class HeadDropsCommands {
             throw new CraftBookException(TranslatableComponent.of("craftbook.command.unknown-player"));
         }
 
-        if (!actor.hasPermission("craftbook.headdrops.give" + (otherPlayer != null ? ".others" : "") + '.' + entityType.getId())) {
+        if (!actor.hasPermission("craftbook.headdrops.give" + (otherPlayer != null ? ".others" : "") + '.' + entityType.id())) {
             throw new AuthorizationException();
         }
 

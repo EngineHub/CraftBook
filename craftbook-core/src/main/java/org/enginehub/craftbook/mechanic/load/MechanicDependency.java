@@ -50,7 +50,7 @@ public class MechanicDependency implements LoadDependency {
 
     @Override
     public String getDependencyId() {
-        return this.mechanicType.getId();
+        return this.mechanicType.id();
     }
 
     @Override

@@ -64,7 +64,7 @@ public class BetterLeads extends AbstractCraftBookMechanic {
 
         CraftBookPlugin.logDebugMessage("A player has right clicked an entity with a lead!", "betterleads.allowed-mobs");
 
-        String typeName = BukkitAdapter.adapt(event.getRightClicked().getType()).getId();
+        String typeName = BukkitAdapter.adapt(event.getRightClicked().getType()).id();
         if (typeName == null) {
             return; //Invalid type.
         }
@@ -229,6 +229,6 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         mobRepellant = config.getBoolean("mob-repel", false);
 
         config.setComment("allowed-mobs", "The list of mobs that can be tethered with a lead.");
-        allowedMobs = ImmutableSet.copyOf(config.getStringList("allowed-mobs", Lists.newArrayList(EntityTypes.ZOMBIE.getId(), EntityTypes.SPIDER.getId())));
+        allowedMobs = ImmutableSet.copyOf(config.getStringList("allowed-mobs", Lists.newArrayList(EntityTypes.ZOMBIE.id(), EntityTypes.SPIDER.id())));
     }
 }

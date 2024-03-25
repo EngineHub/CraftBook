@@ -111,7 +111,7 @@ public class AreaCommands {
             BlockVector3 size = max.subtract(min).add(1, 1, 1);
 
             // Check maximum size
-            if (Area.instance.maxAreaSize != -1 && size.getBlockX() * size.getBlockY() * size.getBlockZ()
+            if (Area.instance.maxAreaSize != -1 && size.x() * size.y() * size.z()
                 > Area.instance.maxAreaSize) {
                 throw new CraftBookException("Area is larger than allowed " + Area.instance.maxAreaSize + " blocks.");
             }
@@ -245,7 +245,7 @@ public class AreaCommands {
             throw new CraftBookException("You must be a player or specify a valid world to use this command.");
         }
 
-        Block block = world.getBlockAt(position.getX(), position.getY(), position.getZ());
+        Block block = world.getBlockAt(position.x(), position.y(), position.z());
         if (!SignUtil.isSign(block))
             throw new CraftBookException("No sign found at the specified location.");
 

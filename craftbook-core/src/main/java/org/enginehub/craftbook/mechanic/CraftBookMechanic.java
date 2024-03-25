@@ -71,6 +71,6 @@ public interface CraftBookMechanic {
     }
 
     default String getDocsUrl(MechanicType<? extends CraftBookMechanic> mechanicType) {
-        return CraftBook.getDocsDomain() + "mechanics/" + mechanicType.getId() + "/";
+        return CraftBook.getDocsDomain() + "mechanics/" + mechanicType.id() + "/";
     }
 }

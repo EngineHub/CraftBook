@@ -43,9 +43,9 @@ public class MechanicConfigurationGenerator {
     public static void generateMechanicConfiguration() {
         MechanicType.REGISTRY.values().forEach(mechanicRegistration -> {
             try {
-                System.out.println("Generating " + mechanicRegistration.getId() + " docs data");
+                System.out.println("Generating " + mechanicRegistration.id() + " docs data");
                 CraftBookMechanic me = mechanicRegistration.getMechanicClass().getDeclaredConstructor().newInstance();
-                Path file = getMechanicConfigFolder().resolve(mechanicRegistration.getId() + ".yml");
+                Path file = getMechanicConfigFolder().resolve(mechanicRegistration.id() + ".yml");
 
                 YAMLProcessor mechanicConfig = new YAMLProcessor(file.toFile(), true, YAMLFormat.EXTENDED);
 
@@ -67,7 +67,7 @@ public class MechanicConfigurationGenerator {
     }
 
     private static void generateConfigRst(MechanicType<?> type, YAMLProcessor config) throws IOException {
-        Path file = getMechanicConfigFolder().resolve(type.getId() + ".rst");
+        Path file = getMechanicConfigFolder().resolve(type.id() + ".rst");
 
         Files.createFile(file);
 

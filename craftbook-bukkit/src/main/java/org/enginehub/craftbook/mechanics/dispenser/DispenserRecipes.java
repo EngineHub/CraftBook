@@ -172,7 +172,7 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
      */
     public void addRecipe(DispenserRecipe recipe) {
         checkNotNull(recipe, "Recipe must not be null");
-        REGISTRY.register(recipe.getId(), recipe);
+        REGISTRY.register(recipe.id(), recipe);
     }
 
     private boolean cannonEnable;

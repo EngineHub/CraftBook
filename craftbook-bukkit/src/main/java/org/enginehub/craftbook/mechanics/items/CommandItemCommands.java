@@ -137,7 +137,7 @@ public class CommandItemCommands {
         stack = ItemUtil.makeItemValid(stack);
         stack.setAmount(stack.getAmount() * amount);
 
-        world.dropItem(new Location(world, location.getX(), location.getY(), location.getZ()), stack);
+        world.dropItem(new Location(world, location.x(), location.y(), location.z()), stack);
 
         if (!silent)
             actor.print("Spawned CommandItem " + ChatColor.BLUE + def.getName() + ChatColor.YELLOW + " at " + location.toString() + " in " + world.getName());

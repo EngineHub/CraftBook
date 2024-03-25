@@ -126,12 +126,12 @@ public class BetterAI extends AbstractCraftBookMechanic {
     }
 
     private static boolean isEntityEnabled(Entity ent, Set<String> entities) {
-        String id = BukkitAdapter.adapt(ent.getType()).getId();
+        String id = BukkitAdapter.adapt(ent.getType()).id();
         if (id.startsWith("minecraft:") && entities.contains(id.substring("minecraft:".length()))) {
             // Special-case handling for removal of `minecraft:` namespace.
             return true;
         }
-        return entities.contains(BukkitAdapter.adapt(ent.getType()).getId());
+        return entities.contains(BukkitAdapter.adapt(ent.getType()).id());
     }
 
     private Set<String> enhancedVision;
@@ -143,17 +143,17 @@ public class BetterAI extends AbstractCraftBookMechanic {
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("enhanced-vision-enabled", "The list of entities to enable the enhanced vision AI mechanic for.");
         enhancedVision = ImmutableSet.copyOf(config.getStringList("enhanced-vision-enabled", Lists.newArrayList(
-            EntityTypes.ZOMBIE.getId(), EntityTypes.DROWNED.getId(), EntityTypes.HUSK.getId(), EntityTypes.ZOMBIFIED_PIGLIN.getId()
+            EntityTypes.ZOMBIE.id(), EntityTypes.DROWNED.id(), EntityTypes.HUSK.id(), EntityTypes.ZOMBIFIED_PIGLIN.id()
         )));
 
         config.setComment("critical-bow-enabled", "The list of entities to enable the critical bow AI mechanic for.");
         criticalBow = ImmutableSet.copyOf(config.getStringList("critical-bow-enabled", Lists.newArrayList(
-            EntityTypes.SKELETON.getId()
+            EntityTypes.SKELETON.id()
         )));
 
         config.setComment("attack-passive-enabled", "The list of entities to enable the attack passive AI mechanic for.");
         attackPassive = ImmutableSet.copyOf(config.getStringList("attack-passive-enabled", Lists.newArrayList(
-            EntityTypes.ZOMBIE.getId(), EntityTypes.DROWNED.getId(), EntityTypes.HUSK.getId()
+            EntityTypes.ZOMBIE.id(), EntityTypes.DROWNED.id(), EntityTypes.HUSK.id()
         )));
 
         config.setComment("attack-passive-ignore-hostile-mounts", "Whether hostile mobs will ignore passive entities that are mounted by a hostile entity.");

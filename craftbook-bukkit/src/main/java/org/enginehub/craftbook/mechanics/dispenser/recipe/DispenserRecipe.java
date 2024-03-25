@@ -74,13 +74,13 @@ public abstract class DispenserRecipe implements Keyed {
     }
 
     @Override
-    public String getId() {
+    public String id() {
         return this.id;
     }
 
     @Override
     public boolean equals(Object o) {
-        return this == o || o instanceof DispenserRecipe && Objects.equals(this.id, ((DispenserRecipe) o).getId()) && Arrays.equals(recipe, ((DispenserRecipe) o).recipe);
+        return this == o || o instanceof DispenserRecipe && Objects.equals(this.id, ((DispenserRecipe) o).id()) && Arrays.equals(recipe, ((DispenserRecipe) o).recipe);
     }
 
     @Override

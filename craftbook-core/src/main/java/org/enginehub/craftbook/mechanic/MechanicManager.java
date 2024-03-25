@@ -94,13 +94,13 @@ public abstract class MechanicManager {
         // We explicitly do not filter out unmet plugin dependencies here, so that they can throw an error when enabling.
 
         for (MechanicType<?> mechanicType : mechanicTypes) {
-            if (CraftBook.getInstance().getPlatform().getConfiguration().enabledMechanics.contains(mechanicType.getId())) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().enabledMechanics.contains(mechanicType.id())) {
                 try {
                     enableMechanic(mechanicType);
                 } catch (UnsatisfiedLoadDependencyException e) {
                     CraftBook.LOGGER.warn("Failed to load mechanic: " + e.getMechanicType().getName() + ". " + e.getMessage());
                 } catch (MechanicInitializationException e) {
-                    CraftBook.LOGGER.warn("Failed to load mechanic: " + e.getMechanicType().getId() + ". " + e.getMessage());
+                    CraftBook.LOGGER.warn("Failed to load mechanic: " + e.getMechanicType().id() + ". " + e.getMessage());
                     if (e.getCause() != null) {
                         e.getCause().printStackTrace();
                     }
@@ -123,7 +123,7 @@ public abstract class MechanicManager {
         if (isMechanicEnabled(mechanicType)) {
             throw new MechanicInitializationException(mechanicType, TranslatableComponent.of(
                 "craftbook.mechanisms.already-enabled",
-                TextComponent.of(mechanicType.getId())
+                TextComponent.of(mechanicType.id())
             ));
         }
         try {
@@ -144,7 +144,7 @@ public abstract class MechanicManager {
         } catch (Throwable t) {
             throw new MechanicInitializationException(mechanicType, TranslatableComponent.of(
                 "craftbook.mechanisms.enable-failed",
-                TextComponent.of(mechanicType.getId())
+                TextComponent.of(mechanicType.id())
             ), t);
         }
     }
@@ -203,7 +203,7 @@ public abstract class MechanicManager {
         } catch (Throwable t) {
             throw new MechanicInitializationException(mechanicType, TranslatableComponent.of(
                 "craftbook.mechanisms.reload-failed",
-                TextComponent.of(mechanicType.getId())
+                TextComponent.of(mechanicType.id())
             ), t);
         }
     }

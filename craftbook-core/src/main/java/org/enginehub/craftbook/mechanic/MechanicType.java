@@ -56,7 +56,7 @@ public class MechanicType<T extends CraftBookMechanic> implements Keyed {
     }
 
     @Override
-    public String getId() {
+    public String id() {
         return this.id;
     }
 

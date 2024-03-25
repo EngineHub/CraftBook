@@ -69,9 +69,9 @@ public class MovementSensor extends AbstractSelfTriggeredIC {
         // the given string should look something like that:
         // radius=x:y:z or radius, e.g. 1=-2:5:11
         radius = ICUtil.parseRadius(getSign());
-        String radiusString = radius.getX() + "," + radius.getY() + "," + radius.getZ();
-        if (radius.getX() == radius.getY() && radius.getY() == radius.getZ())
-            radiusString = String.valueOf(radius.getX());
+        String radiusString = radius.x() + "," + radius.y() + "," + radius.z();
+        if (radius.x() == radius.y() && radius.y() == radius.z())
+            radiusString = String.valueOf(radius.x());
         if (getLine(2).contains("=")) {
             getSign().setLine(2, Component.text(radiusString + "=" + RegexUtil.EQUALS_PATTERN.split(getLine(2))[1]));
             center = ICUtil.parseBlockLocation(getSign());
@@ -108,7 +108,7 @@ public class MovementSensor extends AbstractSelfTriggeredIC {
 
     public boolean check() {
 
-        for (Entity entity : center.getLocation().getNearbyEntities(radius.getX(), radius.getY(), radius.getZ())) {
+        for (Entity entity : center.getLocation().getNearbyEntities(radius.x(), radius.y(), radius.z())) {
             if (entity.isValid()) {
                 for (EntityType type : types) { // Check Type
                     if (type.is(entity)) { // Check Radius

@@ -124,15 +124,15 @@ public final class ICUtil {
 
                             String x, y, z;
 
-                            x = Double.toString(offset.getX());
+                            x = Double.toString(offset.x());
                             if (x.endsWith(".0"))
                                 x = x.replace(".0", "");
 
-                            y = Double.toString(offset.getY());
+                            y = Double.toString(offset.y());
                             if (y.endsWith(".0"))
                                 y = y.replace(".0", "");
 
-                            z = Double.toString(offset.getZ());
+                            z = Double.toString(offset.z());
                             if (z.endsWith(".0"))
                                 z = z.replace(".0", "");
 
@@ -144,15 +144,15 @@ public final class ICUtil {
 
                             String x, y, z;
 
-                            x = Double.toString(offset.getX());
+                            x = Double.toString(offset.x());
                             if (x.endsWith(".0"))
                                 x = x.replace(".0", "");
 
-                            y = Double.toString(offset.getY());
+                            y = Double.toString(offset.y());
                             if (y.endsWith(".0"))
                                 y = y.replace(".0", "");
 
-                            z = Double.toString(offset.getZ());
+                            z = Double.toString(offset.z());
                             if (z.endsWith(".0"))
                                 z = z.replace(".0", "");
 
@@ -181,15 +181,15 @@ public final class ICUtil {
 
                             String x, y, z;
 
-                            x = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getX() - selector.getRegion().getMinimumPoint().getX()) / 2);
+                            x = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().x() - selector.getRegion().getMinimumPoint().x()) / 2);
                             if (x.endsWith(".0"))
                                 x = x.replace(".0", "");
 
-                            y = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getY() - selector.getRegion().getMinimumPoint().getY()) / 2);
+                            y = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().y() - selector.getRegion().getMinimumPoint().y()) / 2);
                             if (y.endsWith(".0"))
                                 y = y.replace(".0", "");
 
-                            z = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().getZ() - selector.getRegion().getMinimumPoint().getZ()) / 2);
+                            z = Double.toString(Math.abs(selector.getRegion().getMaximumPoint().z() - selector.getRegion().getMinimumPoint().z()) / 2);
                             if (z.endsWith(".0"))
                                 z = z.replace(".0", "");
 
@@ -199,7 +199,7 @@ public final class ICUtil {
 
                             String x;
 
-                            double amounts = ((EllipsoidRegion) selector.getRegion()).getRadius().getX();
+                            double amounts = ((EllipsoidRegion) selector.getRegion()).getRadius().x();
 
                             x = Double.toString(amounts);
                             if (x.endsWith(".0"))
@@ -256,15 +256,15 @@ public final class ICUtil {
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException ignored) {
         }
 
-        if (offsets.getBlockX() == 0 && offsets.getBlockY() == 0 && offsets.getBlockZ() == 0)
+        if (offsets.x() == 0 && offsets.y() == 0 && offsets.z() == 0)
             return target;
 
         if (relative == LocationCheckType.RELATIVE)
-            target = LocationUtil.getRelativeOffset(sign, offsets.getBlockX(), offsets.getBlockY(), offsets.getBlockZ());
+            target = LocationUtil.getRelativeOffset(sign, offsets.x(), offsets.y(), offsets.z());
         else if (relative == LocationCheckType.OFFSET)
-            target = target.getRelative(offsets.getBlockX(), offsets.getBlockY(), offsets.getBlockZ());
+            target = target.getRelative(offsets.x(), offsets.y(), offsets.z());
         else if (relative == LocationCheckType.ABSOLUTE)
-            target = new Location(target.getWorld(), offsets.getBlockX(), offsets.getBlockY(), offsets.getBlockZ()).getBlock();
+            target = new Location(target.getWorld(), offsets.x(), offsets.y(), offsets.z()).getBlock();
         return target;
     }
 
@@ -363,7 +363,7 @@ public final class ICUtil {
         Collection<ItemStack> results = event.getItems();
 
         // If there is a chest add the results to the chest
-        Block invHolder = backB.getRelative(offset.getBlockX(), offset.getBlockY(), offset.getBlockZ());
+        Block invHolder = backB.getRelative(offset.x(), offset.y(), offset.z());
         if (InventoryUtil.doesBlockHaveInventory(invHolder)) {
             InventoryHolder c = (InventoryHolder) invHolder.getState();
             results = InventoryUtil.addItemsToInventory(c, results.toArray(new ItemStack[0]));

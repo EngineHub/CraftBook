@@ -90,9 +90,9 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
     public void load() {
 
         radius = ICUtil.parseRadius(getSign());
-        String radiusString = radius.getX() + "," + radius.getY() + "," + radius.getZ();
-        if (radius.getX() == radius.getY() && radius.getY() == radius.getZ())
-            radiusString = String.valueOf(radius.getX());
+        String radiusString = radius.x() + "," + radius.y() + "," + radius.z();
+        if (radius.x() == radius.y() && radius.y() == radius.z())
+            radiusString = String.valueOf(radius.x());
         if (getLine(2).contains("=")) {
             getSign().setLine(2, Component.text(radiusString + "=" + RegexUtil.EQUALS_PATTERN.split(getLine(2))[1]));
             centre = ICUtil.parseBlockLocation(getSign(), 2).getLocation();
@@ -121,7 +121,7 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
 
         List<Item> itemsForChest = Lists.newArrayList();
 
-        for (Entity entity : centre.getNearbyEntities(radius.getX(), radius.getY(), radius.getZ())) {
+        for (Entity entity : centre.getNearbyEntities(radius.x(), radius.y(), radius.z())) {
             if (entity.isValid() && entity instanceof Item && ((Item) entity).getPickupDelay() < 1) {
                 ItemStack stack = ((Item) entity).getItemStack();
 

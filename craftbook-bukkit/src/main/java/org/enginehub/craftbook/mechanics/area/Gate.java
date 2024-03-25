@@ -214,7 +214,7 @@ public class Gate extends StoredBlockMechanic {
                 blo.setBlockData(item, true);
             }
 
-            CraftBookPlugin.logDebugMessage("Set block " + bl.getX() + ':' + bl.getY() + ':' + bl.getZ() + " to " + item, "gates.search");
+            CraftBookPlugin.logDebugMessage("Set block " + bl.x() + ':' + bl.y() + ':' + bl.z() + " to " + item, "gates.search");
 
             recurseColumn(sign, blo.getRelative(1, 0, 0), expectedType, visitedColumns, close);
             recurseColumn(sign, blo.getRelative(-1, 0, 0), expectedType, visitedColumns, close);

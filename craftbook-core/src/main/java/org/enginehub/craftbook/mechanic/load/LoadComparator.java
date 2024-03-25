@@ -26,7 +26,7 @@ public class LoadComparator implements Comparator<MechanicType<?>> {
         // Compare dependencies first, these are more strict than load ordering
         for (LoadDependency dependency : o1.getDependencies()) {
             if (dependency instanceof MechanicDependency) {
-                if (dependency.getDependencyId().equals(o2.getId())) {
+                if (dependency.getDependencyId().equals(o2.id())) {
                     // o1 depends on o2, so it must load beforehand.
                     return -1;
                 }
@@ -35,7 +35,7 @@ public class LoadComparator implements Comparator<MechanicType<?>> {
 
         for (LoadDependency dependency : o2.getDependencies()) {
             if (dependency instanceof MechanicDependency) {
-                if (dependency.getDependencyId().equals(o1.getId())) {
+                if (dependency.getDependencyId().equals(o1.id())) {
                     // o2 depends on o1, so it must load afterwards.
                     return 1;
                 }

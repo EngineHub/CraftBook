@@ -45,7 +45,7 @@ public abstract class CuboidToggleMechanic extends StoredBlockMechanic {
 
     public boolean open(Sign sign, BlockData blockData, CuboidRegion toggle) {
         for (BlockVector3 bv : toggle) {
-            Block checkBlock = sign.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
+            Block checkBlock = sign.getWorld().getBlockAt(bv.x(), bv.y(), bv.z());
             BlockData checkType = checkBlock.getBlockData();
             if (checkType.getMaterial() == blockData.getMaterial() || BlockUtil.isBlockReplacable(checkType.getMaterial())) {
                 if (CraftBook.getInstance().getPlatform().getConfiguration().safeDestruction && (checkType.getMaterial() == blockData.getMaterial())) {
@@ -60,7 +60,7 @@ public abstract class CuboidToggleMechanic extends StoredBlockMechanic {
 
     public boolean close(Sign sign, Sign farSide, BlockData blockData, CuboidRegion toggle) {
         for (BlockVector3 bv : toggle) {
-            Block b = sign.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
+            Block b = sign.getWorld().getBlockAt(bv.x(), bv.y(), bv.z());
             if (BlockUtil.isBlockReplacable(b.getType())) {
                 if (CraftBook.getInstance().getPlatform().getConfiguration().safeDestruction) {
                     if (getStoredBlockCounts(sign, farSide) > 0) {

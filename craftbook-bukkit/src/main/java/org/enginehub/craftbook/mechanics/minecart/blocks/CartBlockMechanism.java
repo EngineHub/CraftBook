@@ -182,7 +182,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
     }
 
     public String getDocsUrl(MechanicType<? extends CraftBookMechanic> mechanicType) {
-        return CraftBook.getDocsDomain() + "mechanics/minecart/block/" + mechanicType.getId() + "/";
+        return CraftBook.getDocsDomain() + "mechanics/minecart/block/" + mechanicType.id() + "/";
     }
 
     /**
@@ -191,7 +191,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
      * @return The node ID.
      */
     protected String getNodeId() {
-        return getMechanicType().getId().replace("_", "").toLowerCase(Locale.ENGLISH);
+        return getMechanicType().id().replace("_", "").toLowerCase(Locale.ENGLISH);
     }
 
     public List<String> getApplicableSigns() {
