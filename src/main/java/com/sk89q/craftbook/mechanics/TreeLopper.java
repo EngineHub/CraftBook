@@ -78,7 +78,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
         TreeSpecies species = null;
         if(placeSaplings && usedBlock.getState().getData() instanceof Tree
-                && (usedBlock.getRelative(0, -1, 0).getType() == Material.DIRT || usedBlock.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK || usedBlock.getRelative(0, -1, 0).getType() == Material.MYCELIUM)) {
+                && (usedBlock.getRelative(0, -1, 0).getType() == Material.DIRT || usedBlock.getRelative(0, -1, 0).getType() == Material.PODZOL || usedBlock.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK || usedBlock.getRelative(0, -1, 0).getType() == Material.MYCELIUM)) {
             species = ((Tree) usedBlock.getState().getData()).getSpecies();
         }
 
@@ -136,7 +136,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
             return false;
         TreeSpecies species = null;
         if(placeSaplings
-                && (block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK || block.getRelative(0, -1, 0).getType() == Material.MYCELIUM)) {
+                && (block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.PODZOL || block.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK || block.getRelative(0, -1, 0).getType() == Material.MYCELIUM)) {
             MaterialData data = block.getState().getData();
             if (data instanceof Leaves)
                 species = ((Leaves) data).getSpecies();
