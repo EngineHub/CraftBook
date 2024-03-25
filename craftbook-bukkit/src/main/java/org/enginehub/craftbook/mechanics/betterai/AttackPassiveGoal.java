@@ -35,10 +35,12 @@ class AttackPassiveGoal implements Goal<Monster> {
     );
 
     private final Monster monster;
+    private final boolean attackPassiveIgnoreHostileMounts;
     private LivingEntity target;
 
-    public AttackPassiveGoal(Monster monster) {
+    public AttackPassiveGoal(Monster monster, boolean attackPassiveIgnoreHostileMounts) {
         this.monster = monster;
+        this.attackPassiveIgnoreHostileMounts = attackPassiveIgnoreHostileMounts;
     }
 
     @Override
@@ -71,6 +73,18 @@ class AttackPassiveGoal implements Goal<Monster> {
 
         for (Entity ent : monster.getNearbyEntities(10D, 10D, 10D)) {
             if (ent instanceof Animals && monster.hasLineOfSight(ent)) {
+                if (attackPassiveIgnoreHostileMounts && !ent.getPassengers().isEmpty()) {
+                    boolean foundAny = false;
+                    for (Entity passenger : ent.getPassengers()) {
+                        if (passenger instanceof Monster) {
+                            foundAny = true;
+                            break;
+                        }
+                    }
+                    if (foundAny) {
+                        continue;
+                    }
+                }
                 double dist = ent.getLocation().distanceSquared(monster.getLocation());
                 if (dist < closestDist) {
                     closest = (Animals) ent;

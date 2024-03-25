@@ -48,7 +48,7 @@ public class BetterAI extends AbstractCraftBookMechanic {
         }
 
         if (isEntityEnabled(event.getEntity(), attackPassive) && event.getEntity() instanceof Monster monster) {
-            Bukkit.getServer().getMobGoals().addGoal(monster, 5, new AttackPassiveGoal(monster));
+            Bukkit.getServer().getMobGoals().addGoal(monster, 5, new AttackPassiveGoal(monster, attackPassiveIgnoreHostileMounts));
         }
     }
 
@@ -137,6 +137,7 @@ public class BetterAI extends AbstractCraftBookMechanic {
     private Set<String> enhancedVision;
     private Set<String> criticalBow;
     private Set<String> attackPassive;
+    private boolean attackPassiveIgnoreHostileMounts;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
@@ -154,5 +155,8 @@ public class BetterAI extends AbstractCraftBookMechanic {
         attackPassive = ImmutableSet.copyOf(config.getStringList("attack-passive-enabled", Lists.newArrayList(
             EntityTypes.ZOMBIE.getId(), EntityTypes.DROWNED.getId(), EntityTypes.HUSK.getId()
         )));
+
+        config.setComment("attack-passive-ignore-hostile-mounts", "Whether hostile mobs will ignore passive entities that are mounted by a hostile entity.");
+        attackPassiveIgnoreHostileMounts = config.getBoolean("attack-passive-ignore-hostile-mounts", true);
     }
 }
