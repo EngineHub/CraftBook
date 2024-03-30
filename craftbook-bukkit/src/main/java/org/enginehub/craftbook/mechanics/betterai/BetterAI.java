@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.betterai;
 
+import com.destroystokyo.paper.entity.ai.VanillaGoal;
 import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -24,6 +25,7 @@ import com.sk89q.worldedit.world.entity.EntityTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.Particle;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
@@ -49,6 +51,14 @@ public class BetterAI extends AbstractCraftBookMechanic {
 
         if (isEntityEnabled(event.getEntity(), attackPassive) && event.getEntity() instanceof Monster monster) {
             Bukkit.getServer().getMobGoals().addGoal(monster, 5, new AttackPassiveGoal(monster, attackPassiveIgnoreHostileMounts));
+        }
+
+        if (isEntityEnabled(event.getEntity(), fleeFromWeapons) && event.getEntity() instanceof Creature creature) {
+            if (Bukkit.getServer().getMobGoals().hasGoal(creature, VanillaGoal.PANIC)) {
+                Bukkit.getServer().getMobGoals().addGoal(creature, 5, new FleeFromWeaponsGoal(creature));
+            } else {
+                CraftBookPlugin.inst().getLogger().warning("Attempted to add FleeFromWeaponsGoal to unsupported entity that does not have PANIC goal: " + event.getEntity().getType().key().asString());
+            }
         }
     }
 
@@ -137,6 +147,7 @@ public class BetterAI extends AbstractCraftBookMechanic {
     private Set<String> enhancedVision;
     private Set<String> criticalBow;
     private Set<String> attackPassive;
+    private Set<String> fleeFromWeapons;
     private boolean attackPassiveIgnoreHostileMounts;
 
     @Override
@@ -154,6 +165,11 @@ public class BetterAI extends AbstractCraftBookMechanic {
         config.setComment("attack-passive-enabled", "The list of entities to enable the attack passive AI mechanic for.");
         attackPassive = ImmutableSet.copyOf(config.getStringList("attack-passive-enabled", Lists.newArrayList(
             EntityTypes.ZOMBIE.id(), EntityTypes.DROWNED.id(), EntityTypes.HUSK.id()
+        )));
+
+        config.setComment("flee-from-weapons", "The list of entities to enable the flee from weapons AI mechanic for.");
+        fleeFromWeapons = ImmutableSet.copyOf(config.getStringList("flee-from-weapons", Lists.newArrayList(
+            EntityTypes.CHICKEN.id(), EntityTypes.PIG.id(), EntityTypes.COW.id(), EntityTypes.MOOSHROOM.id(), EntityTypes.SHEEP.id()
         )));
 
         config.setComment("attack-passive-ignore-hostile-mounts", "Whether hostile mobs will ignore passive entities that are mounted by a hostile entity.");
