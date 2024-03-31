@@ -40,6 +40,7 @@ mechanics:
         readable_bookshelf: false
         snow: false
         teleporter: false
+        toggle_area: false
         tree_lopper: false
         variables: true
         xp_storer: false

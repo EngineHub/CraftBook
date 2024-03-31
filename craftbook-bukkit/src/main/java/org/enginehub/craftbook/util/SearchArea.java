@@ -81,7 +81,7 @@ public final class SearchArea {
     }
 
     /**
-     * Parses a line and creates the appropriate system of parsing for this Area.
+     * Parses a line and creates the appropriate system of parsing for this ToggleArea.
      *
      * @param block The block to measure the offsets off. (Must be a sign)
      * @param line The line to parse

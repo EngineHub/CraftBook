@@ -25,7 +25,7 @@ public class LanguageManager {
 
         put("mech.group", "You are not in the required group!");
 
-        put("mech.area.create", "Toggle Area Created!");
+        put("mech.area.create", "Toggle ToggleArea Created!");
         put("mech.area.missing", "The area or namespace does not exist.");
 
         put("mech.cauldron.create", "Cauldron Created!");

@@ -44,7 +44,7 @@ import org.enginehub.craftbook.mechanics.XPStorer;
 import org.enginehub.craftbook.mechanics.area.Bridge;
 import org.enginehub.craftbook.mechanics.area.Door;
 import org.enginehub.craftbook.mechanics.area.Gate;
-import org.enginehub.craftbook.mechanics.area.clipboard.Area;
+import org.enginehub.craftbook.mechanics.area.clipboard.ToggleArea;
 import org.enginehub.craftbook.mechanics.betterai.BetterAI;
 import org.enginehub.craftbook.mechanics.boat.BoatEmptyDecay;
 import org.enginehub.craftbook.mechanics.boat.BoatExitRemover;
@@ -221,7 +221,7 @@ public class MechanicTypes {
     @Nullable
     public static final MechanicType<TemporaryCart> TEMPORARY_CART = get("temporary_cart");
     @Nullable
-    public static final MechanicType<Area> TOGGLE_AREA = get("toggle_area");
+    public static final MechanicType<ToggleArea> TOGGLE_AREA = get("toggle_area");
     @Nullable
     public static final MechanicType<TreeLopper> TREE_LOPPER = get("tree_lopper");
     @Nullable

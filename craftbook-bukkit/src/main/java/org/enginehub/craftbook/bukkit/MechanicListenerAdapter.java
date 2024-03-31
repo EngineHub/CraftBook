@@ -93,6 +93,7 @@ final class MechanicListenerAdapter implements Listener {
             if (CraftBook.getInstance().getPlatform().getConfiguration().signClickTimeout > 0) {
                 long lastClick = signClickTimer.computeIfAbsent(event.getPlayer().getUniqueId(), uuid -> 0L);
                 if (lastClick > System.currentTimeMillis() - (CraftBook.getInstance().getPlatform().getConfiguration().signClickTimeout)) {
+                    event.setCancelled(true);
                     return;
                 } else {
                     signClickTimer.put(event.getPlayer().getUniqueId(), System.currentTimeMillis());

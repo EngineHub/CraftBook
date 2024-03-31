@@ -42,13 +42,19 @@ public class CommandDocumentationGenerator {
     public static void generateCommandDocumentation() {
         try {
             generateCommandsFile("headdrops", CommandUtils.dumpSection("HeadDrops", List.of("headdrops")));
-        } catch (IOException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
 
         try {
             generateCommandsFile("signcopier", CommandUtils.dumpSection("SignCopier", List.of("signedit")));
-        } catch (IOException e) {
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
+        try {
+            generateCommandsFile("togglearea", CommandUtils.dumpSection("ToggleArea", List.of("area")));
+        } catch (Throwable e) {
             e.printStackTrace();
         }
     }

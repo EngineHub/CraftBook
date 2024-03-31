@@ -29,6 +29,19 @@ import javax.annotation.Nullable;
 public class OwnedSignHelper {
     private static final NamespacedKey signOwnerKey = new NamespacedKey("craftbook", "owner");
 
+    public static boolean hasOwner(Block block) {
+        BlockState state = block.getState(false);
+        return hasOwner(state);
+    }
+
+    public static boolean hasOwner(BlockState state) {
+        if (state instanceof TileState tileState) {
+            return tileState.getPersistentDataContainer().has(signOwnerKey, UuidPersistentDataType.UUID_PERSISTENT_DATA_TYPE);
+        } else {
+            return false;
+        }
+    }
+
     @Nullable
     public static UUID getOwner(Block block) {
         BlockState state = block.getState(false);

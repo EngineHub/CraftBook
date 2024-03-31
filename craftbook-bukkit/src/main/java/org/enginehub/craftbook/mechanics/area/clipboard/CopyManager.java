@@ -47,10 +47,12 @@ import java.util.regex.Pattern;
  * Used to load, save, and cache cuboid copies.
  */
 public class CopyManager {
-
-    private static CraftBookPlugin plugin = CraftBookPlugin.inst();
+    private static final CraftBookPlugin plugin = CraftBookPlugin.inst();
     private static final CopyManager INSTANCE = new CopyManager();
     private static final Pattern NAME_PATTERN = Pattern.compile("^[a-z0-9_]+$", Pattern.CASE_INSENSITIVE);
+
+    public static final int MAX_NAMESPACE_LENGTH = 15;
+    public static final int MAX_AREA_NAME_LENGTH = 13;
 
     /**
      * Cache.
@@ -68,7 +70,6 @@ public class CopyManager {
      * @return The Copy Manager Instance
      */
     public static CopyManager getInstance() {
-
         return INSTANCE;
     }
 
@@ -79,9 +80,8 @@ public class CopyManager {
      * @return If it's valid
      */
     public static boolean isValidName(String name) {
-
-        // name needs to be between 1 and 13 letters long so we can fit the
-        return !name.isEmpty() && name.length() <= 13 && NAME_PATTERN.matcher(name).matches();
+        // name needs to be between 1 and 13 letters long so we can fit the -- around the name
+        return !name.isEmpty() && name.length() <= MAX_AREA_NAME_LENGTH && NAME_PATTERN.matcher(name).matches();
     }
 
     /**
@@ -91,26 +91,7 @@ public class CopyManager {
      * @return If it's valid
      */
     public static boolean isValidNamespace(String name) {
-
-        return !name.isEmpty() && name.length() <= 14 && NAME_PATTERN.matcher(name).matches();
-    }
-
-    /**
-     * Renames a namespace.
-     *
-     * @param originalName The old name.
-     * @param newName The new name. (Post rename)
-     */
-    public static void renameNamespace(File dataFolder, String originalName, String newName) {
-
-        File oldDir = new File(dataFolder, "areas/" + originalName);
-        File newDir = new File(dataFolder, "areas/" + newName);
-        if (oldDir.isDirectory()) {
-            oldDir.renameTo(newDir);
-        } else {
-            oldDir.mkdir();
-            oldDir.renameTo(newDir);
-        }
+        return !name.isEmpty() && name.length() <= MAX_NAMESPACE_LENGTH && NAME_PATTERN.matcher(name).matches();
     }
 
     /**
@@ -122,8 +103,15 @@ public class CopyManager {
     public static boolean isExistingArea(File dataFolder, String namespace, String area) {
         area = area.replace("-", "");
         File file = new File(dataFolder, "areas/" + namespace);
-        if (!new File(file, area + getFileSuffix()).exists()) {
-            return new File(file, area + '.' + BuiltInClipboardFormat.MCEDIT_SCHEMATIC.getPrimaryFileExtension()).exists();
+        if (!new File(file, area + getDefaultFileSuffix()).exists()) {
+            boolean found = false;
+            for (String extension : ClipboardFormats.getFileExtensionArray()) {
+                if (new File(file, area + "." + extension).exists()) {
+                    found = true;
+                    break;
+                }
+            }
+            return found;
         } else {
             return true;
         }
@@ -142,22 +130,28 @@ public class CopyManager {
      * @throws IOException If it fails to load
      */
     public BlockArrayClipboard load(String namespace, String id) throws IOException {
-
         id = id.toLowerCase(Locale.ENGLISH);
         String cacheKey = namespace + '/' + id;
 
         if (missing.containsKey(cacheKey)) {
             long lastCheck = missing.get(cacheKey);
-            if (lastCheck > System.currentTimeMillis()) throw new FileNotFoundException(id);
+            // Assume the file is still missing if it was checked within 60 seconds
+            if (lastCheck > System.currentTimeMillis() - 1000 * 60) {
+                throw new FileNotFoundException(id);
+            }
         }
 
         BlockArrayClipboard copy = cache.get(cacheKey);
 
         if (copy == null) {
-            File file = new File(new File(new File(plugin.getDataFolder(), "areas"), namespace), id + getFileSuffix());
+            File file = new File(new File(new File(plugin.getDataFolder(), "areas"), namespace), id + getDefaultFileSuffix());
             if (!file.exists()) {
-                file = new File(new File(new File(plugin.getDataFolder(), "areas"), namespace),
-                    id + '.' + BuiltInClipboardFormat.MCEDIT_SCHEMATIC.getPrimaryFileExtension());
+                for (String extension : ClipboardFormats.getFileExtensionArray()) {
+                    file = new File(new File(new File(plugin.getDataFolder(), "areas"), namespace), id + "." + extension);
+                    if (file.exists()) {
+                        break;
+                    }
+                }
             }
             if (file.exists()) {
                 ClipboardFormat format = ClipboardFormats.findByFile(file);
@@ -199,7 +193,7 @@ public class CopyManager {
 
         String cacheKey = namespace + '/' + id;
 
-        File file = new File(folder, id + getFileSuffix());
+        File file = new File(folder, id + getDefaultFileSuffix());
         try (ClipboardWriter writer = getDefaultClipboardFormat().getWriter(new FileOutputStream(file))) {
             writer.write(clipboard);
         }
@@ -228,7 +222,8 @@ public class CopyManager {
     public BlockArrayClipboard copy(Region region, World world, boolean copyEntities, boolean copyBiomes) throws WorldEditException {
         BlockArrayClipboard copy = new BlockArrayClipboard(region);
 
-        EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(world, -1);
+        EditSession editSession = WorldEdit.getInstance().newEditSession(world);
+        editSession.setTrackingHistory(false);
 
         ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(editSession, region, copy, region.getMinimumPoint());
         forwardExtentCopy.setCopyingEntities(copyEntities);
@@ -245,7 +240,8 @@ public class CopyManager {
      * @throws WorldEditException If it fails
      */
     public void paste(BlockArrayClipboard clipboard, World world) throws WorldEditException {
-        try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(world, -1)) {
+        try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
+            editSession.setTrackingHistory(false);
 
             Operation operation = new ClipboardHolder(clipboard)
                 .createPaste(editSession)
@@ -265,7 +261,8 @@ public class CopyManager {
      * @param clipboard The clipboard
      */
     public void clear(BlockArrayClipboard clipboard, World world) {
-        try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(world, -1)) {
+        try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
+            editSession.setTrackingHistory(false);
             editSession.setBlocks(clipboard.getRegion(), BlockTypes.AIR.getDefaultState());
         } catch (MaxChangedBlocksException e) {
             // is never thrown
@@ -281,18 +278,19 @@ public class CopyManager {
      * @return -1 if the copy can be made, some other number for the count
      */
     public static int meetsQuota(String namespace, String ignore, int quota) {
-
-        String ignoreFilename = ignore + getFileSuffix();
-
         String[] files = new File(new File(plugin.getDataFolder(), "areas"), namespace).list();
 
-        if (files == null) return quota > 0 ? -1 : 0;
-        else if (ignore == null) return files.length < quota ? -1 : files.length;
-        else {
+        if (files == null) {
+            return quota > 0 ? -1 : 0;
+        } else if (ignore == null) {
+            return files.length < quota ? -1 : files.length;
+        } else {
             int count = 0;
 
             for (String f : files) {
-                if (f.equals(ignoreFilename)) return -1;
+                if (f.substring(0, f.lastIndexOf('.')).equals(ignore)) {
+                    return -1;
+                }
 
                 count++;
             }
@@ -302,10 +300,10 @@ public class CopyManager {
     }
 
     private static ClipboardFormat getDefaultClipboardFormat() {
-        return BuiltInClipboardFormat.SPONGE_SCHEMATIC;
+        return BuiltInClipboardFormat.SPONGE_V3_SCHEMATIC;
     }
 
-    private static String getFileSuffix() {
+    private static String getDefaultFileSuffix() {
         return '.' + getDefaultClipboardFormat().getPrimaryFileExtension();
     }
 }

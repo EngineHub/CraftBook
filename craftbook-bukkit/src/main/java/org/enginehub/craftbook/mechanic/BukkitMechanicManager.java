@@ -33,7 +33,7 @@ public class BukkitMechanicManager extends MechanicManager {
 //        registerMechanic("CustomDrops", org.enginehub.craftbook.mechanics.drops.CustomDrops.class, MechanicCategory.CUSTOMISATION);
 //        registerMechanic("CommandSigns", org.enginehub.craftbook.mechanics.CommandSigns.class, MechanicCategory.GENERAL);
 //        registerMechanic("HiddenSwitch", org.enginehub.craftbook.mechanics.HiddenSwitch.class, MechanicCategory.GENERAL);
-//        registerMechanic("ToggleArea", org.enginehub.craftbook.mechanics.area.Area.class, MechanicCategory.GENERAL);
+//        registerMechanic("ToggleArea", org.enginehub.craftbook.mechanics.area.ToggleArea.class, MechanicCategory.GENERAL);
 //        registerMechanic("Cauldron", org.enginehub.craftbook.mechanics.cauldron.ImprovedCauldron.class, MechanicCategory.CUSTOMISATION);
 //        registerMechanic("Pay", org.enginehub.craftbook.mechanics.Payment.class, MechanicCategory.CIRCUIT);
 //        registerMechanic("Pipes", org.enginehub.craftbook.mechanics.pipe.Pipes.class, MechanicCategory.CIRCUIT);
@@ -531,6 +531,15 @@ public class BukkitMechanicManager extends MechanicManager {
             .description(TranslatableComponent.of("craftbook.treelopper.description"))
             .category(MechanicCategory.GENERAL)
             .className("org.enginehub.craftbook.mechanics.TreeLopper")
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("toggle_area")
+            .name("ToggleArea")
+            .description(TranslatableComponent.of("craftbook.togglearea.description"))
+            .category(MechanicCategory.GENERAL)
+            .className("org.enginehub.craftbook.mechanics.area.clipboard.ToggleArea")
             .buildAndRegister();
 
         // TODO CommandItems needs to load early (after variables).

@@ -21,6 +21,7 @@ import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import org.enginehub.craftbook.PlatformCommandManager;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.mechanics.area.clipboard.AreaCommands;
 import org.enginehub.craftbook.mechanics.headdrops.HeadDropsCommands;
 import org.enginehub.craftbook.mechanics.signcopier.SignEditCommands;
 import org.enginehub.piston.Command;
@@ -65,6 +66,13 @@ public class CommandUtils {
             List.of("edsign", "signcopy"),
             "CraftBook SignCopier Commands",
             (commandManager, registration) -> SignEditCommands.register(commandManager, registration, null)
+        );
+
+        registrar.registerTopLevelWithSubCommands(
+            "area",
+            List.of("togglearea"),
+            "CraftBook ToggleArea Commands",
+            (commandManager, registration) -> AreaCommands.register(commandManager, registration, null)
         );
 
         commands.putAll(commandManager.getCommandManager().getAllCommands().collect(Collectors.toMap(Command::getName, command -> command)));
@@ -233,10 +241,6 @@ public class CommandUtils {
     }
 
     private static String repeatString(String str, int length) {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            builder.append(str);
-        }
-        return builder.toString();
+        return String.valueOf(str).repeat(Math.max(0, length));
     }
 }

@@ -22,7 +22,6 @@ import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
 import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;
-import com.sk89q.worldedit.util.HandSide;
 import com.sk89q.worldedit.util.auth.AuthorizationException;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
@@ -31,7 +30,6 @@ import com.sk89q.worldedit.util.paste.ActorCallbackPaste;
 import com.sk89q.worldedit.util.report.ReportList;
 import com.sk89q.worldedit.util.report.SystemInfoReport;
 import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.report.LoadedICsReport;
 import org.enginehub.craftbook.bukkit.report.MechanicReport;
@@ -43,7 +41,6 @@ import org.enginehub.craftbook.bukkit.report.ServicesReport;
 import org.enginehub.craftbook.bukkit.report.WorldReport;
 import org.enginehub.craftbook.exception.CraftBookException;
 import org.enginehub.craftbook.mechanic.MechanicCommands;
-import org.enginehub.craftbook.util.ItemSyntax;
 import org.enginehub.craftbook.util.report.GlobalConfigReport;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.CommandManagerService;
@@ -104,12 +101,6 @@ public class CraftBookCommands {
         );
     }
 
-    @Command(name = "iteminfo", aliases = { "itemsyntax", "item" }, desc = "Provides item syntax for held item.")
-    public void itemInfo(CraftBookPlayer player) {
-        player.print("Main hand: " + ItemSyntax.getStringFromItem(BukkitAdapter.adapt(player.getItemInHand(HandSide.MAIN_HAND))));
-        player.print("Off hand: " + ItemSyntax.getStringFromItem(BukkitAdapter.adapt(player.getItemInHand(HandSide.OFF_HAND))));
-    }
-
     @Command(name = "report", desc = "Writes a report on CraftBook")
     @CommandPermissions({ "craftbook.report" })
     public void report(Actor actor,
@@ -138,7 +129,7 @@ public class CraftBookCommands {
         try {
             Path dest = CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("report.txt");
             Files.write(result, dest.toFile(), StandardCharsets.UTF_8);
-            actor.print("CraftBook report written to " + dest.toAbsolutePath().toString());
+            actor.print("CraftBook report written to " + dest.toAbsolutePath());
         } catch (IOException e) {
             throw new CraftBookException("Failed to write report: " + e.getMessage());
         }

@@ -53,7 +53,8 @@ public class MechanicConfigurationGenerator {
                     mechanicConfig.load();
                 } catch (FileNotFoundException e) {
                     // Ignore this one.
-                } catch (IOException e) {
+                } catch (Throwable e) {
+                    System.out.println("Failed to load config for " + mechanicRegistration.id() + " - " + e.getMessage());
                     e.printStackTrace();
                 }
 
@@ -61,6 +62,7 @@ public class MechanicConfigurationGenerator {
 
                 generateConfigRst(mechanicRegistration, mechanicConfig);
             } catch (Throwable t) {
+                System.out.println("Failed to load config for " + mechanicRegistration.id() + " - " + t.getMessage());
                 t.printStackTrace();
             }
         });

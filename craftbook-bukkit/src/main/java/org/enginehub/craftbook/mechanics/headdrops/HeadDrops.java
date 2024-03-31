@@ -63,7 +63,11 @@ public class HeadDrops extends AbstractCraftBookMechanic {
     private static final Map<EntityType, PlayerProfile> TEXTURE_MAP = Maps.newEnumMap(EntityType.class);
 
     static {
-        SkinData.addDefaultSkinData(TEXTURE_MAP);
+        try {
+            SkinData.addDefaultSkinData(TEXTURE_MAP);
+        } catch (Throwable e) {
+            CraftBook.LOGGER.error("Failed to load default head textures", e);
+        }
     }
 
     private NamespacedKey headDropsEntityKey;
