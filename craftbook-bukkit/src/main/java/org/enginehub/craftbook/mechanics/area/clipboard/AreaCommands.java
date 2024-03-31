@@ -160,10 +160,10 @@ public class AreaCommands {
     ) throws AuthorizationException {
         boolean personal = false;
         if (namespace != null) {
-            if (!actor.hasPermission("craftbook.toggleareaarea.list." + namespace)) {
+            if (!actor.hasPermission("craftbook.togglearea.list." + namespace)) {
                 throw new AuthorizationException(TranslatableComponent.of("craftbook.togglearea.namespace-permissions", TextComponent.of(namespace)));
             }
-        } else if (listAll && actor.hasPermission("craftbook.toggleareaarea.list.all")) {
+        } else if (listAll && actor.hasPermission("craftbook.togglearea.list.all")) {
             namespace = "";
         } else if (actor instanceof CraftBookPlayer) {
             if (!actor.hasPermission("craftbook.togglearea.list.self")) {
