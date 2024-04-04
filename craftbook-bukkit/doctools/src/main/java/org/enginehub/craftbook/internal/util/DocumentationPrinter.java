@@ -64,7 +64,7 @@ public class DocumentationPrinter {
         try {
             Method method = worldEdit.getPlatform().getClass().getDeclaredMethod("setDataVersion", int.class);
             method.setAccessible(true);
-            method.invoke(worldEdit.getPlatform(), 3105);
+            method.invoke(worldEdit.getPlatform(), 3700);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
