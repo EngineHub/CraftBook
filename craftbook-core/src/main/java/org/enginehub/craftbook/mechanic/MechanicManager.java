@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanic;
 
-import com.google.common.collect.ImmutableList;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import org.enginehub.craftbook.CraftBook;
@@ -44,7 +43,7 @@ public abstract class MechanicManager {
     public abstract void setup();
 
     public void shutdown() {
-        ImmutableList.copyOf(loadedMechanics).forEach(this::disableMechanic);
+        List.copyOf(loadedMechanics).forEach(this::disableMechanic);
         loadedMechanics.clear();
     }
 
@@ -58,7 +57,7 @@ public abstract class MechanicManager {
      * @return A list of loaded mechanics
      */
     public List<CraftBookMechanic> getLoadedMechanics() {
-        return ImmutableList.copyOf(this.loadedMechanics);
+        return List.copyOf(this.loadedMechanics);
     }
 
     @SuppressWarnings("unchecked")

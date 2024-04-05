@@ -510,9 +510,9 @@ public class Gate extends StoredBlockMechanic {
 
     public List<String> getDefaultBlocks() {
         List<String> materials = new ArrayList<>();
-        materials.addAll(BlockCategories.FENCES.getAll().stream().map(BlockType::getId).toList());
-        materials.add(BlockTypes.IRON_BARS.getId());
-        materials.add(BlockTypes.GLASS_PANE.getId());
+        materials.addAll(BlockCategories.FENCES.getAll().stream().map(BlockType::id).toList());
+        materials.add(BlockTypes.IRON_BARS.id());
+        materials.add(BlockTypes.GLASS_PANE.id());
         return materials;
     }
 

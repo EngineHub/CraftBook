@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.st;
 
-import com.google.common.collect.ImmutableList;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -168,8 +167,8 @@ public class BukkitSelfTriggerManager implements SelfTriggerManager, Listener {
      *
      * @return The self triggering locations
      */
-    public ImmutableList<Location> getSelfTriggeringMechanics() {
-        return ImmutableList.copyOf(thinkingMechanics);
+    public List<Location> getSelfTriggeringMechanics() {
+        return List.copyOf(thinkingMechanics);
     }
 
     @EventHandler(priority = EventPriority.HIGH)

@@ -531,7 +531,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         pipesDiagonal = config.getBoolean("allow-diagonal", false);
 
         config.setComment("insulator-block", "When pipes work diagonally, this block allows the pipe to be insulated to not work diagonally.");
-        pipeInsulator = BlockParser.getBlock(config.getString("insulator-block", BlockTypes.WHITE_WOOL.getId()), true);
+        pipeInsulator = BlockParser.getBlock(config.getString("insulator-block", BlockTypes.WHITE_WOOL.id()), true);
 
         config.setComment("stack-per-move", "This option stops the pipes taking the entire chest on power, and makes it just take a single stack.");
         pipeStackPerPull = config.getBoolean("stack-per-move", true);

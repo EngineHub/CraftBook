@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import com.google.common.collect.Lists;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -491,11 +490,11 @@ public class Snow extends AbstractCraftBookMechanic {
     private boolean meltPartial;
 
     private static List<String> getDefaultReplacables() {
-        return Lists.newArrayList(
-            BlockTypes.DEAD_BUSH.getId(),
-            BlockTypes.SHORT_GRASS.getId(),
-            BlockTypes.FIRE.getId(),
-            BlockTypes.FERN.getId());
+        return List.of(
+            BlockTypes.DEAD_BUSH.id(),
+            BlockTypes.SHORT_GRASS.id(),
+            BlockTypes.FIRE.id(),
+            BlockTypes.FERN.id());
     }
 
     @Override

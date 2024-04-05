@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanic;
 
-import com.google.common.collect.Lists;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
 import com.sk89q.worldedit.extension.platform.Actor;
@@ -38,6 +37,7 @@ import org.enginehub.piston.annotation.param.Arg;
 import org.enginehub.piston.annotation.param.ArgFlag;
 import org.enginehub.piston.part.SubCommandPart;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -46,7 +46,7 @@ public class MechanicCommands {
 
     public static void register(CommandManagerService service, CommandManager commandManager, CommandRegistrationHandler registration) {
         commandManager.register("mechanic", builder -> {
-            builder.aliases(Lists.newArrayList("mech", "mechs", "mechanics"));
+            builder.aliases(List.of("mech", "mechs", "mechanics"));
             builder.description(TextComponent.of("Mechanic Commands"));
 
             CommandManager innerManager = service.newCommandManager();

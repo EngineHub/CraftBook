@@ -50,7 +50,6 @@ import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ItemParser;
 import org.enginehub.craftbook.util.ProtectionUtil;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -236,11 +235,11 @@ public class TreeLopper extends AbstractCraftBookMechanic {
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("enabled-blocks", "A list of enabled log blocks. This list can only contain logs, but can be modified to include more logs (for mod support).");
-        enabledBlocks = BlockParser.getBlocks(config.getStringList("enabled-blocks", BlockCategories.LOGS.getAll().stream().map(BlockType::getId).sorted(String::compareToIgnoreCase).toList()), true);
+        enabledBlocks = BlockParser.getBlocks(config.getStringList("enabled-blocks", BlockCategories.LOGS.getAll().stream().map(BlockType::id).sorted(String::compareToIgnoreCase).toList()), true);
 
         config.setComment("tool-list", "A list of tools that can trigger the TreeLopper mechanic.");
-        enabledItems = ItemParser.getItems(config.getStringList("tool-list", Arrays.asList(ItemTypes.IRON_AXE.getId(), ItemTypes.WOODEN_AXE.getId(),
-            ItemTypes.STONE_AXE.getId(), ItemTypes.DIAMOND_AXE.getId(), ItemTypes.GOLDEN_AXE.getId(), ItemTypes.NETHERITE_AXE.getId())), true).stream().map(BaseItem::getType).toList();
+        enabledItems = ItemParser.getItems(config.getStringList("tool-list", List.of(ItemTypes.IRON_AXE.id(), ItemTypes.WOODEN_AXE.id(),
+            ItemTypes.STONE_AXE.id(), ItemTypes.DIAMOND_AXE.id(), ItemTypes.GOLDEN_AXE.id(), ItemTypes.NETHERITE_AXE.id())), true).stream().map(BaseItem::getType).toList();
 
         config.setComment("max-size", "The maximum amount of blocks the TreeLopper can break.");
         maxSearchSize = config.getInt("max-size", 30);

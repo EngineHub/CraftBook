@@ -72,7 +72,7 @@ public class ItemParser {
     }
 
     public static String toMinifiedId(ItemType holder) {
-        String output = holder.getId();
+        String output = holder.id();
         if (output.startsWith("minecraft:")) {
             output = output.substring(10);
         }

@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
-import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BlockTypes;
@@ -78,7 +77,7 @@ import javax.annotation.Nullable;
  */
 public class CartDispenser extends CartBlockMechanism {
 
-    private final static List<String> SIGNS = ImmutableList.of("Dispenser");
+    private final static List<String> SIGNS = List.of("Dispenser");
 
     @Override
     public boolean verify(ChangedSign sign, CraftBookPlayer player) {
@@ -248,7 +247,7 @@ public class CartDispenser extends CartBlockMechanism {
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("block", "Sets the block that is the base of the dispenser mechanic.");
-        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.EMERALD_ORE.getId()), true));
+        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.EMERALD_ORE.id()), true));
 
         config.setComment("check-for-carts", "If true, the dispenser will not dispense a cart if there is already one in the dispenser's block.");
         checkForCarts = config.getBoolean("check-for-carts", true);

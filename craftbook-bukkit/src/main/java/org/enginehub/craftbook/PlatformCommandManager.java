@@ -67,7 +67,7 @@ public class PlatformCommandManager {
         this.commandManagerService = new CommandManagerServiceImpl();
         this.commandManager = commandManagerService.newCommandManager();
         this.globalInjectedValues = MapBackedValueStore.create();
-        this.registration = new CommandRegistrationHandler(ImmutableList.of());
+        this.registration = new CommandRegistrationHandler(List.of());
         this.mechanicCommandRegistrar = new MechanicCommandRegistrar(commandManagerService, commandManager, registration);
 
         // setup separate from main constructor

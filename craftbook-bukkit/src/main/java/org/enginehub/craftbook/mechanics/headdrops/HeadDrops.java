@@ -16,7 +16,6 @@
 package org.enginehub.craftbook.mechanics.headdrops;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
@@ -53,6 +52,7 @@ import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
 import org.enginehub.craftbook.util.EventUtil;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
@@ -79,7 +79,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
         registrar.registerTopLevelWithSubCommands(
             "headdrops",
-            Lists.newArrayList(),
+            List.of(),
             "CraftBook HeadDrops Commands",
             (commandManager, registration) -> HeadDropsCommands.register(commandManager, registration, this)
         );

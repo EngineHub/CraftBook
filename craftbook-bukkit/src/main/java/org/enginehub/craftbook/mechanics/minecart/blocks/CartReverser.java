@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
-import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.block.BlockFace;
@@ -32,7 +31,7 @@ import java.util.List;
 
 public class CartReverser extends CartBlockMechanism {
 
-    private final static List<String> SIGNS = ImmutableList.of("Reverse");
+    private final static List<String> SIGNS = List.of("Reverse");
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
@@ -88,6 +87,6 @@ public class CartReverser extends CartBlockMechanism {
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("block", "The block the Cart Reverser mechanic uses.");
-        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.WHITE_WOOL.getId()), true));
+        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.WHITE_WOOL.id()), true));
     }
 }

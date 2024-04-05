@@ -351,7 +351,7 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
      * @param material The material to set
      */
     public void setStoredType(Sign sign, Material material) {
-        sign.getPersistentDataContainer().set(storedBlockTypeKey, PersistentDataType.STRING, BukkitAdapter.asBlockType(material).getId());
+        sign.getPersistentDataContainer().set(storedBlockTypeKey, PersistentDataType.STRING, BukkitAdapter.asBlockType(material).id());
     }
 
     /**

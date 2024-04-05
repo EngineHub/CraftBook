@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.area.clipboard;
 
-import com.google.common.collect.Lists;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -49,6 +48,7 @@ import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 import org.enginehub.craftbook.util.persistence.OwnedSignHelper;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -62,7 +62,7 @@ public class ToggleArea extends AbstractCraftBookMechanic {
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
         registrar.registerTopLevelWithSubCommands(
             "area",
-            Lists.newArrayList("togglearea"),
+            List.of("togglearea"),
             "CraftBook ToggleArea Commands",
             (commandManager, registration) -> AreaCommands.register(commandManager, registration, this)
         );

@@ -33,6 +33,6 @@ public class CartLightBraker extends AbstractCartBooster {
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("block", "The block the Minecart light braker uses.");
-        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.GRAVEL.getId()), true));
+        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.GRAVEL.id()), true));
     }
 }

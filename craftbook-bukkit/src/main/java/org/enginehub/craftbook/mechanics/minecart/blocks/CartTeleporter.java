@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
-import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BlockTypes;
@@ -36,7 +35,7 @@ import java.util.List;
 
 public class CartTeleporter extends CartBlockMechanism {
 
-    private final static List<String> SIGNS = ImmutableList.of("TeleCart");
+    private final static List<String> SIGNS = List.of("TeleCart");
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
@@ -101,6 +100,6 @@ public class CartTeleporter extends CartBlockMechanism {
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("block", "The block the TeleCart mechanic uses.");
-        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.EMERALD_BLOCK.getId()), true));
+        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.EMERALD_BLOCK.id()), true));
     }
 }

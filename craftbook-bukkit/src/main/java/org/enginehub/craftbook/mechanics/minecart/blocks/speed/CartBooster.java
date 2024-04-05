@@ -33,6 +33,6 @@ public class CartBooster extends AbstractCartBooster {
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("block", "The block the Minecart booster uses.");
-        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.GOLD_ORE.getId()), true));
+        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.GOLD_ORE.id()), true));
     }
 }

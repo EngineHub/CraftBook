@@ -17,8 +17,6 @@ package org.enginehub.craftbook.mechanics.betterai;
 
 import com.destroystokyo.paper.entity.ai.VanillaGoal;
 import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.entity.EntityTypes;
@@ -38,6 +36,7 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.util.EventUtil;
 
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -153,22 +152,22 @@ public class BetterAI extends AbstractCraftBookMechanic {
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("enhanced-vision-enabled", "The list of entities to enable the enhanced vision AI mechanic for.");
-        enhancedVision = ImmutableSet.copyOf(config.getStringList("enhanced-vision-enabled", Lists.newArrayList(
+        enhancedVision = Set.copyOf(config.getStringList("enhanced-vision-enabled", List.of(
             EntityTypes.ZOMBIE.id(), EntityTypes.DROWNED.id(), EntityTypes.HUSK.id(), EntityTypes.ZOMBIFIED_PIGLIN.id()
         )));
 
         config.setComment("critical-bow-enabled", "The list of entities to enable the critical bow AI mechanic for.");
-        criticalBow = ImmutableSet.copyOf(config.getStringList("critical-bow-enabled", Lists.newArrayList(
+        criticalBow = Set.copyOf(config.getStringList("critical-bow-enabled", List.of(
             EntityTypes.SKELETON.id()
         )));
 
         config.setComment("attack-passive-enabled", "The list of entities to enable the attack passive AI mechanic for.");
-        attackPassive = ImmutableSet.copyOf(config.getStringList("attack-passive-enabled", Lists.newArrayList(
+        attackPassive = Set.copyOf(config.getStringList("attack-passive-enabled", List.of(
             EntityTypes.ZOMBIE.id(), EntityTypes.DROWNED.id(), EntityTypes.HUSK.id()
         )));
 
         config.setComment("flee-from-weapons", "The list of entities to enable the flee from weapons AI mechanic for.");
-        fleeFromWeapons = ImmutableSet.copyOf(config.getStringList("flee-from-weapons", Lists.newArrayList(
+        fleeFromWeapons = Set.copyOf(config.getStringList("flee-from-weapons", List.of(
             EntityTypes.CHICKEN.id(), EntityTypes.PIG.id(), EntityTypes.COW.id(), EntityTypes.MOOSHROOM.id(), EntityTypes.SHEEP.id()
         )));
 

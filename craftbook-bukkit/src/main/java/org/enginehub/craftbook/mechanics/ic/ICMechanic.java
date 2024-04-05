@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.ic;
 
-import com.google.common.collect.Lists;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extension.platform.Actor;
@@ -88,7 +87,7 @@ public class ICMechanic extends AbstractCraftBookMechanic {
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
         registrar.registerTopLevelWithSubCommands(
             "ic",
-            Lists.newArrayList("ics"),
+            List.of("ics"),
             "CraftBook Integrated Circuit Commands",
             ICCommands::register
         );

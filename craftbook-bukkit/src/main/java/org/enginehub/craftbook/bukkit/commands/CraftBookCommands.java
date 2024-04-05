@@ -15,8 +15,6 @@
 
 package org.enginehub.craftbook.bukkit.commands;
 
-import com.google.common.collect.Lists;
-import com.google.common.io.Files;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
@@ -51,7 +49,9 @@ import org.enginehub.piston.part.SubCommandPart;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @CommandContainer(superTypes = CommandPermissionsConditionGenerator.Registration.class)
@@ -59,7 +59,7 @@ public class CraftBookCommands {
 
     public static void register(CommandManagerService service, CommandManager commandManager, CommandRegistrationHandler registration) {
         commandManager.register("craftbook", builder -> {
-            builder.aliases(Lists.newArrayList("cb"));
+            builder.aliases(List.of("cb"));
             builder.description(TextComponent.of("CraftBook Commands"));
 
             CommandManager manager = service.newCommandManager();
@@ -79,20 +79,21 @@ public class CraftBookCommands {
     }
 
     @Command(name = "reload", desc = "Reloads the CraftBook Common config")
-    @CommandPermissions("craftbook.reload")
+    @CommandPermissions({ "craftbook.reload" })
     public void reload(Actor actor) {
-
         try {
             CraftBookPlugin.inst().reloadConfiguration();
         } catch (Throwable e) {
-            e.printStackTrace();
-            actor.print("An error occurred while reloading the CraftBook config.");
+            CraftBook.LOGGER.error(e);
+            actor.printError(TranslatableComponent.of("craftbook.reload.failed"));
             return;
         }
-        actor.print("The CraftBook config has been reloaded.");
+
+        actor.printInfo(TranslatableComponent.of("craftbook.reload.reloaded"));
     }
 
     @Command(name = "version", aliases = { "ver" }, desc = "Get CraftBook version.")
+    @CommandPermissions({ "craftbook.version" })
     public void version(Actor actor) {
         actor.printInfo(TranslatableComponent.of("craftbook.version.version", TextComponent.of(CraftBook.getInstance().getPlatform().getPlatformName())));
         actor.printInfo(
@@ -128,10 +129,11 @@ public class CraftBookCommands {
 
         try {
             Path dest = CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("report.txt");
-            Files.write(result, dest.toFile(), StandardCharsets.UTF_8);
-            actor.print("CraftBook report written to " + dest.toAbsolutePath());
+            Files.writeString(dest, result, StandardCharsets.UTF_8);
+            actor.printInfo(TranslatableComponent.of("craftbook.report.written", TextComponent.of(dest.toAbsolutePath().toString())));
         } catch (IOException e) {
-            throw new CraftBookException("Failed to write report: " + e.getMessage());
+            actor.printError(TranslatableComponent.of("craftbook.report.error", TextComponent.of(e.getMessage())));
+            return;
         }
 
         if (pastebin) {
@@ -141,9 +143,8 @@ public class CraftBookCommands {
                 CraftBook.getInstance().getSupervisor(),
                 actor,
                 result,
-                "CraftBook report: %s.report"
+                TranslatableComponent.builder("craftbook.report.success")
             );
         }
     }
-
 }

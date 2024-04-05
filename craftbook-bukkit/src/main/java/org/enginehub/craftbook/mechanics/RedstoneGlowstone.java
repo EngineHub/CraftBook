@@ -86,7 +86,7 @@ public class RedstoneGlowstone extends AbstractCraftBookMechanic {
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("off-block", "Sets the block that the glowstone turns into when turned off.");
-        offBlock = BlockParser.getBlock(config.getString("off-block", BlockTypes.SOUL_SAND.getId()), true);
+        offBlock = BlockParser.getBlock(config.getString("off-block", BlockTypes.SOUL_SAND.id()), true);
 
         config.setComment("prevent-breaking", "Whether powered Glowstone should be unbreakable.");
         preventBreaking = config.getBoolean("prevent-breaking", false);

@@ -22,7 +22,6 @@ import com.comphenix.protocol.async.AsyncListenerHandler;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
-import com.google.common.collect.Sets;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -70,6 +69,7 @@ import org.enginehub.craftbook.util.TernaryState;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -197,7 +197,7 @@ public class Chairs extends AbstractCraftBookMechanic {
     }
 
     private boolean hasSign(Block block) {
-        return hasSign(block, Sets.newHashSet(), block);
+        return hasSign(block, new HashSet<>(), block);
     }
 
     private boolean hasSign(Block block, Collection<Location> searched, Block original) {
@@ -493,7 +493,7 @@ public class Chairs extends AbstractCraftBookMechanic {
         allowedBlocks =
             BlockParser.getBlocks(config.getStringList("blocks", BlockCategories.STAIRS.getAll()
                 .stream()
-                .map(BlockType::getId)
+                .map(BlockType::id)
                 .sorted(String::compareToIgnoreCase)
                 .toList()
             ), true);

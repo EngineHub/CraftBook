@@ -260,6 +260,13 @@
 
     "craftbook.version.version": "CraftBook version {0}",
 
+    "craftbook.reload.reloaded": "Configuration reloaded.",
+    "craftbook.reload.failed": "Failed to reload the configuration. See console for details",
+
+    "craftbook.report.success": "CraftBook Report: {0}.report",
+    "craftbook.report.written": "CraftBook report written to {0}",
+    "craftbook.report.error": "Failed to write report: {0}",
+
     "craftbook.command.player-required": "A player must be provided.",
     "craftbook.command.unknown-player": "Unknown player!"
 }

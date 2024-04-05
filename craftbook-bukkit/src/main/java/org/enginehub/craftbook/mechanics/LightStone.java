@@ -121,7 +121,7 @@ public class LightStone extends AbstractCraftBookMechanic {
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("item", "The item for the lightstone tool.");
-        item = ItemSyntax.getItem(config.getString("item", ItemTypes.GLOWSTONE_DUST.getId()));
+        item = ItemSyntax.getItem(config.getString("item", ItemTypes.GLOWSTONE_DUST.id()));
 
         config.setComment("use-action-bar", "Whether to use the action bar or the player's chat.");
         actionBar = config.getBoolean("use-action-bar", true);

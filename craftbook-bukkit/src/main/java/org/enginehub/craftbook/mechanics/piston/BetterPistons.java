@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.piston;
 
-import com.google.common.collect.Lists;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.blocks.Blocks;
@@ -514,13 +513,13 @@ public class BetterPistons extends AbstractCraftBookMechanic {
     private double maxBounceVelocity;
 
     public static List<String> getDefaultBlacklist() {
-        return Lists.newArrayList(
-            BlockTypes.OBSIDIAN.getId(),
-            BlockTypes.BEDROCK.getId(),
-            BlockTypes.NETHER_PORTAL.getId(),
-            BlockTypes.END_PORTAL.getId(),
-            BlockTypes.END_PORTAL_FRAME.getId(),
-            BlockTypes.END_GATEWAY.getId()
+        return List.of(
+            BlockTypes.OBSIDIAN.id(),
+            BlockTypes.BEDROCK.id(),
+            BlockTypes.NETHER_PORTAL.id(),
+            BlockTypes.END_PORTAL.id(),
+            BlockTypes.END_PORTAL_FRAME.id(),
+            BlockTypes.END_GATEWAY.id()
         );
     }
 

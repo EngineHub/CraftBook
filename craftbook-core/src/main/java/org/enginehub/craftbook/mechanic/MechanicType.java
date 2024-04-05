@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanic;
 
-import com.google.common.collect.ImmutableList;
 import com.sk89q.worldedit.registry.Keyed;
 import com.sk89q.worldedit.registry.Registry;
 import com.sk89q.worldedit.util.formatting.text.Component;
@@ -52,7 +51,7 @@ public class MechanicType<T extends CraftBookMechanic> implements Keyed {
         this.className = className;
         this.category = category;
         this.loadPriority = loadPriority;
-        this.dependencies = ImmutableList.copyOf(dependencies);
+        this.dependencies = List.copyOf(dependencies);
     }
 
     @Override

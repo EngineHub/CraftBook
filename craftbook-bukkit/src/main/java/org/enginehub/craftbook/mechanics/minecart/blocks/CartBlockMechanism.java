@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
-import com.google.common.collect.ImmutableList;
 import com.sk89q.worldedit.util.auth.AuthorizationException;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
@@ -195,7 +194,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
     }
 
     public List<String> getApplicableSigns() {
-        return ImmutableList.of();
+        return List.of();
     }
 
     public boolean verify(ChangedSign sign, CraftBookPlayer player) {

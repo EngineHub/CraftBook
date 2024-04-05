@@ -57,7 +57,7 @@ public class ReadableBookshelf extends AbstractCraftBookMechanic {
                 CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("books.txt"),
                 StandardCharsets.UTF_8
             );
-            this.lines = ImmutableList.copyOf(lines);
+            this.lines = List.copyOf(lines);
             if (this.lines.isEmpty()) {
                 throw new MechanicInitializationException(
                     getMechanicType(),

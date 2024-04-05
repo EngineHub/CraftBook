@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks.station;
 
-import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import io.papermc.paper.entity.TeleportFlag;
@@ -45,7 +44,7 @@ import java.util.UUID;
 
 public class CartStation extends CartBlockMechanism {
 
-    private final static List<String> SIGNS = ImmutableList.of("Station");
+    private final static List<String> SIGNS = List.of("Station");
 
     private final Map<UUID, String> stationSelection = new HashMap<>();
 
@@ -149,6 +148,6 @@ public class CartStation extends CartBlockMechanism {
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("block", "Sets the block that is the base of the station mechanic.");
-        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.OBSIDIAN.getId()), true));
+        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.OBSIDIAN.id()), true));
     }
 }

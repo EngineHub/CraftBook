@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
-import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.block.Block;
@@ -30,7 +29,7 @@ import java.util.List;
 
 public class CartEjector extends CartBlockMechanism {
 
-    private final static List<String> SIGNS = ImmutableList.of("Eject");
+    private final static List<String> SIGNS = List.of("Eject");
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
@@ -63,6 +62,6 @@ public class CartEjector extends CartBlockMechanism {
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("block", "The block the Cart Ejector mechanic uses.");
-        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.IRON_BLOCK.getId()), true));
+        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.IRON_BLOCK.id()), true));
     }
 }

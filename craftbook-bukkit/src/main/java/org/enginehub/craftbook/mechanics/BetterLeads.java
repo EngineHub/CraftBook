@@ -15,8 +15,6 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
@@ -45,6 +43,7 @@ import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.util.EventUtil;
 
+import java.util.List;
 import java.util.Set;
 
 public class BetterLeads extends AbstractCraftBookMechanic {
@@ -229,6 +228,6 @@ public class BetterLeads extends AbstractCraftBookMechanic {
         mobRepellant = config.getBoolean("mob-repel", false);
 
         config.setComment("allowed-mobs", "The list of mobs that can be tethered with a lead.");
-        allowedMobs = ImmutableSet.copyOf(config.getStringList("allowed-mobs", Lists.newArrayList(EntityTypes.ZOMBIE.id(), EntityTypes.SPIDER.id())));
+        allowedMobs = Set.copyOf(config.getStringList("allowed-mobs", List.of(EntityTypes.ZOMBIE.id(), EntityTypes.SPIDER.id())));
     }
 }

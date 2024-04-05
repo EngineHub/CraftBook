@@ -392,10 +392,10 @@ public class Door extends CuboidToggleMechanic {
 
     public List<String> getDefaultBlocks() {
         List<String> materials = new ArrayList<>();
-        materials.add(BlockTypes.COBBLESTONE.getId());
-        materials.add(BlockTypes.GLASS.getId());
-        materials.addAll(BlockCategories.PLANKS.getAll().stream().map(BlockType::getId).toList());
-        materials.addAll(BlockCategories.SLABS.getAll().stream().map(BlockType::getId).toList());
+        materials.add(BlockTypes.COBBLESTONE.id());
+        materials.add(BlockTypes.GLASS.id());
+        materials.addAll(BlockCategories.PLANKS.getAll().stream().map(BlockType::id).toList());
+        materials.addAll(BlockCategories.SLABS.getAll().stream().map(BlockType::id).toList());
         return materials;
     }
 

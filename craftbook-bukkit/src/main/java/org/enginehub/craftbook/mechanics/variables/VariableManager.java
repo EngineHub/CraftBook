@@ -15,9 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.variables;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
@@ -43,6 +41,7 @@ import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -89,7 +88,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
         registrar.registerTopLevelWithSubCommands(
             "variables",
-            Lists.newArrayList("var", "variable", "vars"),
+            List.of("var", "variable", "vars"),
             "CraftBook Variable Commands",
             VariableCommands::register
         );
@@ -213,7 +212,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
 
     public static Collection<VariableKey> getPossibleVariables(String line, @Nullable Actor actor) {
         if (!line.contains("%")) {
-            return ImmutableList.of();
+            return List.of();
         }
 
         Set<VariableKey> variables = new HashSet<>();

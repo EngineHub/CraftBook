@@ -43,7 +43,7 @@ import java.util.List;
 
 public class CartLift extends CartBlockMechanism {
 
-    private final static List<String> SIGNS = ImmutableList.of("CartLift Up", "CartLift Down", "CartLift");
+    private final static List<String> SIGNS = List.of("CartLift Up", "CartLift Down", "CartLift");
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
@@ -109,6 +109,6 @@ public class CartLift extends CartBlockMechanism {
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("block", "Sets the block that is the base of the elevator mechanic.");
-        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.NETHER_BRICKS.getId()), true));
+        setBlock(BlockParser.getBlock(config.getString("block", BlockTypes.NETHER_BRICKS.id()), true));
     }
 }

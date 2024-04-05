@@ -145,7 +145,7 @@ public class Ammeter extends AbstractCraftBookMechanic {
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("item", "The item for the ammeter tool.");
-        item = ItemSyntax.getItem(config.getString("item", ItemTypes.COAL.getId()));
+        item = ItemSyntax.getItem(config.getString("item", ItemTypes.COAL.id()));
 
         config.setComment("use-action-bar", "Whether to use the action bar or the player's chat.");
         actionBar = config.getBoolean("use-action-bar", true);

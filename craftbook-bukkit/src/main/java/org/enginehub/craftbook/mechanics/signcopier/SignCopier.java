@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.signcopier;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
@@ -57,7 +56,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
         registrar.registerTopLevelWithSubCommands(
             "signedit",
-            Lists.newArrayList("edsign", "signcopy"),
+            List.of("edsign", "signcopy"),
             "CraftBook SignCopier Commands",
             (commandManager, registration) -> SignEditCommands.register(commandManager, registration, this)
         );
@@ -206,7 +205,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("item", "The item for the sign copy tool.");
-        item = ItemSyntax.getItem(config.getString("item", ItemTypes.FLINT.getId()));
+        item = ItemSyntax.getItem(config.getString("item", ItemTypes.FLINT.id()));
 
         config.setComment("copy-color", "If the sign copier should also copy the dyed color of the sign.");
         copyColor = config.getBoolean("copy-color", true);

@@ -16,7 +16,6 @@
 package org.enginehub.craftbook.mechanics.crafting;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.Lists;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
@@ -82,7 +81,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
         registrar.registerTopLevelWithSubCommands(
             "recp",
-            Lists.newArrayList("recps"),
+            List.of("recps"),
             "CraftBook Custom Crafting Commands",
             RecipeCommands::register
         );

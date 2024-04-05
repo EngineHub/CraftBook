@@ -417,7 +417,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         bottleXpOverride = config.getInt("bottle-xp-override", -1);
 
         config.setComment("block", "The block that is an XP Storer.");
-        block = BlockParser.getBlock(config.getString("block", BlockTypes.SPAWNER.getId()), true);
+        block = BlockParser.getBlock(config.getString("block", BlockTypes.SPAWNER.id()), true);
 
         config.setComment("allow-sneaking", "Sets how the player must be sneaking in order to use the XP Storer.");
         allowSneaking = TernaryState.parseTernaryState(config.getString("allow-sneaking", TernaryState.FALSE.toString()));
