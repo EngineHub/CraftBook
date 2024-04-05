@@ -1,3 +1,6 @@
+5.0.0 Beta 1
+* Rewrite most of the plugin
+
 3.10.8
 * Fixed a few situations where gates might not work correctly under Y=0
 * Removed a few HeadDrops that had the skins hijacked by offensive imagery
