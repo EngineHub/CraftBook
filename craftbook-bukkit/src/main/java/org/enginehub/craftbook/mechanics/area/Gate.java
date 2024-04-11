@@ -525,7 +525,7 @@ public class Gate extends StoredBlockMechanic {
         columnLimit = config.getInt("max-columns", 14);
 
         config.setComment("blocks", "The list of blocks that a gate can use.");
-        blocks = BlockParser.getBlocks(config.getStringList("blocks", getDefaultBlocks()), true);
+        blocks = BlockParser.getBlocks(config.getStringList("blocks", getDefaultBlocks().stream().sorted(String::compareToIgnoreCase).toList()), true);
 
         config.setComment("max-column-height", "The max height of a column.");
         columnHeight = config.getInt("max-column-height", 12);
