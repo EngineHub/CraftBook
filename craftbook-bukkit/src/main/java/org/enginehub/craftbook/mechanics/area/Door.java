@@ -24,7 +24,6 @@ import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockCategories;
-import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -47,6 +46,7 @@ import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
+import org.enginehub.craftbook.util.ConfigUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
@@ -394,8 +394,8 @@ public class Door extends CuboidToggleMechanic {
         List<String> materials = new ArrayList<>();
         materials.add(BlockTypes.COBBLESTONE.id());
         materials.add(BlockTypes.GLASS.id());
-        materials.addAll(BlockCategories.PLANKS.getAll().stream().map(BlockType::id).toList());
-        materials.addAll(BlockCategories.SLABS.getAll().stream().map(BlockType::id).toList());
+        materials.addAll(ConfigUtil.getIdsFromCategory(BlockCategories.PLANKS));
+        materials.addAll(ConfigUtil.getIdsFromCategory(BlockCategories.SLABS));
         return materials;
     }
 

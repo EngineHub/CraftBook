@@ -24,9 +24,8 @@ import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockCategories;
-import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.item.ItemCategories;
 import com.sk89q.worldedit.world.item.ItemType;
-import com.sk89q.worldedit.world.item.ItemTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -46,6 +45,7 @@ import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
+import org.enginehub.craftbook.util.ConfigUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ItemParser;
 import org.enginehub.craftbook.util.ProtectionUtil;
@@ -235,11 +235,10 @@ public class TreeLopper extends AbstractCraftBookMechanic {
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("enabled-blocks", "A list of enabled log blocks. This list can only contain logs, but can be modified to include more logs (for mod support).");
-        enabledBlocks = BlockParser.getBlocks(config.getStringList("enabled-blocks", BlockCategories.LOGS.getAll().stream().map(BlockType::id).sorted(String::compareToIgnoreCase).toList()), true);
+        enabledBlocks = BlockParser.getBlocks(config.getStringList("enabled-blocks", ConfigUtil.getIdsFromCategory(BlockCategories.LOGS)), true);
 
         config.setComment("tool-list", "A list of tools that can trigger the TreeLopper mechanic.");
-        enabledItems = ItemParser.getItems(config.getStringList("tool-list", List.of(ItemTypes.IRON_AXE.id(), ItemTypes.WOODEN_AXE.id(),
-            ItemTypes.STONE_AXE.id(), ItemTypes.DIAMOND_AXE.id(), ItemTypes.GOLDEN_AXE.id(), ItemTypes.NETHERITE_AXE.id())), true).stream().map(BaseItem::getType).toList();
+        enabledItems = ItemParser.getItems(config.getStringList("tool-list", ConfigUtil.getIdsFromCategory(ItemCategories.AXES)), true).stream().map(BaseItem::getType).toList();
 
         config.setComment("max-size", "The maximum amount of blocks the TreeLopper can break.");
         maxSearchSize = config.getInt("max-size", 30);

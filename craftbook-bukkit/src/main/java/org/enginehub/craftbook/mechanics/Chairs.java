@@ -29,7 +29,6 @@ import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockCategories;
-import com.sk89q.worldedit.world.block.BlockType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -61,6 +60,7 @@ import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
+import org.enginehub.craftbook.util.ConfigUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
@@ -490,13 +490,7 @@ public class Chairs extends AbstractCraftBookMechanic {
         healAmount = config.getDouble("regen-health-amount", 1);
 
         config.setComment("blocks", "A list of blocks that can be sat on.");
-        allowedBlocks =
-            BlockParser.getBlocks(config.getStringList("blocks", BlockCategories.STAIRS.getAll()
-                .stream()
-                .map(BlockType::id)
-                .sorted(String::compareToIgnoreCase)
-                .toList()
-            ), true);
+        allowedBlocks = BlockParser.getBlocks(config.getStringList("blocks", ConfigUtil.getIdsFromCategory(BlockCategories.STAIRS)), true);
 
         config.setComment("face-correct-direction", "When the player sits, automatically face them the direction of the chair. (If possible)");
         faceWhenPossible = config.getBoolean("face-correct-direction", true);

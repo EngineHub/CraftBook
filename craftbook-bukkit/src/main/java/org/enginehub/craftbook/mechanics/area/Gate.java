@@ -24,7 +24,6 @@ import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockCategories;
-import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -45,6 +44,7 @@ import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
+import org.enginehub.craftbook.util.ConfigUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
@@ -510,7 +510,7 @@ public class Gate extends StoredBlockMechanic {
 
     public List<String> getDefaultBlocks() {
         List<String> materials = new ArrayList<>();
-        materials.addAll(BlockCategories.FENCES.getAll().stream().map(BlockType::id).toList());
+        materials.addAll(ConfigUtil.getIdsFromCategory(BlockCategories.FENCES));
         materials.add(BlockTypes.IRON_BARS.id());
         materials.add(BlockTypes.GLASS_PANE.id());
         return materials;

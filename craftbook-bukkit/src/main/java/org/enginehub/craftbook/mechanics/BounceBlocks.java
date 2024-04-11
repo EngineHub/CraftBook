@@ -40,7 +40,6 @@ import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SignUtil;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +55,7 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
     public void loadFromConfiguration(YAMLProcessor config) {
 
         config.setComment("blocks", "A list of blocks that can be jumped on.");
-        blocks = BlockParser.getBlocks(config.getStringList("blocks", Collections.singletonList(BlockTypes.DIAMOND_BLOCK.id())), true);
+        blocks = BlockParser.getBlocks(config.getStringList("blocks", List.of(BlockTypes.DIAMOND_BLOCK.id())), true);
 
         config.setComment("sensitivity", "The sensitivity of jumping.");
         sensitivity = config.getDouble("sensitivity", 0.1);
