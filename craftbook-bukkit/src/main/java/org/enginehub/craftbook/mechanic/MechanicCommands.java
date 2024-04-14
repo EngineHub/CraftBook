@@ -90,11 +90,7 @@ public class MechanicCommands {
                 TextComponent.of(mechanicType.getName(), TextColor.WHITE)
             ));
         } catch (MechanicInitializationException e) {
-            actor.printError(TranslatableComponent.of(
-                "craftbook.mechanisms.enable-failed",
-                TextComponent.of(mechanicType.getName(), TextColor.WHITE),
-                e.getRichMessage()
-            ));
+            actor.printError(e.getRichMessage());
         }
 
         if (listBoxPage > 0) {
