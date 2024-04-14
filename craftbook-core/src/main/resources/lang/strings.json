@@ -245,6 +245,8 @@
     "craftbook.xpstorer.success": "You store your XP in a bottle!",
 
     "craftbook.mechanisms.missing-dependency": "Dependency not satisfied: {0}",
+    "craftbook.mechanisms.mechanic-required": "CraftBook mechanic {0} is required but not enabled",
+    "craftbook.mechanisms.plugin-required": "Plugin {0} is required but not installed or enabled",
     "craftbook.mechanisms.already-enabled": "Mechanic {0} is already enabled",
     "craftbook.mechanisms.not-enabled": "Mechanic {0} is not enabled",
     "craftbook.mechanisms.enable-success": "Enabled mechanic {0}",

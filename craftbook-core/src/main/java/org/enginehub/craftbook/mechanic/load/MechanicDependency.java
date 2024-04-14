@@ -15,6 +15,10 @@
 
 package org.enginehub.craftbook.mechanic.load;
 
+import com.sk89q.worldedit.util.formatting.text.Component;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.mechanic.MechanicType;
 
@@ -61,5 +65,13 @@ public class MechanicDependency implements LoadDependency {
     @Override
     public boolean isMet() {
         return CraftBook.getInstance().getPlatform().getMechanicManager().isMechanicEnabled(this.mechanicType);
+    }
+
+    @Override
+    public Component getFailureMessage() {
+        return TranslatableComponent.of(
+            "craftbook.mechanisms.mechanic-required",
+            TextComponent.of(this.mechanicType.getName(), TextColor.WHITE)
+        );
     }
 }

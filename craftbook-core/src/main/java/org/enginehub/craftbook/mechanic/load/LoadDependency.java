@@ -15,6 +15,9 @@
 
 package org.enginehub.craftbook.mechanic.load;
 
+import com.sk89q.worldedit.util.formatting.text.Component;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+
 public interface LoadDependency {
 
     /**
@@ -38,4 +41,13 @@ public interface LoadDependency {
      * @return if the dependency is met
      */
     boolean isMet();
+
+    /**
+     * The component to be displayed when the dependency is not met.
+     *
+     * @return The failure message
+     */
+    default Component getFailureMessage() {
+        return TextComponent.of(getDependencyId());
+    }
 }

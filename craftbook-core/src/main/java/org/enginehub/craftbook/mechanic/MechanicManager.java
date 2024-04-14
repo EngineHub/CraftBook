@@ -19,6 +19,7 @@ import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.exception.CraftBookException;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.mechanic.load.LoadComparator;
 import org.enginehub.craftbook.mechanic.load.LoadDependency;
@@ -138,9 +139,13 @@ public abstract class MechanicManager {
 
             loadedMechanics.add(mech);
             enableMechanicPlatformListeners(mech);
-        } catch (MechanicInitializationException e) {
-            // Re-throw
-            throw e;
+        } catch (CraftBookException e) {
+            // Re-throw with a wrapper
+            throw new MechanicInitializationException(mechanicType, TranslatableComponent.of(
+                "craftbook.mechanisms.enable-failed",
+                TextComponent.of(mechanicType.getName(), TextColor.WHITE),
+                e.getRichMessage()
+            ), e);
         } catch (Throwable t) {
             throw new MechanicInitializationException(mechanicType, TranslatableComponent.of(
                 "craftbook.mechanisms.enable-failed",

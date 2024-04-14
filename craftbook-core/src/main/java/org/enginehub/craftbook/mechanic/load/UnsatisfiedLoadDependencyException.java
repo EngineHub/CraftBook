@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanic.load;
 
-import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
@@ -25,7 +24,7 @@ public class UnsatisfiedLoadDependencyException extends MechanicInitializationEx
     public UnsatisfiedLoadDependencyException(MechanicType<?> mechanicType, LoadDependency dependency) {
         super(mechanicType, TranslatableComponent.of(
             "craftbook.mechanisms.missing-dependency",
-            TextComponent.of(dependency.getDependencyId())
+            dependency.getFailureMessage()
         ));
     }
 

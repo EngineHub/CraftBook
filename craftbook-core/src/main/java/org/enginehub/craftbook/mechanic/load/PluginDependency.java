@@ -15,6 +15,10 @@
 
 package org.enginehub.craftbook.mechanic.load;
 
+import com.sk89q.worldedit.util.formatting.text.Component;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import org.enginehub.craftbook.CraftBook;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -55,5 +59,13 @@ public class PluginDependency implements LoadDependency {
     @Override
     public boolean isMet() {
         return CraftBook.getInstance().getPlatform().isPluginAvailable(this.pluginName);
+    }
+
+    @Override
+    public Component getFailureMessage() {
+        return TranslatableComponent.of(
+            "craftbook.mechanisms.plugin-required",
+            TextComponent.of(this.getDependencyId(), TextColor.WHITE)
+        );
     }
 }
