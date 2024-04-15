@@ -30,6 +30,7 @@ import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.enginehub.craftbook.bukkit.commands.CraftBookCommands;
+import org.enginehub.craftbook.command.CraftBookExceptionConverter;
 import org.enginehub.craftbook.command.argument.RegistryConverter;
 import org.enginehub.craftbook.command.argument.WorldConverter;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
@@ -62,6 +63,7 @@ public class PlatformCommandManager {
     private final InjectedValueStore globalInjectedValues;
     private final CommandRegistrationHandler registration;
     private final MechanicCommandRegistrar mechanicCommandRegistrar;
+    private final CraftBookExceptionConverter exceptionConverter;
 
     public PlatformCommandManager() {
         this.commandManagerService = new CommandManagerServiceImpl();
@@ -69,6 +71,7 @@ public class PlatformCommandManager {
         this.globalInjectedValues = MapBackedValueStore.create();
         this.registration = new CommandRegistrationHandler(List.of());
         this.mechanicCommandRegistrar = new MechanicCommandRegistrar(commandManagerService, commandManager, registration);
+        this.exceptionConverter = new CraftBookExceptionConverter(CraftBook.getInstance());
 
         // setup separate from main constructor
         // ensures that everything is definitely assigned
@@ -156,13 +159,11 @@ public class PlatformCommandManager {
             } catch (Throwable t) {
                 // Use the exception converter to convert the exception if any of its causes
                 // can be converted, otherwise throw the original exception
-
-                // FIXME: Reimplement or use WorldEdit's exceptions
-                // Throwable next = t;
-                // do {
-                //     exceptionConverter.convert(next);
-                //     next = next.getCause();
-                // } while (next != null);
+                 Throwable next = t;
+                 do {
+                     exceptionConverter.convert(next);
+                     next = next.getCause();
+                 } while (next != null);
 
                 throw t;
             }
@@ -187,13 +188,13 @@ public class PlatformCommandManager {
         } catch (CommandExecutionException e) {
             // FIXME: Put this in an exception converter.
             if (e.getCause() instanceof com.sk89q.minecraft.util.commands.CommandException) {
-                actor.print(TextComponent.builder(e.getCause().getMessage()).color(TextColor.RED).build());
+                actor.printError(TextComponent.of(e.getCause().getMessage()));
                 return;
             }
 
             handleUnknownException(actor, e.getCause());
         } catch (CommandException e) {
-            actor.print(TextComponent.builder("")
+            actor.printError(TextComponent.builder("")
                 .color(TextColor.RED)
                 .append(e.getRichMessage())
                 .build());
