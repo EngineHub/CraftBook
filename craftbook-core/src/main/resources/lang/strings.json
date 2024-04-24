@@ -211,7 +211,7 @@
     "craftbook.togglearea.player-or-namespace-required": "This command either requires being run by a player, or with a provided namespace.",
     "craftbook.togglearea.player-or-world-required": "This command either requires being run by a player, or with a provided world.",
     "craftbook.togglearea.deleted-all-in-namespace": "All areas within the \"{0}\" namespace have been deleted.",
-    "craftbook.togglearea.deleted-area": "The area \"{0}\" within the \"{0}\" namespace has been deleted.",
+    "craftbook.togglearea.deleted-area": "The area \"{0}\" within the \"{1}\" namespace has been deleted.",
     "craftbook.togglearea.failed-delete-all": "Failed to delete all areas within the \"{0}\" namespace.",
     "craftbook.togglearea.failed-delete": "Failed to delete area \"{0}\" in namespace \"{1}\".",
     "craftbook.togglearea.saved": "Saved new area \"{0}\" in namespace \"{1}\".",
