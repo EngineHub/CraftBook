@@ -4,7 +4,7 @@ plugins {
 
 applyCommonConfiguration()
 
-application.mainClassName = "org.enginehub.craftbook.internal.util.DocumentationPrinter"
+application.mainClass.set("org.enginehub.craftbook.internal.util.DocumentationPrinter")
 tasks.named<JavaExec>("run") {
     workingDir = rootProject.projectDir
 }
@@ -30,11 +30,15 @@ repositories {
         name = "ProtocolLib"
         url = uri("https://repo.dmulloy2.net/content/groups/public/")
     }
+    maven {
+        name = "sonatype-oss-snapshots"
+        url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+    }
 }
 
 dependencies {
     "implementation"(project(":craftbook-bukkit"))
-    "implementation"("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT") {
+    "implementation"("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT") {
         exclude(group = "org.slf4j", module = "slf4j-api")
     }
     "implementation"("com.sk89q.worldedit:worldedit-cli:${Versions.WORLDEDIT}")

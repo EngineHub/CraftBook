@@ -30,7 +30,7 @@ public class Cannon extends DispenserRecipe {
 
     @Override
     public void apply(Block block, ItemStack item, BlockFace face) {
-        TNTPrimed a = (TNTPrimed) block.getWorld().spawnEntity(generateLocation(block, face), EntityType.PRIMED_TNT);
+        TNTPrimed a = (TNTPrimed) block.getWorld().spawnEntity(generateLocation(block, face), EntityType.TNT);
         a.setVelocity(generateVelocity(face).normalize().multiply(2));
     }
 }

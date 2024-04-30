@@ -24,6 +24,10 @@ repositories {
         name = "ProtocolLib"
         url = uri("https://repo.dmulloy2.net/content/groups/public/")
     }
+    maven {
+        name = "sonatype-oss-snapshots"
+        url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+    }
 }
 
 val localImplementation = configurations.create("localImplementation") {
@@ -37,7 +41,7 @@ configurations["testImplementation"].extendsFrom(localImplementation)
 dependencies {
     "api"(project(":craftbook-core"))
     "api"(project(":craftbook-libs:bukkit"))
-    "localImplementation"("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT") {
+    "localImplementation"("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT") {
         exclude("junit", "junit")
         exclude(group = "org.slf4j", module = "slf4j-api")
     }

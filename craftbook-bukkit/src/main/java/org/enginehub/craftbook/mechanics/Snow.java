@@ -174,9 +174,9 @@ public class Snow extends AbstractCraftBookMechanic {
 
             if (slowdown) {
                 if (levelled.getLayers() > 4) {
-                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 2));
+                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 20, 2));
                 } else if (levelled.getLayers() > levelled.getMinimumLayers()) {
-                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 1));
+                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 20, 1));
                 }
             }
 

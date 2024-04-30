@@ -128,7 +128,7 @@ public class BetterAI extends AbstractCraftBookMechanic {
 
             if (ThreadLocalRandom.current().nextInt(amount) == 0) {
                 CraftBookPlugin.logDebugMessage("Performing critical hit.", "ai-mechanics.shoot-bow.critical");
-                event.getEntity().getWorld().spawnParticle(Particle.CRIT_MAGIC, event.getEntity().getEyeLocation(), 10);
+                event.getEntity().getWorld().spawnParticle(Particle.CRIT, event.getEntity().getEyeLocation(), 10);
                 event.getProjectile().setFireTicks(5000);
             }
         }

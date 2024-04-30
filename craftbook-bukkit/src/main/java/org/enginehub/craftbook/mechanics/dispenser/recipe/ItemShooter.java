@@ -33,7 +33,7 @@ public class ItemShooter extends DispenserRecipe {
 
     @Override
     public void apply(Block block, ItemStack item, BlockFace face) {
-        Item itemEntity = (Item) block.getWorld().spawnEntity(generateLocation(block, face), EntityType.DROPPED_ITEM);
+        Item itemEntity = (Item) block.getWorld().spawnEntity(generateLocation(block, face), EntityType.ITEM);
         itemEntity.setItemStack(new ItemStack(itemId, 1));
         itemEntity.setVelocity(generateVelocity(face));
     }

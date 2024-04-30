@@ -210,7 +210,7 @@ public final class EntityUtil {
                     }
                 }
                 break;
-            case PRIMED_TNT:
+            case TNT:
                 if (data[0].equalsIgnoreCase("fuse")) {
                     try {
                         int length = Integer.parseInt(data[1]);

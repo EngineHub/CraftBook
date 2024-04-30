@@ -195,11 +195,11 @@ public class CartDispenser extends CartBlockMechanism {
 
         if (inv != null) {
             var cartMaterial = switch (type) {
-                case MINECART_CHEST -> Material.CHEST_MINECART;
-                case MINECART_FURNACE -> Material.FURNACE_MINECART;
-                case MINECART_HOPPER -> Material.HOPPER_MINECART;
-                case MINECART_COMMAND -> Material.COMMAND_BLOCK_MINECART;
-                case MINECART_TNT -> Material.TNT_MINECART;
+                case CHEST_MINECART -> Material.CHEST_MINECART;
+                case FURNACE_MINECART -> Material.FURNACE_MINECART;
+                case HOPPER_MINECART -> Material.HOPPER_MINECART;
+                case COMMAND_BLOCK_MINECART -> Material.COMMAND_BLOCK_MINECART;
+                case TNT_MINECART -> Material.TNT_MINECART;
                 default -> Material.MINECART;
             };
             if (!inv.contains(cartMaterial)) {
@@ -219,13 +219,13 @@ public class CartDispenser extends CartBlockMechanism {
     @Nullable
     private EntityType parseMinecartType(String text) {
         return switch (text.toLowerCase(Locale.ENGLISH)) {
-            case "hopper" -> EntityType.MINECART_HOPPER;
-            case "tnt" -> EntityType.MINECART_TNT;
-            case "powered" -> EntityType.MINECART_FURNACE;
-            case "storage" -> EntityType.MINECART_CHEST;
+            case "hopper" -> EntityType.HOPPER_MINECART;
+            case "tnt" -> EntityType.TNT_MINECART;
+            case "powered" -> EntityType.FURNACE_MINECART;
+            case "storage" -> EntityType.CHEST_MINECART;
             case "minecart", "rideable" -> EntityType.MINECART;
-            case "command" -> EntityType.MINECART_COMMAND;
-            case "mob" -> EntityType.MINECART_MOB_SPAWNER;
+            case "command" -> EntityType.COMMAND_BLOCK_MINECART;
+            case "mob" -> EntityType.SPAWNER_MINECART;
             default -> {
                 EntityType type = Registry.ENTITY_TYPE.get(NamespacedKey.fromString(text.toLowerCase(Locale.ENGLISH)));
                 if (type == null || type.getEntityClass() == null || !Minecart.class.isAssignableFrom(type.getEntityClass())) {
