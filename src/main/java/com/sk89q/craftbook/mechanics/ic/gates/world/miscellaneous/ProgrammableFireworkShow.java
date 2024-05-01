@@ -346,7 +346,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 
                             if(!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4))
                                 continue;
-                            final Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
+                            final Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK_ROCKET);
                             FireworkMeta meta = firework.getFireworkMeta();
                             for(FireworkEffect effect : effects.get(line.replace("launch ", "")))
                                 meta.addEffect(effect);
@@ -461,7 +461,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                             if(!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4))
                                 continue;
 
-                            Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
+                            Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK_ROCKET);
                             FireworkMeta meta = firework.getFireworkMeta();
                             meta.addEffect(effect);
                             meta.setPower((int) duration * 2);

@@ -66,8 +66,8 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         if(customDropRates.containsKey(typeName))
             chance = Math.min(1, customDropRates.get(typeName));
 
-        if(event.getEntity().getKiller() != null && event.getEntity().getKiller().getItemInHand() != null && event.getEntity().getKiller().getItemInHand().containsEnchantment(Enchantment.LOOT_BONUS_MOBS))
-            chance = Math.min(1, chance + rateModifier * event.getEntity().getKiller().getItemInHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS));
+        if(event.getEntity().getKiller() != null && event.getEntity().getKiller().getItemInHand() != null && event.getEntity().getKiller().getItemInHand().containsEnchantment(Enchantment.LOOTING))
+            chance = Math.min(1, chance + rateModifier * event.getEntity().getKiller().getItemInHand().getEnchantmentLevel(Enchantment.LOOTING));
 
         if(CraftBookPlugin.inst().getRandom().nextDouble() > chance)
             return;

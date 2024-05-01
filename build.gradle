@@ -1,5 +1,19 @@
+buildscript {
+    ext {
+        asmAsmVersion = "9.6" // https://gitlab.ow2.org/asm/asm/-/tags
+    }
+    configurations {
+        classpath {
+            resolutionStrategy {
+                //in order to handle jackson's higher release version in shadow, this needs to be upgraded to latest.
+                force(group: "org.ow2.asm", name: "asm", version: asmAsmVersion)
+                force(group: "org.ow2.asm", name: "asm-commons", version: asmAsmVersion)
+            }
+        }
+    }
+}
 plugins {
-    id 'com.github.johnrengelman.shadow' version '7.1.0'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
     id "com.jfrog.artifactory" version "4.21.0"
 }
 
@@ -38,7 +52,7 @@ allprojects {
 
     java {
         toolchain {
-            languageVersion = JavaLanguageVersion.of(17)
+            languageVersion = JavaLanguageVersion.of(21)
         }
     }
 
@@ -85,11 +99,11 @@ allprojects {
     }
 
     dependencies {
-        compileOnly 'org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT'
-        compileOnly 'com.sk89q.worldedit:worldedit-core:7.2.18-SNAPSHOT'
-        compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7.2.18-SNAPSHOT'
-        compileOnly 'com.sk89q.worldguard:worldguard-core:7.0.8'
-        compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.8'
+        compileOnly 'org.spigotmc:spigot-api:1.20.6-R0.1-SNAPSHOT'
+        compileOnly 'com.sk89q.worldedit:worldedit-core:7.3.1-SNAPSHOT'
+        compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7.3.1-SNAPSHOT'
+        compileOnly 'com.sk89q.worldguard:worldguard-core:7.0.9'
+        compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.9'
         compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
         compileOnly 'com.comphenix.protocol:ProtocolLib:5.0.0-SNAPSHOT'
         compileOnly 'fr.neatmonster:nocheatplus:3.15.1-RC'
@@ -98,7 +112,7 @@ allprojects {
         implementation "io.papermc:paperlib:1.0.7"
         implementation 'org.bstats:bstats-bukkit:2.2.1'
 
-        testImplementation 'org.spigotmc:spigot-api:1.20-R0.1-SNAPSHOT'
+        testImplementation 'org.spigotmc:spigot-api:1.20.6-R0.1-SNAPSHOT'
         testImplementation 'com.sk89q.worldedit:worldedit-core:7.2.14'
         testImplementation group: 'junit', name: 'junit', version: '4.12'
         testImplementation group: 'org.powermock', name: 'powermock-api-mockito', version: '1.7.4'
@@ -113,12 +127,12 @@ allprojects {
     }
 
     task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = 'sources'
+        archiveClassifier.set('sources')
         from sourceSets.main.allSource
     }
 
     task javadocJar(type: Jar, dependsOn: javadoc) {
-        classifier = 'javadoc'
+        archiveClassifier.set('javadoc')
         from javadoc.destinationDir
     }
 
@@ -139,7 +153,7 @@ allprojects {
     }
 
     shadowJar {
-        classifier 'dist'
+        archiveClassifier.set('dist')
         dependencies {
             include(dependency('io.papermc:paperlib'))
             include(dependency('com.sk89q:squirrelid'))

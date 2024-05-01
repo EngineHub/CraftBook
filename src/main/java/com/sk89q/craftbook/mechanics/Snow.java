@@ -159,9 +159,9 @@ public class Snow extends AbstractCraftBookMechanic {
             org.bukkit.block.data.type.Snow levelled = (org.bukkit.block.data.type.Snow) event.getTo().getBlock().getBlockData();
             if(slowdown) {
                 if(levelled.getLayers() > 4)
-                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 2), true);
+                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 20, 2), true);
                 else if(levelled.getLayers() > levelled.getMinimumLayers())
-                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 1), true);
+                    event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 20, 1), true);
             }
 
             if (trample) {

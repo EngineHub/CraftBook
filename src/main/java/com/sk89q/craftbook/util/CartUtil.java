@@ -37,21 +37,21 @@ public final class CartUtil {
         EntityType type = cart.getType();
         final Minecart toCart;
 
-        if(type == EntityType.MINECART_CHEST) {
+        if(type == EntityType.CHEST_MINECART) {
             toCart = cart.getWorld().spawn(destination, StorageMinecart.class);
             ((StorageMinecart) toCart).getInventory().setContents(((StorageMinecart) cart).getInventory().getContents());
             ((StorageMinecart) cart).getInventory().clear();
-        } else if(type == EntityType.MINECART_FURNACE) {
+        } else if(type == EntityType.FURNACE_MINECART) {
             toCart = cart.getWorld().spawn(destination, PoweredMinecart.class);
-        } else if(type == EntityType.MINECART_HOPPER) {
+        } else if(type == EntityType.HOPPER_MINECART) {
             toCart = cart.getWorld().spawn(destination, HopperMinecart.class);
             ((HopperMinecart) toCart).getInventory().setContents(((HopperMinecart) cart).getInventory().getContents());
             ((HopperMinecart) cart).getInventory().clear();
-        } else if(type == EntityType.MINECART_MOB_SPAWNER) {
+        } else if(type == EntityType.SPAWNER_MINECART) {
             toCart = cart.getWorld().spawn(destination, SpawnerMinecart.class);
-        } else if(type == EntityType.MINECART_TNT)
+        } else if(type == EntityType.TNT_MINECART)
             toCart = cart.getWorld().spawn(destination, ExplosiveMinecart.class);
-        else if(type == EntityType.MINECART_COMMAND) {
+        else if(type == EntityType.COMMAND_BLOCK_MINECART) {
             toCart = cart.getWorld().spawn(destination, CommandMinecart.class);
             ((CommandMinecart) toCart).setCommand(((CommandMinecart)toCart).getCommand());
             ((CommandMinecart) toCart).setName(toCart.getName());

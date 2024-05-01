@@ -1024,7 +1024,7 @@ public final class ItemUtil {
 
     private static boolean shouldDamageItem(ItemStack stack) {
         Map<Enchantment, Integer> enchants = stack.getEnchantments();
-        int level = enchants.getOrDefault(Enchantment.DURABILITY, 0);
+        int level = enchants.getOrDefault(Enchantment.UNBREAKING, 0);
 
         if (level > 0) {
             int chance = (int) (100d / (level + 1));
