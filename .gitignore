@@ -51,3 +51,5 @@ debug.txt
 # Generated Files
 run/
 docgen_output/
+worldedit/
+logs/
