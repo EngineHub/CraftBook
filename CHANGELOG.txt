@@ -1,5 +1,27 @@
+5.0.0 Beta 2
+* Add support for MC 1.20.5, 1.20.6
+* Reduced opportunities for future MC updates to break tag usage
+* Fixed the list of enabled gate blocks in the config not being alphabetically sorted
+* Make error messages from `/cb mech enable` look nicer
+* Improved errors about a mechanic's dependencies not being satisfied more clear about whether it's another plugin or another mechanic
+* Fixed a localisation typo
+
 5.0.0 Beta 1
 * Rewrite most of the plugin
+
+3.10.10
+* Avoid enabling the legacy material compatibility layer when avoidable
+* Fix the combine harvester not collecting bamboo
+* Add 1.20.4, 1.20.5, and 1.20.6 support
+* Add support for crimson & warped fungus by the planter
+* Improved performance of furnaces in pipes
+* Fix TreeLopper not behaving as expected with podzol under trees
+* Build against Java 21, due to MC 1.20.5 requiring it
+
+3.10.9
+* Update for 1.20
+* Add red sand & nether brick to the smeltables list for a few mechanics
+* Fixed azalea being terraformed incorrectly by the BonemealTerraformer IC
 
 3.10.8
 * Fixed a few situations where gates might not work correctly under Y=0
