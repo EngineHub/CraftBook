@@ -24,6 +24,7 @@ import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockCategories;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.sk89q.worldedit.world.item.ItemCategories;
 import com.sk89q.worldedit.world.item.ItemType;
 import org.bukkit.Bukkit;
@@ -50,6 +51,7 @@ import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ItemParser;
 import org.enginehub.craftbook.util.ProtectionUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -232,10 +234,18 @@ public class TreeLopper extends AbstractCraftBookMechanic {
     private boolean singleDamageAxe;
     private boolean leavesDamageAxe;
 
+    private List<String> getDefaultBlocks() {
+        List<String> materials = new ArrayList<>();
+        materials.addAll(ConfigUtil.getIdsFromCategory(BlockCategories.OVERWORLD_NATURAL_LOGS));
+        materials.add(BlockTypes.CRIMSON_STEM.id());
+        materials.add(BlockTypes.WARPED_STEM.id());
+        return materials;
+    }
+
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("enabled-blocks", "A list of enabled log blocks. This list can only contain logs, but can be modified to include more logs (for mod support).");
-        enabledBlocks = BlockParser.getBlocks(config.getStringList("enabled-blocks", ConfigUtil.getIdsFromCategory(BlockCategories.LOGS)), true);
+        enabledBlocks = BlockParser.getBlocks(config.getStringList("enabled-blocks", getDefaultBlocks().stream().sorted(String::compareToIgnoreCase).toList()), true);
 
         config.setComment("tool-list", "A list of tools that can trigger the TreeLopper mechanic.");
         enabledItems = ItemParser.getItems(config.getStringList("tool-list", ConfigUtil.getIdsFromCategory(ItemCategories.AXES)), true).stream().map(BaseItem::getType).toList();
