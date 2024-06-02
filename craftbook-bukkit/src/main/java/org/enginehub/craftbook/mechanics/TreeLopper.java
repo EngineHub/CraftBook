@@ -38,7 +38,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
@@ -54,10 +53,11 @@ import org.enginehub.craftbook.util.ProtectionUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class TreeLopper extends AbstractCraftBookMechanic {
 
@@ -140,14 +140,11 @@ public class TreeLopper extends AbstractCraftBookMechanic {
             return;
         }
 
-        Set<Location> visitedLocations = new HashSet<>();
         Block usedBlock = event.getBlock();
-        Material originalBlock = usedBlock.getType();
 
-        // Set the planted value very high if we're not allowed to plant saplings
-        int planted = player.hasPermission("craftbook.treelopper.sapling") ? 0 : Integer.MAX_VALUE;
+        boolean allowPlanting = player.hasPermission("craftbook.treelopper.sapling");
 
-        searchBlock(event.getPlayer(), usedBlock, originalBlock, visitedLocations, new AtomicInteger(0), planted);
+        searchBlock(event.getPlayer(), usedBlock, allowPlanting);
     }
 
     private static int getMaximumSaplingCount(Material tree) {
@@ -167,12 +164,14 @@ public class TreeLopper extends AbstractCraftBookMechanic {
     private boolean canBreakBlock(Player player, Material originalBlock, Block toBreak) {
         Material toBreakType = toBreak.getType();
 
-        if (breakLeaves && LOG_TO_LEAVES.containsKey(originalBlock)) {
-           if (LOG_TO_LEAVES.get(originalBlock) != toBreakType) {
-               return false;
-           }
-        } else if (originalBlock != toBreakType) {
-            return false;
+        if (originalBlock != toBreakType) {
+            if (breakLeaves && LOG_TO_LEAVES.containsKey(originalBlock)) {
+                if (LOG_TO_LEAVES.get(originalBlock) != toBreakType) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
         }
 
         if (ProtectionUtil.isBreakingPrevented(player, toBreak)) {
@@ -183,45 +182,58 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         return true;
     }
 
-    private void searchBlock(Player player, Block block, Material baseType, Set<Location> visitedLocations, AtomicInteger broken, int planted) {
-        if (broken.get() > maxSearchSize || visitedLocations.contains(block.getLocation()) || !canBreakBlock(player, baseType, block)) {
-            return;
-        }
+    private void searchBlock(Player player, Block baseBlock, boolean allowPlanting) {
+        Queue<Block> queue = new LinkedList<>();
+        Set<Location> visitedLocations = new HashSet<>();
+        int broken = 0;
+        int planted = 0;
+        Material baseType = baseBlock.getType();
 
-        Material currentType = block.getType();
-        Material belowBlockType = block.getRelative(0, -1, 0).getType();
+        queue.add(baseBlock);
 
-        Material saplingType = null;
-        if (placeSaplings && planted < Integer.MAX_VALUE) {
-            if (LEAVES_TO_SAPLING.containsKey(currentType)) {
-                saplingType = LEAVES_TO_SAPLING.get(currentType);
-            } else if (LOG_TO_SAPLING.containsKey(currentType)) {
-                saplingType = LOG_TO_SAPLING.get(currentType);
-            }
-        }
+        while (!queue.isEmpty() && broken < maxSearchSize) {
+            Block block = queue.poll();
 
-        if (saplingType != null && planted < getMaximumSaplingCount(saplingType) && canPlaceOn(saplingType, belowBlockType)) {
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SaplingPlanter(block, saplingType), 2);
-            planted++;
-        }
-
-        block.breakNaturally(player.getInventory().getItem(EquipmentSlot.HAND));
-        if (!singleDamageAxe && (leavesDamageAxe || !Tag.LEAVES.isTagged(currentType))) {
-            if (player.getInventory().getItemInMainHand().damage(1, player).getAmount() == 0) {
-                // We broke the axe, so we can't continue
-                return;
-            }
-        }
-
-        visitedLocations.add(block.getLocation());
-        broken.incrementAndGet();
-
-        for (Block relativeBlock : allowDiagonals ? BlockUtil.getIndirectlyTouchingBlocks(block) : BlockUtil.getTouchingBlocks(block)) {
-            if (visitedLocations.contains(relativeBlock.getLocation())) {
+            if (visitedLocations.contains(block.getLocation()) || !canBreakBlock(player, baseType, block)) {
                 continue;
             }
 
-            searchBlock(player, relativeBlock, baseType, visitedLocations, broken, planted);
+            Material currentType = block.getType();
+            Material belowBlockType = block.getRelative(0, -1, 0).getType();
+
+            Material saplingType = null;
+            if (placeSaplings && allowPlanting && planted < Integer.MAX_VALUE) {
+                if (LEAVES_TO_SAPLING.containsKey(currentType)) {
+                    saplingType = LEAVES_TO_SAPLING.get(currentType);
+                } else if (LOG_TO_SAPLING.containsKey(currentType)) {
+                    saplingType = LOG_TO_SAPLING.get(currentType);
+                }
+            }
+
+            if (saplingType != null && planted < getMaximumSaplingCount(saplingType) && canPlaceOn(saplingType, belowBlockType)) {
+                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SaplingPlanter(block, saplingType), 2);
+                planted++;
+            }
+
+            var mainHandItem = player.getInventory().getItemInMainHand();
+            block.breakNaturally(mainHandItem);
+            if (!singleDamageAxe && (leavesDamageAxe || !Tag.LEAVES.isTagged(currentType)) && !mainHandItem.isEmpty()) {
+                if (mainHandItem.damage(1, player).isEmpty()) {
+                    // We broke the axe, so we can't continue
+                    return;
+                }
+            }
+
+            visitedLocations.add(block.getLocation());
+            broken ++;
+
+            for (Block relativeBlock : allowDiagonals ? BlockUtil.getIndirectlyTouchingBlocks(block) : BlockUtil.getTouchingBlocks(block)) {
+                if (visitedLocations.contains(relativeBlock.getLocation())) {
+                    continue;
+                }
+
+                queue.add(relativeBlock);
+            }
         }
     }
 
@@ -251,7 +263,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         enabledItems = ItemParser.getItems(config.getStringList("tool-list", ConfigUtil.getIdsFromCategory(ItemCategories.AXES)), true).stream().map(BaseItem::getType).toList();
 
         config.setComment("max-size", "The maximum amount of blocks the TreeLopper can break.");
-        maxSearchSize = config.getInt("max-size", 30);
+        maxSearchSize = config.getInt("max-size", 75);
 
         config.setComment("allow-diagonals", "Allow the TreeLopper to break blocks that are diagonal from each other.");
         allowDiagonals = config.getBoolean("allow-diagonals", false);
