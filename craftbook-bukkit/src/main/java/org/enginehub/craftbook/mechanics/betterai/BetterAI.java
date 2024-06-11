@@ -23,6 +23,9 @@ import com.sk89q.worldedit.world.entity.EntityTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.Particle;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -30,6 +33,8 @@ import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
@@ -44,7 +49,7 @@ public class BetterAI extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityCreate(EntityAddToWorldEvent event) {
-        if (attackPassive.isEmpty() || !EventUtil.passesFilter(event)) {
+        if ((attackPassive.isEmpty() && sizeVariance.isEmpty() && fleeFromWeapons.isEmpty()) || !EventUtil.passesFilter(event)) {
             return;
         }
 
@@ -58,6 +63,31 @@ public class BetterAI extends AbstractCraftBookMechanic {
             } else {
                 CraftBookPlugin.inst().getLogger().warning("Attempted to add FleeFromWeaponsGoal to unsupported entity that does not have PANIC goal: " + event.getEntity().getType().key().asString());
             }
+        }
+
+        if (isEntityEnabled(event.getEntity(), sizeVariance) && event.getEntity() instanceof LivingEntity livingEntity) {
+            CreatureSpawnEvent.SpawnReason spawnReason = livingEntity.getEntitySpawnReason();
+            if (spawnReason != CreatureSpawnEvent.SpawnReason.BREEDING && spawnReason != CreatureSpawnEvent.SpawnReason.CUSTOM && spawnReason != CreatureSpawnEvent.SpawnReason.COMMAND) {
+                livingEntity.getAttribute(Attribute.GENERIC_SCALE).addModifier(
+                    new AttributeModifier("size_variance", (Math.random() - 0.5) * 2 * sizeVarianceVariability, AttributeModifier.Operation.ADD_NUMBER)
+                );
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onEntityBreed(EntityBreedEvent event) {
+        if (sizeVariance.isEmpty() || !EventUtil.passesFilter(event)) {
+            return;
+        }
+
+        if (sizeVarianceAllowBreeding && isEntityEnabled(event.getEntity(), sizeVariance)) {
+            double averageSize = (event.getMother().getAttribute(Attribute.GENERIC_SCALE).getValue() + event.getFather().getAttribute(Attribute.GENERIC_SCALE).getValue()) / 2.0;
+            AttributeInstance attributeInstance = event.getEntity().getAttribute(Attribute.GENERIC_SCALE);
+            attributeInstance.setBaseValue(averageSize);
+            attributeInstance.addModifier(
+                new AttributeModifier("size_variance_breeding", (Math.random() - 0.5) * 2 * sizeVarianceBreedingVariability, AttributeModifier.Operation.ADD_NUMBER)
+            );
         }
     }
 
@@ -146,8 +176,12 @@ public class BetterAI extends AbstractCraftBookMechanic {
     private Set<String> enhancedVision;
     private Set<String> criticalBow;
     private Set<String> attackPassive;
-    private Set<String> fleeFromWeapons;
     private boolean attackPassiveIgnoreHostileMounts;
+    private Set<String> fleeFromWeapons;
+    private Set<String> sizeVariance;
+    private boolean sizeVarianceAllowBreeding;
+    private double sizeVarianceVariability;
+    private double sizeVarianceBreedingVariability;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
@@ -166,12 +200,26 @@ public class BetterAI extends AbstractCraftBookMechanic {
             EntityTypes.ZOMBIE.id(), EntityTypes.DROWNED.id(), EntityTypes.HUSK.id()
         )));
 
+        config.setComment("attack-passive-ignore-hostile-mounts", "Whether hostile mobs will ignore passive entities that are mounted by a hostile entity.");
+        attackPassiveIgnoreHostileMounts = config.getBoolean("attack-passive-ignore-hostile-mounts", true);
+
         config.setComment("flee-from-weapons", "The list of entities to enable the flee from weapons AI mechanic for.");
         fleeFromWeapons = Set.copyOf(config.getStringList("flee-from-weapons", List.of(
             EntityTypes.CHICKEN.id(), EntityTypes.PIG.id(), EntityTypes.COW.id(), EntityTypes.MOOSHROOM.id(), EntityTypes.SHEEP.id()
         )));
 
-        config.setComment("attack-passive-ignore-hostile-mounts", "Whether hostile mobs will ignore passive entities that are mounted by a hostile entity.");
-        attackPassiveIgnoreHostileMounts = config.getBoolean("attack-passive-ignore-hostile-mounts", true);
+        config.setComment("size-variance", "The list of entities to enable the size variance AI mechanic for.");
+        sizeVariance = Set.copyOf(config.getStringList("size-variance", List.of(
+            EntityTypes.CHICKEN.id(), EntityTypes.PIG.id(), EntityTypes.COW.id(), EntityTypes.MOOSHROOM.id(), EntityTypes.SHEEP.id()
+        )));
+
+        config.setComment("size-variance-allow-breeding", "Whether size variance also applies when breeding entities together.");
+        sizeVarianceAllowBreeding = config.getBoolean("size-variance-allow-breeding", true);
+
+        config.setComment("size-variance-variability", "The possible variability from default size to apply to the entities.");
+        sizeVarianceVariability = config.getDouble("size-variance-variability", 0.2);
+
+        config.setComment("size-variance-breeding-variability", "The possible variability from the bred size to apply while breeding entities.");
+        sizeVarianceBreedingVariability = config.getDouble("size-variance-breeding-variability", 0.1);
     }
 }
