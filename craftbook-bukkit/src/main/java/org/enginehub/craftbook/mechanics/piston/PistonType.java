@@ -16,11 +16,8 @@
 package org.enginehub.craftbook.mechanics.piston;
 
 import org.bukkit.Material;
-import org.bukkit.block.Sign;
 import org.bukkit.block.sign.SignSide;
-import org.enginehub.craftbook.ChangedSign;
 
-import java.util.EnumSet;
 import java.util.Set;
 import javax.annotation.Nullable;
 
@@ -28,10 +25,10 @@ import javax.annotation.Nullable;
  * Represents the different types of BetterPistons.
  */
 public enum PistonType {
-    CRUSH("[Crush]", EnumSet.of(Material.PISTON, Material.STICKY_PISTON)),
-    SUPER_STICKY("[SuperSticky]", EnumSet.of(Material.STICKY_PISTON)),
-    BOUNCE("[Bounce]", EnumSet.of(Material.PISTON)),
-    SUPER_PUSH("SuperPush]", EnumSet.of(Material.PISTON, Material.STICKY_PISTON));
+    CRUSH("[Crush]", Set.of(Material.PISTON, Material.STICKY_PISTON)),
+    SUPER_STICKY("[SuperSticky]", Set.of(Material.STICKY_PISTON)),
+    BOUNCE("[Bounce]", Set.of(Material.PISTON)),
+    SUPER_PUSH("SuperPush]", Set.of(Material.PISTON, Material.STICKY_PISTON));
 
     private final String signText;
     private final Set<Material> allowedBlocks;

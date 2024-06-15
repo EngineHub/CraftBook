@@ -39,7 +39,8 @@ import org.enginehub.craftbook.util.InventoryUtil;
 import org.enginehub.craftbook.util.SearchArea;
 
 import java.util.Collections;
-import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AnimalBreeder extends AbstractSelfTriggeredIC {
 
@@ -95,7 +96,7 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
         lastEntity.clear();
     }
 
-    private EnumMap<EntityType, Entity> lastEntity = new EnumMap<>(EntityType.class);
+    private Map<EntityType, Entity> lastEntity = new HashMap<>();
 
     public boolean breed() {
 

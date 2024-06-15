@@ -22,8 +22,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EntityType;
 import org.enginehub.craftbook.CraftBook;
 
-import java.util.EnumSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -258,7 +258,7 @@ public class SkinData {
         // TODO minecraft:camel
     }
 
-    private static final EnumSet<EntityType> IGNORED_ENTITIES = EnumSet.of(
+    private static final Set<EntityType> IGNORED_ENTITIES = Set.of(
         EntityType.PLAYER, EntityType.ZOMBIE, EntityType.CREEPER,
         EntityType.SKELETON, EntityType.WITHER_SKELETON,
         EntityType.ARMOR_STAND, EntityType.ENDER_DRAGON, EntityType.PIGLIN

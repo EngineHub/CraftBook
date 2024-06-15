@@ -60,7 +60,7 @@ import javax.annotation.Nullable;
 
 public class HeadDrops extends AbstractCraftBookMechanic {
 
-    private static final Map<EntityType, PlayerProfile> TEXTURE_MAP = Maps.newEnumMap(EntityType.class);
+    private static final Map<EntityType, PlayerProfile> TEXTURE_MAP = Maps.newHashMap();
 
     static {
         try {

@@ -34,7 +34,6 @@ import org.enginehub.craftbook.util.EntityType;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SearchArea;
 
-import java.util.EnumSet;
 import java.util.Set;
 
 /**
@@ -89,7 +88,7 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
         try {
             types = EntityType.getDetected(RegexUtil.EQUALS_PATTERN.split(getLine(2), 2)[1]);
         } catch (Exception e) {
-            types = EnumSet.of(EntityType.PLAYER);
+            types = Set.of(EntityType.PLAYER);
         }
 
         //Converter.

@@ -34,7 +34,7 @@ import org.bukkit.entity.minecart.PoweredMinecart;
 import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.entity.minecart.StorageMinecart;
 
-import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Set;
 
 public enum EntityType {
@@ -95,7 +95,7 @@ public enum EntityType {
 
     public static Set<EntityType> getDetected(String line) {
 
-        Set<EntityType> types = EnumSet.noneOf(EntityType.class);
+        Set<EntityType> types = new HashSet<>();
 
         if (line.trim().isEmpty()) {
             types.add(ANY);

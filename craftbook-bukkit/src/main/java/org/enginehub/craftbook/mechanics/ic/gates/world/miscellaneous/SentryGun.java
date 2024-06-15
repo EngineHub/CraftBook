@@ -38,7 +38,6 @@ import org.enginehub.craftbook.util.EntityType;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.SearchArea;
 
-import java.util.EnumSet;
 import java.util.Set;
 
 public class SentryGun extends AbstractSelfTriggeredIC {
@@ -59,7 +58,7 @@ public class SentryGun extends AbstractSelfTriggeredIC {
         speed = 0.8f;
         types = EntityType.getDetected(getLine(2).split(":")[0]);
         if (types == null || types.isEmpty()) {
-            types = EnumSet.of(EntityType.MOB_HOSTILE);
+            types = Set.of(EntityType.MOB_HOSTILE);
         }
         if (getLine(2).split(":").length > 1)
             speed = Float.parseFloat(getLine(2).split(":")[1]);
