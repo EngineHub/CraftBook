@@ -24,7 +24,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
-import java.util.EnumSet;
 import java.util.Set;
 
 public class SentryGun extends AbstractSelfTriggeredIC {
@@ -45,7 +44,7 @@ public class SentryGun extends AbstractSelfTriggeredIC {
         speed = 0.8f;
         types = EntityType.getDetected(getSign().getLine(2).split(":")[0]);
         if(types == null || types.isEmpty()) {
-            types = EnumSet.of(EntityType.MOB_HOSTILE);
+            types = Set.of(EntityType.MOB_HOSTILE);
         }
         if(getSign().getLine(2).split(":").length > 1)
             speed = Float.parseFloat(getSign().getLine(2).split(":")[1]);

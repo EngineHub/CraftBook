@@ -14,7 +14,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -82,7 +81,7 @@ public final class CraftBookBukkitUtil {
     }
 
     public static org.bukkit.Location toLocation(World world, Vector3 pt) {
-        return new org.bukkit.Location(world, pt.getX(), pt.getY(), pt.getZ());
+        return new org.bukkit.Location(world, pt.x(), pt.y(), pt.z());
     }
 
     public static org.bukkit.Location center(org.bukkit.Location loc) {
@@ -147,7 +146,6 @@ public final class CraftBookBukkitUtil {
         isRedstoneBlock.add(Material.ACTIVATOR_RAIL);
         isRedstoneBlock.add(Material.DROPPER);
         isRedstoneBlock.add(Material.DAYLIGHT_DETECTOR);
-        isRedstoneBlock = EnumSet.copyOf(isRedstoneBlock);
     }
 
     /**

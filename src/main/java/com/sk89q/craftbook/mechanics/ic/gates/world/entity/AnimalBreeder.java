@@ -25,7 +25,8 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collections;
-import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AnimalBreeder extends AbstractSelfTriggeredIC {
 
@@ -81,7 +82,7 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
         lastEntity.clear();
     }
 
-    private EnumMap<EntityType, Entity> lastEntity = new EnumMap<>(EntityType.class);
+    private Map<EntityType, Entity> lastEntity = new HashMap<>();
 
     public boolean breed() {
 
