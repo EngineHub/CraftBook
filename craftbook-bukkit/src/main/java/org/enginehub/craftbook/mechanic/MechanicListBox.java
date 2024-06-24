@@ -25,9 +25,11 @@ import com.sk89q.worldedit.util.formatting.text.event.ClickEvent;
 import com.sk89q.worldedit.util.formatting.text.event.HoverEvent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class MechanicListBox extends PaginationBox {
 
@@ -39,7 +41,7 @@ public class MechanicListBox extends PaginationBox {
     private final Actor actor;
 
     public MechanicListBox(Actor actor) {
-        super("Mechanics", "/cb mech list -p %page%");
+        super("Mechanics",  getCommandPrefix() + "mech list -p %page%");
 
         this.actor = actor;
     }
@@ -68,12 +70,12 @@ public class MechanicListBox extends PaginationBox {
                 modifyComponent = TextComponent
                     .of("[Disable]", TextColor.RED)
                     .hoverEvent(HoverEvent.showText(TranslatableComponent.of("craftbook.mechanisms.click-to-disable")))
-                    .clickEvent(ClickEvent.runCommand("/cb mech disable " + mechanic.id() + " -l " + getCurrentPage()));
+                    .clickEvent(ClickEvent.runCommand(getCommandPrefix() + "mech disable " + mechanic.id() + " -l " + getCurrentPage()));
             } else {
                 modifyComponent = TextComponent
                     .of("[Enable]", TextColor.GREEN)
                     .hoverEvent(HoverEvent.showText(TranslatableComponent.of("craftbook.mechanisms.click-to-enable")))
-                    .clickEvent(ClickEvent.runCommand("/cb mech enable " + mechanic.id() + " -l " + getCurrentPage()));
+                    .clickEvent(ClickEvent.runCommand(getCommandPrefix() + "mech enable " + mechanic.id() + " -l " + getCurrentPage()));
             }
 
             int length = FontInfo.getPxLength(mechanic.getName());
@@ -88,6 +90,10 @@ public class MechanicListBox extends PaginationBox {
         }
 
         return builder.build();
+    }
+
+    private static String getCommandPrefix() {
+        return "/" + CraftBookPlugin.inst().getPluginMeta().getName().toLowerCase(Locale.ENGLISH) + ":craftbook ";
     }
 
     @Override
