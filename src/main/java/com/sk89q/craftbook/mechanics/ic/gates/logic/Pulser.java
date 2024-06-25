@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mechanics.ic.gates.logic;
 
+import com.github.Anon8281.universalScheduler.scheduling.tasks.MyScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
@@ -25,7 +26,7 @@ public class Pulser extends AbstractIC {
     private int pulseCount;
     private int pauseLength;
 
-    private int taskId;
+    private MyScheduledTask taskId;
     private boolean running;
 
     public Pulser(Server server, ChangedSign block, ICFactory factory) {
@@ -86,15 +87,14 @@ public class Pulser extends AbstractIC {
         if (running) return;
         // start a pulse task and run it every tick after the given delay
         // save the given task id
-        taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(CraftBookPlugin.inst(), new PulseTask(chip,
+        taskId = CraftBookPlugin.getScheduler().scheduleSyncRepeatingTask(new PulseTask(chip,
                 pulseLength, pulseCount, pauseLength),
                 startDelay, 1L);
         running = true;
     }
 
     private void stopThread() {
-
-        Bukkit.getScheduler().cancelTask(taskId);
+        taskId.cancel();
         running = false;
     }
 

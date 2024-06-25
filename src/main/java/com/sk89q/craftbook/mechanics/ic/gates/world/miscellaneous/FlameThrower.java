@@ -86,7 +86,7 @@ public class FlameThrower extends AbstractIC {
             for (int i = 0; i < distance; i++) {
 
                 final int fi = i;
-                CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
+                CraftBookPlugin.getScheduler().runTaskLater(() -> {
 
                     Block fire = block.getRelative(direction, 2+fi);
                     if (make) {

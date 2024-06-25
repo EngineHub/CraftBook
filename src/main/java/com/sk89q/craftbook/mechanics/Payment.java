@@ -71,7 +71,7 @@ public class Payment extends AbstractCraftBookMechanic {
                 Block redstoneItem = back.getRelative(bface);
                 player.print(player.translate("mech.pay.success") + money + ' ' + CraftBookPlugin.plugins.getEconomy().getName());
                 if (ICUtil.setState(redstoneItem, true, back))
-                    CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new TurnOff(redstoneItem, back), 20L);
+                    CraftBookPlugin.getScheduler().runTaskLater(new TurnOff(redstoneItem, back), 20L);
             } else {
                 CraftBookPlugin.plugins.getEconomy().depositPlayer(event.getPlayer().getName(), money);
                 player.printError("mech.pay.failed-to-pay");

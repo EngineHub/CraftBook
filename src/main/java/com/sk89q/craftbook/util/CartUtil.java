@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.util;
 
+import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -62,9 +63,9 @@ public final class CartUtil {
         if (!passengers.isEmpty()) {
             cart.eject();
             for (Entity passenger : passengers) {
-                passenger.teleport(destination);
+                PaperLib.teleportAsync(passenger, destination);
             }
-            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), () -> {
+            CraftBookPlugin.getScheduler().runTask(() -> {
                 for (Entity passenger : passengers) {
                     toCart.addPassenger(passenger);
                     passenger.setVelocity(cart.getVelocity());

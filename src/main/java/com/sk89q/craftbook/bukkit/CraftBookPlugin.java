@@ -1,5 +1,7 @@
 package com.sk89q.craftbook.bukkit;
 
+import com.github.Anon8281.universalScheduler.UniversalScheduler;
+import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
 import com.google.common.collect.Sets;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.craftbook.CraftBookMechanic;
@@ -215,6 +217,11 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     private NMSAdapter nmsAdapter;
 
+    /**
+     * Universal scheduler
+     */
+    private static TaskScheduler scheduler;
+
     public static final Map<String, Class<? extends CraftBookMechanic>> availableMechanics;
 
     public boolean useLegacyCartSystem = false;
@@ -347,7 +354,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     /**
      * Retrieve the UUID Mappings system of CraftBook.
-     * 
+     *
      * @return The UUID Mappings System.
      */
     public UUIDMappings getUUIDMappings() {
@@ -384,6 +391,7 @@ public class CraftBookPlugin extends JavaPlugin {
     public void onEnable() {
 
         ItemSyntax.plugin = this;
+        scheduler = UniversalScheduler.getScheduler(this);
 
         nmsAdapter = new NMSAdapter();
 
@@ -497,8 +505,7 @@ public class CraftBookPlugin extends JavaPlugin {
             }
 
         if(!foundAMech) {
-            Bukkit.getScheduler().runTaskTimer(this,
-                    () -> getLogger().warning(ChatColor.RED + "Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!"), 20L, 20*60*5);
+            CraftBookPlugin.getScheduler().runTaskTimer(() -> getLogger().warning(ChatColor.RED + "Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!"), 20L, 20*60*5);
         }
 
         PaperLib.suggestPaper(this);
@@ -524,7 +531,7 @@ public class CraftBookPlugin extends JavaPlugin {
         languageManager = new LanguageManager();
         languageManager.init();
 
-        getServer().getScheduler().runTask(this, CompatabilityUtil::init);
+        getScheduler().runTask(CompatabilityUtil::init);
 
         mechanics = new ArrayList<>();
 
@@ -598,7 +605,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     /**
      * Enables the mechanic with the specified name.
-     * 
+     *
      * @param mechanic The name of the mechanic.
      * @return If the mechanic could be found and enabled.
      */
@@ -649,7 +656,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     /**
      * Disables the mechanic with the specified name.
-     * 
+     *
      * @param mechanic The name of the mechanic.
      * @return If the mechanic could be found and disabled.
      */
@@ -685,7 +692,7 @@ public class CraftBookPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(managerAdapter, inst());
 
         if(config.easterEggs) {
-            Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+            CraftBookPlugin.getScheduler().runTaskLater(new Runnable() {
 
                 @Override
                 public void run () {
@@ -852,7 +859,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         // Set up the clock for self-triggered ICs.
 
-        getServer().getScheduler().runTaskTimer(this, mechanicClock, 0, config.stThinkRate);
+       getScheduler().runTaskTimer(mechanicClock, 0, config.stThinkRate);
 
         getServer().getPluginManager().registerEvents(selfTriggerManager, this);
     }
@@ -1075,7 +1082,7 @@ public class CraftBookPlugin extends JavaPlugin {
             for(CraftBookMechanic mech : mechanics)
                 mech.disable();
         mechanics = null;
-        getServer().getScheduler().cancelTasks(inst());
+       getScheduler().cancelTasks(inst());
         HandlerList.unregisterAll(inst());
 
         if(config.debugLogToFile) {
@@ -1240,7 +1247,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     /**
      * Parses more advanced portions of the Item Syntax.
-     * 
+     *
      * @param item The item to parse
      * @return The parsed string. (Can be the same, and should be if nothing found)
      */
@@ -1258,5 +1265,9 @@ public class CraftBookPlugin extends JavaPlugin {
 
     public static String getWikiDomain() {
         return "https://craftbook.enginehub.org/en/3.x";
+    }
+
+    public static TaskScheduler getScheduler() {
+        return scheduler;
     }
 }

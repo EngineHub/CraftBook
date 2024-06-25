@@ -24,7 +24,7 @@ public class ExitRemover extends AbstractCraftBookMechanic {
 
         if (!(event.getVehicle() instanceof Boat)) return;
 
-        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new BoatRemover(event.getExited(), (Boat) event.getVehicle()), 2L);
+        CraftBookPlugin.getScheduler().runTaskLater(new BoatRemover(event.getExited(), (Boat) event.getVehicle()), 2L);
     }
 
     class BoatRemover implements Runnable {

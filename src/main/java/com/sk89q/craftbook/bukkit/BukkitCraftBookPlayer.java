@@ -23,6 +23,7 @@ import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.util.HandSide;
 import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.world.item.ItemType;
+import io.papermc.lib.PaperLib;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -68,7 +69,7 @@ public final class BukkitCraftBookPlayer extends BukkitPlayer implements CraftBo
     @Override
     public void teleport(Location location) {
 
-        player.teleport(CraftBookBukkitUtil.toLocation(location));
+        PaperLib.teleportAsync(player, CraftBookBukkitUtil.toLocation(location));
     }
 
     @Override
