@@ -25,12 +25,12 @@ import org.enginehub.craftbook.mechanic.load.LoadComparator;
 import org.enginehub.craftbook.mechanic.load.LoadDependency;
 import org.enginehub.craftbook.mechanic.load.MechanicDependency;
 import org.enginehub.craftbook.mechanic.load.UnsatisfiedLoadDependencyException;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.annotation.Nullable;
 
 public abstract class MechanicManager {
 
@@ -133,7 +133,14 @@ public abstract class MechanicManager {
                     throw new UnsatisfiedLoadDependencyException(mechanicType, dependency);
                 }
             }
-            CraftBookMechanic mech = mechanicType.getMechanicClass().getDeclaredConstructor().newInstance();
+
+            CraftBookMechanic mech;
+            try {
+                mech = mechanicType.getMechanicClass().getDeclaredConstructor(MechanicType.class).newInstance(mechanicType);
+            } catch (NoSuchMethodException e) {
+                mech = mechanicType.getMechanicClass().getDeclaredConstructor().newInstance();
+            }
+
             mech.loadConfiguration(new File(CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("mechanics").toFile(), mechanicType.getName() + ".yml"));
             mech.enable();
 

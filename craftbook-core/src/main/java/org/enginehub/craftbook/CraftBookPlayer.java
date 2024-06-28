@@ -16,7 +16,6 @@
 package org.enginehub.craftbook;
 
 import com.sk89q.worldedit.entity.Player;
-import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.util.formatting.text.Component;
 
 /**

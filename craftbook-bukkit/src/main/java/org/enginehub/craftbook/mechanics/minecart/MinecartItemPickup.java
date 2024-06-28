@@ -26,11 +26,17 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 
 import java.util.Collection;
 
 public class MinecartItemPickup extends AbstractCraftBookMechanic {
+
+    public MinecartItemPickup(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleMove(VehicleMoveEvent event) {

@@ -31,6 +31,8 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ItemSyntax;
 import org.enginehub.craftbook.util.ProtectionUtil;
@@ -41,6 +43,10 @@ import org.enginehub.craftbook.util.ProtectionUtil;
  * This allows users to Right-click to check the light level.
  */
 public class LightStone extends AbstractCraftBookMechanic {
+
+    public LightStone(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onRightClick(PlayerInteractEvent event) {

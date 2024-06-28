@@ -28,10 +28,16 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 
 
 public class MoreRails extends AbstractCraftBookMechanic {
+
+    public MoreRails(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleMove(VehicleMoveEvent event) {

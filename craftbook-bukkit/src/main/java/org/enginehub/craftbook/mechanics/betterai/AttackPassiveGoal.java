@@ -24,7 +24,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 
@@ -63,7 +62,7 @@ class AttackPassiveGoal implements Goal<Monster> {
     public void tick() {
         if (target != null && !target.isDead()) {
             if (target.getWorld().equals(monster.getWorld())
-                && target.getLocation().distanceSquared(monster.getLocation()) < 15*15) {
+                && target.getLocation().distanceSquared(monster.getLocation()) < 15 * 15) {
                 return;
             }
         }
@@ -101,12 +100,12 @@ class AttackPassiveGoal implements Goal<Monster> {
     }
 
     @Override
-    public @NotNull GoalKey<Monster> getKey() {
+    public GoalKey<Monster> getKey() {
         return key;
     }
 
     @Override
-    public @NotNull EnumSet<GoalType> getTypes() {
+    public EnumSet<GoalType> getTypes() {
         return EnumSet.of(GoalType.TARGET);
     }
 }

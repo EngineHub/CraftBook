@@ -26,12 +26,12 @@ import com.sk89q.worldedit.util.formatting.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.enginehub.craftbook.mechanics.variables.exception.InvalidVariableException;
 import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.annotation.Nullable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -62,7 +62,7 @@ public class VariableKey {
     }
 
     /**
-     * Gets the variable name of this variable key
+     * Gets the variable name of this variable key.
      *
      * @return The variable name
      */
@@ -233,8 +233,7 @@ public class VariableKey {
             return false;
         }
         VariableKey that = (VariableKey) o;
-        return namespace.equals(that.namespace) &&
-            variable.equals(that.variable);
+        return namespace.equals(that.namespace) && variable.equals(that.variable);
     }
 
     @Override

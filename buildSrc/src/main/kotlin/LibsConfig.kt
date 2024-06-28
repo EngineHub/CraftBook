@@ -44,7 +44,7 @@ fun Project.applyLibrariesConfiguration() {
         archiveClassifier.set("")
 
         dependencies {
-            exclude(dependency("com.google.code.findbugs:jsr305:1.3.9"))
+            exclude(dependency("org.jspecify:jspecify:0.3.0"))
             exclude(dependency("com.google.guava:guava"))
             exclude(dependency("com.google.code.gson:gson"))
             exclude(dependency("org.checkerframework:checker-qual"))

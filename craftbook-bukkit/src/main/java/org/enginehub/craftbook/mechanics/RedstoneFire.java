@@ -24,16 +24,20 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
-
-import javax.annotation.Nonnull;
 
 /**
  * This mechanism allow players to toggle the fire on top of Netherrack or Soul Soil.
  */
 public class RedstoneFire extends AbstractCraftBookMechanic {
+
+    public RedstoneFire(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
@@ -84,7 +88,6 @@ public class RedstoneFire extends AbstractCraftBookMechanic {
         return (enableNetherrack && type == Material.NETHERRACK) || (enableSoulSoil && type == Material.SOUL_SOIL);
     }
 
-    @Nonnull
     private Material getFireForBlock(Material type) {
         switch (type) {
             case NETHERRACK -> {
@@ -93,9 +96,8 @@ public class RedstoneFire extends AbstractCraftBookMechanic {
             case SOUL_SOIL -> {
                 return Material.SOUL_FIRE;
             }
+            default -> throw new RuntimeException("Tried to place fire on an unsupported block. Please report this error to CraftBook");
         }
-
-        throw new RuntimeException("Tried to place fire on an unsupported block. Please report this error to CraftBook");
     }
 
     private boolean enableNetherrack;

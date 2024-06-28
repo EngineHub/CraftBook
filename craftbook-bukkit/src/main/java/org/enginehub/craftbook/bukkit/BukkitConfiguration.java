@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Locale;
 
 public class BukkitConfiguration extends YamlConfiguration {
 
@@ -73,7 +74,7 @@ public class BukkitConfiguration extends YamlConfiguration {
             .stream()
             .sorted(Comparator.comparing((MechanicType<?> t) -> t.getCategory().name()).thenComparing(MechanicType::id))
             .forEach(mechanicType -> {
-                String path = "mechanics." + mechanicType.getCategory().name().toLowerCase() + "." + mechanicType.id();
+                String path = "mechanics." + mechanicType.getCategory().name().toLowerCase(Locale.ENGLISH) + "." + mechanicType.id();
                 boolean enabled = config.getBoolean(path, mechanicType.id().equals("variables"));
                 if (enabled) {
                     enabledMechanics.add(mechanicType.id());
@@ -119,7 +120,7 @@ public class BukkitConfiguration extends YamlConfiguration {
     @Override
     public void save() {
         for (MechanicType<?> availableMechanic : MechanicType.REGISTRY.values()) {
-            String path = "mechanics." + availableMechanic.getCategory().name().toLowerCase() + "." + availableMechanic.id();
+            String path = "mechanics." + availableMechanic.getCategory().name().toLowerCase(Locale.ENGLISH) + "." + availableMechanic.id();
             config.setProperty(path, enabledMechanics.contains(availableMechanic.id()));
         }
 

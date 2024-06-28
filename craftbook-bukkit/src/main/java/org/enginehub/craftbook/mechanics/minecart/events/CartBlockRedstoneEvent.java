@@ -20,8 +20,7 @@ import org.bukkit.entity.Minecart;
 import org.bukkit.event.HandlerList;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
-
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class CartBlockRedstoneEvent extends SourcedBlockRedstoneEvent {
     private static final HandlerList handlers = new HandlerList();
@@ -50,12 +49,11 @@ public class CartBlockRedstoneEvent extends SourcedBlockRedstoneEvent {
     }
 
     /**
-     * The minecart at this mechanic (If there is one)
+     * The minecart at this mechanic, if present.
      *
      * @return the minecart, if present
      */
-    @Nullable
-    public Minecart getMinecart() {
+    public @Nullable Minecart getMinecart() {
         return this.minecart;
     }
 }

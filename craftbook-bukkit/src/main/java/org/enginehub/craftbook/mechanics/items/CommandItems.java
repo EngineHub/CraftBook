@@ -19,7 +19,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
-import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -54,8 +53,9 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
-import org.enginehub.craftbook.mechanic.MechanicTypes;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.mechanics.items.CommandItemAction.ActionRunStage;
 import org.enginehub.craftbook.mechanics.items.CommandItemDefinition.CommandType;
@@ -89,6 +89,10 @@ public class CommandItems extends AbstractCraftBookMechanic {
     private Map<UUID, List<ItemStack>> deathPersistItems = Maps.newHashMap();
 
     private boolean doChat = false;
+
+    public CommandItems(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     public CommandItemDefinition getDefinitionByName(String name) {
 
@@ -144,8 +148,8 @@ public class CommandItems extends AbstractCraftBookMechanic {
         try {
             config.load();
         } catch (IOException e) {
-            throw new MechanicInitializationException(MechanicTypes.COMMAND_ITEMS, TextComponent.of("Corrupt CommandItems command-items.yml File! Make sure that the correct syntax has been used, and that there "
-                + "are no tabs!"), e);
+//            throw new MechanicInitializationException(MechanicTypes.COMMAND_ITEMS, TextComponent.of("Corrupt CommandItems command-items.yml File! Make sure that the correct syntax has been used, and that there "
+//                + "are no tabs!"), e);
         }
 
         int amount = 0;

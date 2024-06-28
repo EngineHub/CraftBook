@@ -35,7 +35,7 @@ public class VariableException extends CraftBookException {
     /**
      * Gets the variable key.
      *
-     * @return
+     * @return the variable key involved in this exception
      */
     public VariableKey getVariableKey() {
         return this.variableKey;

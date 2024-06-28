@@ -58,6 +58,8 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.ConfigUtil;
@@ -66,6 +68,7 @@ import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.TernaryState;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -73,7 +76,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import javax.annotation.Nullable;
 
 public class Chairs extends AbstractCraftBookMechanic {
 
@@ -84,6 +86,10 @@ public class Chairs extends AbstractCraftBookMechanic {
 
     private AsyncListenerHandler positionLookHandler;
     private AsyncListenerHandler vehicleSteerHandler;
+
+    public Chairs(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @Override
     public void enable() {
@@ -139,7 +145,7 @@ public class Chairs extends AbstractCraftBookMechanic {
         return chairEntity;
     }
 
-    private void addChair(Player player, Block block, Location chairLoc) {
+    private void addChair(Player player, Block block, @Nullable Location chairLoc) {
         Entity ar = null;
         boolean isNew = false;
         if (chairs.containsKey(player.getUniqueId())) {
@@ -158,8 +164,9 @@ public class Chairs extends AbstractCraftBookMechanic {
         Entity far = ar;
         if (ar.isEmpty() && isNew) {
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), () -> {
-                if (chairLoc != null)
+                if (chairLoc != null) {
                     player.teleport(chairLoc);
+                }
                 far.addPassenger(player);
             });
         } else if (ar.isEmpty()) {

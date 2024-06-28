@@ -47,6 +47,8 @@ import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.BukkitCraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.LocationUtil;
@@ -66,6 +68,10 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
 
     public static ImprovedCauldron instance;
     public ImprovedCauldronCookbook recipes;
+
+    public ImprovedCauldron(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @Override
     public void enable() {

@@ -35,6 +35,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.MechanicTypes;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.mechanics.minecart.blocks.station.CartStation;
@@ -53,6 +55,10 @@ import java.util.List;
 public class CartSorter extends CartBlockMechanism {
 
     private CartStation cartStation;
+
+    public CartSorter(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @Override
     public void enable() throws MechanicInitializationException {

@@ -51,7 +51,8 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.st.BukkitSelfTriggerManager;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.EventUtil;
@@ -69,13 +70,10 @@ import java.util.List;
 
 public class XPStorer extends AbstractCraftBookMechanic {
 
-    private NamespacedKey xpQuantityKey;
+    private final NamespacedKey xpQuantityKey = new NamespacedKey("craftbook", "xp_quantity");
 
-    @Override
-    public void enable() throws MechanicInitializationException {
-        super.enable();
-
-        this.xpQuantityKey = new NamespacedKey("craftbook", "xp_quantity");
+    public XPStorer(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
     }
 
     private ItemStack createStack(int bottles) {

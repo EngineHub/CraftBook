@@ -22,15 +22,20 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
 import org.enginehub.craftbook.CraftBook;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
 import org.enginehub.craftbook.util.BlockUtil;
-
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A class that can be a mechanic that toggles a cuboid. This is basically either Door or Bridge.
  */
 public abstract class CuboidToggleMechanic extends StoredBlockMechanic {
+
+    public CuboidToggleMechanic(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     /**
      * Gets the sign on the other side of this mechanic.
@@ -38,8 +43,7 @@ public abstract class CuboidToggleMechanic extends StoredBlockMechanic {
      * @param nearSign The near sign to search from
      * @return The far sign, if it exists
      */
-    @Nullable
-    public abstract Block getFarSign(Block nearSign);
+    public abstract @Nullable Block getFarSign(Block nearSign);
 
     public abstract CuboidRegion getCuboidArea(Block trigger, Block proximalBaseCenter, Block distalBaseCenter) throws InvalidMechanismException;
 

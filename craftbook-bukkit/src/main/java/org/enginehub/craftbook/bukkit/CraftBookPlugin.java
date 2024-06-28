@@ -64,7 +64,7 @@ public class CraftBookPlugin extends JavaPlugin {
     public static CompanionPlugins plugins;
 
     /**
-     * The instance for CraftBook
+     * The instance for CraftBook.
      */
     private static CraftBookPlugin instance;
     private static CraftBookPlatform platform;
@@ -158,11 +158,12 @@ public class CraftBookPlugin extends JavaPlugin {
 
                 boolean foundAMech = false;
 
-                for (CraftBookMechanic mech : platform.getMechanicManager().getLoadedMechanics())
+                for (CraftBookMechanic mech : platform.getMechanicManager().getLoadedMechanics()) {
                     if (!(mech instanceof VariableManager)) {
                         foundAMech = true;
                         break;
                     }
+                }
 
                 if (!foundAMech) {
                     event.getPlayer().sendMessage(ChatColor.RED + "[CraftBook] Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!");
@@ -414,7 +415,7 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     /**
-     * Reload configuration
+     * Reload configuration.
      */
     public void reloadConfiguration() {
         platform.getMechanicManager().shutdown();

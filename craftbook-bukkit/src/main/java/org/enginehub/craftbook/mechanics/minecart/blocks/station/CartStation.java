@@ -26,7 +26,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartBlockMechanism;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
@@ -44,9 +46,13 @@ import java.util.UUID;
 
 public class CartStation extends CartBlockMechanism {
 
-    private final static List<String> SIGNS = List.of("Station");
+    private static final List<String> SIGNS = List.of("Station");
 
     private final Map<UUID, String> stationSelection = new HashMap<>();
+
+    public CartStation(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @Override
     public void enable() throws MechanicInitializationException {
@@ -136,6 +142,8 @@ public class CartStation extends CartBlockMechanism {
                 // recenter it
                 Location l = blocks.rail().getLocation().add(0.5, 0.5, 0.5);
                 cart.teleport(l, TeleportFlag.EntityState.RETAIN_VEHICLE, TeleportFlag.EntityState.RETAIN_PASSENGERS);
+            }
+            default -> {
             }
         }
     }

@@ -41,6 +41,8 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
@@ -67,6 +69,10 @@ import java.util.Set;
  * iterate over the blocks below to open or close the gate.
  */
 public class Gate extends StoredBlockMechanic {
+
+    public Gate(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     /**
      * Toggles the gate closest to a location.
@@ -408,7 +414,8 @@ public class Gate extends StoredBlockMechanic {
         private final Block block;
         private final Material expectedType;
 
-        private int minY = Integer.MIN_VALUE, maxY = Integer.MAX_VALUE;
+        private int minY = Integer.MIN_VALUE;
+        private int maxY = Integer.MAX_VALUE;
 
         public GateColumn(Block block, Material expectedType) {
             this.block = block;
@@ -424,7 +431,7 @@ public class Gate extends StoredBlockMechanic {
         }
 
         public int getStartingY() {
-            if(maxY == Integer.MAX_VALUE) {
+            if (maxY == Integer.MAX_VALUE) {
                 int remainingColumnHeight = columnHeight;
                 int max = Math.min(block.getWorld().getMaxHeight() - 1, block.getY() + remainingColumnHeight);
                 for (int y1 = block.getY() + 1; y1 <= max; y1++) {
@@ -435,8 +442,9 @@ public class Gate extends StoredBlockMechanic {
                     if (currentBlockType == expectedType) {
                         maxY = y1;
                         remainingColumnHeight--;
-                    } else
+                    } else {
                         break;
+                    }
                 }
 
                 if (maxY == Integer.MAX_VALUE) {
@@ -452,13 +460,16 @@ public class Gate extends StoredBlockMechanic {
                 int remainingColumnHeight = columnHeight;
                 int min = Math.max(block.getWorld().getMinHeight(), block.getY() - remainingColumnHeight);
                 for (int y = block.getY(); y >= min; y--) {
-                    if (remainingColumnHeight <= 0) break;
+                    if (remainingColumnHeight <= 0) {
+                        break;
+                    }
                     Material currentBlockType = block.getWorld().getBlockAt(block.getX(), y, block.getZ()).getType();
                     if (BlockUtil.isBlockReplacable(currentBlockType) || currentBlockType == expectedType) {
                         minY = y;
                         remainingColumnHeight--;
-                    } else
+                    } else {
                         break;
+                    }
                 }
                 if (minY == Integer.MIN_VALUE) {
                     minY = block.getY();

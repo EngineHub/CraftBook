@@ -22,9 +22,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 
 public class MinecartCollisionEntry extends AbstractCraftBookMechanic {
+
+    public MinecartCollisionEntry(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {

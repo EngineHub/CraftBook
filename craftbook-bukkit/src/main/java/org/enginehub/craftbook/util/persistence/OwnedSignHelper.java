@@ -19,9 +19,9 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.TileState;
+import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
-import javax.annotation.Nullable;
 
 /**
  * A helper class to assign owners to signs.
@@ -42,14 +42,12 @@ public class OwnedSignHelper {
         }
     }
 
-    @Nullable
-    public static UUID getOwner(Block block) {
+    public static @Nullable UUID getOwner(Block block) {
         BlockState state = block.getState(false);
         return getOwner(state);
     }
 
-    @Nullable
-    public static UUID getOwner(BlockState state) {
+    public static @Nullable UUID getOwner(BlockState state) {
         if (state instanceof TileState tileState) {
             return tileState.getPersistentDataContainer().get(signOwnerKey, UuidPersistentDataType.UUID_PERSISTENT_DATA_TYPE);
         } else {

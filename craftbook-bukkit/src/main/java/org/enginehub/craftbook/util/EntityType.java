@@ -35,6 +35,7 @@ import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.entity.minecart.StorageMinecart;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 public enum EntityType {
@@ -106,7 +107,7 @@ public enum EntityType {
         if (type != null) {
             types.add(type);
         } else {
-            for (char aChar : line.toUpperCase().toCharArray()) {
+            for (char aChar : line.toUpperCase(Locale.ENGLISH).toCharArray()) {
                 for (EntityType aType : EntityType.values()) {
                     if (aType.shortName == aChar) {
                         types.add(aType);

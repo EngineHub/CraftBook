@@ -30,8 +30,6 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
-import javax.annotation.Nonnull;
-
 public class SignClickEvent extends PlayerInteractEvent {
 
     private static final HandlerList handlers = new HandlerList();
@@ -44,13 +42,11 @@ public class SignClickEvent extends PlayerInteractEvent {
         super(who, action, item, clickedBlock, clickedFace, equipmentSlot, interactionPoint);
     }
 
-    @Nonnull
     @Override
     public HandlerList getHandlers() {
         return handlers;
     }
 
-    @Nonnull
     public static HandlerList getHandlerList() {
         return handlers;
     }

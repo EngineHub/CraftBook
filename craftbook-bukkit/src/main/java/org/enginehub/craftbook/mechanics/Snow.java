@@ -44,6 +44,8 @@ import org.bukkit.scheduler.BukkitTask;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
@@ -70,6 +72,10 @@ public class Snow extends AbstractCraftBookMechanic {
     private BukkitTask randomTickTask;
     private BukkitTask dispersionTask;
     private DispersionQueue dispersionQueueRunner;
+
+    public Snow(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @Override
     public void enable() {

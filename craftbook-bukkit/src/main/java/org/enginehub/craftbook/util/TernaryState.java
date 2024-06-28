@@ -35,7 +35,7 @@ public enum TernaryState {
      * @return The parsed value
      */
     public static TernaryState parseTernaryState(String s) {
-        return switch (s.toLowerCase()) {
+        return switch (s.toLowerCase(Locale.ENGLISH)) {
             case "yes", "true", "y", "t", "1" -> TRUE;
             case "no", "false", "n", "f", "0" -> FALSE;
             default -> NONE;

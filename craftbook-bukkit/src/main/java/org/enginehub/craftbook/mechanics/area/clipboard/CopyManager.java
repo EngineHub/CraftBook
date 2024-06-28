@@ -65,7 +65,7 @@ public class CopyManager {
     private final HistoryHashMap<String, Long> missing = new HistoryHashMap<>(10);
 
     /**
-     * Gets the copy manager instance
+     * Gets the copy manager instance.
      *
      * @return The Copy Manager Instance
      */
@@ -256,7 +256,7 @@ public class CopyManager {
     }
 
     /**
-     * Clears the area a clipboard can inhabit
+     * Clears the area a clipboard can inhabit.
      *
      * @param clipboard The clipboard
      */

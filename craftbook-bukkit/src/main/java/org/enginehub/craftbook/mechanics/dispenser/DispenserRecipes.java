@@ -32,6 +32,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanics.dispenser.recipe.Cannon;
 import org.enginehub.craftbook.mechanics.dispenser.recipe.DispenserRecipe;
 import org.enginehub.craftbook.mechanics.dispenser.recipe.EntityMover;
@@ -45,6 +47,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class DispenserRecipes extends AbstractCraftBookMechanic {
 
     public static final Registry<DispenserRecipe> REGISTRY = new NamespacedRegistry<>("dispenser recipe", "craftbook");
+
+    public DispenserRecipes(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @Override
     public void enable() {

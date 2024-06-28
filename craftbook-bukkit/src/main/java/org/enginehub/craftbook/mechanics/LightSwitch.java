@@ -32,6 +32,8 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
@@ -44,6 +46,10 @@ import org.enginehub.craftbook.util.events.SignClickEvent;
  * is right clicked by a player.
  */
 public class LightSwitch extends AbstractCraftBookMechanic {
+
+    public LightSwitch(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
@@ -110,7 +116,8 @@ public class LightSwitch extends AbstractCraftBookMechanic {
      * @param sign The sign to toggle based on
      */
     private void toggleLights(ChangedSign sign) {
-        int radius, maximum;
+        int radius;
+        int maximum;
 
         try {
             String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));

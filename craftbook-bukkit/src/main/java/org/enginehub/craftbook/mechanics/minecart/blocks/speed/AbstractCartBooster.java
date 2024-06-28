@@ -18,16 +18,20 @@ package org.enginehub.craftbook.mechanics.minecart.blocks.speed;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartBlockMechanism;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.RedstoneUtil;
-
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class AbstractCartBooster extends CartBlockMechanism {
 
-    @Nullable
-    protected abstract Vector getNewVelocity(Minecart minecart);
+    public AbstractCartBooster(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
+
+    protected abstract @Nullable Vector getNewVelocity(Minecart minecart);
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {

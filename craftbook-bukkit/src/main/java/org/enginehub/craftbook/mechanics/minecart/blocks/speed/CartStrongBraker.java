@@ -19,14 +19,19 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.entity.Minecart;
 import org.bukkit.util.Vector;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.BlockParser;
-
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class CartStrongBraker extends AbstractCartBooster {
-    @Nullable
+
+    public CartStrongBraker(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
+
     @Override
-    protected Vector getNewVelocity(Minecart minecart) {
+    protected @Nullable Vector getNewVelocity(Minecart minecart) {
         return minecart.getVelocity().clone().multiply(0.5);
     }
 

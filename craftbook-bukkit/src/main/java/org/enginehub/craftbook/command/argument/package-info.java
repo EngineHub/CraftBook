@@ -14,6 +14,7 @@
  */
 
 @NonnullByDefault
+@org.jspecify.annotations.NullMarked
 package org.enginehub.craftbook.command.argument;
 
 import org.enginehub.piston.util.NonnullByDefault;

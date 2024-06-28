@@ -54,7 +54,7 @@ fun Project.applyPlatformAndCoreConfiguration() {
     }
 
     dependencies {
-        "compileOnly"("com.google.code.findbugs:jsr305:1.3.9")
+        "compileOnly"("org.jspecify:jspecify:0.3.0")
         "testImplementation"("org.junit.jupiter:junit-jupiter-api:${Versions.JUNIT}")
         "testImplementation"("org.junit.jupiter:junit-jupiter-params:${Versions.JUNIT}")
         "testImplementation"("org.mockito:mockito-core:${Versions.MOCKITO}")
@@ -109,7 +109,7 @@ fun Project.applyShadowConfiguration() {
         dependencies {
             include(project(":craftbook-libs:core"))
             include(project(":craftbook-core"))
-            exclude("com.google.code.findbugs:jsr305")
+            exclude("org.jspecify:jspecify")
         }
         exclude("GradleStart**")
         exclude(".cache")

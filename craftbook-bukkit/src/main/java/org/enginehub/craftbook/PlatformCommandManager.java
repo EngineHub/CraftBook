@@ -159,11 +159,11 @@ public class PlatformCommandManager {
             } catch (Throwable t) {
                 // Use the exception converter to convert the exception if any of its causes
                 // can be converted, otherwise throw the original exception
-                 Throwable next = t;
-                 do {
-                     exceptionConverter.convert(next);
-                     next = next.getCause();
-                 } while (next != null);
+                Throwable next = t;
+                do {
+                    exceptionConverter.convert(next);
+                    next = next.getCause();
+                } while (next != null);
 
                 throw t;
             }

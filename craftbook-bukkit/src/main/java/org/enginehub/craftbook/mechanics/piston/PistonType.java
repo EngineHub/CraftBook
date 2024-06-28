@@ -17,9 +17,9 @@ package org.enginehub.craftbook.mechanics.piston;
 
 import org.bukkit.Material;
 import org.bukkit.block.sign.SignSide;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
-import javax.annotation.Nullable;
 
 /**
  * Represents the different types of BetterPistons.
@@ -62,8 +62,7 @@ public enum PistonType {
      * @param sign The sign
      * @return The type, if any
      */
-    @Nullable
-    static PistonType getFromSign(SignSide sign) {
+    static @Nullable PistonType getFromSign(SignSide sign) {
         if (sign == null) {
             // TODO Remove
             return null;

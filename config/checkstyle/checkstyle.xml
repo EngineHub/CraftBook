@@ -10,8 +10,7 @@ Checks based on Google Checks, modified for EngineHub.
 <module name="Checker">
     <property name="charset" value="UTF-8"/>
 
-    <!-- TODO Make this error when CB5 is finished -->
-    <property name="severity" value="warning"/>
+    <property name="severity" value="error"/>
 
     <property name="fileExtensions" value="java, properties, xml"/>
     <!-- Checks for whitespace                               -->
@@ -141,6 +140,7 @@ Checks based on Google Checks, modified for EngineHub.
             <property name="lineWrappingIndentation" value="4"/>
             <property name="arrayInitIndent" value="4"/>
         </module>
+        <module name="UnusedImports"/>
         <module name="CustomImportOrder">
             <property name="sortImportsInGroupAlphabetically" value="true"/>
             <property name="customImportOrderRules" value="THIRD_PARTY_PACKAGE###STANDARD_JAVA_PACKAGE###STATIC"/>
@@ -206,4 +206,43 @@ Checks based on Google Checks, modified for EngineHub.
         <property name="format" value="(?s:(\r\n|\r).*)"/>
         <property name="message" value="CRLF and CR line endings are prohibited, but this file uses them."/>
     </module>
+    <module name="SuppressionFilter">
+        <property name="file" value="${config_loc}/checkstyle-suppression.xml"/>
+    </module>
+
+    <module name="TreeWalker"> <!-- Everything here lives in TreeWalker, ensure you put it there along with any existing rules -->
+        <!-- Ban old nullability annotations-->
+        <module name="IllegalImport">
+            <property name="illegalPkgs" value="javax.annotation, org.checkerframework.checker.nullness"/>
+            <property name="illegalClasses" value="
+            org.jetbrains.annotations.Nullable, org.jetbrains.annotations.NotNull, org.jetbrains.annotations.Nullable
+            "/>
+        </module>
+        <!-- Enforce @Nullable comes after all modifiers -->
+        <module name="MatchXpath">
+            <!-- Selects a not-last @Nullable -->
+            <property name="query" value="//MODIFIERS/*[(position() lt last()) and self::ANNOTATION[./IDENT[@text='Nullable']]]"/>
+            <message key="matchxpath.match" value="@Nullable must come after all modifiers"/>
+        </module>
+        <!-- Enforce @Nullable comes on same line as type -->
+        <module name="RegexpSinglelineJava">
+            <property name="message" value="@Nullable must be on the same line as the type"/>
+            <property name="format" value=".*@Nullable\s*$"/>
+            <property name="ignoreComments" value="true"/>
+            <property name="minimum" value="0"/>
+            <property name="maximum" value="0"/>
+        </module>
+        <!-- Enforce @NullMarked in package-info.java -->
+        <module name="RegexpSinglelineJava">
+            <property name="id" value="package-info-NullMarked"/>
+            <property name="message" value="package-info.java must be @NullMarked"/>
+            <property name="format" value="^@org.jspecify.annotations.NullMarked$"/>
+            <property name="ignoreComments" value="true"/>
+            <property name="minimum" value="1"/>
+            <property name="maximum" value="1"/>
+        </module>
+    </module> <!-- </TreeWalker>, the thing below is just outside of it -->
+    <!-- Enforce package-info.java -->
+    <module name="JavadocPackage"/>
+
 </module>

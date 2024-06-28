@@ -59,7 +59,7 @@ public class MechanicListBox extends PaginationBox {
         }
 
         TextComponent.Builder builder = TextComponent.builder()
-            .append(TextComponent.of("\u2588", isEnabled ? TextColor.GREEN : TextColor.RED))
+            .append(TextComponent.of("█", isEnabled ? TextColor.GREEN : TextColor.RED))
             .append(TextComponent.space())
             .append(mechanicName)
             .append(TextComponent.space());

@@ -39,6 +39,8 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.st.BukkitSelfTriggerManager;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ItemUtil;
@@ -49,12 +51,16 @@ import org.enginehub.craftbook.util.events.SelfTriggerThinkEvent;
 import org.enginehub.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
 import org.enginehub.craftbook.util.events.SignClickEvent;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import javax.annotation.Nullable;
 
 public class CookingPot extends AbstractCraftBookMechanic {
+
+    public CookingPot(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
@@ -138,7 +144,8 @@ public class CookingPot extends AbstractCraftBookMechanic {
             sign.update(false);
         }
 
-        int currentCookProgress = 0, previousCookProgress;
+        int currentCookProgress = 0;
+        int previousCookProgress;
 
         try {
             String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
@@ -158,10 +165,11 @@ public class CookingPot extends AbstractCraftBookMechanic {
                 Inventory inventory = chest.getInventory();
 
                 List<ItemStack> items;
-                if (allowSmelting)
+                if (allowSmelting) {
                     items = ItemUtil.getRawMaterials(inventory);
-                else
+                } else {
                     items = ItemUtil.getRawFood(inventory);
+                }
 
                 if (items.size() == 0) {
                     if (emptyCooldown) {
@@ -358,8 +366,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
             return this.fuelCount;
         }
 
-        @Nullable
-        public static CookingPotFuel getByMaterial(Material id) {
+        public static @Nullable CookingPotFuel getByMaterial(Material id) {
             for (CookingPotFuel in : values()) {
                 if (in.id == id) {
                     return in;

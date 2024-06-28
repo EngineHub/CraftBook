@@ -22,7 +22,7 @@ import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 
 /**
- * Called when a Minecart crosses a block boundary
+ * Called when a Minecart crosses a block boundary.
  */
 public class CartBlockImpactEvent extends VehicleMoveEvent {
     private static final HandlerList handlers = new HandlerList();

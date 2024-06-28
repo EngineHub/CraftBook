@@ -27,15 +27,13 @@ import java.io.IOException;
 
 public abstract class AbstractCraftBookMechanic implements CraftBookMechanic, Listener {
 
-    private MechanicType<? extends CraftBookMechanic> mechanicType;
+    private final MechanicType<? extends CraftBookMechanic> mechanicType;
+
+    public AbstractCraftBookMechanic(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        this.mechanicType = mechanicType;
+    }
 
     public MechanicType<? extends CraftBookMechanic> getMechanicType() {
-        if (this.mechanicType == null) {
-            this.mechanicType = CraftBook.getInstance().getPlatform().getMechanicManager().getMechanicType(this);
-            if (this.mechanicType == null) {
-                throw new RuntimeException("Invalid mechanic found");
-            }
-        }
         return this.mechanicType;
     }
 

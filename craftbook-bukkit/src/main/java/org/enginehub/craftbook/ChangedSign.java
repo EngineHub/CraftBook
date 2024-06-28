@@ -28,12 +28,11 @@ import org.bukkit.block.sign.SignSide;
 import org.enginehub.craftbook.mechanics.variables.VariableKey;
 import org.enginehub.craftbook.mechanics.variables.VariableManager;
 import org.enginehub.craftbook.util.ParsingUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * A ChangedSign represents a single side of a sign block.
@@ -214,19 +213,19 @@ public class ChangedSign {
         return Arrays.stream(this.lines).map(PlainTextComponentSerializer.plainText()::serialize).collect(Collectors.joining("|"));
     }
 
-    public static ChangedSign create(@Nonnull Sign sign, @Nonnull Side side) {
+    public static ChangedSign create(Sign sign, Side side) {
         return create(sign.getBlock(), side, sign.getSide(side).lines().toArray(new Component[0]), null);
     }
 
-    public static ChangedSign create(@Nonnull Sign sign, @Nonnull Side side, @Nullable CraftBookPlayer player) {
+    public static ChangedSign create(Sign sign, Side side, @Nullable CraftBookPlayer player) {
         return create(sign.getBlock(), side, sign.getSide(side).lines().toArray(new Component[0]), player);
     }
 
-    public static ChangedSign create(@Nonnull Block block, @Nonnull Side side) {
+    public static ChangedSign create(Block block, Side side) {
         return create(block, side, null, null);
     }
 
-    public static ChangedSign create(@Nonnull Block block, @Nonnull Side side, @Nullable Component[] lines, @Nullable CraftBookPlayer player) {
+    public static ChangedSign create(Block block, Side side, @Nullable Component[] lines, @Nullable CraftBookPlayer player) {
         Preconditions.checkNotNull(block, "block");
         Preconditions.checkNotNull(side, "side");
 

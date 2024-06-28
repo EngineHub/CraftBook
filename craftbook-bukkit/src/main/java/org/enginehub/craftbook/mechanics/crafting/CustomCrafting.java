@@ -41,7 +41,9 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanics.crafting.RecipeManager.RecipeType;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ItemUtil;
@@ -73,6 +75,10 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
     public static final Set<String> registeredNames = new HashSet<>();
 
     private static final Map<Recipe, RecipeManager.Recipe> advancedRecipes = new HashMap<>();
+
+    public CustomCrafting(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @Override
     public void enable() {

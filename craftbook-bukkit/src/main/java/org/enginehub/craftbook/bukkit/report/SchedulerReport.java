@@ -22,23 +22,23 @@ import com.google.common.reflect.TypeToken;
 import com.sk89q.worldedit.util.report.DataReport;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import javax.annotation.Nullable;
 
 public class SchedulerReport extends DataReport {
 
-    private LoadingCache<Class<?>, Optional<Field>> taskFieldCache = CacheBuilder.newBuilder()
+    private final LoadingCache<Class<?>, Optional<Field>> taskFieldCache = CacheBuilder.newBuilder()
         .build(new CacheLoader<Class<?>, Optional<Field>>() {
             @Override
             public Optional<Field> load(Class<?> clazz) throws Exception {
                 try {
                     Field field = clazz.getDeclaredField("task");
                     field.setAccessible(true);
-                    return Optional.ofNullable(field);
+                    return Optional.of(field);
                 } catch (NoSuchFieldException ignored) {
                     return Optional.empty();
                 }
@@ -64,8 +64,7 @@ public class SchedulerReport extends DataReport {
     }
 
     @SuppressWarnings("unchecked")
-    @Nullable
-    private Class<?> getTaskClass(BukkitTask task) {
+    private @Nullable Class<?> getTaskClass(BukkitTask task) {
         try {
             Class<?> clazz = task.getClass();
             Set<Class<?>> classes = (Set) TypeToken.of(clazz).getTypes().rawTypes();

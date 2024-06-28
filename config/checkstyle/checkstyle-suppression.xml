@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suppressions PUBLIC "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+        "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+    <!-- This check only applies to package-info.java -->
+    <suppress files="^((?!package-info\.java).)*$" id="package-info-NullMarked"/>
+    <!-- Suppress NullMarked on tests for now -->
+    <suppress files=".*[\\/]test[\\/].*\.java" checks="package-info-NullMarked|JavadocPackage"/>
+    <!-- Suppress ICs for now -->
+    <suppress files=".*[\\/]mechanics[\\/]ic[\\/].*\.java" checks=".*"/>
+    <!-- Suppress legacy files -->
+    <suppress files=".*[\\/]ItemUtil.java" checks=".*"/>
+    <suppress files=".*[\\/]ICUtil.java" checks=".*"/>
+    <suppress files=".*[\\/]SearchArea.java" checks=".*"/>
+    <suppress files=".*[\\/]EntityUtil.java" checks=".*"/>
+    <suppress files=".*[\\/]ItemSyntax.java" checks=".*"/>
+    <suppress files=".*[\\/]CartSorter.java" checks=".*"/>
+    <suppress files=".*[\\/]CartDeposit.java" checks=".*"/>
+    <suppress files=".*[\\/]CommandSigns.java" checks=".*"/>
+    <suppress files=".*[\\/]InventoryUtil.java" checks=".*"/>
+    <suppress files=".*[\\/]LocationUtil.java" checks=".*"/>
+    <suppress files=".*[\\/]Payment.java" checks=".*"/>
+    <suppress files=".*[\\/]BounceBlocks.java" checks=".*"/>
+    <suppress files=".*[\\/]HiddenSwitch.java" checks=".*"/>
+    <suppress files=".*[\\/]CompanionPlugins.java" checks=".*"/>
+    <suppress files=".*[\\/]Tuple2.java" checks=".*"/>
+    <suppress files=".*[\\/]ItemInfo.java" checks=".*"/>
+    <suppress files=".*[\\/]CartDispenser.java" checks=".*"/>
+    <suppress files=".*[\\/]mechanics[\\/]crafting[\\/].*\.java" checks=".*"/>
+    <suppress files=".*[\\/]mechanics[\\/]items[\\/].*\.java" checks=".*"/>
+    <suppress files=".*[\\/]mechanics[\\/]pipe[\\/].*\.java" checks=".*"/>
+    <suppress files=".*[\\/]mechanics[\\/]cauldron[\\/].*\.java" checks=".*"/>
+    <suppress files=".*[\\/]mechanics[\\/]drops[\\/].*\.java" checks=".*"/>
+    <suppress files=".*[\\/]util[\\/]jinglenote[\\/].*\.java" checks=".*"/>
+</suppressions>

@@ -106,7 +106,9 @@ public final class ProtectionUtil {
      * @return whether {@code player} can build at {@code loc}
      */
     public static boolean canUse(Player player, Location loc, BlockFace face, Action action) {
-        if (!shouldUseProtection()) return true;
+        if (!shouldUseProtection()) {
+            return true;
+        }
         if (CraftBook.getInstance().getPlatform().getConfiguration().obeyPluginProtections) {
             PlayerInteractEvent event = new PlayerInteractEvent(player, action == null ? Action.RIGHT_CLICK_BLOCK : action, player.getItemInHand(), loc.getBlock(), face == null ? BlockFace.SELF : face);
             EventUtil.callEventSafely(event);
@@ -127,12 +129,13 @@ public final class ProtectionUtil {
      * @return whether {@code player} can build at {@code loc}
      */
     public static boolean canAccessInventory(Player player, Block block) {
-
-        if (!shouldUseProtection()) return true;
+        if (!shouldUseProtection()) {
+            return true;
+        }
         if (CraftBook.getInstance().getPlatform().getConfiguration().obeyPluginProtections) {
-
-            if (!canUse(player, block.getLocation(), null, Action.RIGHT_CLICK_BLOCK))
+            if (!canUse(player, block.getLocation(), null, Action.RIGHT_CLICK_BLOCK)) {
                 return false;
+            }
         }
         return !CraftBook.getInstance().getPlatform().getConfiguration().obeyWorldGuard || CraftBookPlugin.plugins.getWorldGuard() == null || CraftBookPlugin.plugins.getWorldGuard().createProtectionQuery().testBlockInteract(player, block);
     }
@@ -146,8 +149,9 @@ public final class ProtectionUtil {
      * @return Whether the block can form.
      */
     public static boolean canBlockForm(Block block, BlockState newState) {
-
-        if (!shouldUseProtection()) return true;
+        if (!shouldUseProtection()) {
+            return true;
+        }
         if (CraftBook.getInstance().getPlatform().getConfiguration().obeyPluginProtections) {
 
             BlockFormEvent event = new BlockFormEvent(block, newState);

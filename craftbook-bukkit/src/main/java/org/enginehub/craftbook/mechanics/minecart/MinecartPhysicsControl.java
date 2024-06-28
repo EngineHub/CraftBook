@@ -22,11 +22,17 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 
 public class MinecartPhysicsControl extends AbstractCraftBookMechanic {
     private Vector fallSpeed;
     private Vector derailedVelocityMod;
+
+    public MinecartPhysicsControl(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @Override
     public void enable() {

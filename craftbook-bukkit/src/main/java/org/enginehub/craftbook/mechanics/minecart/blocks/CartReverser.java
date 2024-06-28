@@ -22,6 +22,8 @@ import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
@@ -31,7 +33,11 @@ import java.util.List;
 
 public class CartReverser extends CartBlockMechanism {
 
-    private final static List<String> SIGNS = List.of("Reverse");
+    private static final List<String> SIGNS = List.of("Reverse");
+
+    public CartReverser(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {

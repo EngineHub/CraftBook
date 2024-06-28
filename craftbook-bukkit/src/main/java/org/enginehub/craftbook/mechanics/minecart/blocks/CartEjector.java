@@ -20,6 +20,8 @@ import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
@@ -29,7 +31,11 @@ import java.util.List;
 
 public class CartEjector extends CartBlockMechanism {
 
-    private final static List<String> SIGNS = List.of("Eject");
+    private static final List<String> SIGNS = List.of("Eject");
+
+    public CartEjector(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {

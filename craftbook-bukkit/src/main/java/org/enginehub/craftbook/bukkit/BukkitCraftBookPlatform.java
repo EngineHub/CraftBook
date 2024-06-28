@@ -165,7 +165,8 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
         List<ProfileService> services = new ArrayList<>();
         try {
             services.add(PaperPlayerService.getInstance());
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
         services.add(HttpRepositoryService.forMinecraft());
         return new CacheForwardingService(new CombinedProfileService(services), profileCache);
     }

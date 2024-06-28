@@ -23,6 +23,7 @@ import org.bukkit.block.data.type.Sign;
 import org.bukkit.block.data.type.WallSign;
 import org.bukkit.block.sign.Side;
 import org.bukkit.event.block.SignChangeEvent;
+import org.jspecify.annotations.Nullable;
 
 /**
  * <p>
@@ -70,18 +71,24 @@ public final class SignUtil {
     }
 
     /**
+     * Get the back of the sign, the block that it is attached to.
+     *
      * @param sign treated as sign post if it is such, or else assumed to be a wall sign (i.e.,
      *     if you ask about a stone block, it's considered a wall
      *     sign).
      * @return the direction a player would be facing when reading the sign; i.e. the face that is
      *     actually the back
      *     side of the sign.
+     * @deprecated confusing, should use getBack or getFront explicitly
      */
+    @Deprecated
     public static BlockFace getFacing(Block sign) {
         return getBack(sign);
     }
 
     /**
+     * Get the front face of the sign.
+     *
      * @param sign treated as sign post if it is such, or else assumed to be a wall sign (i.e.,
      *     if you ask about a stone block, it's considered a wall
      *     sign).
@@ -91,21 +98,22 @@ public final class SignUtil {
      */
     public static BlockFace getFront(Block sign) {
         BlockData blockData = sign.getBlockData();
-        if (blockData instanceof Sign) {
-            return ((Sign) blockData).getRotation();
-        } else if (blockData instanceof WallSign) {
-            return ((WallSign) blockData).getFacing();
+        if (blockData instanceof Sign signBlock) {
+            return signBlock.getRotation();
+        } else if (blockData instanceof WallSign wallSign) {
+            return wallSign.getFacing();
         } else {
             return BlockFace.SELF;
         }
     }
 
     public static Block getFrontBlock(Block sign) {
-
         return sign.getRelative(getFront(sign));
     }
 
     /**
+     * Get the back face of the sign.
+     *
      * @param sign treated as sign post if it is such, or else assumed to be a wall sign (i.e.,
      *     if you ask about a stone block, it's considered a wall
      *     sign).
@@ -120,12 +128,10 @@ public final class SignUtil {
     }
 
     public static Block getBackBlock(Block sign) {
-
         return sign.getRelative(getBack(sign));
     }
 
-    public static Block getNextSign(Block sign, String criterea, int searchRadius) {
-
+    public static @Nullable Block getNextSign(Block sign, String criterea, int searchRadius) {
         Block otherBlock = sign;
         BlockFace way = sign.getFace(getBackBlock(sign));
         boolean found = false;
@@ -146,11 +152,19 @@ public final class SignUtil {
                 otherBlock = otherBlock.getRelative(way);
             }
         }
-        if (!found) return null;
+        if (!found) {
+            return null;
+        }
         return otherBlock;
     }
 
+    public static Block getRightBlock(Block sign) {
+        return sign.getRelative(getRight(sign));
+    }
+
     /**
+     * Gets the right direction from the perspective of the front of the sign.
+     *
      * @param sign treated as sign post if it is such, or else assumed to be a wall sign (i.e.,
      *     if you ask about a stone block, it's considered a wall
      *     sign).
@@ -169,6 +183,8 @@ public final class SignUtil {
     }
 
     /**
+     * Gets the left direction from the perspective of the front of the sign.
+     *
      * @param sign treated as sign post if it is such, or else assumed to be a wall sign (i.e.,
      *     if you ask about a stone block, it's considered a wall
      *     sign).
@@ -181,12 +197,9 @@ public final class SignUtil {
         return getClockWise(getFront(sign));
     }
 
-    public static Block getRightBlock(Block sign) {
-
-        return sign.getRelative(getRight(sign));
-    }
-
     /**
+     * Returns whether the sign is oriented along a cardinal direction.
+     *
      * @param sign treated as sign post if it is such, or else assumed to be a wall sign (i.e.,
      *     if you ask about a stone block, it's considered a wall
      *     sign).
@@ -196,57 +209,42 @@ public final class SignUtil {
      */
     public static boolean isCardinal(Block sign) {
         BlockFace facing = getFront(sign);
-        switch (facing) {
-            case NORTH:
-            case SOUTH:
-            case EAST:
-            case WEST:
-                return true;
-            default:
-                return false;
-        }
+        return switch (facing) {
+            case NORTH, SOUTH, EAST, WEST -> true;
+            default -> false;
+        };
     }
 
     /**
+     * Gets the clockwise rotated face of this sign.
+     *
      * @param face Start from direction
      * @return clockwise direction
      */
     public static BlockFace getClockWise(BlockFace face) {
-
-        switch (face) {
-            case NORTH:
-                return BlockFace.EAST;
-            case EAST:
-                return BlockFace.SOUTH;
-            case SOUTH:
-                return BlockFace.WEST;
-            case WEST:
-                return BlockFace.NORTH;
-
-            default:
-                return BlockFace.SELF;
-        }
+        return switch (face) {
+            case NORTH -> BlockFace.EAST;
+            case EAST -> BlockFace.SOUTH;
+            case SOUTH -> BlockFace.WEST;
+            case WEST -> BlockFace.NORTH;
+            default -> BlockFace.SELF;
+        };
     }
 
     /**
+     * Gets the counterclockwise rotated face of this sign.
+     *
      * @param face Start from direction
      * @return clockwise direction
      */
     public static BlockFace getCounterClockWise(BlockFace face) {
-
-        switch (face) {
-            case NORTH:
-                return BlockFace.WEST;
-            case EAST:
-                return BlockFace.NORTH;
-            case SOUTH:
-                return BlockFace.EAST;
-            case WEST:
-                return BlockFace.SOUTH;
-
-            default:
-                return BlockFace.SELF;
-        }
+        return switch (face) {
+            case NORTH -> BlockFace.WEST;
+            case EAST -> BlockFace.NORTH;
+            case SOUTH -> BlockFace.EAST;
+            case WEST -> BlockFace.SOUTH;
+            default -> BlockFace.SELF;
+        };
     }
 
     /**

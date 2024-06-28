@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
@@ -30,6 +29,8 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
@@ -47,6 +48,10 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ReadableBookshelf extends AbstractCraftBookMechanic {
 
     public List<String> lines;
+
+    public ReadableBookshelf(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @Override
     public void enable() throws MechanicInitializationException {

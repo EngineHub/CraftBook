@@ -32,11 +32,14 @@ import org.bukkit.event.server.ServerCommandEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.MechanicTypes;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.mechanics.ic.ICManager;
 import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.Collection;
@@ -47,7 +50,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.annotation.Nullable;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -65,6 +67,10 @@ public class VariableManager extends AbstractCraftBookMechanic {
     private VariableConfiguration variableConfiguration;
 
     private Map<String, Map<String, String>> variableStore;
+
+    public VariableManager(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @Override
     public void enable() throws MechanicInitializationException {
@@ -130,8 +136,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
      * @param key The variable key
      * @return The value, or null if unset
      */
-    @Nullable
-    public String getVariable(VariableKey key) {
+    public @Nullable String getVariable(VariableKey key) {
         checkNotNull(key);
 
         Map<String, String> namespacedVariables = this.variableStore.getOrDefault(key.getNamespace(), ImmutableMap.of());

@@ -28,6 +28,8 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ICUtil;
@@ -41,6 +43,10 @@ import org.enginehub.craftbook.util.events.SignClickEvent;
  * @author Me4502
  */
 public class Payment extends AbstractCraftBookMechanic {
+
+    public Payment(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @Override
     public void enable() throws MechanicInitializationException {

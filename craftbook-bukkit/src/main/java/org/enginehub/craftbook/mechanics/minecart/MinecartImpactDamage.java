@@ -25,11 +25,17 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 
 public class MinecartImpactDamage extends AbstractCraftBookMechanic {
 
     private static final Vector HALF_BLOCK_UP = new Vector(0, 0.5, 0);
+
+    public MinecartImpactDamage(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {

@@ -33,6 +33,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanics.minecart.RailUtil;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
@@ -40,10 +42,10 @@ import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.EntityUtil;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
 import org.enginehub.craftbook.util.SignUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Locale;
-import javax.annotation.Nullable;
 
 /**
  * <p>
@@ -78,6 +80,10 @@ import javax.annotation.Nullable;
 public class CartDispenser extends CartBlockMechanism {
 
     private final static List<String> SIGNS = List.of("Dispenser");
+
+    public CartDispenser(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @Override
     public boolean verify(ChangedSign sign, CraftBookPlayer player) {

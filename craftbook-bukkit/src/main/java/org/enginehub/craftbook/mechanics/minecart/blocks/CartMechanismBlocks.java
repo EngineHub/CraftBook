@@ -31,8 +31,7 @@ import org.bukkit.util.BoundingBox;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.mechanics.minecart.RailUtil;
 import org.enginehub.craftbook.util.SignUtil;
-
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * <p>
@@ -62,8 +61,7 @@ public record CartMechanismBlocks(Block rail, Block base, Block sign) {
      * @return a Side if the bracketed keyword on the sign matches the given testText; null otherwise
      *     or if no sign.
      */
-    @Nullable
-    public Side matches(String ... testText) {
+    public @Nullable Side matches(String... testText) {
         if (!hasSign()) {
             return null;
         }
@@ -120,8 +118,7 @@ public record CartMechanismBlocks(Block rail, Block base, Block sign) {
      *     first one encountered when traversing the list of Entity in the Chunk is the one
      *     returned.)
      */
-    @Nullable
-    public Minecart findMinecart() {
+    public @Nullable Minecart findMinecart() {
         if (!hasRail()) {
             return null;
         }
@@ -174,8 +171,7 @@ public record CartMechanismBlocks(Block rail, Block base, Block sign) {
      *
      * @param rail the block containing the rails.
      */
-    @Nullable
-    public static CartMechanismBlocks findByRail(Block rail) {
+    public static @Nullable CartMechanismBlocks findByRail(Block rail) {
         if (!RailUtil.isTrack(rail.getType())) {
             return null;
         }
@@ -221,8 +217,7 @@ public record CartMechanismBlocks(Block rail, Block base, Block sign) {
      * @param base the block on which the rails sit; the type of this block is what determines
      *     the mechanism type.
      */
-    @Nullable
-    private static CartMechanismBlocks findByBase(Block base) {
+    private static @Nullable CartMechanismBlocks findByBase(Block base) {
         if (!RailUtil.isTrack(base.getRelative(BlockFace.UP, 1).getType())) {
             return null;
         }
@@ -253,8 +248,7 @@ public record CartMechanismBlocks(Block rail, Block base, Block sign) {
      * @param sign the block containing the sign that gives additional configuration to the
      *     mechanism.
      */
-    @Nullable
-    private static CartMechanismBlocks findBySign(Block sign) {
+    private static @Nullable CartMechanismBlocks findBySign(Block sign) {
         if (!SignUtil.isSign(sign)) {
             return null;
         }

@@ -34,7 +34,9 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanics.pipe.PipePutEvent;
 import org.enginehub.craftbook.st.BukkitSelfTriggerManager;
 import org.enginehub.craftbook.util.EventUtil;
@@ -73,7 +75,8 @@ public class ICMechanic extends AbstractCraftBookMechanic {
     //protected final IC ic;
     //protected final BlockWorldVector pos;
 
-    public ICMechanic() {
+    public ICMechanic(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
 
         manager = new ICManager();
         instance = this;

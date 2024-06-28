@@ -36,20 +36,26 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ItemSyntax;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.events.SignClickEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import javax.annotation.Nullable;
 
 public class SignCopier extends AbstractCraftBookMechanic {
 
     private final Map<UUID, SignData> signs = Maps.newHashMap();
+
+    public SignCopier(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @Override
     public void enable() {
@@ -90,8 +96,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
      * @param uuid The user's UUID
      * @return The sign data, or null
      */
-    @Nullable
-    public SignData getSignData(UUID uuid) {
+    public @Nullable SignData getSignData(UUID uuid) {
         return signs.get(uuid);
     }
 

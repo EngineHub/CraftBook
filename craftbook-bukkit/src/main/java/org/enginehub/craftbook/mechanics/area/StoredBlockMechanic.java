@@ -35,6 +35,8 @@ import org.bukkit.persistence.PersistentDataType;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.mechanics.pipe.PipeFinishEvent;
@@ -42,15 +44,19 @@ import org.enginehub.craftbook.mechanics.pipe.PipePutEvent;
 import org.enginehub.craftbook.mechanics.pipe.PipeSuckEvent;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.SignUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
 
 public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
 
     private NamespacedKey storedBlockTypeKey;
     private NamespacedKey storedBlockQuantityKey;
+
+    public StoredBlockMechanic(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @Override
     public void enable() throws MechanicInitializationException {
@@ -201,8 +207,9 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
                     amount -= 64;
                 }
             } catch (InvalidMechanismException e) {
-                if (e.getMessage() != null)
+                if (e.getMessage() != null) {
                     player.printError(TextComponent.of(e.getMessage()));
+                }
             }
         }
     }
@@ -218,7 +225,7 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
      * @param signs The signs
      * @return If the removal could be successfully completed
      */
-    public boolean takeFromStoredBlockCounts(int amount, Sign ... signs) {
+    public boolean takeFromStoredBlockCounts(int amount, Sign... signs) {
         if (signs.length == 0 || amount < 0) {
             // Sanity check for an empty list, given we're making assumptions about at least one sign below.
             return false;
@@ -274,7 +281,7 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
      * @param signs The list of signs
      * @return The stored block count
      */
-    public int getStoredBlockCounts(Sign ... signs) {
+    public int getStoredBlockCounts(Sign... signs) {
         if (signs.length == 0) {
             // Sanity check for an empty list, given we're making assumptions about at least one sign below.
             return 0;
@@ -328,8 +335,7 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
      * @param sign The sign
      * @return The stored material, if applicable
      */
-    @Nullable
-    public Material getStoredType(Sign sign) {
+    public @Nullable Material getStoredType(Sign sign) {
         if (sign.getPersistentDataContainer().has(storedBlockTypeKey, PersistentDataType.STRING)) {
             String signBlockData = sign.getPersistentDataContainer().get(storedBlockTypeKey, PersistentDataType.STRING);
             if (signBlockData == null) {

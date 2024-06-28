@@ -30,6 +30,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -37,6 +39,10 @@ import java.util.concurrent.ThreadLocalRandom;
 public class BetterPlants extends AbstractCraftBookMechanic {
 
     private BukkitTask growthTask;
+
+    public BetterPlants(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @Override
     public void enable() {
@@ -95,7 +101,9 @@ public class BetterPlants extends AbstractCraftBookMechanic {
         @Override
         public void run() {
             for (World world : Bukkit.getWorlds()) {
-                int x = 0, y = 0, z = 0;
+                int x = 0;
+                int y = 0;
+                int z = 0;
 
                 if (fastTickRandoms) {
                     x = ThreadLocalRandom.current().nextInt(16);

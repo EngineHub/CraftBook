@@ -57,7 +57,7 @@ public enum PlayerType {
             case TEAM:
                 try {
                     return Bukkit.getScoreboardManager().getMainScoreboard().getTeam(line).hasEntry(player.getName());
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
                 break;
             case ALL:

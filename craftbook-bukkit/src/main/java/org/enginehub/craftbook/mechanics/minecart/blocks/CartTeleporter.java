@@ -27,6 +27,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.RegexUtil;
@@ -35,7 +37,11 @@ import java.util.List;
 
 public class CartTeleporter extends CartBlockMechanism {
 
-    private final static List<String> SIGNS = List.of("TeleCart");
+    private static final List<String> SIGNS = List.of("TeleCart");
+
+    public CartTeleporter(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {

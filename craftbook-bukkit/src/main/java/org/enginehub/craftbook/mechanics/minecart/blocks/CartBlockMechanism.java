@@ -52,6 +52,10 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
 
     private BaseBlock block;
 
+    public CartBlockMechanism(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
+
     public BaseBlock getBlock() {
         return this.block;
     }
@@ -80,6 +84,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
                 case ON:
                     return Power.ON;
                 case NA:
+                default:
                     break;
                 case OFF:
                     isWired = true;
@@ -91,6 +96,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
                 case ON:
                     return Power.ON;
                 case NA:
+                default:
                     break;
                 case OFF:
                     isWired = true;
@@ -102,6 +108,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
                 case ON:
                     return Power.ON;
                 case NA:
+                default:
                     break;
                 case OFF:
                     isWired = true;
@@ -127,6 +134,7 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
                 case ON:
                     return Power.ON;
                 case NA:
+                default:
                     break;
                 case OFF:
                     isWired = true;

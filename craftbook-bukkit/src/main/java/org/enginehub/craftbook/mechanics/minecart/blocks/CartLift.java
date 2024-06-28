@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.minecart.blocks;
 
-import com.google.common.collect.ImmutableList;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BlockTypes;
@@ -34,6 +33,8 @@ import org.bukkit.util.Vector;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.RedstoneUtil;
@@ -43,7 +44,11 @@ import java.util.List;
 
 public class CartLift extends CartBlockMechanism {
 
-    private final static List<String> SIGNS = List.of("CartLift Up", "CartLift Down", "CartLift");
+    private static final List<String> SIGNS = List.of("CartLift Up", "CartLift Down", "CartLift");
+
+    public CartLift(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {

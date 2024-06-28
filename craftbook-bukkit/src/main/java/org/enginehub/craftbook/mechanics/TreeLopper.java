@@ -42,6 +42,8 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
@@ -61,28 +63,32 @@ import java.util.Set;
 
 public class TreeLopper extends AbstractCraftBookMechanic {
 
-    private final Map<Material, Material> LOG_TO_SAPLING = new HashMap<>();
-    private final Map<Material, Material> LEAVES_TO_SAPLING = new HashMap<>();
-    private final Map<Material, Material> LOG_TO_LEAVES = new HashMap<>();
+    private final Map<Material, Material> logsToSaplings = new HashMap<>();
+    private final Map<Material, Material> leavesToSaplings = new HashMap<>();
+    private final Map<Material, Material> logsToLeaves = new HashMap<>();
+
+    public TreeLopper(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @Override
     public void enable() throws MechanicInitializationException {
         super.enable();
 
-        LOG_TO_SAPLING.clear();
-        LEAVES_TO_SAPLING.clear();
+        logsToSaplings.clear();
+        leavesToSaplings.clear();
 
         // A few special cases
-        LOG_TO_LEAVES.put(Material.CRIMSON_STEM, Material.NETHER_WART_BLOCK);
-        LOG_TO_SAPLING.put(Material.CRIMSON_STEM, Material.CRIMSON_FUNGUS);
-        LEAVES_TO_SAPLING.put(Material.NETHER_WART_BLOCK, Material.CRIMSON_FUNGUS);
+        logsToLeaves.put(Material.CRIMSON_STEM, Material.NETHER_WART_BLOCK);
+        logsToSaplings.put(Material.CRIMSON_STEM, Material.CRIMSON_FUNGUS);
+        leavesToSaplings.put(Material.NETHER_WART_BLOCK, Material.CRIMSON_FUNGUS);
 
-        LOG_TO_LEAVES.put(Material.WARPED_STEM, Material.WARPED_WART_BLOCK);
-        LOG_TO_SAPLING.put(Material.WARPED_STEM, Material.WARPED_FUNGUS);
-        LEAVES_TO_SAPLING.put(Material.WARPED_WART_BLOCK, Material.WARPED_FUNGUS);
+        logsToLeaves.put(Material.WARPED_STEM, Material.WARPED_WART_BLOCK);
+        logsToSaplings.put(Material.WARPED_STEM, Material.WARPED_FUNGUS);
+        leavesToSaplings.put(Material.WARPED_WART_BLOCK, Material.WARPED_FUNGUS);
 
-        LOG_TO_SAPLING.put(Material.MANGROVE_LOG, Material.MANGROVE_PROPAGULE);
-        LEAVES_TO_SAPLING.put(Material.MANGROVE_LEAVES, Material.MANGROVE_PROPAGULE);
+        logsToSaplings.put(Material.MANGROVE_LOG, Material.MANGROVE_PROPAGULE);
+        leavesToSaplings.put(Material.MANGROVE_LEAVES, Material.MANGROVE_PROPAGULE);
 
         Tag.PLANKS.getValues().stream().map(Material::getKey).map(NamespacedKey::asString).forEach(key -> {
             if (key.endsWith("crimson_planks") || key.endsWith("warped_planks")) {
@@ -97,15 +103,15 @@ public class TreeLopper extends AbstractCraftBookMechanic {
                 return;
             }
 
-            LOG_TO_LEAVES.put(log, leaves);
+            logsToLeaves.put(log, leaves);
 
-            if (sapling == null && !LOG_TO_SAPLING.containsKey(log)) {
+            if (sapling == null && !logsToSaplings.containsKey(log)) {
                 CraftBook.LOGGER.debug("Failed to find sapling for " + key);
                 return;
             }
 
-            LOG_TO_SAPLING.put(log, sapling);
-            LEAVES_TO_SAPLING.put(leaves, sapling);
+            logsToSaplings.put(log, sapling);
+            leavesToSaplings.put(leaves, sapling);
         });
     }
 
@@ -113,8 +119,8 @@ public class TreeLopper extends AbstractCraftBookMechanic {
     public void disable() {
         super.disable();
 
-        LOG_TO_SAPLING.clear();
-        LEAVES_TO_SAPLING.clear();
+        logsToSaplings.clear();
+        leavesToSaplings.clear();
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -165,8 +171,8 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         Material toBreakType = toBreak.getType();
 
         if (originalBlock != toBreakType) {
-            if (breakLeaves && LOG_TO_LEAVES.containsKey(originalBlock)) {
-                if (LOG_TO_LEAVES.get(originalBlock) != toBreakType) {
+            if (breakLeaves && logsToLeaves.containsKey(originalBlock)) {
+                if (logsToLeaves.get(originalBlock) != toBreakType) {
                     return false;
                 }
             } else {
@@ -203,10 +209,10 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
             Material saplingType = null;
             if (placeSaplings && allowPlanting && planted < Integer.MAX_VALUE) {
-                if (LEAVES_TO_SAPLING.containsKey(currentType)) {
-                    saplingType = LEAVES_TO_SAPLING.get(currentType);
-                } else if (LOG_TO_SAPLING.containsKey(currentType)) {
-                    saplingType = LOG_TO_SAPLING.get(currentType);
+                if (leavesToSaplings.containsKey(currentType)) {
+                    saplingType = leavesToSaplings.get(currentType);
+                } else if (logsToSaplings.containsKey(currentType)) {
+                    saplingType = logsToSaplings.get(currentType);
                 }
             }
 
@@ -225,7 +231,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
             }
 
             visitedLocations.add(block.getLocation());
-            broken ++;
+            broken++;
 
             for (Block relativeBlock : allowDiagonals ? BlockUtil.getIndirectlyTouchingBlocks(block) : BlockUtil.getTouchingBlocks(block)) {
                 if (visitedLocations.contains(relativeBlock.getLocation())) {

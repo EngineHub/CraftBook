@@ -48,15 +48,17 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
-import javax.annotation.Nullable;
 
 public class HeadDrops extends AbstractCraftBookMechanic {
 
@@ -71,6 +73,10 @@ public class HeadDrops extends AbstractCraftBookMechanic {
     }
 
     private NamespacedKey headDropsEntityKey;
+
+    public HeadDrops(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @Override
     public void enable() {
@@ -281,8 +287,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         }
     }
 
-    @Nullable
-    protected ItemStack createFromEntityType(EntityType entityType) {
+    protected @Nullable ItemStack createFromEntityType(EntityType entityType) {
         PlayerProfile profile = TEXTURE_MAP.get(entityType);
         NamespacedKey entityKey = entityType.getKey();
         if (customSkins.containsKey(entityKey)) {

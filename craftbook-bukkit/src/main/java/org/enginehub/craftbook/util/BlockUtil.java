@@ -60,39 +60,44 @@ public final class BlockUtil {
      * @return The list of drops
      */
     public static ItemStack[] getBlockDrops(Block block, ItemStack tool) {
-
         List<ItemStack> drops = new ArrayList<>();
 
         switch (block.getType()) {
             case SNOW:
-                if (tool == null) break;
+                if (tool == null) {
+                    break;
+                }
                 if (tool.getType() == Material.WOODEN_SHOVEL
                     || tool.getType() == Material.STONE_SHOVEL
                     || tool.getType() == Material.IRON_SHOVEL
                     || tool.getType() == Material.GOLDEN_SHOVEL
-                    || tool.getType() == Material.DIAMOND_SHOVEL)
+                    || tool.getType() == Material.DIAMOND_SHOVEL) {
                     drops.add(new ItemStack(Material.SNOWBALL, ((Snow) block.getBlockData()).getLayers() + 1));
+                }
                 break;
             case WHEAT: {
                 drops.add(new ItemStack(Material.WHEAT, 1));
                 int amount = ThreadLocalRandom.current().nextInt(4);
-                if (amount > 0)
+                if (amount > 0) {
                     drops.add(new ItemStack(Material.WHEAT_SEEDS, amount));
+                }
                 break;
             }
             case BEETROOTS:
                 drops.add(new ItemStack(Material.BEETROOT, 1));
                 int amount = ThreadLocalRandom.current().nextInt(4);
-                if (amount > 0)
+                if (amount > 0) {
                     drops.add(new ItemStack(Material.BEETROOT_SEEDS, amount));
+                }
                 break;
             case CARROTS:
                 drops.add(new ItemStack(Material.CARROT, 1 + ThreadLocalRandom.current().nextInt(4)));
                 break;
             case POTATOES:
                 drops.add(new ItemStack(Material.POTATO, 1 + ThreadLocalRandom.current().nextInt(4)));
-                if (ThreadLocalRandom.current().nextInt(50) == 0)
+                if (ThreadLocalRandom.current().nextInt(50) == 0) {
                     drops.add(new ItemStack(Material.POISONOUS_POTATO, 1));
+                }
                 break;
             case NETHER_WART:
                 drops.add(new ItemStack(Material.NETHER_WART, 2 + ThreadLocalRandom.current().nextInt(3)));
@@ -119,22 +124,25 @@ public final class BlockUtil {
     }
 
     public static Block[] getTouchingBlocks(Block block) {
-
         List<Block> blocks = new ArrayList<>();
-        for (BlockFace face : LocationUtil.getDirectFaces())
+        for (BlockFace face : LocationUtil.getDirectFaces()) {
             blocks.add(block.getRelative(face));
+        }
 
         return blocks.toArray(new Block[0]);
     }
 
     public static Block[] getIndirectlyTouchingBlocks(Block block) {
-
         List<Block> blocks = new ArrayList<>();
-        for (int x = -1; x < 2; x++)
-            for (int y = -1; y < 2; y++)
-                for (int z = -1; z < 2; z++)
-                    if (!(x == 0 && y == 0 & z == 0))
+        for (int x = -1; x < 2; x++) {
+            for (int y = -1; y < 2; y++) {
+                for (int z = -1; z < 2; z++) {
+                    if (!(x == 0 && y == 0 & z == 0)) {
                         blocks.add(block.getRelative(x, y, z));
+                    }
+                }
+            }
+        }
 
         return blocks.toArray(new Block[0]);
     }

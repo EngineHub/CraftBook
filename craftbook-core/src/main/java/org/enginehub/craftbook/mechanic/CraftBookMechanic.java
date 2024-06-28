@@ -39,12 +39,14 @@ public interface CraftBookMechanic {
      *
      * @throws MechanicInitializationException if the mechanic failed to initialise
      */
-    default void enable() throws MechanicInitializationException {}
+    default void enable() throws MechanicInitializationException {
+    }
 
     /**
      * Called when the mechanic should be disabled. This should make sure all memory is released.
      */
-    default void disable() {}
+    default void disable() {
+    }
 
     /**
      * Called when a mechanic's configuration has been re-loaded.

@@ -39,6 +39,8 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 
 import java.util.List;
@@ -46,6 +48,10 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class BetterAI extends AbstractCraftBookMechanic {
+
+    public BetterAI(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityCreate(EntityAddToWorldEvent event) {
@@ -141,7 +147,7 @@ public class BetterAI extends AbstractCraftBookMechanic {
         }
 
         if (isEntityEnabled(event.getEntity(), criticalBow)) {
-            int amount = 0;
+            int amount;
             switch (event.getEntity().getWorld().getDifficulty()) {
                 case EASY:
                     amount = 100;
@@ -153,6 +159,7 @@ public class BetterAI extends AbstractCraftBookMechanic {
                     amount = 50;
                     break;
                 case PEACEFUL:
+                default:
                     return;
             }
 

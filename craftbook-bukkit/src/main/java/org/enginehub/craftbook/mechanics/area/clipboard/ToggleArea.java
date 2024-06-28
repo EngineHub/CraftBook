@@ -39,7 +39,9 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
@@ -56,6 +58,10 @@ import java.util.regex.Pattern;
 public class ToggleArea extends AbstractCraftBookMechanic {
 
     private static final TextReplacementConfig DASH_REMOVER = TextReplacementConfig.builder().matchLiteral("-").replacement("").build();
+
+    public ToggleArea(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @Override
     public void enable() {
@@ -245,7 +251,9 @@ public class ToggleArea extends AbstractCraftBookMechanic {
         ChangedSign sign = ChangedSign.create(bukkitSign, side);
 
         String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
-        if (!line1.equals("[ToggleArea]") && !line1.equals("[ToggleAreaSave]")) return;
+        if (!line1.equals("[ToggleArea]") && !line1.equals("[ToggleAreaSave]")) {
+            return;
+        }
 
         ToggleAreaData toggleAreaData = getToggleAreaData(sign);
         // check if the namespace and area exists

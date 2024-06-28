@@ -279,6 +279,8 @@ final class MechanicListenerAdapter implements Listener {
             case POWERED_RAIL:
             case ACTIVATOR_RAIL:
                 return;
+            default:
+                break;
         }
 
         // For redstone wires and repeaters, the code already exited this method

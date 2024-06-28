@@ -15,6 +15,8 @@
 
 package org.enginehub.craftbook;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.JarURLConnection;
@@ -22,7 +24,6 @@ import java.net.URL;
 import java.util.function.Supplier;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
-import javax.annotation.Nullable;
 
 /**
  * Represents CraftBook info from the MANIFEST.MF file.
@@ -38,8 +39,7 @@ public class CraftBookManifest {
         );
     }
 
-    @Nullable
-    private static Attributes readAttributes() {
+    private static @Nullable Attributes readAttributes() {
         Class<CraftBookManifest> clazz = CraftBookManifest.class;
         String className = clazz.getSimpleName() + ".class";
         String classPath = clazz.getResource(className).toString();

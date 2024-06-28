@@ -44,7 +44,7 @@ public class MechanicConfigurationGenerator {
         MechanicType.REGISTRY.values().forEach(mechanicRegistration -> {
             try {
                 System.out.println("Generating " + mechanicRegistration.id() + " docs data");
-                CraftBookMechanic me = mechanicRegistration.getMechanicClass().getDeclaredConstructor().newInstance();
+                CraftBookMechanic me = mechanicRegistration.getMechanicClass().getDeclaredConstructor(MechanicType.class).newInstance(mechanicRegistration);
                 Path file = getMechanicConfigFolder().resolve(mechanicRegistration.id() + ".yml");
 
                 YAMLProcessor mechanicConfig = new YAMLProcessor(file.toFile(), true, YAMLFormat.EXTENDED);

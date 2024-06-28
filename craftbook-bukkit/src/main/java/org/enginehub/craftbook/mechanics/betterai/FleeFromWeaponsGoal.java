@@ -26,7 +26,6 @@ import org.bukkit.Tag;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 
@@ -61,12 +60,12 @@ public class FleeFromWeaponsGoal implements Goal<Creature> {
     }
 
     @Override
-    public @NotNull GoalKey<Creature> getKey() {
+    public GoalKey<Creature> getKey() {
         return key;
     }
 
     @Override
-    public @NotNull EnumSet<GoalType> getTypes() {
+    public EnumSet<GoalType> getTypes() {
         return EnumSet.of(GoalType.MOVE);
     }
 }

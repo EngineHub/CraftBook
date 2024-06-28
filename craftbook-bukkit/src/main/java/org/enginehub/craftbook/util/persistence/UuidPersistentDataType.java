@@ -17,7 +17,6 @@ package org.enginehub.craftbook.util.persistence;
 
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
 import java.util.UUID;
@@ -29,17 +28,17 @@ public class UuidPersistentDataType implements PersistentDataType<byte[], UUID> 
     public static final UuidPersistentDataType UUID_PERSISTENT_DATA_TYPE = new UuidPersistentDataType();
 
     @Override
-    public @NotNull Class<byte[]> getPrimitiveType() {
+    public Class<byte[]> getPrimitiveType() {
         return byte[].class;
     }
 
     @Override
-    public @NotNull Class<UUID> getComplexType() {
+    public Class<UUID> getComplexType() {
         return UUID.class;
     }
 
     @Override
-    public byte @NotNull [] toPrimitive(@NotNull UUID complex, @NotNull PersistentDataAdapterContext context) {
+    public byte [] toPrimitive(UUID complex, PersistentDataAdapterContext context) {
         // 128 (size of two longs) / 8 (size of byte) = 16
         ByteBuffer buffer = ByteBuffer.wrap(new byte[16]);
         buffer.putLong(complex.getMostSignificantBits());
@@ -48,7 +47,7 @@ public class UuidPersistentDataType implements PersistentDataType<byte[], UUID> 
     }
 
     @Override
-    public @NotNull UUID fromPrimitive(byte @NotNull [] primitive, @NotNull PersistentDataAdapterContext context) {
+    public UUID fromPrimitive(byte [] primitive, PersistentDataAdapterContext context) {
         ByteBuffer buffer = ByteBuffer.wrap(primitive);
         long mostSig = buffer.getLong();
         long leastSig = buffer.getLong();

@@ -44,22 +44,27 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.events.SignClickEvent;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * The default elevator mechanism -- wall signs in a vertical column that teleport the player
  * vertically when triggered.
  */
 public class Elevator extends AbstractCraftBookMechanic {
+
+    public Elevator(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     private enum LiftType {
         UP("[Lift Up]"),
@@ -88,7 +93,7 @@ public class Elevator extends AbstractCraftBookMechanic {
          * @param label The label
          * @return The lift type, or null
          */
-        public static LiftType fromLabel(String label) {
+        public static @Nullable LiftType fromLabel(String label) {
             for (LiftType liftType : values()) {
                 if (liftType.getLabel().equalsIgnoreCase(label)) {
                     return liftType;
@@ -260,7 +265,7 @@ public class Elevator extends AbstractCraftBookMechanic {
      * @param clickedBlock The lift block
      * @return The destination, or null if none found
      */
-    public Block findDestination(BlockFace shift, Block clickedBlock) {
+    public @Nullable Block findDestination(BlockFace shift, Block clickedBlock) {
         int maximumSearchPoint = shift == BlockFace.UP
             ? clickedBlock.getWorld().getMaxHeight()
             : clickedBlock.getWorld().getMinHeight();
@@ -393,7 +398,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         }
     }
 
-    public static boolean isValidLift(@Nonnull Block start, @Nonnull Block stop) {
+    public static boolean isValidLift(Block start, Block stop) {
         if (!SignUtil.isSign(start) || !SignUtil.isSign(stop)) {
             return true;
         }
@@ -415,8 +420,7 @@ public class Elevator extends AbstractCraftBookMechanic {
         return true;
     }
 
-    @Nullable
-    private LiftType findLift(Block block) {
+    private @Nullable LiftType findLift(Block block) {
         if (!SignUtil.isSign(block)) {
             if (elevatorButtonEnabled && Tag.BUTTONS.isTagged(block.getType())) {
                 Switch b = (Switch) block.getBlockData();

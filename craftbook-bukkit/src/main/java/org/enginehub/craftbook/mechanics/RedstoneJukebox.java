@@ -19,6 +19,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Jukebox;
 import org.bukkit.event.EventHandler;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
@@ -26,6 +28,10 @@ import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
  * This mechanism allows a jukebox to be started and stopped via redstone.
  */
 public class RedstoneJukebox extends AbstractCraftBookMechanic {
+
+    public RedstoneJukebox(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
 
     @EventHandler
     public void onRedstonePower(SourcedBlockRedstoneEvent event) {
