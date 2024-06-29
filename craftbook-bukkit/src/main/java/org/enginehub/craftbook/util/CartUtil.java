@@ -23,16 +23,9 @@ public final class CartUtil {
     }
 
     public static boolean isMinecart(Material material) {
-        switch (material) {
-            case MINECART:
-            case CHEST_MINECART:
-            case COMMAND_BLOCK_MINECART:
-            case FURNACE_MINECART:
-            case HOPPER_MINECART:
-            case TNT_MINECART:
-                return true;
-            default:
-                return false;
-        }
+        return switch (material) {
+            case MINECART, CHEST_MINECART, COMMAND_BLOCK_MINECART, FURNACE_MINECART, HOPPER_MINECART, TNT_MINECART -> true;
+            default -> false;
+        };
     }
 }

@@ -72,7 +72,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         }
     }
 
-    private NamespacedKey headDropsEntityKey;
+    private final NamespacedKey headDropsEntityKey = new NamespacedKey("craftbook", "head_drops_entity");
 
     public HeadDrops(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
@@ -80,8 +80,6 @@ public class HeadDrops extends AbstractCraftBookMechanic {
 
     @Override
     public void enable() {
-        this.headDropsEntityKey = new NamespacedKey("craftbook", "head_drops_entity");
-
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();
         registrar.registerTopLevelWithSubCommands(
             "headdrops",

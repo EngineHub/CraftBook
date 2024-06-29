@@ -33,6 +33,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
@@ -51,8 +52,8 @@ import java.util.List;
 
 public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
 
-    private NamespacedKey storedBlockTypeKey;
-    private NamespacedKey storedBlockQuantityKey;
+    private final NamespacedKey storedBlockTypeKey = new NamespacedKey("craftbook", "toggle_block_type");
+    private final NamespacedKey storedBlockQuantityKey = new NamespacedKey("craftbook", "toggle_block_quantity");
 
     public StoredBlockMechanic(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
@@ -61,9 +62,6 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
     @Override
     public void enable() throws MechanicInitializationException {
         super.enable();
-
-        this.storedBlockTypeKey = new NamespacedKey("craftbook", "toggle_block_type");
-        this.storedBlockQuantityKey = new NamespacedKey("craftbook", "toggle_block_quantity");
     }
 
 
@@ -114,7 +112,7 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
 
             event.setItems(leftovers);
         } catch (InvalidMechanismException e) {
-            e.printStackTrace();
+            CraftBook.LOGGER.error("Failed to store blocks in sign at " + sign.getLocation(), e);
         }
     }
 
@@ -144,7 +142,7 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
 
             event.setItems(leftovers);
         } catch (InvalidMechanismException e) {
-            e.printStackTrace();
+            CraftBook.LOGGER.error("Failed to store blocks in sign at " + sign.getLocation(), e);
         }
     }
 
@@ -174,7 +172,7 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
             }
             event.setItems(items);
         } catch (InvalidMechanismException e) {
-            e.printStackTrace();
+            CraftBook.LOGGER.error("Failed to store blocks in sign at " + sign.getLocation(), e);
         }
     }
 
@@ -225,8 +223,8 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
      * @param signs The signs
      * @return If the removal could be successfully completed
      */
-    public boolean takeFromStoredBlockCounts(int amount, Sign... signs) {
-        if (signs.length == 0 || amount < 0) {
+    public boolean takeFromStoredBlockCounts(int amount, @Nullable Sign... signs) {
+        if (signs.length == 0 || amount < 0 || signs[0] == null) {
             // Sanity check for an empty list, given we're making assumptions about at least one sign below.
             return false;
         }
@@ -281,8 +279,8 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
      * @param signs The list of signs
      * @return The stored block count
      */
-    public int getStoredBlockCounts(Sign... signs) {
-        if (signs.length == 0) {
+    public int getStoredBlockCounts(@Nullable Sign... signs) {
+        if (signs.length == 0 || signs[0] == null) {
             // Sanity check for an empty list, given we're making assumptions about at least one sign below.
             return 0;
         }

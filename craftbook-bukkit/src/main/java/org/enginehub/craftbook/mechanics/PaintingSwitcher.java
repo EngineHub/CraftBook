@@ -22,6 +22,8 @@ import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import org.bukkit.Art;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,18 +40,29 @@ import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
+import org.jspecify.annotations.Nullable;
 
+import java.util.List;
 import java.util.UUID;
 
 public class PaintingSwitcher extends AbstractCraftBookMechanic {
 
     private final BiMap<UUID, Painting> paintingMap = HashBiMap.create();
+    private @Nullable List<NamespacedKey> artKeys;
 
     public PaintingSwitcher(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
+    }
+
+    @Override
+    public void enable() throws MechanicInitializationException {
+        super.enable();
+
+        this.artKeys = Registry.ART.stream().map(Art::getKey).toList();
     }
 
     @Override
@@ -57,6 +70,7 @@ public class PaintingSwitcher extends AbstractCraftBookMechanic {
         super.disable();
 
         paintingMap.clear();
+        this.artKeys = null;
     }
 
     public boolean isBeingEdited(Painting painting) {
@@ -144,8 +158,6 @@ public class PaintingSwitcher extends AbstractCraftBookMechanic {
             isForwards = true;
         }
 
-        // TODO Migrate to Registries at some point, if Bukkit improve their Registry API.
-        Art[] art = Art.values();
         Painting paint = paintingMap.get(player.getUniqueId());
         if (!paint.isValid()) {
             paintingMap.remove(player.getUniqueId());
@@ -158,17 +170,17 @@ public class PaintingSwitcher extends AbstractCraftBookMechanic {
             return;
         }
 
-        int newID = paint.getArt().ordinal() + (isForwards ? 1 : -1);
+        int newID = artKeys.indexOf(paint.getArt().getKey()) + (isForwards ? 1 : -1);
         if (newID < 0) {
-            newID = art.length - 1;
-        } else if (newID > art.length - 1) {
+            newID = artKeys.size() - 1;
+        } else if (newID > artKeys.size() - 1) {
             newID = 0;
         }
 
-        while (!paint.setArt(art[newID])) {
+        while (!paint.setArt(Registry.ART.get(artKeys.get(newID)))) {
             if (newID > 0 && !isForwards) {
                 newID--;
-            } else if (newID < art.length - 1 && isForwards) {
+            } else if (newID < artKeys.size() - 1 && isForwards) {
                 newID++;
             } else {
                 break;
@@ -196,8 +208,7 @@ public class PaintingSwitcher extends AbstractCraftBookMechanic {
             if (uuid != null) {
                 Player player = Bukkit.getPlayer(uuid);
                 if (player != null) {
-                    CraftBookPlugin.inst().wrapPlayer(player)
-                        .printInfo(TranslatableComponent.of("craftbook.paintingswitcher.no-longer-editing"));
+                    CraftBookPlugin.inst().wrapPlayer(player).printInfo(TranslatableComponent.of("craftbook.paintingswitcher.no-longer-editing"));
                 }
             }
         }

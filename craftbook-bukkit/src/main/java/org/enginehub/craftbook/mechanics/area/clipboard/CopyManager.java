@@ -34,6 +34,7 @@ import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.util.HistoryHashMap;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -274,10 +275,10 @@ public class CopyManager {
      *
      * @param namespace The clipboard namespace
      * @param ignore File name to ignore
-     * @param quota The limit of tiels
+     * @param quota The limit of blocks
      * @return -1 if the copy can be made, some other number for the count
      */
-    public static int meetsQuota(String namespace, String ignore, int quota) {
+    public static int meetsQuota(String namespace, @Nullable String ignore, int quota) {
         String[] files = new File(new File(plugin.getDataFolder(), "areas"), namespace).list();
 
         if (files == null) {

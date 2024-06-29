@@ -28,7 +28,6 @@ import org.enginehub.piston.inject.InjectedValueAccess;
 import org.enginehub.piston.inject.Key;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class WorldConverter implements ArgumentConverter<World> {
@@ -59,7 +58,7 @@ public class WorldConverter implements ArgumentConverter<World> {
         return getWorlds()
             .map(World::getName)
             .filter(world -> world.startsWith(input))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     @Override

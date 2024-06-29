@@ -38,7 +38,7 @@ repositories {
 
 dependencies {
     "implementation"(project(":craftbook-bukkit"))
-    "implementation"("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT") {
+    "implementation"("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT") {
         exclude(group = "org.slf4j", module = "slf4j-api")
     }
     "implementation"("com.sk89q.worldedit:worldedit-cli:${Versions.WORLDEDIT}")

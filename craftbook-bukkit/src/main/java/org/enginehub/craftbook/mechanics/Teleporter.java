@@ -170,7 +170,7 @@ public class Teleporter extends AbstractCraftBookMechanic {
         }
 
         String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
-        if (line2.length() == 0) {
+        if (line2.isEmpty()) {
             localPlayer.printError(TranslatableComponent.of("craftbook.teleporter.no-depart"));
             return;
         }

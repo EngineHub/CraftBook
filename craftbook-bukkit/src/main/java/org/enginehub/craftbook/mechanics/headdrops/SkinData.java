@@ -254,8 +254,21 @@ public class SkinData {
         skinMap.put(EntityType.WARDEN, createProfile(
             "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzNmYWJkZGRlZDQ0ZDBmYTE2YTQ4NmRkNTQwODY5Nzc5ZWY0MmY5YzNkODgyMDA1MDllYTAwMmM5ZWYxZWQ0MCJ9fX0="
         ));
-
-        // TODO minecraft:camel
+        skinMap.put(EntityType.CAMEL, createProfile(
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzY0MmM5ZjcxMTMxYjVkZjRhOGMyMWM4YzZmMTA2ODRmMjJhYmFmYjhjZDY4YTFkNTVhYzRiZjI2M2E1M2EzMSJ9fX0="
+        ));
+        skinMap.put(EntityType.SNIFFER, createProfile(
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODdhZDkyMGE2NmUzOGNjMzQyNmE1YmZmMDg0NjY3ZTg3NzIxMTY5MTVlMjk4MDk4NTY3YzEzOWYyMjJlMmM0MiJ9fX0="
+        ));
+        skinMap.put(EntityType.BREEZE, createProfile(
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTI3NTcyOGFmN2U2YTI5Yzg4MTI1YjY3NWEzOWQ4OGFlOTkxOWJiNjFmZGMyMDAzMzdmZWQ2YWIwYzQ5ZDY1YyJ9fX0="
+        ));
+        skinMap.put(EntityType.ARMADILLO, createProfile(
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDA0ZDkxNjRlOGY3NmRjZGRlNWY4ZDEwZmY2N2RlYjJkNjU4YTYwMDhkMjNjNDRmYjJmODQ0ZTA4NTkxYzAxZCJ9fX0="
+        ));
+        skinMap.put(EntityType.BOGGED, createProfile(
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTNiOTAwM2JhMmQwNTU2MmM3NTExOWI4YTYyMTg1YzY3MTMwZTkyODJmN2FjYmFjNGJjMjgyNGMyMWViOTVkOSJ9fX0="
+        ));
     }
 
     private static final Set<EntityType> IGNORED_ENTITIES = Set.of(

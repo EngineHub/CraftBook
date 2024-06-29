@@ -46,6 +46,7 @@ import org.enginehub.craftbook.util.ItemUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
+import org.jspecify.annotations.Nullable;
 
 public class HiddenSwitch extends AbstractCraftBookMechanic {
 
@@ -53,7 +54,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
         super(mechanicType);
     }
 
-    private static boolean isValidWallSign(Block b) {
+    private static boolean isValidWallSign(@Nullable Block b) {
 
         // Must be Wall Sign
         if (b == null || !SignUtil.isWallSign(b)) return false;

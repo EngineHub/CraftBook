@@ -52,6 +52,7 @@ import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.events.SignClickEvent;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -82,7 +83,7 @@ public class Gate extends StoredBlockMechanic {
      * @return true if a gate was found and blocks were changed; false otherwise.
      * @throws InvalidMechanismException if something went wrong with the gate
      */
-    public boolean toggleGates(Block block, ChangedSign sign, Boolean close) throws InvalidMechanismException {
+    public boolean toggleGates(Block block, ChangedSign sign, @Nullable Boolean close) throws InvalidMechanismException {
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
@@ -104,7 +105,7 @@ public class Gate extends StoredBlockMechanic {
             }
         }
 
-        return foundGate && visitedColumns.size() > 0;
+        return foundGate && !visitedColumns.isEmpty();
     }
 
     /**
@@ -117,7 +118,7 @@ public class Gate extends StoredBlockMechanic {
      * @param close Should close or open.
      * @return true if a gate column was found and blocks were changed; false otherwise.
      */
-    private boolean recurseColumn(ChangedSign sign, Block block, Material expectedType, Set<GateColumn> visitedColumns, Boolean close) throws InvalidMechanismException {
+    private boolean recurseColumn(ChangedSign sign, Block block, Material expectedType, Set<GateColumn> visitedColumns, @Nullable Boolean close) throws InvalidMechanismException {
         if (columnLimit >= 0 && visitedColumns.size() > columnLimit || block.getType() != expectedType) {
             return false;
         }
@@ -161,7 +162,7 @@ public class Gate extends StoredBlockMechanic {
      * @param close To open or close.
      * @param visitedColumns Previously searched columns.
      */
-    private boolean toggleColumn(ChangedSign sign, GateColumn column, boolean close, Set<GateColumn> visitedColumns) throws InvalidMechanismException {
+    private boolean toggleColumn(@Nullable ChangedSign sign, GateColumn column, boolean close, Set<GateColumn> visitedColumns) throws InvalidMechanismException {
         Block block = column.getBlock();
         Material expectedType = column.getExpectedType();
 

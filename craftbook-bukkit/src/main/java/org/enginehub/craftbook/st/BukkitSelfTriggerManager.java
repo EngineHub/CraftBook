@@ -36,6 +36,7 @@ import org.enginehub.craftbook.util.events.SelfTriggerPingEvent;
 import org.enginehub.craftbook.util.events.SelfTriggerThinkEvent;
 import org.enginehub.craftbook.util.events.SelfTriggerUnregisterEvent;
 import org.enginehub.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -48,7 +49,7 @@ public class BukkitSelfTriggerManager implements SelfTriggerManager, Listener {
     private final Set<Location> thinkingMechanics = new HashSet<>();
     private final List<Location> removingLocations = new ArrayList<>();
 
-    private BukkitTask clockTask;
+    private @Nullable BukkitTask clockTask;
 
     @Override
     public void setup() {

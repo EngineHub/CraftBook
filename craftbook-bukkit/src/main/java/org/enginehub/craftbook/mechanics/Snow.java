@@ -50,6 +50,7 @@ import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -69,9 +70,10 @@ public class Snow extends AbstractCraftBookMechanic {
     private static final BlockFace[] UPDATE_FACES = { BlockFace.UP, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST };
     private static final BlockFace[] DISPERSE_FACES = { BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST };
 
-    private BukkitTask randomTickTask;
-    private BukkitTask dispersionTask;
-    private DispersionQueue dispersionQueueRunner;
+    private @Nullable BukkitTask randomTickTask;
+    private @Nullable BukkitTask dispersionTask;
+    private @Nullable DispersionQueue dispersionQueueRunner;
+    private final Queue<Block> dispersionQueue = new LinkedList<>();
 
     public Snow(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
@@ -101,8 +103,10 @@ public class Snow extends AbstractCraftBookMechanic {
         }
         if (dispersionTask != null) {
             dispersionTask.cancel();
-            while (!dispersionQueue.isEmpty()) {
-                dispersionQueueRunner.run();
+            if (dispersionQueueRunner != null) {
+                while (!dispersionQueue.isEmpty()) {
+                    dispersionQueueRunner.run();
+                }
             }
         }
         dispersionQueue.clear();
@@ -330,8 +334,6 @@ public class Snow extends AbstractCraftBookMechanic {
 
         return true;
     }
-
-    private final Queue<Block> dispersionQueue = new LinkedList<>();
 
     void addToDispersionQueue(Block block) {
         if (!dispersionMode) {

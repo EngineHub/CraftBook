@@ -79,10 +79,10 @@ import java.util.UUID;
 
 public class Chairs extends AbstractCraftBookMechanic {
 
-    private static final double ARMOR_STAND_MOUNT_Y = 2.2;
+    private static final double ARMOR_STAND_MOUNT_Y = 2.375;
 
     private final Map<UUID, ChairData> chairs = new HashMap<>();
-    private NamespacedKey chairDataKey;
+    private final NamespacedKey chairDataKey = new NamespacedKey("craftbook", "is_chair");
 
     private AsyncListenerHandler positionLookHandler;
     private AsyncListenerHandler vehicleSteerHandler;
@@ -93,8 +93,6 @@ public class Chairs extends AbstractCraftBookMechanic {
 
     @Override
     public void enable() {
-        this.chairDataKey = new NamespacedKey("craftbook", "is_chair");
-
         Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new ChairChecker(), 20L, 20L);
 
         AsynchronousManager packetManager = ProtocolLibrary
@@ -176,8 +174,9 @@ public class Chairs extends AbstractCraftBookMechanic {
 
         ChairData chairData;
         if (chairs.containsKey(player.getUniqueId())) {
-            chairData = chairs.get(player.getUniqueId());
-            chairData.chairEntity = ar;
+            ChairData oldChairData = chairs.get(player.getUniqueId());
+            // Create a new ChairData with the new entity
+            chairData = new ChairData(ar, oldChairData.location, oldChairData.playerExitPoint);
         } else {
             chairData = new ChairData(ar, block, player.getLocation().clone());
         }
@@ -415,16 +414,7 @@ public class Chairs extends AbstractCraftBookMechanic {
         }
     }
 
-    private static final class ChairData {
-        private Entity chairEntity;
-        private final Block location;
-        private final Location playerExitPoint;
-
-        private ChairData(Entity entity, Block location, @Nullable Location playerExitPoint) {
-            this.chairEntity = entity;
-            this.location = location;
-            this.playerExitPoint = playerExitPoint;
-        }
+    private record ChairData(Entity chairEntity, Block location, @Nullable Location playerExitPoint) {
     }
 
     private class VehicleSteerPacketHandler extends PacketAdapter {

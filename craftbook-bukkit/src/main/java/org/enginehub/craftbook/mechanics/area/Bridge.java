@@ -213,7 +213,7 @@ public class Bridge extends CuboidToggleMechanic {
 
     @Override
     public Block getFarSign(Block nearSign) {
-        BlockFace dir = SignUtil.getFacing(nearSign);
+        BlockFace dir = SignUtil.getBack(nearSign);
         Block farSide = nearSign.getRelative(dir);
         Material nearType = nearSign.getType();
 
@@ -330,7 +330,7 @@ public class Bridge extends CuboidToggleMechanic {
         // this is kinda funky, but we only check one position
         // to see if the bridge is open and/or closable.
         // efficiency choice :/
-        Material hingeType = proximalBaseCenter.getRelative(SignUtil.getFacing(trigger)).getType();
+        Material hingeType = proximalBaseCenter.getRelative(SignUtil.getBack(trigger)).getType();
 
         // aaand we also only check if it's something we can
         // smosh or not when deciding if we're open or closed.

@@ -46,7 +46,7 @@ public abstract class AbstractCraftBookMechanic implements CraftBookMechanic, Li
         } catch (FileNotFoundException e) {
             // Ignore this one.
         } catch (IOException e) {
-            e.printStackTrace();
+            CraftBook.LOGGER.error("Failed to load configuration for " + getMechanicType().getName(), e);
         }
 
         mechanicConfig.setWriteDefaults(true);

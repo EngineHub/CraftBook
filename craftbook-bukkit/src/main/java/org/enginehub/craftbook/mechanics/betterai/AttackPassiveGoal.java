@@ -24,6 +24,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.jspecify.annotations.Nullable;
 
 import java.util.EnumSet;
 
@@ -35,7 +36,7 @@ class AttackPassiveGoal implements Goal<Monster> {
 
     private final Monster monster;
     private final boolean attackPassiveIgnoreHostileMounts;
-    private LivingEntity target;
+    private @Nullable LivingEntity target;
 
     public AttackPassiveGoal(Monster monster, boolean attackPassiveIgnoreHostileMounts) {
         this.monster = monster;

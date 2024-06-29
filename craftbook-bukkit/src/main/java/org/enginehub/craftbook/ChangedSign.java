@@ -41,11 +41,11 @@ public class ChangedSign {
     private final Block block;
     private final Side side;
 
-    private Sign sign;
-    private Component[] lines;
-    private Component[] oldLines;
+    private @Nullable Sign sign;
+    private Component @Nullable [] lines;
+    private Component @Nullable [] oldLines;
 
-    private ChangedSign(Block block, Side side, Component[] lines, CraftBookPlayer player) {
+    private ChangedSign(Block block, Side side, Component @Nullable [] lines, @Nullable CraftBookPlayer player) {
         this.block = block;
         this.side = side;
 
@@ -113,7 +113,7 @@ public class ChangedSign {
         return this.block.getZ();
     }
 
-    public Component[] getLines() {
+    public Component @Nullable [] getLines() {
         return this.lines;
     }
 

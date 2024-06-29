@@ -41,6 +41,7 @@ import org.enginehub.craftbook.mechanics.dispenser.recipe.FireArrows;
 import org.enginehub.craftbook.mechanics.dispenser.recipe.ItemShooter;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ItemUtil;
+import org.jspecify.annotations.Nullable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -159,7 +160,7 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
         }
     }
 
-    private static boolean checkRecipe(ItemStack[] stacks, Material[] recipe) {
+    private static boolean checkRecipe(@Nullable ItemStack[] stacks, Material[] recipe) {
         for (int i = 0; i < stacks.length; i++) {
             ItemStack stack = stacks[i];
             Material id = stack == null ? Material.AIR : stack.getType();

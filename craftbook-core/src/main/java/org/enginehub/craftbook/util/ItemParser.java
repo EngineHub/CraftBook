@@ -20,6 +20,7 @@ import com.sk89q.worldedit.blocks.BaseItem;
 import com.sk89q.worldedit.extension.input.InputParseException;
 import com.sk89q.worldedit.extension.input.ParserContext;
 import com.sk89q.worldedit.world.item.ItemType;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -38,11 +39,11 @@ public class ItemParser {
         ITEM_CONTEXT.setRestricted(false);
     }
 
-    public static BaseItem getItem(String line) {
+    public static @Nullable BaseItem getItem(@Nullable String line) {
         return getItem(line, false);
     }
 
-    public static BaseItem getItem(String line, boolean wild) {
+    public static @Nullable BaseItem getItem(@Nullable String line, boolean wild) {
         if (line == null || line.trim().isEmpty() || knownBadLines.contains(line)) {
             return null;
         }

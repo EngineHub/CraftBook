@@ -171,7 +171,7 @@ public class CookingPot extends AbstractCraftBookMechanic {
                     items = ItemUtil.getRawFood(inventory);
                 }
 
-                if (items.size() == 0) {
+                if (items.isEmpty()) {
                     if (emptyCooldown) {
                         sign.setLine(0, Component.text("COOLDOWN"));
                         sign.update(false);

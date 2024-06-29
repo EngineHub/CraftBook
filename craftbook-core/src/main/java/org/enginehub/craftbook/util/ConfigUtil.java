@@ -17,12 +17,13 @@ package org.enginehub.craftbook.util;
 
 import com.sk89q.worldedit.registry.Category;
 import com.sk89q.worldedit.registry.Keyed;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public class ConfigUtil {
 
-    public static <T extends Category<? extends Keyed>> List<String> getIdsFromCategory(T category) {
+    public static <T extends Category<? extends Keyed>> List<String> getIdsFromCategory(@Nullable T category) {
         if (category == null) {
             return List.of();
         }

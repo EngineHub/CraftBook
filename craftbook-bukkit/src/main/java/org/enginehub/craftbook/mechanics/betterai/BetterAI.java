@@ -22,6 +22,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.entity.EntityTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -37,6 +38,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.inventory.EquipmentSlotGroup;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
@@ -48,6 +50,9 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class BetterAI extends AbstractCraftBookMechanic {
+
+    private static final NamespacedKey SIZE_VARIANCE = new NamespacedKey("craftbook", "size_variance");
+    private static final NamespacedKey SIZE_VARIANCE_BREEDING = new NamespacedKey("craftbook", "size_variance_breeding");
 
     public BetterAI(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
@@ -75,7 +80,7 @@ public class BetterAI extends AbstractCraftBookMechanic {
             CreatureSpawnEvent.SpawnReason spawnReason = livingEntity.getEntitySpawnReason();
             if (spawnReason != CreatureSpawnEvent.SpawnReason.BREEDING && spawnReason != CreatureSpawnEvent.SpawnReason.CUSTOM && spawnReason != CreatureSpawnEvent.SpawnReason.COMMAND) {
                 livingEntity.getAttribute(Attribute.GENERIC_SCALE).addModifier(
-                    new AttributeModifier("size_variance", (Math.random() - 0.5) * 2 * sizeVarianceVariability, AttributeModifier.Operation.ADD_NUMBER)
+                    new AttributeModifier(SIZE_VARIANCE, (Math.random() - 0.5) * 2 * sizeVarianceVariability, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY)
                 );
             }
         }
@@ -92,7 +97,7 @@ public class BetterAI extends AbstractCraftBookMechanic {
             AttributeInstance attributeInstance = event.getEntity().getAttribute(Attribute.GENERIC_SCALE);
             attributeInstance.setBaseValue(averageSize);
             attributeInstance.addModifier(
-                new AttributeModifier("size_variance_breeding", (Math.random() - 0.5) * 2 * sizeVarianceBreedingVariability, AttributeModifier.Operation.ADD_NUMBER)
+                new AttributeModifier(SIZE_VARIANCE_BREEDING, (Math.random() - 0.5) * 2 * sizeVarianceBreedingVariability, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY)
             );
         }
     }

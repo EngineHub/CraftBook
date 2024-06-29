@@ -144,7 +144,7 @@ public record CartMechanismBlocks(Block rail, Block base, Block sign) {
      *
      * @param unknown the block to examine.
      */
-    public static CartMechanismBlocks find(Block unknown) {
+    public static @Nullable CartMechanismBlocks find(Block unknown) {
         Material ti = unknown.getType();
 
         if (SignUtil.isSign(unknown)) {

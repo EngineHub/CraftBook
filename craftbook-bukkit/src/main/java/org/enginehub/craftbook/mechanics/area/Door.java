@@ -54,6 +54,7 @@ import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.events.SignClickEvent;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -264,7 +265,7 @@ public class Door extends CuboidToggleMechanic {
     }
 
     @Override
-    public Block getFarSign(Block nearSign) {
+    public @Nullable Block getFarSign(Block nearSign) {
         // Find the other side
         Block otherSide = null;
         BlockFace direction = null;

@@ -38,6 +38,7 @@ import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.events.SignClickEvent;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
+import org.jspecify.annotations.Nullable;
 
 public class CommandSigns extends AbstractCraftBookMechanic {
 
@@ -116,7 +117,7 @@ public class CommandSigns extends AbstractCraftBookMechanic {
         runCommandSign(s, null);
     }
 
-    public static void runCommandSign(ChangedSign sign, CraftBookPlayer player) {
+    public static void runCommandSign(ChangedSign sign, @Nullable CraftBookPlayer player) {
         String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
         String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
         StringBuilder command = new StringBuilder(line2.replace("/", "") + line3);

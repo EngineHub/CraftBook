@@ -153,7 +153,7 @@ public class VariableKey {
      * @param actor The actor to use for default namespacing
      * @return The variable key
      */
-    public static VariableKey fromString(String line, @Nullable Actor actor) throws VariableException {
+    public static @Nullable VariableKey fromString(String line, @Nullable Actor actor) throws VariableException {
         Matcher matcher = VariableManager.DIRECT_VARIABLE_PATTERN.matcher(line);
 
         if (matcher.find()) {
@@ -211,7 +211,6 @@ public class VariableKey {
             if (namespace.contains("-")) {
                 // Namespaces may only contain '-' if they are UUIDs.
                 try {
-                    //noinspection ResultOfMethodCallIgnored
                     UUID.fromString(namespace);
                 } catch (IllegalArgumentException ignored) {
                     throw new InvalidVariableException(TranslatableComponent.of("craftbook.variables.invalid-namespace", TextComponent.of(namespace)));

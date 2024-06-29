@@ -20,6 +20,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -89,7 +90,7 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
                 return;
             }
 
-            ladder.getWorld().spawnFallingBlock(ladder.getLocation().add(0.5, 0, 0.5), ladder.getBlockData());
+            ladder.getWorld().spawn(ladder.getLocation().add(0.5, 0, 0.5), FallingBlock.class, fallingBlock -> fallingBlock.setBlockData(ladder.getBlockData()));
             ladder.setType(Material.AIR, false);
 
             checkForPhysics(ladder.getRelative(BlockFace.UP));

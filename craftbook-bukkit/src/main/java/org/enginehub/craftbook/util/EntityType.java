@@ -44,42 +44,24 @@ public enum EntityType {
     CART_STORAGE('S'), CART_POWERED('E'), CART_HOPPER('O'), EXPLOSIVE('T'), AMBIENT('N'), NON_LIVING('D'), LIVING('L');
 
     public boolean is(Entity entity) {
-
-        switch (this) {
-            case PLAYER:
-                return entity instanceof Player;
-            case ITEM:
-                return entity instanceof Item;
-            case MOB_HOSTILE:
-                return entity instanceof Monster && !(entity instanceof HumanEntity);
-            case MOB_PEACEFUL:
-                return entity instanceof Animals && !(entity instanceof HumanEntity);
-            case MOB_ANY:
-                return entity instanceof Mob && !(entity instanceof HumanEntity);
-            case CART:
-                return entity instanceof Minecart;
-            case CART_STORAGE:
-                return entity instanceof StorageMinecart;
-            case CART_POWERED:
-                return entity instanceof PoweredMinecart;
-            case CART_HOPPER:
-                return entity instanceof HopperMinecart;
-            case EXPLOSIVE:
-                return entity instanceof Explosive;
-            case RIDEABLE:
-                return entity instanceof RideableMinecart || entity instanceof Boat || entity instanceof Pig || entity instanceof Horse;
-            case AMBIENT:
-                return entity instanceof Ambient;
-            case NON_LIVING:
-                return !(entity instanceof LivingEntity);
-            case LIVING:
-                return entity instanceof LivingEntity;
-            case ANY:
-                return true;
-            default:
-                break;
-        }
-        return false;
+        return switch (this) {
+            case PLAYER -> entity instanceof Player;
+            case ITEM -> entity instanceof Item;
+            case MOB_HOSTILE -> entity instanceof Monster && !(entity instanceof HumanEntity);
+            case MOB_PEACEFUL -> entity instanceof Animals && !(entity instanceof HumanEntity);
+            case MOB_ANY -> entity instanceof Mob && !(entity instanceof HumanEntity);
+            case CART -> entity instanceof Minecart;
+            case CART_STORAGE -> entity instanceof StorageMinecart;
+            case CART_POWERED -> entity instanceof PoweredMinecart;
+            case CART_HOPPER -> entity instanceof HopperMinecart;
+            case EXPLOSIVE -> entity instanceof Explosive;
+            case RIDEABLE ->
+                entity instanceof RideableMinecart || entity instanceof Boat || entity instanceof Pig || entity instanceof Horse;
+            case AMBIENT -> entity instanceof Ambient;
+            case NON_LIVING -> !(entity instanceof LivingEntity);
+            case LIVING -> entity instanceof LivingEntity;
+            case ANY -> true;
+        };
     }
 
     private final char shortName;

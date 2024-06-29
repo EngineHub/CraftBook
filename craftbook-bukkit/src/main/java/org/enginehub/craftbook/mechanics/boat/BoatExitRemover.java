@@ -79,7 +79,7 @@ public class BoatExitRemover extends AbstractCraftBookMechanic {
                     if (!player.getInventory().addItem(stack).isEmpty()) {
                         passenger.getLocation().getWorld().dropItemNaturally(passenger.getLocation(), stack);
                     }
-                } else if (passenger != null) {
+                } else if (passenger.isValid()) {
                     passenger.getLocation().getWorld().dropItemNaturally(passenger.getLocation(), stack);
                 } else {
                     boat.getLocation().getWorld().dropItemNaturally(boat.getLocation(), stack);

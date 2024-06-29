@@ -63,7 +63,7 @@ public abstract class MechanicManager {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends CraftBookMechanic> MechanicType<T> getMechanicType(T mechanic) {
+    public <T extends CraftBookMechanic> @Nullable MechanicType<T> getMechanicType(T mechanic) {
         for (MechanicType<? extends CraftBookMechanic> type : MechanicType.REGISTRY.values()) {
             if (type.isInstance(mechanic)) {
                 return (MechanicType<T>) type;
@@ -170,7 +170,7 @@ public abstract class MechanicManager {
      * @param mechanic The mechanic.
      * @return If the mechanic could be disabled.
      */
-    public boolean disableMechanic(CraftBookMechanic mechanic) {
+    public boolean disableMechanic(@Nullable CraftBookMechanic mechanic) {
         if (mechanic == null) {
             return false;
         }

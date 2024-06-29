@@ -21,6 +21,7 @@ import com.sk89q.worldedit.extension.input.ParserContext;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockType;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -39,11 +40,11 @@ public class BlockParser {
         BLOCK_CONTEXT.setRestricted(false);
     }
 
-    public static BaseBlock getBlock(String line) {
+    public static @Nullable BaseBlock getBlock(@Nullable String line) {
         return getBlock(line, false);
     }
 
-    public static BaseBlock getBlock(String line, boolean wild) {
+    public static @Nullable BaseBlock getBlock(@Nullable String line, boolean wild) {
         if (line == null || line.trim().isEmpty() || knownBadLines.contains(line)) {
             return null;
         }

@@ -80,7 +80,7 @@ public class BoatEmptyDecay extends AbstractCraftBookMechanic {
 
         @Override
         public void run() {
-            if (boat == null || !boat.isValid() || !boat.isEmpty()) {
+            if (!boat.isValid() || !boat.isEmpty()) {
                 return;
             }
 

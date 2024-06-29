@@ -80,7 +80,7 @@ public abstract class DispenserRecipe implements Keyed {
 
     @Override
     public boolean equals(Object o) {
-        return this == o || o instanceof DispenserRecipe && Objects.equals(this.id, ((DispenserRecipe) o).id()) && Arrays.equals(recipe, ((DispenserRecipe) o).recipe);
+        return this == o || o instanceof DispenserRecipe otherRecipe && Objects.equals(this.id, otherRecipe.id()) && Arrays.equals(recipe, otherRecipe.recipe);
     }
 
     @Override

@@ -62,7 +62,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
 
     public static final String GLOBAL_NAMESPACE = "global";
 
-    public static VariableManager instance;
+    public static @Nullable VariableManager instance;
 
     private VariableConfiguration variableConfiguration;
 

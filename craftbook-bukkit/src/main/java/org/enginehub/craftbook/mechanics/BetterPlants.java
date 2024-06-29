@@ -33,12 +33,13 @@ import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public class BetterPlants extends AbstractCraftBookMechanic {
 
-    private BukkitTask growthTask;
+    private @Nullable BukkitTask growthTask;
 
     public BetterPlants(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

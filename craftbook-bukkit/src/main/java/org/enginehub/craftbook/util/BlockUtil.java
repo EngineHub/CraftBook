@@ -23,6 +23,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Snow;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ public final class BlockUtil {
      * @param tool The tool. If null, it'll allow for all drops.
      * @return The list of drops
      */
-    public static ItemStack[] getBlockDrops(Block block, ItemStack tool) {
+    public static ItemStack[] getBlockDrops(Block block, @Nullable ItemStack tool) {
         List<ItemStack> drops = new ArrayList<>();
 
         switch (block.getType()) {

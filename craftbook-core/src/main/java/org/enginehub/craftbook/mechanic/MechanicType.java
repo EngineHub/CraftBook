@@ -20,6 +20,7 @@ import com.sk89q.worldedit.registry.Registry;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import org.enginehub.craftbook.mechanic.load.LoadDependency;
 import org.enginehub.craftbook.mechanic.load.LoadPriority;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,25 +34,25 @@ public class MechanicType<T extends CraftBookMechanic> implements Keyed {
     private final String id;
     private final String name;
     private final String className;
-    private final Component description;
+    private final @Nullable Component description;
     private final MechanicCategory category;
     private final LoadPriority loadPriority;
     private final List<LoadDependency> dependencies;
 
     private MechanicType(String id,
                          String name,
-                         Component description,
+                         @Nullable Component description,
                          String className,
                          MechanicCategory category,
                          LoadPriority loadPriority,
                          List<LoadDependency> dependencies) {
-        this.id = id;
-        this.name = name;
+        this.id = checkNotNull(id);
+        this.name = checkNotNull(name);
         this.description = description;
-        this.className = className;
-        this.category = category;
-        this.loadPriority = loadPriority;
-        this.dependencies = List.copyOf(dependencies);
+        this.className = checkNotNull(className);
+        this.category = checkNotNull(category);
+        this.loadPriority = checkNotNull(loadPriority);
+        this.dependencies = List.copyOf(checkNotNull(dependencies));
     }
 
     @Override
@@ -63,7 +64,7 @@ public class MechanicType<T extends CraftBookMechanic> implements Keyed {
         return this.name;
     }
 
-    public Component getDescription() {
+    public @Nullable Component getDescription() {
         return this.description;
     }
 
@@ -90,11 +91,11 @@ public class MechanicType<T extends CraftBookMechanic> implements Keyed {
 
     public static class Builder<T extends CraftBookMechanic> {
 
-        private String id;
-        private String name;
-        private Component description;
-        private String className;
-        private MechanicCategory mechanicCategory;
+        private @Nullable String id;
+        private @Nullable String name;
+        private @Nullable Component description;
+        private @Nullable String className;
+        private @Nullable MechanicCategory mechanicCategory;
         private LoadPriority loadPriority = LoadPriority.NORMAL;
 
         private final List<LoadDependency> dependencies = new ArrayList<>();
