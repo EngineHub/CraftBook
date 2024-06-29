@@ -79,9 +79,12 @@ public class BetterAI extends AbstractCraftBookMechanic {
         if (isEntityEnabled(event.getEntity(), sizeVariance) && event.getEntity() instanceof LivingEntity livingEntity) {
             CreatureSpawnEvent.SpawnReason spawnReason = livingEntity.getEntitySpawnReason();
             if (spawnReason != CreatureSpawnEvent.SpawnReason.BREEDING && spawnReason != CreatureSpawnEvent.SpawnReason.CUSTOM && spawnReason != CreatureSpawnEvent.SpawnReason.COMMAND) {
-                livingEntity.getAttribute(Attribute.GENERIC_SCALE).addModifier(
-                    new AttributeModifier(SIZE_VARIANCE, (Math.random() - 0.5) * 2 * sizeVarianceVariability, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY)
-                );
+                AttributeInstance attributeInstance = livingEntity.getAttribute(Attribute.GENERIC_SCALE);
+                if (attributeInstance.getModifier(SIZE_VARIANCE) == null && attributeInstance.getModifier(SIZE_VARIANCE_BREEDING) == null) {
+                    attributeInstance.addModifier(
+                        new AttributeModifier(SIZE_VARIANCE, (Math.random() - 0.5) * 2 * sizeVarianceVariability, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY)
+                    );
+                }
             }
         }
     }
@@ -96,9 +99,11 @@ public class BetterAI extends AbstractCraftBookMechanic {
             double averageSize = (event.getMother().getAttribute(Attribute.GENERIC_SCALE).getValue() + event.getFather().getAttribute(Attribute.GENERIC_SCALE).getValue()) / 2.0;
             AttributeInstance attributeInstance = event.getEntity().getAttribute(Attribute.GENERIC_SCALE);
             attributeInstance.setBaseValue(averageSize);
-            attributeInstance.addModifier(
-                new AttributeModifier(SIZE_VARIANCE_BREEDING, (Math.random() - 0.5) * 2 * sizeVarianceBreedingVariability, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY)
-            );
+            if (attributeInstance.getModifier(SIZE_VARIANCE_BREEDING) == null) {
+                attributeInstance.addModifier(
+                    new AttributeModifier(SIZE_VARIANCE_BREEDING, (Math.random() - 0.5) * 2 * sizeVarianceBreedingVariability, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY)
+                );
+            }
         }
     }
 
