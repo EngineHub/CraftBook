@@ -1,3 +1,6 @@
+3.10.11
+* Add 1.21 support
+
 3.10.10
 * Avoid enabling the legacy material compatibility layer when avoidable
 * Fix the combine harvester not collecting bamboo
