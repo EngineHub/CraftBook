@@ -1,3 +1,11 @@
+5.0.0 Beta 3
+* Add support for MC 1.21
+* Add the "Size Variance" BetterAI mechanic, to add natural variation in animal sizes that can be propagated through breeding
+* Add newer mob heads to HeadDrops mechanic
+* Improve default block list for TreeLopper mechanic
+* Increase the default limit of the TreeLopper mechanic, and switch block search method to produce better results when hitting limit
+* Improve compatibility with other plugins when using the `/cb mech list` box
+
 5.0.0 Beta 2
 * Add support for MC 1.20.5, 1.20.6
 * Reduced opportunities for future MC updates to break tag usage
