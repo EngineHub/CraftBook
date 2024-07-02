@@ -22,7 +22,6 @@
     <suppress files=".*[\\/]LocationUtil.java" checks=".*"/>
     <suppress files=".*[\\/]Payment.java" checks=".*"/>
     <suppress files=".*[\\/]BounceBlocks.java" checks=".*"/>
-    <suppress files=".*[\\/]HiddenSwitch.java" checks=".*"/>
     <suppress files=".*[\\/]CompanionPlugins.java" checks=".*"/>
     <suppress files=".*[\\/]Tuple2.java" checks=".*"/>
     <suppress files=".*[\\/]ItemInfo.java" checks=".*"/>

@@ -225,7 +225,7 @@ public class ChangedSign {
         return create(block, side, null, null);
     }
 
-    public static ChangedSign create(Block block, Side side, @Nullable Component[] lines, @Nullable CraftBookPlayer player) {
+    public static ChangedSign create(Block block, Side side, Component @Nullable [] lines, @Nullable CraftBookPlayer player) {
         Preconditions.checkNotNull(block, "block");
         Preconditions.checkNotNull(side, "side");
 

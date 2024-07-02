@@ -16,6 +16,9 @@
 package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -32,7 +35,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
@@ -41,12 +43,12 @@ import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.ItemSyntax;
-import org.enginehub.craftbook.util.ItemUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
-import org.jspecify.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HiddenSwitch extends AbstractCraftBookMechanic {
 
@@ -54,42 +56,69 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
         super(mechanicType);
     }
 
-    private static boolean isValidWallSign(@Nullable Block b) {
-
-        // Must be Wall Sign
-        if (b == null || !SignUtil.isWallSign(b)) return false;
-        ChangedSign s = ChangedSign.create(b, Side.FRONT);
-
-        return PlainTextComponentSerializer.plainText().serialize(s.getLine(1)).equalsIgnoreCase("[X]");
-    }
-
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
 
-        if (!EventUtil.passesFilter(event)) return;
+        String line1 = PlainTextComponentSerializer.plainText().serialize(event.line(1));
+        if (!line1.equalsIgnoreCase("[x]")) {
+            return;
+        }
 
-        if (!event.getLine(1).equalsIgnoreCase("[x]")) return;
-        CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if (!lplayer.hasPermission("craftbook.mech.hiddenswitch")) {
-            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages)
-                lplayer.printError("mech.create-permission");
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+        if (!player.hasPermission("craftbook.hiddenswitch.create")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
+                player.printError(TranslatableComponent.of(
+                    "craftbook.mechanisms.create-permission",
+                    TextComponent.of(getMechanicType().getName())
+                ));
+            }
+
             SignUtil.cancelSignChange(event);
             return;
         }
 
-        event.setLine(1, "[X]");
+        event.line(1, Component.text("[X]"));
+        player.printInfo(TranslatableComponent.of("craftbook.hiddenswitch.create"));
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onRightClick(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND || !event.getBlockFace().isCartesian() || event.getPlayer().isSneaking()) {
+            return;
+        }
+
+        if (!EventUtil.passesFilter(event)) {
+            return;
+        }
+
+        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+
+        if (!player.hasPermission("craftbook.hiddenswitch.use")) {
+            return;
+        }
+
+        Block clickedBlock = event.getClickedBlock();
+        if (clickedBlock == null) {
+            return;
+        }
+
+        if (testBlock(clickedBlock, event.getBlockFace(), event.getPlayer())) {
+            event.setCancelled(true);
+        }
     }
 
     public boolean testBlock(Block switchBlock, BlockFace eventFace, Player player) {
-
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(player);
-        ChangedSign s = null;
+        ChangedSign sign = null;
         Block testBlock = null;
-        if (anyside) {
+        if (allowAnyFace) {
             for (BlockFace face : LocationUtil.getDirectFaces()) {
                 testBlock = switchBlock.getRelative(face);
                 if (SignUtil.isWallSign(testBlock) && ((WallSign) testBlock.getBlockData()).getFacing() == face) {
-                    s = ChangedSign.create(testBlock, Side.FRONT);
+                    sign = ChangedSign.create(testBlock, Side.FRONT);
                     break;
                 }
             }
@@ -97,127 +126,93 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
             BlockFace face = eventFace.getOppositeFace();
             testBlock = switchBlock.getRelative(face);
             if (SignUtil.isWallSign(testBlock) && ((WallSign) testBlock.getBlockData()).getFacing() == face) {
-                s = ChangedSign.create(testBlock, Side.FRONT);
+                sign = ChangedSign.create(testBlock, Side.FRONT);
             }
         }
 
-        if (s == null)
+        if (sign == null) {
             return false;
+        }
 
-        String line1 = PlainTextComponentSerializer.plainText().serialize(s.getLine(1));
+        String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
         if (line1.equalsIgnoreCase("[X]")) {
-
-            ItemStack itemID = null;
-
-            String line0 = PlainTextComponentSerializer.plainText().serialize(s.getLine(0));
-            if (!line0.trim().isEmpty()) {
-                itemID = ItemSyntax.getItem(line0.trim());
-            }
-
-            String line2 = PlainTextComponentSerializer.plainText().serialize(s.getLine(2));
-            if (!line2.trim().isEmpty())
+            String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
+            if (!line2.trim().isEmpty()) {
                 if (!CraftBookPlugin.inst().inGroup(player, line2.trim())) {
-                    lplayer.printError("mech.group");
+                    lplayer.printError(TranslatableComponent.of("craftbook.hiddenswitch.not-in-group"));
                     return true;
                 }
-
-            boolean success = false;
-
-            if (!ItemUtil.isStackValid(itemID)) {
-                toggleSwitches(testBlock, eventFace.getOppositeFace());
-                success = true;
-            } else {
-                if (ItemUtil.areItemsIdentical(player.getInventory().getItemInMainHand(), itemID)
-                    || ItemUtil.areItemsIdentical(player.getInventory().getItemInOffHand(), itemID)) {
-                    toggleSwitches(testBlock, eventFace.getOppositeFace());
-                    success = true;
-                } else
-                    lplayer.printError("mech.hiddenswitch.key");
             }
 
-            if (success)
-                lplayer.print("mech.hiddenswitch.toggle");
+            if (!ProtectionUtil.canUse(player, switchBlock.getLocation(), eventFace, Action.RIGHT_CLICK_BLOCK)) {
+                return false;
+            }
 
-            return !lplayer.isSneaking();
+            if (toggleSwitches(testBlock, eventFace.getOppositeFace())) {
+                lplayer.printInfo(TranslatableComponent.of("craftbook.hiddenswitch.toggle"));
+                return true;
+            }
         }
 
         return false;
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onRightClick(PlayerInteractEvent event) {
-
-        if (!EventUtil.passesFilter(event))
-            return;
-
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND)
-            return;
-
-        if (!(event.getBlockFace() == BlockFace.EAST || event.getBlockFace() == BlockFace.WEST
-            || event.getBlockFace() == BlockFace.NORTH || event.getBlockFace() == BlockFace.SOUTH
-            || event.getBlockFace() == BlockFace.UP || event.getBlockFace() == BlockFace.DOWN))
-            return;
-
-        CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-
-        if (!player.hasPermission("craftbook.mech.hiddenswitch.use"))
-            return;
-
-        if (!isValidWallSign(event.getClickedBlock().getRelative(1, 0, 0))
-            && !isValidWallSign(event.getClickedBlock().getRelative(-1, 0, 0))
-            && !isValidWallSign(event.getClickedBlock().getRelative(0, 0, 1))
-            && !isValidWallSign(event.getClickedBlock().getRelative(0, 0, -1)))
-            return;
-
-        if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction()))
-            return;
-
-        if (testBlock(event.getClickedBlock(), event.getBlockFace(), event.getPlayer()))
-            event.setCancelled(true);
-    }
-
-    private static void toggleSwitches(Block sign, BlockFace direction) {
-
-        BlockFace[] checkFaces = new BlockFace[4];
-        checkFaces[0] = BlockFace.UP;
-        checkFaces[1] = BlockFace.DOWN;
+    private boolean toggleSwitches(Block sign, BlockFace direction) {
+        List<BlockFace> checkFaces = new ArrayList<>(4);
+        checkFaces.add(BlockFace.UP);
+        checkFaces.add(BlockFace.DOWN);
 
         switch (direction) {
             case EAST:
             case WEST:
-                checkFaces[2] = BlockFace.NORTH;
-                checkFaces[3] = BlockFace.SOUTH;
+                checkFaces.add(BlockFace.NORTH);
+                checkFaces.add(BlockFace.SOUTH);
                 break;
             default:
-                checkFaces[2] = BlockFace.EAST;
-                checkFaces[3] = BlockFace.WEST;
+                checkFaces.add(BlockFace.EAST);
+                checkFaces.add(BlockFace.WEST);
                 break;
         }
 
+        boolean toggledSwitch = false;
+
         for (BlockFace blockFace : checkFaces) {
             final Block checkBlock = sign.getRelative(blockFace);
+            final Material checkBlockType = checkBlock.getType();
 
-            if (checkBlock.getType() == Material.LEVER) {
+            if (checkBlockType == Material.LEVER) {
                 Powerable powerable = (Powerable) checkBlock.getBlockData();
                 powerable.setPowered(!powerable.isPowered());
                 checkBlock.setBlockData(powerable);
-            } else if (Tag.BUTTONS.getValues().contains(checkBlock.getType())) {
+
+                toggledSwitch = true;
+                break;
+            } else if (Tag.BUTTONS.getValues().contains(checkBlockType)) {
                 Powerable powerable = (Powerable) checkBlock.getBlockData();
                 powerable.setPowered(true);
                 checkBlock.setBlockData(powerable);
                 powerable.setPowered(false);
-                Runnable turnOff = () -> checkBlock.setBlockData(powerable);
-                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), turnOff, Tag.WOODEN_BUTTONS.getValues().contains(checkBlock.getType()) ? 30L : 20L);
+                Runnable turnOff = () -> {
+                    // Check if the block is still a button, as it could have been removed
+                    if (checkBlock.getType() == checkBlockType) {
+                        checkBlock.setBlockData(powerable);
+                    }
+                };
+                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), turnOff, Tag.WOODEN_BUTTONS.getValues().contains(checkBlockType) ? 30L : 20L);
+
+                toggledSwitch = true;
+                break;
             }
         }
+
+        return toggledSwitch;
     }
 
-    private boolean anyside;
+    private boolean allowAnyFace;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-
-        config.setComment("any-side", "Allows the Hidden Switch to be activated from any side of the block.");
-        anyside = config.getBoolean("any-side", true);
+        config.setComment("allow-any-face", "Allows the Hidden Switch to be activated from any face of the block.");
+        allowAnyFace = config.getBoolean("allow-any-face", true);
     }
 }
