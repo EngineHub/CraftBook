@@ -147,8 +147,7 @@ allprojects {
 
     jar {
         manifest {
-            attributes("Class-Path": "CraftBook/WorldEdit.jar lib/WorldEdit.jar ../lib/WorldEdit.jar ../WorldEdit.jar",
-                       "CraftBook-Version": pluginVersion)
+            attributes("CraftBook-Version": pluginVersion)
         }
     }
 
