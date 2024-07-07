@@ -149,6 +149,8 @@ allprojects {
         exclude 'LICENSE*'
     }
 
+    build.dependsOn(shadowJar)
+
     publishing {
         publications {
             mavenJava(MavenPublication) {
