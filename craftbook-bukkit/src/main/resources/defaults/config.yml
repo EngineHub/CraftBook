@@ -34,6 +34,7 @@ mechanics:
         elevator: false
         gate: false
         head_drops: false
+        hidden_switch: false
         light_switch: false
         marquee: false
         painting_switcher: false
