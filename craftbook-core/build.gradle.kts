@@ -31,7 +31,7 @@ dependencies {
     "implementation"("org.jspecify:jspecify:0.3.0")
     "implementation"("com.google.code.gson:gson")
     "implementation"("it.unimi.dsi:fastutil")
-    "languageFiles"("${project.group}:craftbook-lang:5.0.0:1479@zip")
+    "languageFiles"("${project.group}:craftbook-lang:5.0.0:1534@zip")
 
     "implementation"("org.apache.logging.log4j:log4j-api:${Versions.LOG4J}")
 
