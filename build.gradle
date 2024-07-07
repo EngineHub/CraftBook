@@ -166,6 +166,14 @@ allprojects {
         exclude 'LICENSE*'
     }
 
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+
     artifactory {
         contextUrl = "${artifactory_contextUrl}"
         publish {
