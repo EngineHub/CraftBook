@@ -14,7 +14,7 @@ buildscript {
 }
 plugins {
     id 'com.github.johnrengelman.shadow' version '8.1.1'
-    id "com.jfrog.artifactory" version "4.21.0"
+    id "com.jfrog.artifactory" version "5.2.2"
 }
 
 println """
@@ -54,6 +54,8 @@ allprojects {
         toolchain {
             languageVersion = JavaLanguageVersion.of(21)
         }
+        withJavadocJar()
+        withSourcesJar()
     }
 
     tasks.test {
@@ -126,25 +128,6 @@ allprojects {
         }
     }
 
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        archiveClassifier.set('sources')
-        from sourceSets.main.allSource
-    }
-
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        archiveClassifier.set('javadoc')
-        from javadoc.destinationDir
-    }
-
-    artifacts {
-        archives shadowJar
-        archives sourcesJar
-        archives javadocJar
-    }
-
-    build.dependsOn(sourcesJar)
-    build.dependsOn(javadocJar)
-
     jar {
         manifest {
             attributes("CraftBook-Version": pluginVersion)
@@ -181,17 +164,10 @@ allprojects {
                 repoKey = project.version.contains("SNAPSHOT") ? 'libs-snapshot-local' : 'libs-release-local'
                 username = "${artifactory_user}"
                 password = "${artifactory_password}"
-                maven = true
-
             }
-        }
 
-        resolve {
-            repository {
-                repoKey = 'repo'
-                username = "${artifactory_user}"
-                password = "${artifactory_password}"
-                maven = true
+            defaults {
+                publications("mavenJava")
             }
         }
     }
