@@ -48,8 +48,6 @@ import java.util.concurrent.ThreadLocalRandom;
  * seed item drop in
  * range it will auto plant it above
  * the IC.
- *
- * @authors Drathus, Me4502
  */
 public class Planter extends AbstractSelfTriggeredIC {
 

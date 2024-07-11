@@ -17,7 +17,6 @@ package org.enginehub.craftbook.bukkit;
 
 import com.google.common.base.Joiner;
 import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.wepif.PermissionsResolverManager;
 import com.sk89q.worldedit.bukkit.BukkitCommandSender;
 import com.sk89q.worldedit.extension.platform.Actor;
@@ -371,7 +370,7 @@ public class CraftBookPlugin extends JavaPlugin {
      *
      * @param sender The sender to check the permission on.
      * @param perm The permission to check the permission on.
-     * @throws CommandPermissionsException if {@code sender} doesn't have {@code perm}
+     * @throws AuthorizationException if {@code sender} doesn't have {@code perm}
      */
     public void checkPermission(CommandSender sender, String perm)
         throws AuthorizationException {

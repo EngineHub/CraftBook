@@ -1,6 +1,8 @@
-applyLibrariesConfiguration()
+plugins {
+    id("buildlogic.libs")
+}
 
 dependencies {
-    "shade"("org.enginehub:squirrelid:${Versions.SQUIRRELID}") { isTransitive = false }
+    "shade"(libs.squirrelid)
 //    "shade"("org.enginehub.jinglenote:jinglenote-core:${Versions.JINGLENOTE}") { isTransitive = false }
 }

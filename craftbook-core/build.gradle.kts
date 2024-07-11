@@ -1,8 +1,9 @@
+import org.cadixdev.gradle.licenser.LicenseExtension
+
 plugins {
     id("java-library")
+    id("buildlogic.core-and-platform")
 }
-
-applyPlatformAndCoreConfiguration()
 
 repositories {
     ivy {
@@ -23,29 +24,40 @@ configurations {
 }
 
 dependencies {
+    constraints {
+        "implementation"(libs.snakeyaml) {
+            because("Bukkit provides SnakeYaml")
+        }
+    }
+
     "api"(project(":craftbook-libs:core"))
-    "api"("com.sk89q.worldedit:worldedit-core:${Versions.WORLDEDIT}")
-    "api"("com.sk89q.worldguard:worldguard-core:${Versions.WORLDGUARD}")
-    "implementation"("org.yaml:snakeyaml:2.0")
-    "implementation"("com.google.guava:guava")
-    "implementation"("org.jspecify:jspecify:0.3.0")
-    "implementation"("com.google.code.gson:gson")
-    "implementation"("it.unimi.dsi:fastutil")
-    "languageFiles"("${project.group}:craftbook-lang:5.0.0:1534@zip")
 
-    "implementation"("org.apache.logging.log4j:log4j-api:${Versions.LOG4J}")
+    "api"(libs.worldedit.core)
+    "api"(libs.worldguard.core)
+    "implementation"(libs.snakeyaml)
+    "implementation"(libs.guava)
+    "implementation"(libs.jspecify)
+    "implementation"(libs.gson)
+    "implementation"(libs.log4j.api)
+    "implementation"(libs.fastutil)
+    "languageFiles"("${project.group}:craftbook-lang:5.0.0:${libs.versions.lang.version.get()}@zip")
 
-    "testImplementation"("org.hamcrest:hamcrest-library:1.2.1")
+    "compileOnly"(libs.worldedit.libs.ap)
+    "annotationProcessor"(libs.worldedit.libs.ap)
+    // ensure this is on the classpath for the AP
+    "annotationProcessor"(libs.guava)
+
+    "testImplementation"(libs.hamcrest.library)
 }
 
-tasks.withType<JavaCompile>().configureEach {
+tasks.compileJava {
     dependsOn(":craftbook-libs:build")
     options.compilerArgs.add("-Aarg.name.key.prefix=")
 }
 
-configure<org.cadixdev.gradle.licenser.LicenseExtension> {
+configure<LicenseExtension> {
     exclude {
-        it.file.startsWith(project.buildDir)
+        it.file.startsWith(project.layout.buildDirectory.get().asFile)
     }
 }
 
@@ -60,7 +72,7 @@ tasks.named<Copy>("processResources") {
 
 configure<PublishingExtension> {
     publications.named<MavenPublication>("maven") {
-        artifactId = the<BasePluginConvention>().archivesBaseName
+        artifactId = the<BasePluginExtension>().archivesName.get()
         from(components["java"])
     }
 }

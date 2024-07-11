@@ -183,8 +183,8 @@ public class CommandUtils {
                 .append("\n")
         );
         cmdOutput.append(
-            ".. csv-table::\n" +
-                "  :widths: 8, 15\n"
+            ".. csv-table::\n"
+                + "  :widths: 8, 15\n"
         );
         cmdOutput.append("\n");
         for (Map.Entry<String, String> entry : entries.entrySet()) {

@@ -53,9 +53,9 @@ public class ComponentRstRenderer {
 
             if (deco != null) {
                 if (currentDeco != null) {
-                    throw new RuntimeException("Nested decorations are hell in RST. \n" +
-                        "Existing: " + currentDeco + "; New: " + deco + "\n" +
-                        "Offender: " + TextHelper.reduceToText(component));
+                    throw new RuntimeException("Nested decorations are hell in RST. \n"
+                        + "Existing: " + currentDeco + "; New: " + deco + "\n"
+                        + "Offender: " + TextHelper.reduceToText(component));
                 }
                 rstDeco(content, deco);
             }

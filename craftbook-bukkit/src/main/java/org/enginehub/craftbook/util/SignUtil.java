@@ -38,18 +38,6 @@ import org.jspecify.annotations.Nullable;
  * term "further direction"
  * confuses you, see <a href="https://secure.wikimedia.org/wikipedia/en/wiki/Cardinal_directions">this page</a>).
  * </p>
- * <p>
- * This is direly close to being a replicate of things you can access via org.bukkit.material.Sign
- * (which extends
- * MaterialData). However, that thing:
- * <ul>
- * <li>doesn't provide the relative direction methods.
- * <li>rounds the further divisions to cardinal/ordinal differently (and wrong, in my book).
- * <li>has the same class name for that MaterialData thing as the BlockState, which is annoying as hell import-wise.
- * <li>requires allocating an object and copying two bytes in a fashion that I consider kinda unnecessary.
- * </ul>
- * Ideally, I think I'd like to see if I can get something like these methods pushed to bukkit.
- * </p>
  *
  * @author hash
  */

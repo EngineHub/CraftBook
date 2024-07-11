@@ -2,10 +2,8 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     id("java-library")
+    id("buildlogic.platform")
 }
-
-applyPlatformAndCoreConfiguration()
-applyShadowConfiguration()
 
 repositories {
     maven {
@@ -22,7 +20,7 @@ repositories {
     }
     maven {
         name = "ProtocolLib"
-        url = uri("https://repo.dmulloy2.net/content/groups/public/")
+        url = uri("https://repo.dmulloy2.net/repository/public/")
     }
     maven {
         name = "sonatype-oss-snapshots"
@@ -41,26 +39,23 @@ configurations["testImplementation"].extendsFrom(localImplementation)
 dependencies {
     "api"(project(":craftbook-core"))
     "api"(project(":craftbook-libs:bukkit"))
-    "localImplementation"("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT") {
+
+    "api"(libs.worldedit.bukkit)
+    "api"(libs.worldguard.bukkit) { isTransitive = false }
+
+    "localImplementation"(libs.paperApi) {
+        exclude("org.slf4j", "slf4j-api")
         exclude("junit", "junit")
-        exclude(group = "org.slf4j", module = "slf4j-api")
     }
-    "api"("com.sk89q.worldedit:worldedit-bukkit:${Versions.WORLDEDIT}") {
-        exclude(group = "org.spigotmc")
-    }
-    "api"("com.sk89q.worldguard:worldguard-bukkit:${Versions.WORLDGUARD}") {
-        exclude(group = "org.spigotmc")
-    }
-    "implementation"("com.github.MilkBowl:VaultAPI:1.7") { isTransitive = false }
-    "implementation"("com.comphenix.protocol:ProtocolLib:5.0.0-SNAPSHOT") { isTransitive = false }
-    "implementation"("org.bstats:bstats-bukkit:2.2.1")
+    "implementation"(libs.vaultApi) { isTransitive = false }
+    "implementation"(libs.protocolLib) { isTransitive = false }
 
-    "localImplementation"(platform("org.apache.logging.log4j:log4j-bom:2.8.1"))
-    "localImplementation"("org.apache.logging.log4j:log4j-api")
+    "implementation"(libs.bstats.bukkit)
 
-    "compileOnly"("com.sk89q.worldedit.worldedit-libs:ap:${Versions.WORLDEDIT}")
-    "annotationProcessor"("com.sk89q.worldedit.worldedit-libs:ap:${Versions.WORLDEDIT}")
-    "annotationProcessor"("com.google.guava:guava:${Versions.GUAVA}")
+    "compileOnly"(libs.worldedit.libs.ap)
+    "annotationProcessor"(libs.worldedit.libs.ap)
+    // ensure this is on the classpath for the AP
+    "annotationProcessor"(libs.guava)
 }
 
 tasks.named<Copy>("processResources") {
@@ -74,15 +69,12 @@ tasks.named<Copy>("processResources") {
     }
 }
 
-addJarManifest();
-
 tasks.named<ShadowJar>("shadowJar") {
     dependencies {
         include(dependency(":craftbook-core"))
+        include(dependency("org.bstats:"))
 
-        relocate("org.bstats", "org.enginehub.craftbook.bukkit.bstats") {
-            include(dependency("org.bstats:"))
-        }
+        relocate("org.bstats", "org.enginehub.craftbook.bukkit.bstats")
     }
 }
 
