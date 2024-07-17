@@ -166,7 +166,14 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
             BlockFace back = SignUtil.getBack(CraftBookBukkitUtil.toSign(getSign()).getBlock());
             Block pipe = getBackBlock().getRelative(back);
 
-            PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<>(over.values()), getBackBlock());
+            ItemStack leftover = new ArrayList<>(over.values()).get(0);
+            int availableAmount = item.getAmount() - leftover.getAmount();
+            if (availableAmount <= 0) {
+                return false;
+            }
+            leftover.setAmount(availableAmount);
+
+            PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<>(Collections.singletonList(leftover.clone())), getBackBlock());
             Bukkit.getPluginManager().callEvent(event);
 
             if(!event.isValid())
