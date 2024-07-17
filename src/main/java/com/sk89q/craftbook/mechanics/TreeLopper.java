@@ -83,7 +83,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         }
 
         if(species != null && planted < maxSaplings(species)) {
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SaplingPlanter(usedBlock, species), 2);
+            CraftBookPlugin.getScheduler().runTaskLater(new SaplingPlanter(usedBlock, species), 2);
             planted ++;
         }
 
@@ -145,7 +145,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         }
         block.breakNaturally(event.getPlayer().getItemInHand());
         if(species != null && planted < maxSaplings(species)) {
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SaplingPlanter(block, species), 2);
+            CraftBookPlugin.getScheduler().runTaskLater(new SaplingPlanter(block, species), 2);
             planted ++;
         }
         visitedLocations.add(block.getLocation());

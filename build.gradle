@@ -113,6 +113,7 @@ allprojects {
         implementation 'com.sk89q:squirrelid:0.1.0'
         implementation "io.papermc:paperlib:1.0.7"
         implementation 'org.bstats:bstats-bukkit:2.2.1'
+        implementation 'com.github.Anon8281:UniversalScheduler:0.1.3'
 
         testImplementation 'org.spigotmc:spigot-api:1.20.6-R0.1-SNAPSHOT'
         testImplementation 'com.sk89q.worldedit:worldedit-core:7.2.14'
@@ -140,10 +141,12 @@ allprojects {
             include(dependency('io.papermc:paperlib'))
             include(dependency('com.sk89q:squirrelid'))
             include(dependency("org.bstats:"))
+            include(dependency("com.github.Anon8281:UniversalScheduler"))
         }
         relocate 'org.bstats', 'com.sk89q.craftbook.bukkit.bstats'
         relocate 'com.sk89q.squirrelid', 'com.sk89q.craftbook.util.profile'
         relocate 'io.papermc.lib', 'com.sk89q.craftbook.bukkit.paperlib'
+        relocate 'com.github.Anon8281.universalScheduler', 'com.sk89q.craftbook.universalScheduler'
         exclude 'GradleStart**'
         exclude '.cache'
         exclude 'LICENSE*'

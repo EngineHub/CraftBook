@@ -95,7 +95,7 @@ final class MechanicListenerAdapter implements Listener {
                     return;
                 } else {
                     signClickTimer.add(event.getPlayer().getName());
-                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> signClickTimer.remove(event.getPlayer().getName()), CraftBookPlugin.inst().getConfiguration().signClickTimeout);
+                    CraftBookPlugin.getScheduler().runTaskLater(() -> signClickTimer.remove(event.getPlayer().getName()), CraftBookPlugin.inst().getConfiguration().signClickTimeout);
                 }
             }
             SignClickEvent ev = new SignClickEvent(event.getPlayer(), action, event.getItem(), block, event.getBlockFace());
@@ -345,7 +345,7 @@ final class MechanicListenerAdapter implements Listener {
         CraftBookPlugin.inst().getServer().getPluginManager().callEvent(event);
 
         if(CraftBookPlugin.inst().useLegacyCartSystem) {
-            CraftBookPlugin.server().getScheduler().runTask(CraftBookPlugin.inst(), () -> {
+            CraftBookPlugin.getScheduler().runTask(() -> {
                 try {
                     CartMechanismBlocks cmb = CartMechanismBlocks.find(event.getBlock());
                     CartBlockRedstoneEvent ev = new CartBlockRedstoneEvent(event.getBlock(), event.getSource(), event.getOldCurrent(), event.getNewCurrent(), cmb, CartBlockMechanism.getCart(cmb.rail));

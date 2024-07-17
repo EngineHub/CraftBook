@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.util.jinglenote;
 
+import com.github.Anon8281.universalScheduler.scheduling.tasks.MyScheduledTask;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import org.bukkit.Bukkit;
 
@@ -15,7 +16,7 @@ public class StringJingleSequencer implements JingleSequencer {
 
     private int delay;
     private int position;
-    private int taskID;
+    private MyScheduledTask taskID;
     private boolean isPlaying;
     private boolean playedBefore = false;
 
@@ -38,10 +39,10 @@ public class StringJingleSequencer implements JingleSequencer {
         isPlaying = true;
         playedBefore = true;
 
-        taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(CraftBookPlugin.inst(), () -> {
+        taskID = CraftBookPlugin.getScheduler().scheduleSyncRepeatingTask(() -> {
 
             if (position >= song.size() || !isPlaying || players.isEmpty()) {
-                Bukkit.getScheduler().cancelTask(taskID);
+                taskID.cancel();
                 isPlaying = false;
                 return;
             }

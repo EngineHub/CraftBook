@@ -16,6 +16,7 @@
 
 package com.sk89q.craftbook.mechanics;
 
+import com.github.Anon8281.universalScheduler.UniversalRunnable;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
@@ -31,6 +32,7 @@ import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -50,7 +52,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
@@ -380,10 +381,10 @@ public class Elevator extends AbstractCraftBookMechanic {
 
                 // Ejecting the player out of the vehicle will move
                 // the player to the side, so we have to correct this.
-                bukkitPlayer.teleport(lastLocation);
+                PaperLib.teleportAsync(bukkitPlayer, lastLocation);
             }
 
-            new BukkitRunnable(){
+            new UniversalRunnable(){
                 @Override
                 public void run () {
 
@@ -440,7 +441,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                             // moving down into solid blocks works just fine.
                             p.setVelocity(new Vector(0, -elevatorMoveSpeed, 0));
                             if (isSolidBlockOccludingMovement(p, playerVerticalMovement))
-                                p.teleport(p.getLocation().add(0, -elevatorMoveSpeed, 0));
+                                PaperLib.teleportAsync(p, p.getLocation().add(0, -elevatorMoveSpeed, 0));
                             break;
                         default:
                             // Player is not moving
@@ -452,7 +453,7 @@ public class Elevator extends AbstractCraftBookMechanic {
                 }
 
                 private void finishElevatingPlayer(Player p) {
-                    p.teleport(newLocation);
+                    PaperLib.teleportAsync(p, newLocation);
                     teleportFinish(player, destination, shift);
                     disableFlightMode(p);
                     setPassengerIfPlayerWasInVehicle(player);
@@ -465,11 +466,11 @@ public class Elevator extends AbstractCraftBookMechanic {
             if (player.isInsideVehicle()) {
                 Entity teleportedVehicle = LocationUtil.ejectAndTeleportPlayerVehicle(player, newLocation);
 
-                player.setPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
+                player.teleport(BukkitAdapter.adapt(newLocation));
 
                 LocationUtil.addVehiclePassengerDelayed(teleportedVehicle, player);
             } else {
-                player.setPosition(BukkitAdapter.adapt(newLocation).toVector(), newLocation.getPitch(), newLocation.getYaw());
+                player.teleport(BukkitAdapter.adapt(newLocation));
             }
 
             teleportFinish(player, destination, shift);

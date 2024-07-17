@@ -68,7 +68,7 @@ public class Sponge extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), () -> addWater(event.getBlock()));
+        CraftBookPlugin.getScheduler().runTask(CraftBookPlugin.inst(), () -> addWater(event.getBlock()));
     }
 
     @EventHandler(priority = EventPriority.HIGH)
