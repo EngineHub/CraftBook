@@ -108,7 +108,7 @@ public class CartDispenser extends CartBlockMechanism {
         performMechanic(event.getMinecart(), event.getBlocks());
     }
 
-    private void performMechanic(Minecart cart, CartMechanismBlocks blocks) {
+    private void performMechanic(@Nullable Minecart cart, CartMechanismBlocks blocks) {
         if (!blocks.matches(getBlock())) {
             return;
         }
@@ -146,25 +146,24 @@ public class CartDispenser extends CartBlockMechanism {
         }
     }
 
-    private boolean tryAction(CartMechanismBlocks blocks, Power pow, Minecart cart, Inventory inv, EntityType type, boolean canCollect, boolean canDispense) {
+    private boolean tryAction(CartMechanismBlocks blocks, Power pow, @Nullable Minecart cart, @Nullable Inventory inv, EntityType type, boolean canCollect, boolean canDispense) {
         if (canDispense) {
-            switch (pow) {
-                case OFF: // power going off doesn't eat a cart unless the cart moves.
-                case NA:
-                    return false;
-                case ON:
+            return switch (pow) { // power going off doesn't eat a cart unless the cart moves.
+                case OFF, NA -> false;
+                case ON -> {
                     dispense(blocks, inv, type);
-                    return true;
-            }
+                    yield true;
+                }
+            };
         } else if (canCollect) {
-            switch (pow) {
-                case ON: // there's already a cart moving on the dispenser so don't spam.
-                    return false;
-                case OFF:
-                case NA:
+            return switch (pow) {
+                case ON -> // there's already a cart moving on the dispenser so don't spam.
+                    false;
+                case OFF, NA -> {
                     collect(cart, inv);
-                    return true;
-            }
+                    yield true;
+                }
+            };
         }
 
         return false;
@@ -174,7 +173,7 @@ public class CartDispenser extends CartBlockMechanism {
      * @param cart the cart to be destroyed/collected
      * @param inv the inventory to place a cart item in, or null if we don't care.
      */
-    private void collect(Minecart cart, Inventory inv) {
+    private void collect(@Nullable Minecart cart, @Nullable Inventory inv) {
         if (cart == null || cart.isDead()) {
             return;
         }
@@ -192,7 +191,7 @@ public class CartDispenser extends CartBlockMechanism {
      * @param blocks The CMB instance of this run
      * @param inv the inventory to remove a cart item from, or null if we don't care.
      */
-    private void dispense(CartMechanismBlocks blocks, Inventory inv, EntityType type) {
+    private void dispense(CartMechanismBlocks blocks, @Nullable Inventory inv, EntityType type) {
         Location location = blocks.rail().getLocation().toCenterLocation();
 
         if (checkForCarts && EntityUtil.isEntityOfTypeInBlock(location.getBlock(), type)) {

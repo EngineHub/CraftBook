@@ -187,9 +187,10 @@ public class BukkitSelfTriggerManager implements SelfTriggerManager, Listener {
             return;
         }
 
-        // TODO potentially re-think how this works if it turns out to be slow.
+        long chunkKey = event.getChunk().getChunkKey();
+
         for (Location location : thinkingMechanics) {
-            if (location.getChunk().equals(event.getChunk())) {
+            if (Chunk.getChunkKey(location) == chunkKey) {
                 unregisterSelfTrigger(location, UnregisterReason.UNLOAD);
             }
         }

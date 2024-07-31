@@ -32,7 +32,7 @@ import java.util.Set;
 public class SchedulerReport extends DataReport {
 
     private final LoadingCache<Class<?>, Optional<Field>> taskFieldCache = CacheBuilder.newBuilder()
-        .build(new CacheLoader<Class<?>, Optional<Field>>() {
+        .build(new CacheLoader<>() {
             @Override
             public Optional<Field> load(Class<?> clazz) throws Exception {
                 try {
