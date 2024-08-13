@@ -1,3 +1,20 @@
+3.10.11
+* Add 1.21 support
+
+3.10.10
+* Avoid enabling the legacy material compatibility layer when avoidable
+* Fix the combine harvester not collecting bamboo
+* Add 1.20.4, 1.20.5, and 1.20.6 support
+* Add support for crimson & warped fungus by the planter
+* Improved performance of furnaces in pipes
+* Fix TreeLopper not behaving as expected with podzol under trees
+* Build against Java 21, due to MC 1.20.5 requiring it
+
+3.10.9
+* Update for 1.20
+* Add red sand & nether brick to the smeltables list for a few mechanics
+* Fixed azalea being terraformed incorrectly by the BonemealTerraformer IC
+
 3.10.8
 * Fixed a few situations where gates might not work correctly under Y=0
 * Removed a few HeadDrops that had the skins hijacked by offensive imagery

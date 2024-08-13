@@ -228,7 +228,7 @@ public final class EntityUtil {
                     }
                 }
                 break;
-            case PRIMED_TNT:
+            case TNT:
                 if (data[0].equalsIgnoreCase("fuse")) {
                     try {
                         int length = Integer.parseInt(data[1]);
@@ -267,7 +267,7 @@ public final class EntityUtil {
                     ((Ocelot) ent).setCatType(Ocelot.Type.SIAMESE_CAT);
                 }
                 break;
-            case THROWN_EXP_BOTTLE:
+            case EXPERIENCE_BOTTLE:
                 if (data[0].equalsIgnoreCase("bounce")) {
                     ((ThrownExpBottle) ent).setBounce(true);
                 }

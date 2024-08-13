@@ -17,7 +17,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.EnumSet;
 import java.util.Set;
 
 public class Cultivator extends AbstractSelfTriggeredIC {
@@ -78,7 +77,7 @@ public class Cultivator extends AbstractSelfTriggeredIC {
         return false;
     }
 
-    private static final Set<Material> hoes = EnumSet.of(Material.WOODEN_HOE, Material.STONE_HOE, Material.IRON_HOE, Material.GOLDEN_HOE,
+    private static final Set<Material> hoes = Set.of(Material.WOODEN_HOE, Material.STONE_HOE, Material.IRON_HOE, Material.GOLDEN_HOE,
             Material.DIAMOND_HOE);
 
     public boolean damageHoe() {

@@ -32,7 +32,7 @@ public class Cannon extends Recipe {
         Directional disp = (Directional) block.getBlockData();
         BlockFace face = disp.getFacing();
         Location location = block.getRelative(face).getLocation().add(0.5, 0.5, 0.5);
-        TNTPrimed a = (TNTPrimed) block.getWorld().spawnEntity(location, EntityType.PRIMED_TNT);
+        TNTPrimed a = (TNTPrimed) block.getWorld().spawnEntity(location, EntityType.TNT);
         a.setVelocity(velocity.normalize().multiply(2));
         return true;
     }

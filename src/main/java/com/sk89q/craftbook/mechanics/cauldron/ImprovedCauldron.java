@@ -303,7 +303,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
             default:
                 break;
         }
-        multiplier += item.getEnchantmentLevel(Enchantment.DIG_SPEED);
+        multiplier += item.getEnchantmentLevel(Enchantment.EFFICIENCY);
         return temp + tenth * multiplier;
     }
 

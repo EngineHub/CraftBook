@@ -81,7 +81,7 @@ public class TimedExplosion extends AbstractIC {
             while(loc.getBlock().getType().isSolid())
                 loc = loc.add(0, 1, 0);
             TNTPrimed tnt = (TNTPrimed) loc.getWorld().spawnEntity(BlockUtil.getBlockCentre(loc.getBlock()),
-                    EntityType.PRIMED_TNT);
+                    EntityType.TNT);
             tnt.setIsIncendiary(flamey);
             if (ticks > 0) {
                 tnt.setFuseTicks(ticks);
