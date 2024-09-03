@@ -192,6 +192,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                     items.removeAll(filteredItems);
                     items.addAll(newItems);
+                    items.addAll(event.getRejectedItems());
                 }
             } else if (bl.getType() == Material.DROPPER) {
                 ChangedSign sign = getSignOnPiston(bl);
