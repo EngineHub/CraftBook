@@ -5,37 +5,39 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class PipeFilterEvent extends PipeEvent {
 
   private static final HandlerList handlers = new HandlerList();
 
-  private boolean beenSet = false;
+  private Set<ItemStack> filters;
+  private Set<ItemStack> exceptions;
+  private List<ItemStack> filteredItems;
 
-  public PipeFilterEvent(Block theBlock, List<ItemStack> items) {
+  public PipeFilterEvent(Block theBlock, List<ItemStack> items, Set<ItemStack> filters, Set<ItemStack> exceptions, List<ItemStack> filteredItems) {
     super(theBlock, items);
+
+    this.filters = filters;
+    this.exceptions = exceptions;
+    this.filteredItems = filteredItems;
   }
 
-  @Override
-  public void setItems(List<ItemStack> items) {
-    super.setItems(items);
-    this.beenSet = true;
+  public Set<ItemStack> getFilters() {
+    return filters;
   }
 
-  @Override
-  public List<ItemStack> getItems() {
-    return Collections.unmodifiableList(super.getItems());
+  public Set<ItemStack> getExceptions() {
+    return exceptions;
   }
 
-  @Override
-  public void addItems(List<ItemStack> items) {
-    throw new UnsupportedOperationException();
+  public List<ItemStack> getFilteredItems() {
+    return filteredItems;
   }
 
-  public boolean hasBeenSet() {
-    return this.beenSet;
+  public void setFilteredItems(List<ItemStack> filteredItems) {
+    this.filteredItems = filteredItems;
   }
 
   @Override
