@@ -138,24 +138,33 @@ public class Pipes extends AbstractCraftBookMechanic {
             if (bl.getType() == Material.PISTON) {
                 Piston p = (Piston) bl.getBlockData();
 
-                ChangedSign sign = getSignOnPiston(bl);
+                List<ItemStack> filteredItems;
 
-                HashSet<ItemStack> pFilters = new HashSet<>();
-                HashSet<ItemStack> pExceptions = new HashSet<>();
+                PipeFilterEvent filterEvent = new PipeFilterEvent(bl, items);
+                Bukkit.getPluginManager().callEvent(filterEvent);
 
-                if(sign != null) {
-                    for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
-                        pFilters.add(ItemSyntax.getItem(line3.trim()));
+                if (filterEvent.hasBeenSet()) {
+                    filteredItems = filterEvent.getItems();
+                } else {
+                    ChangedSign sign = getSignOnPiston(bl);
+
+                    HashSet<ItemStack> pFilters = new HashSet<>();
+                    HashSet<ItemStack> pExceptions = new HashSet<>();
+
+                    if (sign != null) {
+                        for (String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
+                            pFilters.add(ItemSyntax.getItem(line3.trim()));
+                        }
+                        for (String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
+                            pExceptions.add(ItemSyntax.getItem(line4.trim()));
+                        }
+
+                        pFilters.removeAll(Collections.<ItemStack>singleton(null));
+                        pExceptions.removeAll(Collections.<ItemStack>singleton(null));
                     }
-                    for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
-                        pExceptions.add(ItemSyntax.getItem(line4.trim()));
-                    }
 
-                    pFilters.removeAll(Collections.<ItemStack>singleton(null));
-                    pExceptions.removeAll(Collections.<ItemStack>singleton(null));
+                    filteredItems = new ArrayList<>(VerifyUtil.withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
                 }
-
-                List<ItemStack> filteredItems = new ArrayList<>(VerifyUtil.withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
 
                 if(filteredItems.isEmpty())
                     continue;
@@ -192,7 +201,6 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                     items.removeAll(filteredItems);
                     items.addAll(newItems);
-                    items.addAll(event.getRejectedItems());
                 }
             } else if (bl.getType() == Material.DROPPER) {
                 ChangedSign sign = getSignOnPiston(bl);
