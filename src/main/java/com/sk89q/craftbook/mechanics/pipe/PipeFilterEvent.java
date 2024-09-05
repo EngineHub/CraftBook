@@ -12,24 +12,24 @@ public class PipeFilterEvent extends PipeEvent {
 
     private static final HandlerList handlers = new HandlerList();
 
-    private Set<ItemStack> filters;
-    private Set<ItemStack> exceptions;
+    private Set<ItemStack> includeFilters;
+    private Set<ItemStack> excludeFilters;
     private List<ItemStack> filteredItems;
 
-    public PipeFilterEvent(Block theBlock, List<ItemStack> items, Set<ItemStack> filters, Set<ItemStack> exceptions, List<ItemStack> filteredItems) {
+    public PipeFilterEvent(Block theBlock, List<ItemStack> items, Set<ItemStack> includeFilters, Set<ItemStack> excludeFilters, List<ItemStack> filteredItems) {
         super(theBlock, items);
 
-        this.filters = filters;
-        this.exceptions = exceptions;
+        this.includeFilters = includeFilters;
+        this.excludeFilters = excludeFilters;
         this.filteredItems = filteredItems;
     }
 
-    public Set<ItemStack> getFilters() {
-        return filters;
+    public Set<ItemStack> getIncludeFilters() {
+        return includeFilters;
     }
 
-    public Set<ItemStack> getExceptions() {
-        return exceptions;
+    public Set<ItemStack> getExcludeFilters() {
+        return excludeFilters;
     }
 
     public List<ItemStack> getFilteredItems() {
