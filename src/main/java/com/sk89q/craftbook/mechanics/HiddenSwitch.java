@@ -180,7 +180,7 @@ public class HiddenSwitch extends AbstractCraftBookMechanic {
                 checkBlock.setBlockData(powerable);
                 powerable.setPowered(false);
                 Runnable turnOff = () -> checkBlock.setBlockData(powerable);
-                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), turnOff, Tag.WOODEN_BUTTONS.getValues().contains(checkBlock.getType()) ? 30L : 20L);
+                CraftBookPlugin.getScheduler().runTaskLater(turnOff, Tag.WOODEN_BUTTONS.getValues().contains(checkBlock.getType()) ? 30L : 20L);
             }
         }
     }

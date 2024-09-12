@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.github.Anon8281.universalScheduler.scheduling.tasks.MyScheduledTask;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -144,7 +145,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 
         List<String> lines = new ArrayList<>();
 
-        BukkitTask task;
+        MyScheduledTask task;
 
         boolean fyrestone = false;
 
@@ -197,7 +198,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                 show = new BasicShowInterpreter();
             else
                 show = new FyrestoneInterpreter();
-            task = Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), show);
+            task = CraftBookPlugin.getScheduler().runTask(CraftBookPlugin.inst(), show);
         }
 
         private class FyrestoneInterpreter implements ShowInterpreter {
@@ -297,7 +298,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 
                         FyrestoneInterpreter nshow = new FyrestoneInterpreter(effects,currentBuilding,location,duration,builder);
                         nshow.setRunning(isRunning);
-                        task = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), nshow, Long.parseLong(line.replace("wait ", "")));
+                        task = CraftBookPlugin.getScheduler().runTaskLater(nshow, Long.parseLong(line.replace("wait ", "")));
                         show = nshow;
                         return;
                     } else if (line.startsWith("sound ")) {
@@ -353,7 +354,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                             meta.setPower((int) duration * 2);
                             firework.setFireworkMeta(meta);
                             if(preciseDuration)
-                                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), firework::detonate, (long) (duration*10));
+                                CraftBookPlugin.getScheduler().runTaskLater(firework::detonate, (long) (duration*10));
                         }
                     }
                 }
@@ -392,7 +393,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 
                     if (bits[0].equalsIgnoreCase("wait")) {
                         BasicShowInterpreter show = new BasicShowInterpreter();
-                        task = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), show,
+                        task = CraftBookPlugin.getScheduler().runTaskLater(show,
                                 Long.parseLong(bits[1]));
                         return;
                     } else if (bits[0].equalsIgnoreCase("launch")) {

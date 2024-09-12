@@ -335,7 +335,7 @@ public class Gate extends AbstractCraftBookMechanic {
         final ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
         if (!sign.getLine(1).equals("[Gate]") && !sign.getLine(1).equals("[DGate]")) return;
 
-        CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(),
+        CraftBookPlugin.getScheduler().runTaskLater(CraftBookPlugin.inst(),
                 () -> toggleGates(null, event.getBlock(), sign.getLine(1).equals("[DGate]"), event.getNewCurrent() > 0), 2);
     }
 

@@ -144,7 +144,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         CraftBookPlugin.logger().info("Successfully added " + amount + " CommandItems!");
 
         if(definitions.size() > 0) {
-            Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), () -> {
+            CraftBookPlugin.getScheduler().runTaskTimer( () -> {
                 Iterator<Entry<Tuple2<String, String>, Integer>> iterator = cooldownPeriods.entrySet().iterator();
 
                 while(iterator.hasNext()) {
@@ -156,7 +156,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
                         iterator.remove();
                 }
             }, 0, 20);
-            Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), () -> {
+            CraftBookPlugin.getScheduler().runTaskTimer( () -> {
                 for(Player player : Bukkit.getOnlinePlayers()) {
                     if(player.getInventory().getItemInMainHand().getType() != Material.AIR)
                         performCommandItems(player.getInventory().getItemInMainHand(), player, null);
@@ -272,7 +272,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         final ItemStack item = ((Player) event.getEntity().getShooter()).getItemInHand();
         final Player shooter = (Player) event.getEntity().getShooter();
 
-        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> performCommandItems(item, shooter, event), 5L);
+        CraftBookPlugin.getScheduler().runTaskLater(() -> performCommandItems(item, shooter, event), 5L);
     }
 
     @EventHandler(priority=EventPriority.HIGH)
@@ -287,7 +287,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         final ItemStack item = ((Player) event.getEntity().getShooter()).getItemInHand();
         final Player shooter = (Player) event.getEntity().getShooter();
 
-        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> performCommandItems(item, shooter, event), 5L);
+        CraftBookPlugin.getScheduler().runTaskLater(() -> performCommandItems(item, shooter, event), 5L);
     }
 
     @EventHandler(priority=EventPriority.HIGH)
@@ -375,7 +375,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         if(!doChat || event.getPlayer().getItemInHand() == null)
             return;
 
-        Bukkit.getScheduler().runTask(CraftBookPlugin.inst(),
+        CraftBookPlugin.getScheduler().runTask(CraftBookPlugin.inst(),
                 () -> performCommandItems(event.getPlayer().getItemInHand(), event.getPlayer(), event));
     }
 
@@ -526,7 +526,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
                     cooldownPeriods.put(new Tuple2<>(lplayer.getName(), comdef.name), comdef.cooldown);
 
                 if(comdef.delayedCommands.length > 0)
-                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
+                    CraftBookPlugin.getScheduler().runTaskLater(() -> {
                         for(String command : comdef.delayedCommands)
                             doCommand(command, event, comdef, player);
                     }, comdef.delay);

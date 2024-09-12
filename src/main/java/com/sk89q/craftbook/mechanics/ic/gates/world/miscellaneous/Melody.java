@@ -141,7 +141,7 @@ public class Melody extends AbstractSelfTriggeredIC {
                             pp.sendMessage(ChatColor.YELLOW + "Playing " + midiName + "...");
                         }
                         if(!hasRun) {
-                            Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), player);
+                            CraftBookPlugin.getScheduler().runTaskAsynchronously(getPlugin(), player);
                             hasRun = true;
                         }
                     }

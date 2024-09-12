@@ -79,7 +79,7 @@ public class TemporaryCart extends AbstractCraftBookMechanic {
 
         if(!minecarts.contains(event.getVehicle())) return;
 
-        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), event.getVehicle()::remove, 2L);
+        CraftBookPlugin.getScheduler().runTaskLater(event.getVehicle()::remove, 2L);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -91,7 +91,7 @@ public class TemporaryCart extends AbstractCraftBookMechanic {
 
         if (minecarts.contains(event.getVehicle())) {
             event.setCancelled(true);
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), event.getVehicle()::remove, 2L);
+            CraftBookPlugin.getScheduler().runTaskLater(event.getVehicle()::remove, 2L);
         }
     }
 

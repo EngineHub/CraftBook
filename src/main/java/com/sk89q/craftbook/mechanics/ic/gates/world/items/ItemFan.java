@@ -1,5 +1,9 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.items;
 
+import com.sk89q.craftbook.ChangedSign;
+import com.sk89q.craftbook.mechanics.ic.*;
+import com.sk89q.craftbook.util.ItemUtil;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
@@ -62,7 +66,7 @@ public class ItemFan extends AbstractSelfTriggeredIC {
         Block aboveBlock = getBackBlock().getRelative(0, 1, 0);
 
         for (Item item : ItemUtil.getItemsAtBlock(aboveBlock)) {
-            item.teleport(item.getLocation().add(0, force, 0));
+            PaperLib.teleportAsync(item, item.getLocation().add(0, force, 0));
             returnValue = true;
         }
 

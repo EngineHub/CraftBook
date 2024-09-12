@@ -24,7 +24,7 @@ public class EmptyDecay extends AbstractCraftBookMechanic {
 
         if (!(vehicle instanceof Boat)) return;
 
-        CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Decay((Boat) vehicle), delay);
+        CraftBookPlugin.getScheduler().runTaskLater(new Decay((Boat) vehicle), delay);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -39,7 +39,7 @@ public class EmptyDecay extends AbstractCraftBookMechanic {
                 continue;
             if (!ent.isEmpty())
                 continue;
-            CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Decay((Boat) ent), delay);
+            CraftBookPlugin.getScheduler().runTaskLater(new Decay((Boat) ent), delay);
         }
     }
 

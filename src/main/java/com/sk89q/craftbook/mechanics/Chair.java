@@ -22,6 +22,7 @@ import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.item.ItemTypes;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
@@ -96,9 +97,9 @@ public class Chair extends AbstractCraftBookMechanic {
         // Attach the player to said arrow.
         final Entity far = ar;
         if(ar.isEmpty() && isNew) {
-            Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), () -> {
+            CraftBookPlugin.getScheduler().runTask(CraftBookPlugin.inst(), () -> {
                 if (chairLoc != null)
-                    player.teleport(chairLoc);
+                    PaperLib.teleportAsync(player, chairLoc);
                 far.addPassenger(player);
             });
         } else if (ar.isEmpty()) {
@@ -125,8 +126,8 @@ public class Chair extends AbstractCraftBookMechanic {
             ent.eject();
             player.eject();
             ent.remove();
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
-                player.teleport(chairData.playerExitPoint);
+            CraftBookPlugin.getScheduler().runTaskLater(() -> {
+                PaperLib.teleportAsync(player, chairData.playerExitPoint);
                 player.setSneaking(false);
             }, 5L);
         }
@@ -290,7 +291,7 @@ public class Chair extends AbstractCraftBookMechanic {
                 if (p == null  || p.isDead() || !p.isValid()) {
                     ChairData data = chairs.remove(pl.getKey());
                     if (data != null && data.chairEntity != null) {
-                        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
+                        CraftBookPlugin.getScheduler().runTaskLater(() -> {
                             data.chairEntity.eject();
                             data.chairEntity.remove();
                         }, 5);
@@ -328,7 +329,7 @@ public class Chair extends AbstractCraftBookMechanic {
 
         chairs = new ConcurrentHashMap<>();
 
-        Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new ChairChecker(), 20L, 20L);
+        CraftBookPlugin.getScheduler().runTaskTimer(new ChairChecker(), 20L, 20L);
 
         try {
             Class.forName("com.comphenix.protocol.events.PacketListener");

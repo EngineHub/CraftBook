@@ -1,5 +1,6 @@
 package com.sk89q.craftbook.mechanics.ic.gates.logic;
 
+import com.github.Anon8281.universalScheduler.scheduling.tasks.MyScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.scheduler.BukkitTask;
@@ -18,7 +19,7 @@ import com.sk89q.craftbook.mechanics.ic.ICVerificationException;
  */
 public class LowDelayer extends AbstractIC {
 
-    private BukkitTask taskId;
+    private MyScheduledTask taskId;
 
     public LowDelayer(Server server, ChangedSign block, ICFactory factory) {
 
@@ -46,7 +47,7 @@ public class LowDelayer extends AbstractIC {
                 taskId.cancel();
             chip.setOutput(0, true);
         } else {
-            taskId = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
+            taskId = CraftBookPlugin.getScheduler().runTaskLater(() -> {
 
                 if (!chip.getInput(0)) {
                     chip.setOutput(0, false);

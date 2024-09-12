@@ -161,7 +161,7 @@ public class SelfTriggeringManager implements Listener {
         if (!EventUtil.passesFilter(event))
             return;
 
-        CraftBookPlugin.server().getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> registerSelfTrigger(event.getChunk()), 2);
+        CraftBookPlugin.getScheduler().runTaskLater(() -> registerSelfTrigger(event.getChunk()), 2);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
