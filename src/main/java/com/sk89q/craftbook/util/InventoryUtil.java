@@ -4,6 +4,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Chest;
+import org.bukkit.block.ChiseledBookshelf;
+import org.bukkit.block.Crafter;
 import org.bukkit.block.Furnace;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.entity.Player;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Class for utilities that include adding items to a furnace based on if it is a fuel or not, and adding items to a chest. Also will include methdos for checking contents and removing.
@@ -49,6 +52,10 @@ public class InventoryUtil {
             return addItemsToFurnace((Furnace) container, stacks);
         } else if(container instanceof BrewingStand) {
             return addItemsToBrewingStand((BrewingStand) container, stacks);
+        } else if(container instanceof Crafter) {
+            return addItemsToCrafter((Crafter) container, stacks);
+        } else if(container instanceof ChiseledBookshelf) {
+            return addItemsToChiseledBookshelf((ChiseledBookshelf) container, stacks);
         } else { //Basic inventories like chests, dispensers, storage carts, etc.
             List<ItemStack> leftovers = new ArrayList<>();
             if (container instanceof ShulkerBox) {
@@ -152,6 +159,58 @@ public class InventoryUtil {
         }
 
         //brewingStand.update();
+
+        return leftovers;
+    }
+
+    /**
+     * Adds items to a Crafter, respecting disabled slots, returning the leftovers.
+     * 
+     * @param crafter The Crafter to add the items to.
+     * @param stacks The stacks to add to the inventory.
+     * @return The stacks that could not be added.
+     */
+    public static List<ItemStack> addItemsToCrafter(Crafter crafter, ItemStack ... stacks) {
+
+        List<ItemStack> leftovers = new ArrayList<>();
+        int[] availableSlots = IntStream.rangeClosed(0, crafter.getInventory().getSize() - 1).filter(slot -> !crafter.isSlotDisabled(slot)).toArray();
+        
+        for(ItemStack stack : stacks) {
+            Inventory inv = crafter.getInventory();
+            
+            for (int i : availableSlots) {
+                if (stack == null) {
+                    break;
+                }
+                if (inv.getItem(i) == null) {
+                    inv.setItem(i, stack);
+                    stack = null;
+                } else {
+                    stack = ItemUtil.addToStack(inv.getItem(i), stack);
+                }
+            }
+            if (stack != null) {
+                leftovers.add(stack);
+            }
+        }
+        return leftovers;
+    }
+
+    /**
+     * Adds items to a chiseled bookshelf.
+     * 
+     * @param chiseledBookshelf The chiseled bookshelf to add the items to.
+     * @param stacks The stacks to add to the inventory.
+     * @return The stacks that could not be added.
+     */
+    public static List<ItemStack> addItemsToChiseledBookshelf(ChiseledBookshelf chiseledBookshelf, ItemStack ... stacks) {
+
+        List<ItemStack> leftovers = new ArrayList<>();
+        
+        Arrays.stream(stacks).filter(item -> !ItemUtil.isAStorableBook(item)).forEach(leftovers::add);
+        stacks = Arrays.stream(stacks).filter(item -> ItemUtil.isAStorableBook(item)).toArray(ItemStack[]::new);
+
+        leftovers.addAll(chiseledBookshelf.getInventory().addItem(stacks).values());
 
         return leftovers;
     }
@@ -308,6 +367,8 @@ public class InventoryUtil {
             case SMOKER:
             case BARREL:
             case CHISELED_BOOKSHELF:
+            case DECORATED_POT:
+            case CRAFTER:
                 return true;
             default:
                 return false;

@@ -357,6 +357,9 @@ public class Pipes extends AbstractCraftBookMechanic {
                     || fac.getType() == Material.DISPENSER
                     || fac.getType() == Material.HOPPER
                     || fac.getType() == Material.BARREL
+                    || fac.getType() == Material.CHISELED_BOOKSHELF
+                    || fac.getType() == Material.CRAFTER
+                    || fac.getType() == Material.DECORATED_POT
                     || Tag.SHULKER_BOXES.isTagged(fac.getType())) {
                 for (ItemStack stack : ((InventoryHolder) fac.getState()).getInventory().getContents()) {
 
