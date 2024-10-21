@@ -29,6 +29,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dropper;
 import org.bukkit.block.Furnace;
 import org.bukkit.block.Jukebox;
+import org.bukkit.block.Crafter;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.Piston;
@@ -385,9 +386,13 @@ public class Pipes extends AbstractCraftBookMechanic {
                 }
 
                 if (!items.isEmpty()) {
-                    for (ItemStack item : items) {
-                        if (item == null) continue;
-                        leftovers.addAll(((InventoryHolder) fac.getState()).getInventory().addItem(item).values());
+                    if (fac.getType() == Material.CRAFTER)
+                        leftovers.addAll(InventoryUtil.addItemsToCrafter((Crafter) fac.getState(), items.toArray(new ItemStack[items.size()])));
+                    else {
+                        for (ItemStack item : items) {
+                            if (item == null) continue;
+                            leftovers.addAll(((InventoryHolder) fac.getState()).getInventory().addItem(item).values());
+                        }
                     }
                 }
             } else if (fac.getType() == Material.FURNACE || fac.getType() == Material.BLAST_FURNACE || fac.getType() == Material.SMOKER) {
