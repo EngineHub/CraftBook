@@ -204,9 +204,9 @@ public final class SearchArea {
 
         if(hasRegion()) {
 
-            Chunk c1 = getWorld().getChunkAt(region.getMinimumPoint().getBlockX() >> 4, region.getMinimumPoint().getBlockZ() >> 4);
+            Chunk c1 = getWorld().getChunkAt(region.getMinimumPoint().x() >> 4, region.getMinimumPoint().z() >> 4);
 
-            Chunk c2 = getWorld().getChunkAt(region.getMaximumPoint().getBlockX() >> 4, region.getMaximumPoint().getBlockZ() >> 4);
+            Chunk c2 = getWorld().getChunkAt(region.getMaximumPoint().x() >> 4, region.getMaximumPoint().z() >> 4);
             int xMin = Math.min(c1.getX(), c2.getX());
             int xMax = Math.max(c1.getX(), c2.getX());
             int zMin = Math.min(c1.getZ(), c2.getZ());
@@ -217,11 +217,11 @@ public final class SearchArea {
                     chunks.add(getWorld().getChunkAt(x,z));
         } else if (hasRadiusAndCenter()) {
 
-            int chunkRadiusX = blockRadius.getBlockX() < 16 ? 1 : blockRadius.getBlockX() / 16;
-            int chunkRadiusZ = blockRadius.getBlockZ() < 16 ? 1 : blockRadius.getBlockZ() / 16;
+            int chunkRadiusX = blockRadius.x() < 16 ? 1 : blockRadius.x() / 16;
+            int chunkRadiusZ = blockRadius.z() < 16 ? 1 : blockRadius.z() / 16;
 
-            for (int chX = 0 - chunkRadiusX; chX <= chunkRadiusX; chX++) {
-                for (int chZ = 0 - chunkRadiusZ; chZ <= chunkRadiusZ; chZ++) {
+            for (int chX = -chunkRadiusX; chX <= chunkRadiusX; chX++) {
+                for (int chZ = -chunkRadiusZ; chZ <= chunkRadiusZ; chZ++) {
 
                     chunks.add(new Location(center.getWorld(), center.getBlockX() + chX * 16, center.getBlockY(), center.getBlockZ() + chZ * 16).getChunk());
                 }
@@ -241,19 +241,19 @@ public final class SearchArea {
         int xMin,xMax,yMin,yMax,zMin,zMax;
 
         if(hasRegion()) {
-            xMin = region.getMinimumPoint().getBlockX();
-            xMax = region.getMaximumPoint().getBlockX();
-            yMin = region.getMinimumPoint().getBlockY();
-            yMax = region.getMaximumPoint().getBlockY();
-            zMin = region.getMinimumPoint().getBlockZ();
-            zMax = region.getMaximumPoint().getBlockZ();
+            xMin = region.getMinimumPoint().x();
+            xMax = region.getMaximumPoint().x();
+            yMin = region.getMinimumPoint().y();
+            yMax = region.getMaximumPoint().y();
+            zMin = region.getMinimumPoint().z();
+            zMax = region.getMaximumPoint().z();
         } else if(hasRadiusAndCenter()) {
-            xMin = Math.min(center.getBlockX() - blockRadius.getBlockX(), center.getBlockX() + blockRadius.getBlockX());
-            xMax = Math.max(center.getBlockX() - blockRadius.getBlockX(), center.getBlockX() + blockRadius.getBlockX());
-            yMin = Math.min(center.getBlockY() - blockRadius.getBlockY(), center.getBlockY() + blockRadius.getBlockY());
-            yMax = Math.max(center.getBlockY() - blockRadius.getBlockY(), center.getBlockY() + blockRadius.getBlockY());
-            zMin = Math.min(center.getBlockZ() - blockRadius.getBlockZ(), center.getBlockZ() + blockRadius.getBlockZ());
-            zMax = Math.max(center.getBlockZ() - blockRadius.getBlockZ(), center.getBlockZ() + blockRadius.getBlockZ());
+            xMin = Math.min(center.getBlockX() - blockRadius.x(), center.getBlockX() + blockRadius.x());
+            xMax = Math.max(center.getBlockX() - blockRadius.x(), center.getBlockX() + blockRadius.x());
+            yMin = Math.min(center.getBlockY() - blockRadius.y(), center.getBlockY() + blockRadius.y());
+            yMax = Math.max(center.getBlockY() - blockRadius.y(), center.getBlockY() + blockRadius.y());
+            zMin = Math.min(center.getBlockZ() - blockRadius.z(), center.getBlockZ() + blockRadius.z());
+            zMax = Math.max(center.getBlockZ() - blockRadius.z(), center.getBlockZ() + blockRadius.z());
         } else
             return null;
 
@@ -277,9 +277,9 @@ public final class SearchArea {
     }
 
     /**
-     * Checks if this SearchArea is a Radius & Center type, compared to other types.
+     * Checks if this SearchArea is a Radius &amp; Center type, compared to other types.
      * 
-     * @return If it is a Radius&Center type.
+     * @return If it is a Radius &amp; Center type.
      */
     public boolean hasRadiusAndCenter() {
 
