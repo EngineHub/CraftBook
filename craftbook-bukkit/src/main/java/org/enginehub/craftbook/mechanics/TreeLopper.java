@@ -293,7 +293,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         singleDamageAxe = config.getBoolean("single-damage-axe", false);
 
         config.setComment("allow-sneaking", "Sets how the player must be sneaking in order to use the Tree Lopper.");
-        allowSneaking = TernaryState.parseTernaryState(config.getString("allow-sneaking", TernaryState.FALSE.toString()));
+        allowSneaking = TernaryState.parseTernaryState(config.getString("allow-sneaking", TernaryState.NONE.toString()));
     }
 
     private record SaplingPlanter(Block location, Material sapling) implements Runnable {
