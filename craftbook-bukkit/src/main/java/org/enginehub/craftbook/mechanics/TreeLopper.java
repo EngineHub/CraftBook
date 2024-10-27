@@ -51,6 +51,7 @@ import org.enginehub.craftbook.util.ConfigUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ItemParser;
 import org.enginehub.craftbook.util.ProtectionUtil;
+import org.enginehub.craftbook.util.TernaryState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -130,6 +131,10 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         }
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
+
+        if (!allowSneaking.doesPass(player.isSneaking())) {
+            return;
+        }
 
         if (!Blocks.containsFuzzy(enabledBlocks, BukkitAdapter.adapt(event.getBlock().getBlockData()))) {
             return;
@@ -251,6 +256,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
     private boolean breakLeaves;
     private boolean singleDamageAxe;
     private boolean leavesDamageAxe;
+    private TernaryState allowSneaking;
 
     private List<String> getDefaultBlocks() {
         List<String> materials = new ArrayList<>();
@@ -285,6 +291,9 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
         config.setComment("single-damage-axe", "Only remove one damage from the axe, regardless of the amount of blocks removed.");
         singleDamageAxe = config.getBoolean("single-damage-axe", false);
+
+        config.setComment("allow-sneaking", "Sets how the player must be sneaking in order to use the Tree Lopper.");
+        allowSneaking = TernaryState.parseTernaryState(config.getString("allow-sneaking", TernaryState.FALSE.toString()));
     }
 
     private record SaplingPlanter(Block location, Material sapling) implements Runnable {
