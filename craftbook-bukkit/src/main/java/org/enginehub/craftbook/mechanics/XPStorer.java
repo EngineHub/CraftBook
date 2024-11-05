@@ -258,11 +258,11 @@ public class XPStorer extends AbstractCraftBookMechanic {
         ChangedSign sign = null;
 
         for (Side side : Side.values()) {
-            String line1 = PlainTextComponentSerializer.plainText().serialize(bukkitSign.line(1));
+            String line1 = PlainTextComponentSerializer.plainText().serialize(bukkitSign.getSide(side).line(1));
             if (!line1.equals("[XP]")) {
                 continue;
             }
-            sign = ChangedSign.create(event.getBlock(), side, bukkitSign.lines().toArray(new Component[0]), null);
+            sign = ChangedSign.create(event.getBlock(), side, bukkitSign.getSide(side).lines().toArray(new Component[0]), null);
             break;
         }
         if (sign == null) {
