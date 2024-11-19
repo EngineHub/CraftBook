@@ -401,7 +401,7 @@ public class Chairs extends AbstractCraftBookMechanic {
                     addChair(p, pl.getValue().location, null); // For any new players.
 
                     if (regenHealth) {
-                        AttributeInstance maxHealthAttr = p.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+                        AttributeInstance maxHealthAttr = p.getAttribute(Attribute.MAX_HEALTH);
                         if (maxHealthAttr != null && p.getHealth() < maxHealthAttr.getValue()) {
                             p.setHealth(Math.min(p.getHealth() + healAmount, maxHealthAttr.getValue()));
                         }

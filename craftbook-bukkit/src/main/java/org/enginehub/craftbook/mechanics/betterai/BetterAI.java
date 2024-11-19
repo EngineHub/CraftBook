@@ -79,7 +79,7 @@ public class BetterAI extends AbstractCraftBookMechanic {
         if (isEntityEnabled(event.getEntity(), sizeVariance) && event.getEntity() instanceof LivingEntity livingEntity) {
             CreatureSpawnEvent.SpawnReason spawnReason = livingEntity.getEntitySpawnReason();
             if (spawnReason != CreatureSpawnEvent.SpawnReason.BREEDING && spawnReason != CreatureSpawnEvent.SpawnReason.CUSTOM && spawnReason != CreatureSpawnEvent.SpawnReason.COMMAND) {
-                AttributeInstance attributeInstance = livingEntity.getAttribute(Attribute.GENERIC_SCALE);
+                AttributeInstance attributeInstance = livingEntity.getAttribute(Attribute.SCALE);
                 if (attributeInstance.getModifier(SIZE_VARIANCE) == null && attributeInstance.getModifier(SIZE_VARIANCE_BREEDING) == null) {
                     attributeInstance.addModifier(
                         new AttributeModifier(SIZE_VARIANCE, (Math.random() - 0.5) * 2 * sizeVarianceVariability, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ANY)
@@ -96,8 +96,8 @@ public class BetterAI extends AbstractCraftBookMechanic {
         }
 
         if (sizeVarianceAllowBreeding && isEntityEnabled(event.getEntity(), sizeVariance)) {
-            double averageSize = (event.getMother().getAttribute(Attribute.GENERIC_SCALE).getValue() + event.getFather().getAttribute(Attribute.GENERIC_SCALE).getValue()) / 2.0;
-            AttributeInstance attributeInstance = event.getEntity().getAttribute(Attribute.GENERIC_SCALE);
+            double averageSize = (event.getMother().getAttribute(Attribute.SCALE).getValue() + event.getFather().getAttribute(Attribute.SCALE).getValue()) / 2.0;
+            AttributeInstance attributeInstance = event.getEntity().getAttribute(Attribute.SCALE);
             attributeInstance.setBaseValue(averageSize);
             if (attributeInstance.getModifier(SIZE_VARIANCE_BREEDING) == null) {
                 attributeInstance.addModifier(
