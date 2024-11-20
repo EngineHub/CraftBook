@@ -332,18 +332,6 @@ public class Chair extends AbstractCraftBookMechanic {
 
         try {
             Class.forName("com.comphenix.protocol.events.PacketListener");
-            ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new PacketAdapter(PacketAdapter.params(CraftBookPlugin.inst(), PacketType.Play.Client.STEER_VEHICLE).clientSide().listenerPriority(ListenerPriority.HIGHEST)) {
-                @Override
-                public void onPacketReceiving(PacketEvent e) {
-                    if (!e.isCancelled()) {
-                        Player player = e.getPlayer();
-                        if (e.getPacket().getBooleans().getValues().get(1))
-                            if(hasChair(player))
-                                removeChair(player);
-                    }
-                }
-            }).syncStart();
-
             ProtocolLibrary.getProtocolManager().getAsynchronousManager().registerAsyncHandler(new PacketAdapter(PacketAdapter.params(CraftBookPlugin.inst(), PacketType.Play.Client.ENTITY_ACTION).clientSide().listenerPriority(ListenerPriority.HIGHEST)) {
                 @Override
                 public void onPacketReceiving(PacketEvent e) {
