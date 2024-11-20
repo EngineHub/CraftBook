@@ -15,13 +15,6 @@
 
 package org.enginehub.craftbook.mechanics;
 
-import com.comphenix.protocol.AsynchronousManager;
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.async.AsyncListenerHandler;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -47,6 +40,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDismountEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -84,9 +78,6 @@ public class Chairs extends AbstractCraftBookMechanic {
     private final Map<UUID, ChairData> chairs = new HashMap<>();
     private final NamespacedKey chairDataKey = new NamespacedKey("craftbook", "is_chair");
 
-    private AsyncListenerHandler positionLookHandler;
-    private AsyncListenerHandler vehicleSteerHandler;
-
     public Chairs(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
@@ -94,28 +85,11 @@ public class Chairs extends AbstractCraftBookMechanic {
     @Override
     public void enable() {
         Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new ChairChecker(), 20L, 20L);
-
-        AsynchronousManager packetManager = ProtocolLibrary
-            .getProtocolManager()
-            .getAsynchronousManager();
-
-        vehicleSteerHandler = packetManager.registerAsyncHandler(new VehicleSteerPacketHandler());
-        positionLookHandler = packetManager.registerAsyncHandler(new PositionLookPacketHandler());
-
-        vehicleSteerHandler.syncStart();
-        positionLookHandler.syncStart();
     }
 
     @Override
     public void disable() {
         chairs.clear();
-
-        AsynchronousManager packetManager = ProtocolLibrary
-            .getProtocolManager()
-            .getAsynchronousManager();
-
-        packetManager.unregisterAsyncHandler(positionLookHandler);
-        packetManager.unregisterAsyncHandler(vehicleSteerHandler);
     }
 
     private Entity createChairEntity(Block block, @Nullable Vector direction) {
@@ -281,6 +255,16 @@ public class Chairs extends AbstractCraftBookMechanic {
     }
 
     @EventHandler(priority = EventPriority.HIGH)
+    public void onEntityDismount(EntityDismountEvent event) {
+        if (event.getEntity() instanceof Player bukkitPlayer) {
+            CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(bukkitPlayer);
+            if (hasChair(player)) {
+                removeChair(bukkitPlayer);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
     public void onChunkUnload(ChunkUnloadEvent event) {
         // Cleanup missed chair entities.
         for (Entity entity : event.getChunk().getEntities()) {
@@ -415,46 +399,6 @@ public class Chairs extends AbstractCraftBookMechanic {
     }
 
     private record ChairData(Entity chairEntity, Block location, @Nullable Location playerExitPoint) {
-    }
-
-    private class VehicleSteerPacketHandler extends PacketAdapter {
-        public VehicleSteerPacketHandler() {
-            super(PacketAdapter
-                .params(CraftBookPlugin.inst(), PacketType.Play.Client.STEER_VEHICLE)
-                .clientSide()
-                .listenerPriority(ListenerPriority.HIGHEST));
-        }
-
-        @Override
-        public void onPacketReceiving(PacketEvent event) {
-            if (!event.isCancelled()) {
-                if (event.getPacket().getBooleans().getValues().get(1)) {
-                    CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-                    if (hasChair(player)) {
-                        removeChair(event.getPlayer());
-                    }
-                }
-            }
-        }
-    }
-
-    private class PositionLookPacketHandler extends PacketAdapter {
-        public PositionLookPacketHandler() {
-            super(PacketAdapter
-                .params(CraftBookPlugin.inst(), PacketType.Play.Client.ENTITY_ACTION)
-                .clientSide()
-                .listenerPriority(ListenerPriority.HIGHEST));
-        }
-
-        @Override
-        public void onPacketReceiving(PacketEvent event) {
-            if (!event.isCancelled()) {
-                CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-                if (hasChair(player)) {
-                    removeChair(event.getPlayer());
-                }
-            }
-        }
     }
 
     private boolean allowHeldBlock;

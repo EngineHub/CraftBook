@@ -22,7 +22,6 @@ import org.bukkit.event.Listener;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.load.LoadPriority;
 import org.enginehub.craftbook.mechanic.load.MechanicDependency;
-import org.enginehub.craftbook.mechanic.load.PluginDependency;
 
 public class BukkitMechanicManager extends MechanicManager {
 
@@ -169,7 +168,6 @@ public class BukkitMechanicManager extends MechanicManager {
             .description(TranslatableComponent.of("craftbook.chairs.description"))
             .className("org.enginehub.craftbook.mechanics.Chairs")
             .category(MechanicCategory.GENERAL)
-            .dependsOn(new PluginDependency("ProtocolLib"))
             .buildAndRegister();
 
         MechanicType.Builder

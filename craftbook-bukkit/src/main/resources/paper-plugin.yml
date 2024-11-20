@@ -11,9 +11,6 @@ dependencies:
     WorldGuard:
       load: BEFORE
       required: false
-    ProtocolLib:
-      load: BEFORE
-      required: false
     Vault:
       load: BEFORE
       required: false
