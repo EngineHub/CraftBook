@@ -39,7 +39,6 @@ mockito-junit-jupiter.module = "org.mockito:mockito-junit-jupiter"
 
 paperApi = "io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT"
 vaultApi = "com.github.MilkBowl:VaultAPI:1.7.1"
-protocolLib = "com.comphenix.protocol:ProtocolLib:5.1.0"
 
 dummypermscompat = "com.sk89q:dummypermscompat:1.10"
 bstats-bukkit = "org.bstats:bstats-bukkit:2.2.1"

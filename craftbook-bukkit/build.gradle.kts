@@ -19,10 +19,6 @@ repositories {
         url = uri("https://jitpack.io")
     }
     maven {
-        name = "ProtocolLib"
-        url = uri("https://repo.dmulloy2.net/repository/public/")
-    }
-    maven {
         name = "sonatype-oss-snapshots"
         url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
     }
@@ -48,7 +44,6 @@ dependencies {
         exclude("junit", "junit")
     }
     "implementation"(libs.vaultApi) { isTransitive = false }
-    "implementation"(libs.protocolLib) { isTransitive = false }
 
     "implementation"(libs.bstats.bukkit)
 

@@ -26,10 +26,6 @@ repositories {
         url = uri("https://jitpack.io")
     }
     maven {
-        name = "ProtocolLib"
-        url = uri("https://repo.dmulloy2.net/content/groups/public/")
-    }
-    maven {
         name = "sonatype-oss-snapshots"
         url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
     }
