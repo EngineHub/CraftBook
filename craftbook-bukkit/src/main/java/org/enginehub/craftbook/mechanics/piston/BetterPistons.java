@@ -326,7 +326,9 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                 ent.setVelocity(ent.getVelocity().add(vel));
             }
         } else {
-            FallingBlock fall = trigger.getWorld().spawnFallingBlock(pistonHead.getLocation().add(vel), pistonHeadData);
+            FallingBlock fall = trigger.getWorld().spawn(pistonHead.getLocation().add(vel), FallingBlock.class, fallingBlock -> {
+                fallingBlock.setBlockData(pistonHeadData);
+            });
             pistonHead.setType(Material.AIR);
             fall.setVelocity(vel);
         }
@@ -380,8 +382,8 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                                 Location dest = ent.getLocation().subtract(facing.getDirection());
                                 if (ent instanceof Player player) {
                                     player.teleport(dest, PlayerTeleportEvent.TeleportCause.PLUGIN,
-                                        TeleportFlag.Relative.X, TeleportFlag.Relative.Y, TeleportFlag.Relative.Z,
-                                        TeleportFlag.Relative.PITCH, TeleportFlag.Relative.YAW,
+                                        TeleportFlag.Relative.VELOCITY_X, TeleportFlag.Relative.VELOCITY_Y, TeleportFlag.Relative.VELOCITY_Z,
+                                        TeleportFlag.Relative.VELOCITY_ROTATION,
                                         TeleportFlag.EntityState.RETAIN_PASSENGERS, TeleportFlag.EntityState.RETAIN_VEHICLE,
                                         TeleportFlag.EntityState.RETAIN_OPEN_INVENTORY
                                     );
@@ -440,8 +442,8 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                                 Location dest = ent.getLocation().add(piston.getFacing().getDirection());
                                 if (ent instanceof Player player) {
                                     player.teleport(dest, PlayerTeleportEvent.TeleportCause.PLUGIN,
-                                        TeleportFlag.Relative.X, TeleportFlag.Relative.Y, TeleportFlag.Relative.Z,
-                                        TeleportFlag.Relative.PITCH, TeleportFlag.Relative.YAW,
+                                        TeleportFlag.Relative.VELOCITY_X, TeleportFlag.Relative.VELOCITY_Y, TeleportFlag.Relative.VELOCITY_Z,
+                                        TeleportFlag.Relative.VELOCITY_ROTATION,
                                         TeleportFlag.EntityState.RETAIN_PASSENGERS, TeleportFlag.EntityState.RETAIN_VEHICLE,
                                         TeleportFlag.EntityState.RETAIN_OPEN_INVENTORY
                                     );

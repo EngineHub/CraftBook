@@ -423,6 +423,11 @@ public class Snow extends AbstractCraftBookMechanic {
 
         @Override
         public void run() {
+            if (Bukkit.getServer().isPaused()) {
+                // Skip dispersion ticks when the server is paused.
+                return;
+            }
+
             int limit = 10000;
             int iterations = Math.min(limit, dispersionQueue.size());
             for (int i = 0; i < iterations; i++) {
@@ -439,6 +444,11 @@ public class Snow extends AbstractCraftBookMechanic {
 
         @Override
         public void run() {
+            if (Bukkit.getServer().isPaused()) {
+                // Skip snow ticks when the server is paused.
+                return;
+            }
+
             for (World world : Bukkit.getWorlds()) {
                 boolean meltMode = !world.hasStorm();
 

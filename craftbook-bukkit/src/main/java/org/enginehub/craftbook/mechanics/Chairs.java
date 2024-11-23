@@ -47,6 +47,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
@@ -77,6 +78,7 @@ public class Chairs extends AbstractCraftBookMechanic {
 
     private final Map<UUID, ChairData> chairs = new HashMap<>();
     private final NamespacedKey chairDataKey = new NamespacedKey("craftbook", "is_chair");
+    private @Nullable BukkitTask tickerTask;
 
     public Chairs(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
@@ -84,12 +86,16 @@ public class Chairs extends AbstractCraftBookMechanic {
 
     @Override
     public void enable() {
-        Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new ChairChecker(), 20L, 20L);
+        tickerTask = Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new ChairChecker(), 20L, 20L);
     }
 
     @Override
     public void disable() {
         chairs.clear();
+        if (tickerTask != null) {
+            tickerTask.cancel();
+            tickerTask = null;
+        }
     }
 
     private Entity createChairEntity(Block block, @Nullable Vector direction) {
@@ -363,6 +369,11 @@ public class Chairs extends AbstractCraftBookMechanic {
     private class ChairChecker implements Runnable {
         @Override
         public void run() {
+            if (Bukkit.getServer().isPaused()) {
+                // Don't check chairs when the server is paused.
+                return;
+            }
+
             for (Map.Entry<UUID, ChairData> pl : chairs.entrySet()) {
                 Player p = Bukkit.getPlayer(pl.getKey());
 

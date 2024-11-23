@@ -101,6 +101,11 @@ public class BetterPlants extends AbstractCraftBookMechanic {
     private class GrowthTicker implements Runnable {
         @Override
         public void run() {
+            if (Bukkit.getServer().isPaused()) {
+                // Skip growth ticks when the server is paused
+                return;
+            }
+
             for (World world : Bukkit.getWorlds()) {
                 int x = 0;
                 int y = 0;

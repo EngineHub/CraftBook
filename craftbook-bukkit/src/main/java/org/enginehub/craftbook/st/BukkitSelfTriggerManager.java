@@ -96,6 +96,11 @@ public class BukkitSelfTriggerManager implements SelfTriggerManager, Listener {
 
     @Override
     public void think() {
+        if (Bukkit.getServer().isPaused()) {
+            // Do not tick self triggering mechanics when the server is paused.
+            return;
+        }
+
         // First, remove them.
         for (Location location : removingLocations) {
             thinkingMechanics.remove(location);
