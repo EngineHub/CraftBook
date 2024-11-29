@@ -186,6 +186,11 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                 List<ItemStack> filteredItems = new ArrayList<>(VerifyUtil.withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
 
+                PipeFilterEvent filterEvent = new PipeFilterEvent(bl, items, pFilters, pExceptions, filteredItems);
+                Bukkit.getPluginManager().callEvent(filterEvent);
+
+                filteredItems = filterEvent.getFilteredItems();
+
                 if (filteredItems.isEmpty())
                     continue;
 
