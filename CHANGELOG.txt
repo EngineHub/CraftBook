@@ -1,3 +1,11 @@
+5.0.0 Beta 4
+* Add support for MC 1.21.3
+* Add the HiddenSwitch mechanic
+* Improve unload speed when many self triggering mechanics are in use
+* Add an option to require certain sneak states for the tree lopper mechanic
+* Removed the dependency on ProtocolLib for the chairs mechanic
+* Improve compatibility with the new "server pausing" system
+
 5.0.0 Beta 3
 * Add support for MC 1.21
 * Add the "Size Variance" BetterAI mechanic, to add natural variation in animal sizes that can be propagated through breeding

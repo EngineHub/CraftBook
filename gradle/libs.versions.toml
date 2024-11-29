@@ -10,7 +10,7 @@ minimumAsm = "9.7"
 minimumJdependency = "2.10"
 minimumTinyRemapper = "0.8.11"
 
-lang-version = "1534"
+lang-version = "1604"
 
 [libraries]
 
