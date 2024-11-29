@@ -303,8 +303,8 @@ public class Chair extends AbstractCraftBookMechanic {
                 else {
                     addChair(p, pl.getValue().location, null); // For any new players.
 
-                    if (chairHealth && p.getHealth() < p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue())
-                        p.setHealth(Math.min(p.getHealth() + chairHealAmount, p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()));
+                    if (chairHealth && p.getHealth() < p.getAttribute(Attribute.MAX_HEALTH).getValue())
+                        p.setHealth(Math.min(p.getHealth() + chairHealAmount, p.getAttribute(Attribute.MAX_HEALTH).getValue()));
                     if (p.getExhaustion() > -20d) p.setExhaustion((float)(p.getExhaustion() - 0.1d));
                 }
             }
@@ -395,7 +395,7 @@ public class Chair extends AbstractCraftBookMechanic {
 
         config.setComment(path + "blocks", "A list of blocks that can be sat on.");
         chairBlocks =
-                BlockSyntax.getBlocks(config.getStringList(path + "blocks", BlockCategories.STAIRS.getAll().stream().map(BlockType::getId).sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
+                BlockSyntax.getBlocks(config.getStringList(path + "blocks", BlockCategories.STAIRS.getAll().stream().map(BlockType::id).sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
 
         config.setComment(path + "face-correct-direction", "When the player sits, automatically face them the direction of the chair. (If possible)");
         chairFacing = config.getBoolean(path + "face-correct-direction", true);
