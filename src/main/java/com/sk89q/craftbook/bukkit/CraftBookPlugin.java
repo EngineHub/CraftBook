@@ -317,7 +317,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     @Nullable
     public static String getVersion() {
-        return null;
+        return "3.10.12";
     }
 
     public List<CraftBookMechanic> getMechanics() {
