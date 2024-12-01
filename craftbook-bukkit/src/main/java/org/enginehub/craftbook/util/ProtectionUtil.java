@@ -160,7 +160,7 @@ public final class ProtectionUtil {
                 if (manager != null) {
                     com.sk89q.worldguard.protection.ApplicableRegionSet regionSet = manager.getApplicableRegions(BukkitAdapter.asBlockVector(block.getLocation()));
 
-                    com.sk89q.worldguard.protection.flags.StateFlag flag = switch(newType) {
+                    com.sk89q.worldguard.protection.flags.StateFlag flag = switch (newType) {
                         case SNOW -> com.sk89q.worldguard.protection.flags.Flags.SNOW_FALL;
                         case ICE -> com.sk89q.worldguard.protection.flags.Flags.ICE_FORM;
                         case FROSTED_ICE -> com.sk89q.worldguard.protection.flags.Flags.FROSTED_ICE_FORM;
