@@ -99,7 +99,7 @@ public class PaintingSwitcher extends AbstractCraftBookMechanic {
                 return;
             }
 
-            if (ProtectionUtil.canBuild(event.getPlayer(), paint.getLocation().getBlock())) {
+            if (!ProtectionUtil.canBuild(event.getPlayer(), paint.getLocation().getBlock())) {
                 if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                     player.printError(TranslatableComponent.of("craftbook.mechanisms.protection-blocked", TextComponent.of(getMechanicType().getName())));
                 }
