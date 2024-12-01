@@ -185,7 +185,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
             }
         }
 
-        if (ProtectionUtil.isBreakingPrevented(player, toBreak)) {
+        if (!ProtectionUtil.canBreak(player, toBreak)) {
             CraftBookPlugin.inst().wrapPlayer(player).printError(TranslatableComponent.of("craftbook.mechanisms.protection-blocked", TextComponent.of(getMechanicType().getName())));
             return false;
         }

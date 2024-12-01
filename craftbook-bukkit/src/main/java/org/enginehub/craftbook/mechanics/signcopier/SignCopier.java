@@ -147,7 +147,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
             return;
         }
 
-        if (ProtectionUtil.isBreakingPrevented(event.getPlayer(), block)) {
+        if (!ProtectionUtil.canBreak(event.getPlayer(), block)) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                 player.printError(TranslatableComponent.of("craftbook.mechanisms.protection-blocked", TextComponent.of(getMechanicType().getName())));
             }

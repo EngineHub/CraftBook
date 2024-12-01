@@ -143,7 +143,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
 
                 if (type == PistonType.BOUNCE || type == PistonType.CRUSH) {
                     Block off = pistonBlock.getRelative(pistonData.getFacing());
-                    if (ProtectionUtil.isBreakingPrevented(event.getPlayer(), off)) {
+                    if (!ProtectionUtil.canBreak(event.getPlayer(), off)) {
                         if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                             player.printError(TranslatableComponent.of("craftbook.mechanisms.protection-blocked", TextComponent.of(getMechanicType().getName())));
                         }
@@ -161,7 +161,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
                     Block off = pistonBlock;
                     for (int i = 0; i < distance; i++) {
                         off = off.getRelative(pistonData.getFacing());
-                        if (ProtectionUtil.isBreakingPrevented(event.getPlayer(), off)) {
+                        if (!ProtectionUtil.canBreak(event.getPlayer(), off)) {
                             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
                                 player.printError(TranslatableComponent.of("craftbook.mechanisms.protection-blocked", TextComponent.of(getMechanicType().getName())));
                             }
