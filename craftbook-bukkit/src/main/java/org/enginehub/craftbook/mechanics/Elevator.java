@@ -218,8 +218,14 @@ public class Elevator extends AbstractCraftBookMechanic {
             case BOTH:
                 if (event.getInteractionPoint() != null) {
                     double relativeHeight = event.getInteractionPoint().getY();
-                    relativeHeight -= (int) relativeHeight;
-                    shift = relativeHeight >= 0.5 ? BlockFace.UP : BlockFace.DOWN;
+                    double fractionalPart = relativeHeight - Math.floor(relativeHeight);  // Normalize to 0.0-1.0
+                    if (relativeHeight < 0) {
+                        // Invert behavior for negative Y coordinates
+                        fractionalPart = 1.0 - fractionalPart;
+                        shift = fractionalPart >= 0.5 ? BlockFace.DOWN : BlockFace.UP;
+                    } else {
+                        shift = fractionalPart >= 0.5 ? BlockFace.UP : BlockFace.DOWN;
+                    }
                     break;
                 }
                 return;
