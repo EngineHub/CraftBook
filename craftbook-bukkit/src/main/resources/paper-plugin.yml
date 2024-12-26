@@ -2,7 +2,7 @@ name: CraftBook5
 version: "${internalVersion}"
 main: org.enginehub.craftbook.bukkit.CraftBookPlugin
 author: EngineHub
-api-version: "1.21"
+api-version: "1.21.4"
 dependencies:
   server:
     WorldEdit:

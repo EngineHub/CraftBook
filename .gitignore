@@ -37,6 +37,7 @@ manifest.mf
 .idea/
 .gradle/
 out/
+.kotlin/
 
 # Fern's utils
 uploadtoserver.sh
