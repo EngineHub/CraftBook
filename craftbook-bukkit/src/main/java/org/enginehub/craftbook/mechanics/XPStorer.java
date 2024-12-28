@@ -24,6 +24,7 @@ import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
@@ -53,6 +54,7 @@ import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.st.BukkitSelfTriggerManager;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.EventUtil;
@@ -71,19 +73,35 @@ import java.util.List;
 public class XPStorer extends AbstractCraftBookMechanic {
 
     private final NamespacedKey xpQuantityKey = new NamespacedKey("craftbook", "xp_quantity");
+    private ItemStack mergeStack;
 
     public XPStorer(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 
+    @Override
+    public void enable() throws MechanicInitializationException {
+        super.enable();
+
+        try {
+            this.mergeStack = Bukkit.getServer().getItemFactory().createItemStack(this.bottleExtraData);
+        } catch (IllegalArgumentException e) {
+            CraftBook.LOGGER.error("Failed to parse extra bottle data for XP Storer", e);
+            this.mergeStack = new ItemStack(Material.EXPERIENCE_BOTTLE);
+        }
+    }
+
     private ItemStack createStack(int bottles) {
-        ItemStack stack = new ItemStack(Material.EXPERIENCE_BOTTLE, Math.min(bottles, 64));
+        ItemStack stack = mergeStack.clone();
+        stack.setAmount(Math.min(bottles, 64));
         if (bottleXpOverride >= 0) {
-            ItemMeta meta = stack.getItemMeta();
-            meta.getPersistentDataContainer().set(xpQuantityKey, PersistentDataType.INTEGER, bottleXpOverride);
-            // TODO Make this translatable when possible.
-            meta.lore(List.of(net.kyori.adventure.text.Component.text("Stored XP: " + bottleXpOverride)));
-            stack.setItemMeta(meta);
+            stack.editMeta(meta -> {
+                meta.getPersistentDataContainer().set(xpQuantityKey, PersistentDataType.INTEGER, bottleXpOverride);
+                var lore = meta.hasLore() ? new ArrayList<>(meta.lore()) : new ArrayList<net.kyori.adventure.text.Component>(1);
+                // TODO Make this translatable when possible.
+                lore.add(net.kyori.adventure.text.Component.text("Stored XP: " + bottleXpOverride));
+                meta.lore(lore);
+            });
         }
         return stack;
     }
@@ -293,6 +311,10 @@ public class XPStorer extends AbstractCraftBookMechanic {
             }
         }
 
+        if (xp == 0 || orbs.isEmpty()) {
+            return;
+        }
+
         int max = Integer.MAX_VALUE;
         Inventory inventory = null;
 
@@ -310,6 +332,10 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         int bottleCount = (int) Math.min(max, Math.floor(xp / (double) bottleXpRequirement));
         int tempBottles = bottleCount;
+
+        if (bottleCount == 0) {
+            return;
+        }
 
         while (tempBottles > 0) {
             ItemStack bottles = createStack(tempBottles);
@@ -395,6 +421,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
     private boolean allowOffHand;
     private int bottleXpRequirement;
     private int bottleXpOverride;
+    private String bottleExtraData;
     private BaseBlock block;
     private TernaryState allowSneaking;
     private boolean radiusMode;
@@ -413,6 +440,9 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         config.setComment("bottle-xp-override", "Set the amount of XP points that each bottle provides on usage (-1 to use MC behaviour).");
         bottleXpOverride = config.getInt("bottle-xp-override", -1);
+
+        config.setComment("bottle-extra-data", "Extra data to apply to the item, using /give command syntax.");
+        bottleExtraData = config.getString("bottle-extra-data", "minecraft:experience_bottle");
 
         config.setComment("block", "The block that is an XP Storer.");
         block = BlockParser.getBlock(config.getString("block", BlockTypes.SPAWNER.id()), true);

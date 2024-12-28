@@ -157,7 +157,7 @@ public abstract class MechanicManager {
             throw new MechanicInitializationException(mechanicType, TranslatableComponent.of(
                 "craftbook.mechanisms.enable-failed",
                 TextComponent.of(mechanicType.getName(), TextColor.WHITE),
-                TextComponent.of(t.getMessage())
+                t.getMessage() != null ? TextComponent.of(t.getMessage()) : TextComponent.empty()
             ), t);
         }
     }
