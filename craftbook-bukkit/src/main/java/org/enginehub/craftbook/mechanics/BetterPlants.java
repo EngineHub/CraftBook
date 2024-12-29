@@ -32,6 +32,7 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -128,10 +129,13 @@ public class BetterPlants extends AbstractCraftBookMechanic {
                     block = chunk.getBlock(x, y, z);
 
                     if (fernFarming && block.getType() == Material.FERN) {
-                        block.setType(Material.LARGE_FERN, false);
-                        Bisected topHalfData = ((Bisected) Material.LARGE_FERN.createBlockData());
-                        topHalfData.setHalf(Bisected.Half.TOP);
-                        block.getRelative(0, 1, 0).setBlockData(topHalfData, false);
+                        Block aboveBlock = block.getRelative(0, 1, 0);
+                        if (BlockUtil.isBlockReplacable(aboveBlock.getType())) {
+                            block.setType(Material.LARGE_FERN, false);
+                            Bisected topHalfData = ((Bisected) Material.LARGE_FERN.createBlockData());
+                            topHalfData.setHalf(Bisected.Half.TOP);
+                            aboveBlock.setBlockData(topHalfData, false);
+                        }
                     }
                 }
             }
