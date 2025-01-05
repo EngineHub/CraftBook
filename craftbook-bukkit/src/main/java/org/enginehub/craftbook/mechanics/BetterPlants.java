@@ -41,6 +41,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class BetterPlants extends AbstractCraftBookMechanic {
 
     private @Nullable BukkitTask growthTask;
+    private @Nullable Bisected topHalfData = null;
 
     public BetterPlants(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
@@ -49,7 +50,10 @@ public class BetterPlants extends AbstractCraftBookMechanic {
     @Override
     public void enable() {
         if (fernFarming) {
-            growthTask = Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new GrowthTicker(), 2L, 2L);
+            this.growthTask = Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), new GrowthTicker(), 2L, 2L);
+
+            this.topHalfData = ((Bisected) Material.LARGE_FERN.createBlockData());
+            this.topHalfData.setHalf(Bisected.Half.TOP);
         }
     }
 
@@ -114,7 +118,7 @@ public class BetterPlants extends AbstractCraftBookMechanic {
 
                 if (fastTickRandoms) {
                     x = ThreadLocalRandom.current().nextInt(16);
-                    y = ThreadLocalRandom.current().nextInt(world.getMaxHeight());
+                    y = ThreadLocalRandom.current().nextInt(world.getMinHeight(), world.getMaxHeight());
                     z = ThreadLocalRandom.current().nextInt(16);
                 }
 
@@ -122,18 +126,16 @@ public class BetterPlants extends AbstractCraftBookMechanic {
                     Block block;
                     if (!fastTickRandoms) {
                         x = ThreadLocalRandom.current().nextInt(16);
-                        y = ThreadLocalRandom.current().nextInt(world.getMaxHeight());
+                        y = ThreadLocalRandom.current().nextInt(world.getMinHeight(), world.getMaxHeight());
                         z = ThreadLocalRandom.current().nextInt(16);
                     }
 
                     block = chunk.getBlock(x, y, z);
 
-                    if (fernFarming && block.getType() == Material.FERN) {
+                    if (fernFarming && block.getType() == Material.FERN && topHalfData != null) {
                         Block aboveBlock = block.getRelative(0, 1, 0);
                         if (BlockUtil.isBlockReplacable(aboveBlock.getType())) {
                             block.setType(Material.LARGE_FERN, false);
-                            Bisected topHalfData = ((Bisected) Material.LARGE_FERN.createBlockData());
-                            topHalfData.setHalf(Bisected.Half.TOP);
                             aboveBlock.setBlockData(topHalfData, false);
                         }
                     }
