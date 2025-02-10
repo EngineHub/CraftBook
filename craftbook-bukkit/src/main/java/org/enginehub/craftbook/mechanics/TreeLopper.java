@@ -160,7 +160,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
     private static int getMaximumSaplingCount(Material tree) {
         return switch (tree) {
-            case DARK_OAK_SAPLING, JUNGLE_SAPLING -> 4;
+            case DARK_OAK_SAPLING, JUNGLE_SAPLING, PALE_OAK_SAPLING -> 4;
             default -> 1;
         };
     }
@@ -213,7 +213,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
             Material belowBlockType = block.getRelative(0, -1, 0).getType();
 
             Material saplingType = null;
-            if (placeSaplings && allowPlanting && planted < Integer.MAX_VALUE) {
+            if (placeSaplings && allowPlanting) {
                 if (leavesToSaplings.containsKey(currentType)) {
                     saplingType = leavesToSaplings.get(currentType);
                 } else if (logsToSaplings.containsKey(currentType)) {
