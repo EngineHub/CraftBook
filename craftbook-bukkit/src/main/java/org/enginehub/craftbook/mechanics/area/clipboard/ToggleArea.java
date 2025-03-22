@@ -367,6 +367,7 @@ public class ToggleArea extends AbstractCraftBookMechanic {
     }
 
     private boolean allowRedstone;
+    boolean removeEntitiesOnToggle;
     int maxAreaSize;
     int maxAreasPerUser;
 
@@ -374,6 +375,9 @@ public class ToggleArea extends AbstractCraftBookMechanic {
     public void loadFromConfiguration(YAMLProcessor config) {
         config.setComment("allow-redstone", "Allow ToggleAreas to be toggled via redstone.");
         allowRedstone = config.getBoolean("allow-redstone", true);
+
+        config.setComment("remove-entities-on-toggle", "Whether the area toggling will remove entities within it.");
+        removeEntitiesOnToggle = config.getBoolean("remove-entities-on-toggle", false);
 
         config.setComment("max-size", "Sets the max amount of blocks that a ToggleArea can hold.");
         maxAreaSize = config.getInt("max-size", 5000);

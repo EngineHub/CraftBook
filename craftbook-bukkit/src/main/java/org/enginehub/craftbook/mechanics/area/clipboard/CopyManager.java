@@ -19,6 +19,7 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.entity.Entity;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
@@ -32,7 +33,9 @@ import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.MechanicTypes;
 import org.enginehub.craftbook.util.HistoryHashMap;
 import org.jspecify.annotations.Nullable;
 
@@ -72,6 +75,10 @@ public class CopyManager {
      */
     public static CopyManager getInstance() {
         return INSTANCE;
+    }
+
+    private ToggleArea getToggleAreaInstance() {
+        return CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(MechanicTypes.TOGGLE_AREA).get();
     }
 
     /**
@@ -244,6 +251,10 @@ public class CopyManager {
         try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
             editSession.setTrackingHistory(false);
 
+            if (getToggleAreaInstance().removeEntitiesOnToggle) {
+                editSession.getEntities(clipboard.getRegion()).forEach(Entity::remove);
+            }
+
             Operation operation = new ClipboardHolder(clipboard)
                 .createPaste(editSession)
                 .to(clipboard.getOrigin())
@@ -265,6 +276,9 @@ public class CopyManager {
         try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
             editSession.setTrackingHistory(false);
             editSession.setBlocks(clipboard.getRegion(), BlockTypes.AIR.getDefaultState());
+            if (getToggleAreaInstance().removeEntitiesOnToggle) {
+                editSession.getEntities(clipboard.getRegion()).forEach(Entity::remove);
+            }
         } catch (MaxChangedBlocksException e) {
             // is never thrown
         }
