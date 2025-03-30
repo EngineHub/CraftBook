@@ -92,6 +92,7 @@ import com.sk89q.craftbook.util.UUIDMappings;
 import com.sk89q.craftbook.util.compat.companion.CompanionPlugins;
 import com.sk89q.craftbook.util.compat.nms.NMSAdapter;
 import com.sk89q.craftbook.util.persistent.PersistentStorage;
+import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.minecraft.util.commands.CommandUsageException;
@@ -594,6 +595,8 @@ public class CraftBookPlugin extends JavaPlugin {
 
         if(hasSTMechanic)
             setupSelfTriggered();
+
+        ItemUtil.setupSmeltableItemLists();
     }
 
     /**

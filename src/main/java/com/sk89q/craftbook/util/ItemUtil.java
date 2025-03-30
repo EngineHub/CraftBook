@@ -1,28 +1,35 @@
 package com.sk89q.craftbook.util;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
-import org.bukkit.Tag;
 import org.bukkit.TreeSpecies;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.BlastingRecipe;
+import org.bukkit.inventory.CookingRecipe;
+import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,6 +37,57 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public final class ItemUtil {
+    private static Map<Material, ItemStack> smeltableItems;
+    private static Map<Material, ItemStack> cookableItems;
+    private static Map<Material, ItemStack> blastSmeltableItems;
+
+    /**
+     * Precompute lists of all recipes available for furnace, blast_furnace and smoker/campfire
+     * 
+     */
+    public static void setupSmeltableItemLists() {
+
+        smeltableItems = new HashMap<>();
+        cookableItems = new HashMap<>();
+        blastSmeltableItems = new HashMap<>();
+    
+        Iterator<Recipe> it = Bukkit.recipeIterator();
+        while (it.hasNext()) {
+            Recipe recipe = it.next();
+
+            if (recipe instanceof FurnaceRecipe) {
+                if (((FurnaceRecipe)recipe).getInputChoice() instanceof MaterialChoice) {
+                    for (Material choice : 
+                            ((MaterialChoice)((FurnaceRecipe)recipe).getInputChoice()).getChoices()) {
+                        smeltableItems.put(choice, ((FurnaceRecipe)recipe).getResult());
+                    }
+                } else {
+                    smeltableItems.put(((FurnaceRecipe)recipe).getInput().getType(), 
+                                       ((FurnaceRecipe)recipe).getResult());
+                }
+            } else if (recipe instanceof BlastingRecipe) {
+                if (((BlastingRecipe)recipe).getInputChoice() instanceof MaterialChoice) {
+                    for (Material choice : 
+                            ((MaterialChoice)((BlastingRecipe)recipe).getInputChoice()).getChoices()) {
+                        blastSmeltableItems.put(choice, ((BlastingRecipe)recipe).getResult());
+                    }
+                } else {
+                    blastSmeltableItems.put(((BlastingRecipe)recipe).getInput().getType(), 
+                                            ((BlastingRecipe)recipe).getResult());
+                }
+            } else if (recipe instanceof CookingRecipe) {
+                if (((CookingRecipe)recipe).getInputChoice() instanceof MaterialChoice) {
+                    for (Material choice : 
+                            ((MaterialChoice)((CookingRecipe)recipe).getInputChoice()).getChoices()) {
+                        cookableItems.put(choice, ((CookingRecipe)recipe).getResult());
+                    }
+                } else {
+                    cookableItems.put(((CookingRecipe)recipe).getInput().getType(), 
+                                      ((CookingRecipe)recipe).getResult());
+                }
+            }
+        }
+    }
 
     /**
      * Add an itemstack to an existing itemstack.
@@ -466,29 +524,10 @@ public final class ItemUtil {
 
     public static ItemStack getCookedResult(ItemStack item) {
 
-        switch (item.getType()) {
-            case BEEF:
-                return new ItemStack(Material.COOKED_BEEF);
-            case CHICKEN:
-                return new ItemStack(Material.COOKED_CHICKEN);
-            case COD:
-                return new ItemStack(Material.COOKED_COD);
-            case SALMON:
-                return new ItemStack(Material.COOKED_SALMON);
-            case PORKCHOP:
-                return new ItemStack(Material.COOKED_PORKCHOP);
-            case POTATO:
-                return new ItemStack(Material.BAKED_POTATO);
-            case MUTTON:
-                return new ItemStack(Material.COOKED_MUTTON);
-            case RABBIT:
-                return new ItemStack(Material.COOKED_RABBIT);
-            case CHORUS_FRUIT:
-                return new ItemStack(Material.POPPED_CHORUS_FRUIT);
-            case KELP:
-                return new ItemStack(Material.DRIED_KELP);
-            default:
-                return null;
+        if (cookableItems.containsKey(item.getType())) {
+            return new ItemStack(cookableItems.get(item.getType()));
+        } else {
+            return null;
         }
     }
 
@@ -499,90 +538,10 @@ public final class ItemUtil {
 
     public static ItemStack getSmeltedResult(ItemStack item) {
 
-        switch (item.getType()) {
-            case COBBLESTONE:
-                return new ItemStack(Material.STONE);
-            case COBBLED_DEEPSLATE:
-                return new ItemStack(Material.DEEPSLATE);
-            case DEEPSLATE_BRICKS:
-                return new ItemStack(Material.CRACKED_DEEPSLATE_BRICKS);
-            case DEEPSLATE_TILES:
-                return new ItemStack(Material.CRACKED_DEEPSLATE_TILES);
-            case POLISHED_BLACKSTONE_BRICKS:
-                return new ItemStack(Material.CRACKED_POLISHED_BLACKSTONE_BRICKS);
-            case BASALT:
-                return new ItemStack(Material.SMOOTH_BASALT);
-            case CACTUS:
-                return new ItemStack(Material.GREEN_DYE);
-            case SAND:
-            case RED_SAND:
-                return new ItemStack(Material.GLASS);
-            case CLAY_BALL:
-                return new ItemStack(Material.BRICK);
-            case NETHERRACK:
-                return new ItemStack(Material.NETHER_BRICK);
-            case CLAY:
-                return new ItemStack(Material.TERRACOTTA);
-            case STONE_BRICKS:
-                return new ItemStack(Material.CRACKED_STONE_BRICKS);
-            case NETHER_BRICKS:
-                return new ItemStack(Material.CRACKED_NETHER_BRICKS);
-            case WET_SPONGE:
-                return new ItemStack(Material.SPONGE);
-            case WHITE_TERRACOTTA:
-                return new ItemStack(Material.WHITE_GLAZED_TERRACOTTA);
-            case ORANGE_TERRACOTTA:
-                return new ItemStack(Material.ORANGE_GLAZED_TERRACOTTA);
-            case MAGENTA_TERRACOTTA:
-                return new ItemStack(Material.MAGENTA_GLAZED_TERRACOTTA);
-            case LIGHT_BLUE_TERRACOTTA:
-                return new ItemStack(Material.LIGHT_BLUE_GLAZED_TERRACOTTA);
-            case YELLOW_TERRACOTTA:
-                return new ItemStack(Material.YELLOW_GLAZED_TERRACOTTA);
-            case LIME_TERRACOTTA:
-                return new ItemStack(Material.LIME_GLAZED_TERRACOTTA);
-            case PINK_TERRACOTTA:
-                return new ItemStack(Material.PINK_GLAZED_TERRACOTTA);
-            case GRAY_TERRACOTTA:
-                return new ItemStack(Material.GRAY_GLAZED_TERRACOTTA);
-            case LIGHT_GRAY_TERRACOTTA:
-                return new ItemStack(Material.LIGHT_GRAY_GLAZED_TERRACOTTA);
-            case CYAN_TERRACOTTA:
-                return new ItemStack(Material.CYAN_GLAZED_TERRACOTTA);
-            case PURPLE_TERRACOTTA:
-                return new ItemStack(Material.PURPLE_GLAZED_TERRACOTTA);
-            case BLUE_TERRACOTTA:
-                return new ItemStack(Material.BLUE_GLAZED_TERRACOTTA);
-            case BROWN_TERRACOTTA:
-                return new ItemStack(Material.BROWN_GLAZED_TERRACOTTA);
-            case GREEN_TERRACOTTA:
-                return new ItemStack(Material.GREEN_GLAZED_TERRACOTTA);
-            case RED_TERRACOTTA:
-                return new ItemStack(Material.RED_GLAZED_TERRACOTTA);
-            case BLACK_TERRACOTTA:
-                return new ItemStack(Material.BLACK_GLAZED_TERRACOTTA);
-            case STONE:
-                return new ItemStack(Material.SMOOTH_STONE);
-            case QUARTZ_BLOCK:
-                return new ItemStack(Material.SMOOTH_QUARTZ);
-            case SANDSTONE:
-                return new ItemStack(Material.SMOOTH_SANDSTONE);
-            case RED_SANDSTONE:
-                return new ItemStack(Material.SMOOTH_RED_SANDSTONE);
-            case CHORUS_FRUIT:
-                return new ItemStack(Material.POPPED_CHORUS_FRUIT);
-            case SEA_PICKLE:
-                return new ItemStack(Material.LIME_DYE);
-            case RESIN_CLUMP:
-                return new ItemStack(Material.RESIN_BRICK);
-            default:
-                if (Tag.LOGS_THAT_BURN.isTagged(item.getType())) {
-                    return new ItemStack(Material.CHARCOAL);
-                }
-                if (Tag.LEAVES.isTagged(item.getType())) {
-                    return new ItemStack(Material.LEAF_LITTER);
-                }
-                return null;
+        if (smeltableItems.containsKey(item.getType())) {
+            return new ItemStack(smeltableItems.get(item.getType()));
+        } else {
+            return null;
         }
     }
 
@@ -593,67 +552,10 @@ public final class ItemUtil {
 
     public static ItemStack getBlastSmeltedResult(ItemStack item) {
 
-        switch (item.getType()) {
-            case IRON_ORE:
-            case DEEPSLATE_IRON_ORE:
-            case RAW_IRON:
-                return new ItemStack(Material.IRON_INGOT);
-            case COAL_ORE:
-            case DEEPSLATE_COAL_ORE:
-                return new ItemStack(Material.COAL);
-            case LAPIS_ORE:
-            case DEEPSLATE_LAPIS_ORE:
-                return new ItemStack(Material.LAPIS_LAZULI);
-            case REDSTONE_ORE:
-            case DEEPSLATE_REDSTONE_ORE:
-                return new ItemStack(Material.REDSTONE, 4);
-            case EMERALD_ORE:
-            case DEEPSLATE_EMERALD_ORE:
-                return new ItemStack(Material.EMERALD);
-            case GOLD_ORE:
-            case DEEPSLATE_GOLD_ORE:
-            case RAW_GOLD:
-            case NETHER_GOLD_ORE:
-                return new ItemStack(Material.GOLD_INGOT);
-            case ANCIENT_DEBRIS:
-                return new ItemStack(Material.NETHERITE_SCRAP);
-            case COPPER_ORE:
-            case DEEPSLATE_COPPER_ORE:
-            case RAW_COPPER:
-                return new ItemStack(Material.COPPER_INGOT);
-            case DIAMOND_ORE:
-            case DEEPSLATE_DIAMOND_ORE:
-                return new ItemStack(Material.DIAMOND);
-            case NETHER_QUARTZ_ORE:
-                return new ItemStack(Material.QUARTZ);
-            case IRON_SWORD:
-            case IRON_PICKAXE:
-            case IRON_AXE:
-            case IRON_SHOVEL:
-            case IRON_HOE:
-            case CHAINMAIL_HELMET:
-            case CHAINMAIL_CHESTPLATE:
-            case CHAINMAIL_LEGGINGS:
-            case CHAINMAIL_BOOTS:
-            case IRON_HELMET:
-            case IRON_CHESTPLATE:
-            case IRON_LEGGINGS:
-            case IRON_BOOTS:
-            case IRON_HORSE_ARMOR:
-                return new ItemStack(Material.IRON_NUGGET);
-            case GOLDEN_SWORD:
-            case GOLDEN_PICKAXE:
-            case GOLDEN_AXE:
-            case GOLDEN_SHOVEL:
-            case GOLDEN_HOE:
-            case GOLDEN_HELMET:
-            case GOLDEN_CHESTPLATE:
-            case GOLDEN_LEGGINGS:
-            case GOLDEN_BOOTS:
-            case GOLDEN_HORSE_ARMOR:
-                return new ItemStack(Material.GOLD_NUGGET);
-            default:
-                return null;
+        if (blastSmeltableItems.containsKey(item.getType())) {
+            return new ItemStack(blastSmeltableItems.get(item.getType()));
+        } else {
+            return null;
         }
     }
 
