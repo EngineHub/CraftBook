@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -119,6 +120,8 @@ public class ItemUtilTest {
 
         ItemStack ingredient = newMockItemStack(Material.CHICKEN, (byte) 0, 1);
         assertTrue(ItemUtil.isCookable(ingredient));
+        ItemStack ingredient2 = newMockItemStack(Material.CLAY, (byte) 0, 1);
+        assertFalse(ItemUtil.isCookable(ingredient2));
     }
 
     @Test
@@ -126,6 +129,17 @@ public class ItemUtilTest {
 
         ItemStack ingredient = newMockItemStack(Material.CLAY, (byte) 0, 1);
         assertTrue(ItemUtil.isSmeltable(ingredient));
+        ItemStack ingredient2 = newMockItemStack(Material.BEDROCK, (byte) 0, 1);
+        assertFalse(ItemUtil.isCookable(ingredient2));
+    }
+
+    @Test
+    public void testIsBlastSmeltable() {
+
+        ItemStack ingredient = newMockItemStack(Material.IRON_ORE, (byte) 0, 1);
+        assertTrue(ItemUtil.isBlastSmeltable(ingredient));
+        ItemStack ingredient2 = newMockItemStack(Material.CHICKEN, (byte) 0, 1);
+        assertFalse(ItemUtil.isCookable(ingredient2));
     }
 
     @Test
