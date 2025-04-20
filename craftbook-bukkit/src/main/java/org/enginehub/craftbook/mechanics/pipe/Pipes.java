@@ -26,6 +26,7 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Crafter;
 import org.bukkit.block.Dropper;
 import org.bukkit.block.Furnace;
 import org.bukkit.block.Jukebox;
@@ -388,6 +389,9 @@ public class Pipes extends AbstractCraftBookMechanic {
                 || fac.getType() == Material.DISPENSER
                 || fac.getType() == Material.HOPPER
                 || fac.getType() == Material.BARREL
+                || fac.getType() == Material.CHISELED_BOOKSHELF
+                || fac.getType() == Material.CRAFTER
+                || fac.getType() == Material.DECORATED_POT
                 || Tag.SHULKER_BOXES.isTagged(fac.getType())) {
                 for (ItemStack stack : ((InventoryHolder) fac.getState()).getInventory().getContents()) {
 
@@ -413,9 +417,15 @@ public class Pipes extends AbstractCraftBookMechanic {
                 }
 
                 if (!items.isEmpty()) {
-                    for (ItemStack item : items) {
-                        if (item == null) continue;
-                        leftovers.addAll(((InventoryHolder) fac.getState()).getInventory().addItem(item).values());
+                    if (fac.getType() == Material.CRAFTER) {
+                        leftovers.addAll(InventoryUtil.addItemsToCrafter((Crafter) fac.getState(), items.toArray(new ItemStack[items.size()])));
+                    } else {
+                        for (ItemStack item : items) {
+                            if (item == null) {
+                                continue;
+                            }
+                            leftovers.addAll(((InventoryHolder) fac.getState()).getInventory().addItem(item).values());
+                        }
                     }
                 }
             } else if (fac.getType() == Material.FURNACE || fac.getType() == Material.BLAST_FURNACE || fac.getType() == Material.SMOKER) {

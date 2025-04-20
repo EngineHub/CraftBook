@@ -708,6 +708,26 @@ public final class ItemUtil {
         }
     }
 
+    /**
+     * Checks whether an item can be put in a chiseled bookshelf.
+     * 
+     * @param item The item to check.
+     * @return If the item can be put in a chiseled bookshelf.
+     */
+    public static boolean isAStorableBook(ItemStack item) {
+
+        switch (item.getType()) {
+            case BOOK:
+            case WRITABLE_BOOK:
+            case WRITTEN_BOOK:
+            case ENCHANTED_BOOK:
+            case KNOWLEDGE_BOOK:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public static boolean containsRawFood(Inventory inv) {
 
         return getRawFood(inv).size() > 0;
