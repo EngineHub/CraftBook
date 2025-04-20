@@ -119,6 +119,35 @@ public final class SignUtil {
         return sign.getRelative(getBack(sign));
     }
 
+    /**
+     * This method will iterate backwards from the "back" of the sign, until it finds a block that is
+     * not a sign.
+     *
+     * <p>
+     * This is useful for allowing mechanics to have multiple signs attached, effectively allowing nested signs.
+     * </p>
+     *
+     * @param sign The sign block to iterate from.
+     * @return The first block in the chain that is not a sign.
+     */
+    public static Block findNonSignBackBlock(Block sign) {
+        Block workingBlock = sign;
+
+        while (SignUtil.isSign(workingBlock)) {
+            // Iterate backwards from signs.
+            Block backBlock = SignUtil.getBackBlock(workingBlock);
+
+            if (backBlock.equals(workingBlock)) {
+                // If we've not moved, this block is giving us invalid data.
+                break;
+            }
+
+            workingBlock = backBlock;
+        }
+
+        return workingBlock;
+    }
+
     public static @Nullable Block getNextSign(Block sign, String criterea, int searchRadius) {
         Block otherBlock = sign;
         BlockFace way = sign.getFace(getBackBlock(sign));

@@ -84,13 +84,7 @@ public class BetterPistons extends AbstractCraftBookMechanic {
             return;
         }
 
-        Block pistonBlock = SignUtil.getBackBlock(event.getBlock());
-
-        while (SignUtil.isSign(pistonBlock)) {
-            // Iterate backwards from signs.
-            pistonBlock = SignUtil.getBackBlock(pistonBlock);
-        }
-
+        Block pistonBlock = SignUtil.findNonSignBackBlock(event.getBlock());
         Material pistonBlockType = pistonBlock.getType();
 
         // Check if this looks at all like something we're interested in first.
