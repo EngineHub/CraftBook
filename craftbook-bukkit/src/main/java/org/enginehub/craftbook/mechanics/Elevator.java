@@ -95,7 +95,7 @@ public class Elevator extends AbstractCraftBookMechanic {
          */
         public static @Nullable LiftType fromLabel(String label) {
             for (LiftType liftType : values()) {
-                if (liftType.getLabel().equalsIgnoreCase(label)) {
+                if (liftType.label.equalsIgnoreCase(label)) {
                     return liftType;
                 }
             }
@@ -178,7 +178,9 @@ public class Elevator extends AbstractCraftBookMechanic {
             return;
         }
 
-        if (!Tag.BUTTONS.isTagged(event.getClickedBlock().getType())) {
+        Block clickedBlock = event.getClickedBlock();
+
+        if (clickedBlock == null || !Tag.BUTTONS.isTagged(clickedBlock.getType())) {
             return;
         }
 
@@ -426,7 +428,11 @@ public class Elevator extends AbstractCraftBookMechanic {
         return true;
     }
 
-    private @Nullable LiftType findLift(Block block) {
+    private @Nullable LiftType findLift(@Nullable Block block) {
+        if (block == null) {
+            return null;
+        }
+
         if (!SignUtil.isSign(block)) {
             if (elevatorButtonEnabled && Tag.BUTTONS.isTagged(block.getType())) {
                 Switch b = (Switch) block.getBlockData();

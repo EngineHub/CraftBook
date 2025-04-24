@@ -98,7 +98,7 @@ public class Ammeter extends AbstractCraftBookMechanic {
         }
     }
 
-    private int getSpecialData(Block block) {
+    private static int getSpecialData(Block block) {
         Material type = block.getType();
         BlockData blockData = block.getBlockData();
         int current = -1;
@@ -115,7 +115,7 @@ public class Ammeter extends AbstractCraftBookMechanic {
         return current;
     }
 
-    private Component getCurrentLine(int data) {
+    private static Component getCurrentLine(int data) {
         TextComponent.Builder line = TextComponent.builder();
         line.append("[", TextColor.YELLOW);
 

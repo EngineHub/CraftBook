@@ -60,7 +60,7 @@ public class BetterAI extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityCreate(EntityAddToWorldEvent event) {
-        if ((attackPassive.isEmpty() && sizeVariance.isEmpty() && fleeFromWeapons.isEmpty()) || !EventUtil.passesFilter(event)) {
+        if (areAllDisabled(attackPassive, sizeVariance, fleeFromWeapons) || !EventUtil.passesFilter(event)) {
             return;
         }
 
@@ -91,7 +91,7 @@ public class BetterAI extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityBreed(EntityBreedEvent event) {
-        if (sizeVariance.isEmpty() || !EventUtil.passesFilter(event)) {
+        if (areAllDisabled(sizeVariance) || !EventUtil.passesFilter(event)) {
             return;
         }
 
@@ -109,7 +109,7 @@ public class BetterAI extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntitySearchTarget(EntityTargetEvent event) {
-        if (enhancedVision.isEmpty() || !EventUtil.passesFilter(event)) {
+        if (areAllDisabled(enhancedVision) || !EventUtil.passesFilter(event)) {
             return;
         }
 
@@ -152,7 +152,7 @@ public class BetterAI extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityShootBow(EntityShootBowEvent event) {
-        if (criticalBow.isEmpty() || !EventUtil.passesFilter(event)) {
+        if (areAllDisabled(criticalBow) || !EventUtil.passesFilter(event)) {
             return;
         }
 
@@ -188,6 +188,22 @@ public class BetterAI extends AbstractCraftBookMechanic {
             return true;
         }
         return entities.contains(BukkitAdapter.adapt(ent.getType()).id());
+    }
+
+    /**
+     * Minor convenience method to make it easier to check if logic used for these mechanics can be skipped.
+     *
+     * @param entitySets The entity sets to check.
+     * @return True if all of the sets are empty.
+     */
+    private static boolean areAllDisabled(Set<?>... entitySets) {
+        for (Set<?> entitySet : entitySets) {
+            if (!entitySet.isEmpty()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private Set<String> enhancedVision;

@@ -18,7 +18,6 @@ package org.enginehub.craftbook.bukkit;
 import com.google.common.base.Joiner;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.wepif.PermissionsResolverManager;
-import com.sk89q.worldedit.bukkit.BukkitCommandSender;
 import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.internal.command.CommandUtil;
 import com.sk89q.worldedit.util.auth.AuthorizationException;
@@ -400,7 +399,7 @@ public class CraftBookPlugin extends JavaPlugin {
             return wrapPlayer((Player) sender);
         }
 
-        return new BukkitCommandSender(plugins.getWorldEdit(), sender);
+        return new BukkitCraftBookCommandSender(plugins.getWorldEdit(), sender);
     }
 
     /**

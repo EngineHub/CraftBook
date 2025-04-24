@@ -27,8 +27,8 @@ import org.enginehub.craftbook.util.TextUtil;
 
 public final class BukkitCraftBookPlayer extends BukkitPlayer implements CraftBookPlayer {
 
-    protected final CraftBookPlugin plugin;
-    protected final Player player;
+    private final CraftBookPlugin plugin;
+    private final Player player;
 
     public BukkitCraftBookPlayer(CraftBookPlugin plugin, Player player) {
         super(CraftBookPlugin.plugins.getWorldEdit(), player);
@@ -41,7 +41,6 @@ public final class BukkitCraftBookPlayer extends BukkitPlayer implements CraftBo
     public void print(Component component) {
         TextAdapter.sendMessage(player, TextUtil.format(component, getLocale()));
     }
-
 
     @Override
     public void printActionBar(Component component) {

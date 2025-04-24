@@ -53,7 +53,10 @@ public class FleeFromWeaponsGoal implements Goal<Creature> {
             if (entity instanceof Player player) {
                 Material mainHandType = player.getInventory().getItemInMainHand().getType();
                 if (Tag.ITEMS_SWORDS.isTagged(mainHandType)) {
-                    Bukkit.getServer().getMobGoals().getGoal(this.creature, VanillaGoal.PANIC).start();
+                    Goal<Creature> panicGoal = Bukkit.getServer().getMobGoals().getGoal(this.creature, VanillaGoal.PANIC);
+                    if (panicGoal != null) {
+                        panicGoal.start();
+                    }
                 }
             }
         }

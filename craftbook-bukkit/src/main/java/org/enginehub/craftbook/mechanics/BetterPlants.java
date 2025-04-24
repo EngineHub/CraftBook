@@ -75,7 +75,7 @@ public class BetterPlants extends AbstractCraftBookMechanic {
         }
     }
 
-    private void handleFernBreak(Block block) {
+    private static void handleFernBreak(Block block) {
         Material type = block.getType();
         if (type != Material.LARGE_FERN) {
             return;
