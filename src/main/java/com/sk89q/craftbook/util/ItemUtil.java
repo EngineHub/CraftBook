@@ -514,35 +514,6 @@ public final class ItemUtil {
                 return new ItemStack(Material.SMOOTH_BASALT);
             case CACTUS:
                 return new ItemStack(Material.GREEN_DYE);
-            case IRON_ORE:
-            case RAW_IRON:
-            case DEEPSLATE_IRON_ORE:
-                return new ItemStack(Material.IRON_INGOT);
-            case COAL_ORE:
-                return new ItemStack(Material.COAL);
-            case LAPIS_ORE:
-            case DEEPSLATE_LAPIS_ORE:
-                return new ItemStack(Material.LAPIS_LAZULI);
-            case REDSTONE_ORE:
-            case DEEPSLATE_REDSTONE_ORE:
-                return new ItemStack(Material.REDSTONE, 4);
-            case EMERALD_ORE:
-            case DEEPSLATE_EMERALD_ORE:
-                return new ItemStack(Material.EMERALD);
-            case GOLD_ORE:
-            case NETHER_GOLD_ORE:
-            case RAW_GOLD:
-            case DEEPSLATE_GOLD_ORE:
-                return new ItemStack(Material.GOLD_INGOT);
-            case ANCIENT_DEBRIS:
-                return new ItemStack(Material.NETHERITE_SCRAP);
-            case COPPER_ORE:
-            case RAW_COPPER:
-            case DEEPSLATE_COPPER_ORE:
-                return new ItemStack(Material.COPPER_INGOT);
-            case DIAMOND_ORE:
-            case DEEPSLATE_DIAMOND_ORE:
-                return new ItemStack(Material.DIAMOND);
             case SAND:
             case RED_SAND:
                 return new ItemStack(Material.GLASS);
@@ -552,8 +523,6 @@ public final class ItemUtil {
                 return new ItemStack(Material.NETHER_BRICK);
             case CLAY:
                 return new ItemStack(Material.TERRACOTTA);
-            case NETHER_QUARTZ_ORE:
-                return new ItemStack(Material.QUARTZ);
             case STONE_BRICKS:
                 return new ItemStack(Material.CRACKED_STONE_BRICKS);
             case NETHER_BRICKS:
@@ -592,6 +561,71 @@ public final class ItemUtil {
                 return new ItemStack(Material.RED_GLAZED_TERRACOTTA);
             case BLACK_TERRACOTTA:
                 return new ItemStack(Material.BLACK_GLAZED_TERRACOTTA);
+            case STONE:
+                return new ItemStack(Material.SMOOTH_STONE);
+            case QUARTZ_BLOCK:
+                return new ItemStack(Material.SMOOTH_QUARTZ);
+            case SANDSTONE:
+                return new ItemStack(Material.SMOOTH_SANDSTONE);
+            case RED_SANDSTONE:
+                return new ItemStack(Material.SMOOTH_RED_SANDSTONE);
+            case CHORUS_FRUIT:
+                return new ItemStack(Material.POPPED_CHORUS_FRUIT);
+            case SEA_PICKLE:
+                return new ItemStack(Material.LIME_DYE);
+            case RESIN_CLUMP:
+                return new ItemStack(Material.RESIN_BRICK);
+            default:
+                if (Tag.LOGS_THAT_BURN.isTagged(item.getType())) {
+                    return new ItemStack(Material.CHARCOAL);
+                }
+                if (Tag.LEAVES.isTagged(item.getType())) {
+                    return new ItemStack(Material.LEAF_LITTER);
+                }
+                return null;
+        }
+    }
+
+    public static boolean isBlastSmeltable(ItemStack item) {
+
+        return getBlastSmeltedResult(item) != null;
+    }
+
+    public static ItemStack getBlastSmeltedResult(ItemStack item) {
+
+        switch (item.getType()) {
+            case IRON_ORE:
+            case DEEPSLATE_IRON_ORE:
+            case RAW_IRON:
+                return new ItemStack(Material.IRON_INGOT);
+            case COAL_ORE:
+            case DEEPSLATE_COAL_ORE:
+                return new ItemStack(Material.COAL);
+            case LAPIS_ORE:
+            case DEEPSLATE_LAPIS_ORE:
+                return new ItemStack(Material.LAPIS_LAZULI);
+            case REDSTONE_ORE:
+            case DEEPSLATE_REDSTONE_ORE:
+                return new ItemStack(Material.REDSTONE, 4);
+            case EMERALD_ORE:
+            case DEEPSLATE_EMERALD_ORE:
+                return new ItemStack(Material.EMERALD);
+            case GOLD_ORE:
+            case DEEPSLATE_GOLD_ORE:
+            case RAW_GOLD:
+            case NETHER_GOLD_ORE:
+                return new ItemStack(Material.GOLD_INGOT);
+            case ANCIENT_DEBRIS:
+                return new ItemStack(Material.NETHERITE_SCRAP);
+            case COPPER_ORE:
+            case DEEPSLATE_COPPER_ORE:
+            case RAW_COPPER:
+                return new ItemStack(Material.COPPER_INGOT);
+            case DIAMOND_ORE:
+            case DEEPSLATE_DIAMOND_ORE:
+                return new ItemStack(Material.DIAMOND);
+            case NETHER_QUARTZ_ORE:
+                return new ItemStack(Material.QUARTZ);
             case IRON_SWORD:
             case IRON_PICKAXE:
             case IRON_AXE:
@@ -618,22 +652,7 @@ public final class ItemUtil {
             case GOLDEN_BOOTS:
             case GOLDEN_HORSE_ARMOR:
                 return new ItemStack(Material.GOLD_NUGGET);
-            case STONE:
-                return new ItemStack(Material.SMOOTH_STONE);
-            case QUARTZ_BLOCK:
-                return new ItemStack(Material.SMOOTH_QUARTZ);
-            case SANDSTONE:
-                return new ItemStack(Material.SMOOTH_SANDSTONE);
-            case RED_SANDSTONE:
-                return new ItemStack(Material.SMOOTH_RED_SANDSTONE);
-            case CHORUS_FRUIT:
-                return new ItemStack(Material.POPPED_CHORUS_FRUIT);
-            case SEA_PICKLE:
-                return new ItemStack(Material.LIME_DYE);
             default:
-                if (Tag.LOGS.isTagged(item.getType())) {
-                    return new ItemStack(Material.CHARCOAL);
-                }
                 return null;
         }
     }
@@ -700,69 +719,7 @@ public final class ItemUtil {
      */
     public static boolean isAFuel(ItemStack item) {
 
-        switch(item.getType()) {
-            case COAL:
-            case CHARCOAL:
-            case COAL_BLOCK:
-            case WOODEN_AXE:
-            case WOODEN_HOE:
-            case WOODEN_PICKAXE:
-            case WOODEN_SHOVEL:
-            case WOODEN_SWORD:
-            case STICK:
-            case OAK_FENCE:
-            case OAK_FENCE_GATE:
-            case OAK_TRAPDOOR:
-            case ACACIA_TRAPDOOR:
-            case BIRCH_TRAPDOOR:
-            case DARK_OAK_TRAPDOOR:
-            case JUNGLE_TRAPDOOR:
-            case SPRUCE_TRAPDOOR:
-            case CRAFTING_TABLE:
-            case CHEST:
-            case TRAPPED_CHEST:
-            case JUKEBOX:
-            case NOTE_BLOCK:
-            case BROWN_MUSHROOM_BLOCK:
-            case RED_MUSHROOM_BLOCK:
-            case BLAZE_ROD:
-            case LAVA_BUCKET:
-            case BOOKSHELF:
-            case ACACIA_STAIRS:
-            case DARK_OAK_STAIRS:
-            case SPRUCE_FENCE:
-            case JUNGLE_FENCE:
-            case BIRCH_FENCE:
-            case ACACIA_FENCE:
-            case DARK_OAK_FENCE:
-            case SPRUCE_FENCE_GATE:
-            case JUNGLE_FENCE_GATE:
-            case BIRCH_FENCE_GATE:
-            case ACACIA_FENCE_GATE:
-            case DARK_OAK_FENCE_GATE:
-            case FISHING_ROD:
-            case BOW:
-            case LADDER:
-            case SCAFFOLDING:
-            case DRIED_KELP_BLOCK:
-            case BAMBOO:
-                return true;
-            default:
-                return Tag.ITEMS_BOATS.isTagged(item.getType())
-                        || Tag.WOODEN_DOORS.isTagged(item.getType())
-                        || Tag.WOOL_CARPETS.isTagged(item.getType())
-                        || Tag.WOODEN_BUTTONS.isTagged(item.getType())
-                        || Tag.ITEMS_BANNERS.isTagged(item.getType())
-                        || Tag.LOGS.isTagged(item.getType())
-                        || Tag.LEAVES.isTagged(item.getType())
-                        || Tag.PLANKS.isTagged(item.getType())
-                        || Tag.WOODEN_STAIRS.isTagged(item.getType())
-                        || Tag.WOODEN_SLABS.isTagged(item.getType())
-                        || Tag.SAPLINGS.isTagged(item.getType())
-                        || Tag.WOOL.isTagged(item.getType())
-                        || Tag.WOODEN_PRESSURE_PLATES.isTagged(item.getType())
-                        || Tag.SIGNS.isTagged(item.getType());
-        }
+        return item.getType().isFuel();
     }
 
     /**
@@ -875,7 +832,7 @@ public final class ItemUtil {
 
     public static boolean isFurnacable(ItemStack item) {
 
-        return isCookable(item) || isSmeltable(item);
+        return isSmeltable(item) || isCookable(item) || isBlastSmeltable(item);
     }
 
     public static boolean isItemEdible(ItemStack item) {
