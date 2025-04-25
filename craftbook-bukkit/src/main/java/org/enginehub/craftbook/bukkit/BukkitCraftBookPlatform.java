@@ -106,7 +106,12 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
         }
 
         this.selfTriggerManager = new BukkitSelfTriggerManager();
-        this.selfTriggerManager.setup();
+
+        // skip if the CRAFTBOOK_DOCGEN environment variable is set
+        // This breaks docgen currently.
+        if (System.getenv("CRAFTBOOK_DOCGEN") == null) {
+            this.selfTriggerManager.setup();
+        }
     }
 
     @Override

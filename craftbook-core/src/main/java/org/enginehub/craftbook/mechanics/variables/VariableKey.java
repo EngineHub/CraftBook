@@ -156,7 +156,7 @@ public class VariableKey {
      * @return The variable key
      */
     public static @Nullable VariableKey fromString(String line, @Nullable Actor actor) throws VariableException {
-        Matcher matcher = AbstractVariableManager.DIRECT_VARIABLE_PATTERN.matcher(line);
+        Matcher matcher = VariableManager.DIRECT_VARIABLE_PATTERN.matcher(line);
 
         if (matcher.find()) {
             String namespace = matcher.group(1);
@@ -204,8 +204,8 @@ public class VariableKey {
         }
 
         if (namespace == null || namespace.trim().isEmpty()) {
-            if (AbstractVariableManager.instance.defaultToGlobal || actorUuid == null) {
-                namespace = AbstractVariableManager.GLOBAL_NAMESPACE;
+            if (VariableManager.instance.defaultToGlobal || actorUuid == null) {
+                namespace = VariableManager.GLOBAL_NAMESPACE;
             } else {
                 namespace = actorUuid.toString();
             }

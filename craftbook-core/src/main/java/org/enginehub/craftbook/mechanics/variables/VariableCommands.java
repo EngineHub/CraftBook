@@ -80,7 +80,7 @@ public class VariableCommands {
         checkVariablePermission(actor, key, "modify");
         checkVariableValue(value);
 
-        AbstractVariableManager.instance.setVariable(key, value);
+        VariableManager.instance.setVariable(key, value);
         actor.printInfo(TranslatableComponent.of(
             "craftbook.variables.set",
             key.getRichName(),
@@ -97,14 +97,14 @@ public class VariableCommands {
     ) throws CraftBookException, AuthorizationException {
         VariableKey key = VariableKey.of(namespace, variable, actor);
 
-        if (AbstractVariableManager.instance.hasVariable(key)) {
+        if (VariableManager.instance.hasVariable(key)) {
             throw new ExistingVariableException(key);
         }
 
         checkVariablePermission(actor, key, "define");
         checkVariableValue(value);
 
-        AbstractVariableManager.instance.setVariable(key, value);
+        VariableManager.instance.setVariable(key, value);
         actor.printInfo(TranslatableComponent.of(
             "craftbook.variables.set",
             key.getRichName(),
@@ -121,7 +121,7 @@ public class VariableCommands {
         checkVariableExists(key);
         checkVariablePermission(actor, key, "get");
 
-        String value = AbstractVariableManager.instance.getVariable(key);
+        String value = VariableManager.instance.getVariable(key);
 
         actor.printInfo(TranslatableComponent.of(
             "craftbook.variables.get",
@@ -140,8 +140,8 @@ public class VariableCommands {
                      @ArgFlag(name = 'p', desc = "Select page number", def = "1") int page
     ) throws InvalidComponentException, VariableException {
         if (!all && namespace == null) {
-            if (AbstractVariableManager.instance.defaultToGlobal || !(actor instanceof CraftBookPlayer)) {
-                namespace = AbstractVariableManager.GLOBAL_NAMESPACE;
+            if (VariableManager.instance.defaultToGlobal || !(actor instanceof CraftBookPlayer)) {
+                namespace = VariableManager.GLOBAL_NAMESPACE;
             } else {
                 namespace = actor.getUniqueId().toString();
             }
@@ -153,12 +153,12 @@ public class VariableCommands {
         List<VariableKey> variableKeys = new ArrayList<>();
 
         if (namespace != null) {
-            Set<String> variableNames = AbstractVariableManager.instance.getVariableStore().getOrDefault(namespace, ImmutableMap.of()).keySet();
+            Set<String> variableNames = VariableManager.instance.getVariableStore().getOrDefault(namespace, ImmutableMap.of()).keySet();
             for (String variableName : variableNames) {
                 variableKeys.add(VariableKey.of(namespace, variableName, actor));
             }
         } else {
-            for (Entry<String, Map<String, String>> namespaceEntry : AbstractVariableManager.instance.getVariableStore().entrySet()) {
+            for (Entry<String, Map<String, String>> namespaceEntry : VariableManager.instance.getVariableStore().entrySet()) {
                 for (String variable : namespaceEntry.getValue().keySet()) {
                     variableKeys.add(VariableKey.of(namespaceEntry.getKey(), variable, actor));
                 }
@@ -183,7 +183,7 @@ public class VariableCommands {
         checkVariableExists(key);
         checkVariablePermission(actor, key, "remove");
 
-        AbstractVariableManager.instance.removeVariable(key);
+        VariableManager.instance.removeVariable(key);
         actor.printInfo(TranslatableComponent.of("craftbook.variables.remove", key.getRichName()));
     }
 
@@ -199,11 +199,11 @@ public class VariableCommands {
         checkVariablePermission(actor, key, "modify");
         checkVariableValue(value);
 
-        AbstractVariableManager.instance.setVariable(key, AbstractVariableManager.instance.getVariable(key) + value);
+        VariableManager.instance.setVariable(key, VariableManager.instance.getVariable(key) + value);
         actor.printInfo(TranslatableComponent.of(
             "craftbook.variables.set",
             key.getRichName(),
-            TextComponent.of(Objects.requireNonNull(AbstractVariableManager.instance.getVariable(key)), TextColor.WHITE)
+            TextComponent.of(Objects.requireNonNull(VariableManager.instance.getVariable(key)), TextColor.WHITE)
         ));
     }
 
@@ -219,11 +219,11 @@ public class VariableCommands {
         checkVariablePermission(actor, key, "modify");
         checkVariableValue(value);
 
-        AbstractVariableManager.instance.setVariable(key, value + AbstractVariableManager.instance.getVariable(key));
+        VariableManager.instance.setVariable(key, value + VariableManager.instance.getVariable(key));
         actor.printInfo(TranslatableComponent.of(
             "craftbook.variables.set",
             key.getRichName(),
-            TextComponent.of(Objects.requireNonNull(AbstractVariableManager.instance.getVariable(key)), TextColor.WHITE)
+            TextComponent.of(Objects.requireNonNull(VariableManager.instance.getVariable(key)), TextColor.WHITE)
         ));
     }
 
@@ -237,7 +237,7 @@ public class VariableCommands {
         checkVariableExists(key);
         checkVariablePermission(actor, key, "modify");
 
-        String var = AbstractVariableManager.instance.getVariable(key);
+        String var = VariableManager.instance.getVariable(key);
         if (var != null) {
             String result;
             if (var.equalsIgnoreCase("0") || var.equalsIgnoreCase("1")) {
@@ -253,7 +253,7 @@ public class VariableCommands {
                 ));
             }
 
-            AbstractVariableManager.instance.setVariable(key, result);
+            VariableManager.instance.setVariable(key, result);
             actor.printInfo(TranslatableComponent.of(
                 "craftbook.variables.set",
                 key.getRichName(),
@@ -273,7 +273,7 @@ public class VariableCommands {
         checkVariableExists(key);
         checkVariablePermission(actor, key, "modify");
 
-        String var = AbstractVariableManager.instance.getVariable(key);
+        String var = VariableManager.instance.getVariable(key);
         if (var != null) {
             double f;
             try {
@@ -295,7 +295,7 @@ public class VariableCommands {
 
             double result = expression.evaluate(f);
 
-            AbstractVariableManager.instance.setVariable(key, String.valueOf(result));
+            VariableManager.instance.setVariable(key, String.valueOf(result));
             actor.printInfo(TranslatableComponent.of(
                 "craftbook.variables.set",
                 key.getRichName(),
@@ -311,13 +311,13 @@ public class VariableCommands {
     }
 
     private void checkVariableExists(VariableKey key) throws UnknownVariableException {
-        if (!AbstractVariableManager.instance.hasVariable(key)) {
+        if (!VariableManager.instance.hasVariable(key)) {
             throw new UnknownVariableException(key);
         }
     }
 
     private void checkVariableValue(String value) throws InvalidVariableException {
-        if (!AbstractVariableManager.ALLOWED_VALUE_PATTERN.matcher(value).find()) {
+        if (!VariableManager.ALLOWED_VALUE_PATTERN.matcher(value).find()) {
             throw new InvalidVariableException(TranslatableComponent.of(
                 "craftbook.variables.invalid-value",
                 TextComponent.of(value)
@@ -365,7 +365,7 @@ public class VariableCommands {
                 label = key.toString();
             }
 
-            String varValue = AbstractVariableManager.instance.getVariable(key);
+            String varValue = VariableManager.instance.getVariable(key);
             Component value;
             TextColor valueColor = TextColor.GRAY;
             if (varValue == null) {

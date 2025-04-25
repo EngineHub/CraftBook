@@ -48,6 +48,11 @@ flyway-core = "org.flywaydb:flyway-core:3.0"
 
 hamcrest-library = "org.hamcrest:hamcrest-library:2.2"
 
+adventure = "net.kyori:adventure-api:4.20.0"
+adventureMinimessage = "net.kyori:adventure-text-minimessage:4.20.0"
+adventureGson = "net.kyori:adventure-text-serializer-gson:4.20.0"
+adventurePlain = "net.kyori:adventure-text-serializer-plain:4.20.0"
+
 # Mojang-provided libraries, CHECK AGAINST MINECRAFT for versions
 guava = "com.google.guava:guava:33.3.1-jre!!"
 log4j-bom = "org.apache.logging.log4j:log4j-bom:2.24.1!!"

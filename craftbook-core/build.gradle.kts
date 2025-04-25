@@ -34,6 +34,10 @@ dependencies {
 
     "api"(libs.worldedit.core)
     "api"(libs.worldguard.core)
+    "api"(libs.adventure)
+    "api"(libs.adventureMinimessage)
+    "api"(libs.adventureGson)
+    "api"(libs.adventurePlain)
     "implementation"(libs.snakeyaml)
     "implementation"(libs.guava)
     "implementation"(libs.jspecify)

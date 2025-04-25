@@ -51,7 +51,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("variables")
             .name("Variables")
             .description(TranslatableComponent.of("craftbook.variables.description"))
-            .className("org.enginehub.craftbook.mechanics.variables.BukkitVariableManager")
+            .className("org.enginehub.craftbook.bukkit.mechanics.variables.BukkitVariableManager")
             .category(MechanicCategory.GENERAL)
             .loadPriority(LoadPriority.EARLY)
             .buildAndRegister();
@@ -61,7 +61,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("snow")
             .name("Snow")
             .description(TranslatableComponent.of("craftbook.snow.description"))
-            .className("org.enginehub.craftbook.mechanics.Snow")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitSnow")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
@@ -70,7 +70,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("ammeter")
             .name("Ammeter")
             .description(TranslatableComponent.of("craftbook.ammeter.description"))
-            .className("org.enginehub.craftbook.mechanics.Ammeter")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitAmmeter")
             .category(MechanicCategory.TOOL)
             .buildAndRegister();
 
@@ -79,7 +79,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("lightstone")
             .name("LightStone")
             .description(TranslatableComponent.of("craftbook.lightstone.description"))
-            .className("org.enginehub.craftbook.mechanics.LightStone")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitLightStone")
             .category(MechanicCategory.TOOL)
             .buildAndRegister();
 
@@ -88,7 +88,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("sign_copier")
             .name("SignCopier")
             .description(TranslatableComponent.of("craftbook.signcopier.description"))
-            .className("org.enginehub.craftbook.mechanics.signcopier.SignCopier")
+            .className("org.enginehub.craftbook.bukkit.mechanics.signcopier.BukkitSignCopier")
             .category(MechanicCategory.TOOL)
             .buildAndRegister();
 
@@ -97,7 +97,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("redstone_fire")
             .name("RedstoneFire")
             .description(TranslatableComponent.of("craftbook.redstonefire.description"))
-            .className("org.enginehub.craftbook.mechanics.RedstoneFire")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitRedstoneFire")
             .category(MechanicCategory.CIRCUIT)
             .buildAndRegister();
 
@@ -106,7 +106,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("redstone_jukebox")
             .name("RedstoneJukebox")
             .description(TranslatableComponent.of("craftbook.redstonejukebox.description"))
-            .className("org.enginehub.craftbook.mechanics.RedstoneJukebox")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitRedstoneJukebox")
             .category(MechanicCategory.CIRCUIT)
             .buildAndRegister();
 
@@ -115,7 +115,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("jack_o_lantern")
             .name("JackOLantern")
             .description(TranslatableComponent.of("craftbook.jackolantern.description"))
-            .className("org.enginehub.craftbook.mechanics.JackOLantern")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitJackOLantern")
             .category(MechanicCategory.CIRCUIT)
             .buildAndRegister();
 
@@ -134,7 +134,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("better_plants")
             .name("BetterPlants")
             .description(TranslatableComponent.of("craftbook.betterplants.description"))
-            .className("org.enginehub.craftbook.mechanics.BetterPlants")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitBetterPlants")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
@@ -143,7 +143,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("better_physics")
             .name("BetterPhysics")
             .description(TranslatableComponent.of("craftbook.betterphysics.description"))
-            .className("org.enginehub.craftbook.mechanics.BetterPhysics")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitBetterPhysics")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
@@ -152,7 +152,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("redstone_glowstone")
             .name("RedstoneGlowstone")
             .description(TranslatableComponent.of("craftbook.redstoneglowstone.description"))
-            .className("org.enginehub.craftbook.mechanics.RedstoneGlowstone")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitRedstoneGlowstone")
             .category(MechanicCategory.CIRCUIT)
             .buildAndRegister();
 
@@ -161,7 +161,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("readable_bookshelf")
             .name("ReadableBookshelf")
             .description(TranslatableComponent.of("craftbook.readablebookshelf.description"))
-            .className("org.enginehub.craftbook.mechanics.ReadableBookshelf")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitReadableBookshelf")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
@@ -170,7 +170,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("chairs")
             .name("Chairs")
             .description(TranslatableComponent.of("craftbook.chairs.description"))
-            .className("org.enginehub.craftbook.mechanics.Chairs")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitChairs")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
@@ -188,7 +188,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("better_sponge")
             .name("BetterSponge")
             .description(TranslatableComponent.of("craftbook.bettersponge.description"))
-            .className("org.enginehub.craftbook.mechanics.BetterSponge")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitBetterSponge")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
@@ -215,7 +215,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("boat_empty_decay")
             .name("BoatEmptyDecay")
             .description(TranslatableComponent.of("craftbook.boatemptydecay.description"))
-            .className("org.enginehub.craftbook.mechanics.boat.BoatEmptyDecay")
+            .className("org.enginehub.craftbook.bukkit.mechanics.boat.BukkitBoatEmptyDecay")
             .category(MechanicCategory.BOAT)
             .buildAndRegister();
 
@@ -224,7 +224,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("boat_exit_remover")
             .name("BoatExitRemover")
             .description(TranslatableComponent.of("craftbook.boatexitremover.description"))
-            .className("org.enginehub.craftbook.mechanics.boat.BoatExitRemover")
+            .className("org.enginehub.craftbook.bukkit.mechanics.boat.BukkitBoatExitRemover")
             .category(MechanicCategory.BOAT)
             .buildAndRegister();
 
@@ -233,7 +233,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("boat_impact_damage")
             .name("BoatImpactDamage")
             .description(TranslatableComponent.of("craftbook.boatimpactdamage.description"))
-            .className("org.enginehub.craftbook.mechanics.boat.BoatImpactDamage")
+            .className("org.enginehub.craftbook.bukkit.mechanics.boat.BukkitBoatImpactDamage")
             .category(MechanicCategory.BOAT)
             .buildAndRegister();
 
@@ -341,7 +341,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("dispenser_recipes")
             .name("DispenserRecipes")
             .description(TranslatableComponent.of("craftbook.dispenserrecipes.description"))
-            .className("org.enginehub.craftbook.mechanics.dispenser.DispenserRecipes")
+            .className("org.enginehub.craftbook.bukkit.mechanics.dispenser.BukkitDispenserRecipes")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
@@ -359,7 +359,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("better_leads")
             .name("BetterLeads")
             .description(TranslatableComponent.of("craftbook.betterleads.description"))
-            .className("org.enginehub.craftbook.mechanics.BetterLeads")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitBetterLeads")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
@@ -368,7 +368,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("better_ai")
             .name("BetterAI")
             .description(TranslatableComponent.of("craftbook.betterai.description"))
-            .className("org.enginehub.craftbook.mechanics.betterai.BetterAI")
+            .className("org.enginehub.craftbook.bukkit.mechanics.betterai.BukkitBetterAI")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
@@ -458,7 +458,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("better_pistons")
             .name("BetterPistons")
             .description(TranslatableComponent.of("craftbook.betterpistons.description"))
-            .className("org.enginehub.craftbook.mechanics.piston.BetterPistons")
+            .className("org.enginehub.craftbook.bukkit.mechanics.piston.BukkitBetterPistons")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
@@ -467,7 +467,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("xp_storer")
             .name("XPStorer")
             .description(TranslatableComponent.of("craftbook.xpstorer.description"))
-            .className("org.enginehub.craftbook.mechanics.XPStorer")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitXPStorer")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
@@ -476,7 +476,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("teleporter")
             .name("Teleporter")
             .description(TranslatableComponent.of("craftbook.teleporter.description"))
-            .className("org.enginehub.craftbook.mechanics.Teleporter")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitTeleporter")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
@@ -531,7 +531,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .name("TreeLopper")
             .description(TranslatableComponent.of("craftbook.treelopper.description"))
             .category(MechanicCategory.GENERAL)
-            .className("org.enginehub.craftbook.mechanics.TreeLopper")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitTreeLopper")
             .buildAndRegister();
 
         MechanicType.Builder

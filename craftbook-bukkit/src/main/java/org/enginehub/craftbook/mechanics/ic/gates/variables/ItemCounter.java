@@ -28,8 +28,8 @@ import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
-import org.enginehub.craftbook.mechanics.variables.AbstractVariableManager;
 import org.enginehub.craftbook.mechanics.variables.VariableKey;
+import org.enginehub.craftbook.mechanics.variables.VariableManager;
 import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 import org.enginehub.craftbook.util.InventoryUtil;
 import org.enginehub.craftbook.util.ItemSyntax;
@@ -83,13 +83,13 @@ public class ItemCounter extends AbstractIC {
             try {
                 VariableKey variableKey = VariableKey.fromString(variable, null);
 
-                double existing = Double.parseDouble(AbstractVariableManager.instance.getVariable(variableKey));
+                double existing = Double.parseDouble(VariableManager.instance.getVariable(variableKey));
 
                 String val = String.valueOf(existing + amount);
                 if (val.endsWith(".0"))
                     val = val.replace(".0", "");
 
-                AbstractVariableManager.instance.setVariable(variableKey, val);
+                VariableManager.instance.setVariable(variableKey, val);
             } catch (VariableException e) {
                 CraftBook.LOGGER.error("Failed to tick IC at " + getBackBlock().getLocation(), e);
             }
@@ -155,7 +155,7 @@ public class ItemCounter extends AbstractIC {
         public void verify(ChangedSign sign) throws ICVerificationException {
             try {
                 VariableKey variableKey = VariableKey.fromString(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)), null);
-                if (variableKey == null || !AbstractVariableManager.instance.hasVariable(variableKey)) {
+                if (variableKey == null || !VariableManager.instance.hasVariable(variableKey)) {
                     throw new ICVerificationException("Unknown Variable!");
                 }
             } catch (VariableException e) {

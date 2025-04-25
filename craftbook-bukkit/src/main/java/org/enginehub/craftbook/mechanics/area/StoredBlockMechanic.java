@@ -65,7 +65,6 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic impl
         super.enable();
     }
 
-
     /**
      * Find the base block of this mechanic attached to the given sign.
      *

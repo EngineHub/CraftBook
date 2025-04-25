@@ -51,9 +51,9 @@ public class VariableConfiguration {
                 try {
                     VariableKey key = VariableKey.of(namespace, variable, (UUID) null);
 
-                    if (AbstractVariableManager.DIRECT_VARIABLE_PATTERN.matcher(key.toString()).matches()
-                        && AbstractVariableManager.ALLOWED_VALUE_PATTERN.matcher(value).find()) {
-                        AbstractVariableManager.instance.setVariable(key, value);
+                    if (VariableManager.DIRECT_VARIABLE_PATTERN.matcher(key.toString()).matches()
+                        && VariableManager.ALLOWED_VALUE_PATTERN.matcher(value).find()) {
+                        VariableManager.instance.setVariable(key, value);
                     } else {
                         throw new VariableException(TextComponent.of("Invalid variable " + key.toString() + " with value " + value), key);
                     }
@@ -67,7 +67,7 @@ public class VariableConfiguration {
     public void save() {
         config.clear();
 
-        for (Map.Entry<String, Map<String, String>> namespaceEntry : AbstractVariableManager.instance.getVariableStore().entrySet()) {
+        for (Map.Entry<String, Map<String, String>> namespaceEntry : VariableManager.instance.getVariableStore().entrySet()) {
             config.setProperty("variables." + namespaceEntry.getKey(), namespaceEntry.getValue());
         }
 

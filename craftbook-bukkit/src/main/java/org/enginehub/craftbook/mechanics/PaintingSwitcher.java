@@ -20,7 +20,8 @@ import com.google.common.collect.HashBiMap;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
-import org.bukkit.Art;
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -63,7 +64,11 @@ public class PaintingSwitcher extends AbstractCraftBookMechanic implements Liste
     public void enable() throws MechanicInitializationException {
         super.enable();
 
-        this.artKeys = Registry.ART.stream().map(Art::getKey).toList();
+        var paintingRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.PAINTING_VARIANT);
+
+        this.artKeys = paintingRegistry.stream()
+                .map(paintingRegistry::getKey)
+                .toList();
     }
 
     @Override
