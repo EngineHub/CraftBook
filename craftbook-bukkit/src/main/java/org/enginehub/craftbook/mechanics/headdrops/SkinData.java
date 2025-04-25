@@ -19,6 +19,7 @@ import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.entity.EntityType;
 import org.enginehub.craftbook.CraftBook;
 
@@ -26,7 +27,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class SkinData {
 
@@ -269,25 +269,29 @@ public class SkinData {
         skinMap.put(EntityType.BOGGED, createProfile(
             "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTNiOTAwM2JhMmQwNTU2MmM3NTExOWI4YTYyMTg1YzY3MTMwZTkyODJmN2FjYmFjNGJjMjgyNGMyMWViOTVkOSJ9fX0="
         ));
+        skinMap.put(EntityType.CREAKING, createProfile(
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTJmZmNlNDU2MWYzYjA3NjkwZjU4Y2Q2MmM2ZjJiNWY4Y2NjMjc2ZjQ0M2MyZDFkN2NmZGU0ODcwYTJiYWYwMyJ9fX0="
+        ));
     }
 
     private static final Set<EntityType> IGNORED_ENTITIES = Set.of(
         EntityType.PLAYER, EntityType.ZOMBIE, EntityType.CREEPER,
         EntityType.SKELETON, EntityType.WITHER_SKELETON,
-        EntityType.ARMOR_STAND, EntityType.ENDER_DRAGON, EntityType.PIGLIN
+        EntityType.ARMOR_STAND, EntityType.ENDER_DRAGON, EntityType.PIGLIN,
+        EntityType.UNKNOWN
     );
 
     @SuppressWarnings("unused")
     private static void printMissingSkins(Map<EntityType, PlayerProfile> skinMap) {
-        String missingText = Stream.of(EntityType.values())
-            .filter(type -> type.getName() != null && type.isAlive() && !IGNORED_ENTITIES.contains(type))
+        String missingText = Registry.ENTITY_TYPE.stream()
+            .filter(type -> !IGNORED_ENTITIES.contains(type) && type.isAlive())
             .filter(type -> !skinMap.containsKey(type))
             .map(EntityType::getKey)
             .map(NamespacedKey::toString)
             .collect(Collectors.joining(", "));
 
         if (!missingText.isEmpty()) {
-            CraftBook.LOGGER.debug(missingText);
+            CraftBook.LOGGER.warn(missingText);
         }
     }
 }
