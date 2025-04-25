@@ -21,6 +21,7 @@ import org.bukkit.entity.Boat;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
@@ -29,7 +30,7 @@ import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 
-public class BoatEmptyDecay extends AbstractCraftBookMechanic {
+public class BoatEmptyDecay extends AbstractCraftBookMechanic implements Listener {
 
     public BoatEmptyDecay(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

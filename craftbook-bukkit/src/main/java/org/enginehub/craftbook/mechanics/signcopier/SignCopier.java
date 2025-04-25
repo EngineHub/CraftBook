@@ -29,6 +29,7 @@ import org.bukkit.block.sign.Side;
 import org.bukkit.block.sign.SignSide;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
@@ -49,7 +50,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class SignCopier extends AbstractCraftBookMechanic {
+public class SignCopier extends AbstractCraftBookMechanic implements Listener {
 
     private final Map<UUID, SignData> signs = Maps.newHashMap();
 

@@ -25,6 +25,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
@@ -48,7 +49,7 @@ import java.util.Locale;
  * be modified to
  * include an implementer.
  */
-public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
+public abstract class CartBlockMechanism extends AbstractCraftBookMechanic implements Listener {
 
     private BaseBlock block;
 

@@ -28,6 +28,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockEvent;
@@ -77,7 +78,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-public class CommandItems extends AbstractCraftBookMechanic {
+public class CommandItems extends AbstractCraftBookMechanic implements Listener {
 
     public static CommandItems INSTANCE;
 

@@ -22,6 +22,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
@@ -32,7 +33,7 @@ import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 /**
  * This mechanism allow players to toggle Jack-o-Lanterns.
  */
-public class JackOLantern extends AbstractCraftBookMechanic {
+public class JackOLantern extends AbstractCraftBookMechanic implements Listener {
 
     public JackOLantern(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

@@ -37,6 +37,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
@@ -62,7 +63,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-public class TreeLopper extends AbstractCraftBookMechanic {
+public class TreeLopper extends AbstractCraftBookMechanic implements Listener {
 
     private final Map<Material, Material> logsToSaplings = new HashMap<>();
     private final Map<Material, Material> leavesToSaplings = new HashMap<>();

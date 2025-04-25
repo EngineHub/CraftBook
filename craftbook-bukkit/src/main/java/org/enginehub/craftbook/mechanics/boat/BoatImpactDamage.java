@@ -20,6 +20,7 @@ import org.bukkit.entity.Boat;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
@@ -27,7 +28,7 @@ import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 
-public class BoatImpactDamage extends AbstractCraftBookMechanic {
+public class BoatImpactDamage extends AbstractCraftBookMechanic implements Listener {
 
     private static final Vector HALF_BLOCK_UP = new Vector(0, 0.5, 0);
 

@@ -24,6 +24,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.InventoryAction;
@@ -67,7 +68,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * @author Me4502
  */
-public class CustomCrafting extends AbstractCraftBookMechanic {
+public class CustomCrafting extends AbstractCraftBookMechanic implements Listener {
 
     public static CustomCrafting INSTANCE;
     private RecipeManager manager;

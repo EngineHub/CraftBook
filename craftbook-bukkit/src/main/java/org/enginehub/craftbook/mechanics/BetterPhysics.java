@@ -23,6 +23,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -32,7 +33,7 @@ import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 
-public class BetterPhysics extends AbstractCraftBookMechanic {
+public class BetterPhysics extends AbstractCraftBookMechanic implements Listener {
 
     public BetterPhysics(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

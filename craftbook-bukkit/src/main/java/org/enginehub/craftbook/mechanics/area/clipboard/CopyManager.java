@@ -35,7 +35,7 @@ import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.mechanic.MechanicTypes;
+import org.enginehub.craftbook.bukkit.mechanic.MechanicTypes;
 import org.enginehub.craftbook.util.HistoryHashMap;
 import org.jspecify.annotations.Nullable;
 

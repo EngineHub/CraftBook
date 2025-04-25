@@ -20,6 +20,7 @@ import org.enginehub.craftbook.mechanic.MechanicManager;
 import org.enginehub.craftbook.st.SelfTriggerManager;
 import org.enginehub.craftbook.util.profile.cache.ProfileCache;
 import org.enginehub.craftbook.util.profile.resolver.ProfileService;
+import org.enginehub.craftbook.util.report.ReportFlag;
 import org.enginehub.piston.CommandManager;
 
 import java.nio.file.Path;
@@ -90,11 +91,16 @@ public interface CraftBookPlatform {
     YamlConfiguration getConfiguration();
 
     /**
+     * Reloads the configuration.
+     */
+    void reloadConfiguration();
+
+    /**
      * Adds reports specific to this platform.
      *
      * @param report The report list
      */
-    void addPlatformReports(ReportList report);
+    void addPlatformReports(ReportList report, ReportFlag... flags);
 
     /**
      * Internal use.
@@ -108,4 +114,9 @@ public interface CraftBookPlatform {
      * @return Whether the plugin is available
      */
     boolean isPluginAvailable(String pluginName);
+
+    /**
+     * A function that triggers all connected players to refresh their command maps.
+     */
+    void refreshPlayerCommandMaps();
 }

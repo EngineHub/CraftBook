@@ -29,6 +29,7 @@ import org.bukkit.block.Dispenser;
 import org.bukkit.block.data.Directional;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
@@ -45,7 +46,7 @@ import org.jspecify.annotations.Nullable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class DispenserRecipes extends AbstractCraftBookMechanic {
+public class DispenserRecipes extends AbstractCraftBookMechanic implements Listener {
 
     public static final Registry<DispenserRecipe> REGISTRY = new NamespacedRegistry<>("dispenser recipe", "craftbook");
 

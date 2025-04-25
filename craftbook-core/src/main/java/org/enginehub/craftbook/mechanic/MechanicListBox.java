@@ -25,11 +25,9 @@ import com.sk89q.worldedit.util.formatting.text.event.ClickEvent;
 import com.sk89q.worldedit.util.formatting.text.event.HoverEvent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 public class MechanicListBox extends PaginationBox {
 
@@ -93,7 +91,7 @@ public class MechanicListBox extends PaginationBox {
     }
 
     private static String getCommandPrefix() {
-        return "/" + CraftBookPlugin.inst().getPluginMeta().getName().toLowerCase(Locale.ENGLISH) + ":craftbook ";
+        return "/craftbook5:craftbook ";
     }
 
     @Override

@@ -25,6 +25,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.Directional;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
@@ -45,7 +46,7 @@ import org.enginehub.craftbook.util.events.SignClickEvent;
  * every time a sign with [|] or [I]
  * is right clicked by a player.
  */
-public class LightSwitch extends AbstractCraftBookMechanic {
+public class LightSwitch extends AbstractCraftBookMechanic implements Listener {
 
     public LightSwitch(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

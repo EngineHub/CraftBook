@@ -23,13 +23,22 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.command.util.PermissionCondition;
 import com.sk89q.worldedit.util.report.ReportList;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookManifest;
 import org.enginehub.craftbook.CraftBookPlatform;
 import org.enginehub.craftbook.YamlConfiguration;
-import org.enginehub.craftbook.mechanic.BukkitMechanicManager;
+import org.enginehub.craftbook.bukkit.mechanic.BukkitMechanicManager;
+import org.enginehub.craftbook.bukkit.report.LoadedICsReport;
+import org.enginehub.craftbook.bukkit.report.MechanicReport;
+import org.enginehub.craftbook.bukkit.report.PerformanceReport;
+import org.enginehub.craftbook.bukkit.report.PluginReport;
+import org.enginehub.craftbook.bukkit.report.SchedulerReport;
+import org.enginehub.craftbook.bukkit.report.ServerReport;
+import org.enginehub.craftbook.bukkit.report.ServicesReport;
+import org.enginehub.craftbook.bukkit.report.WorldReport;
+import org.enginehub.craftbook.bukkit.st.BukkitSelfTriggerManager;
 import org.enginehub.craftbook.mechanic.MechanicManager;
-import org.enginehub.craftbook.st.BukkitSelfTriggerManager;
 import org.enginehub.craftbook.st.SelfTriggerManager;
 import org.enginehub.craftbook.util.profile.cache.ProfileCache;
 import org.enginehub.craftbook.util.profile.resolver.CacheForwardingService;
@@ -37,6 +46,7 @@ import org.enginehub.craftbook.util.profile.resolver.CombinedProfileService;
 import org.enginehub.craftbook.util.profile.resolver.HttpRepositoryService;
 import org.enginehub.craftbook.util.profile.resolver.PaperPlayerService;
 import org.enginehub.craftbook.util.profile.resolver.ProfileService;
+import org.enginehub.craftbook.util.report.ReportFlag;
 import org.enginehub.piston.CommandManager;
 
 import java.nio.file.Path;
@@ -156,8 +166,27 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
     }
 
     @Override
-    public void addPlatformReports(ReportList report) {
+    public void reloadConfiguration() {
+        CraftBookPlugin.inst().reloadConfiguration();
+    }
 
+    @Override
+    public void addPlatformReports(ReportList report, ReportFlag... flags) {
+        report.add(new ServerReport());
+        report.add(new PluginReport());
+        report.add(new SchedulerReport());
+        report.add(new ServicesReport());
+        report.add(new WorldReport());
+        report.add(new PerformanceReport());
+        report.add(new MechanicReport());
+
+        for (ReportFlag flag : flags) {
+            switch (flag) {
+                case IC_REPORT -> report.add(new LoadedICsReport());
+                default -> {
+                }
+            }
+        }
     }
 
     @Override
@@ -174,5 +203,14 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
     @Override
     public boolean isPluginAvailable(String pluginName) {
         return Bukkit.getPluginManager().isPluginEnabled(pluginName);
+    }
+
+    @Override
+    public void refreshPlayerCommandMaps() {
+        CraftBookPlugin plugin = CraftBookPlugin.inst();
+        if (plugin.getCommandManager().getMechanicRegistrar().isDirty()) {
+            resetCommandRegistration(plugin);
+            Bukkit.getOnlinePlayers().forEach(Player::updateCommands);
+        }
     }
 }

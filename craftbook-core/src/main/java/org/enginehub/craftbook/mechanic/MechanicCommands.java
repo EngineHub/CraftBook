@@ -23,11 +23,7 @@ import com.sk89q.worldedit.util.formatting.component.InvalidComponentException;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.bukkit.BukkitCraftBookPlatform;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.CommandManagerService;
@@ -74,16 +70,12 @@ public class MechanicCommands {
                            MechanicType<?> mechanicType,
                        @ArgFlag(name = 'l', desc = "Show the list box", def = "0")
                                int listBoxPage) throws InvalidComponentException {
-        CraftBookPlugin plugin = CraftBookPlugin.inst();
         try {
             CraftBook.getInstance().getPlatform().getMechanicManager().enableMechanic(mechanicType);
             CraftBook.getInstance().getPlatform().getConfiguration().enabledMechanics.add(mechanicType.id());
             CraftBook.getInstance().getPlatform().getConfiguration().save();
 
-            if (plugin.getCommandManager().getMechanicRegistrar().isDirty()) {
-                ((BukkitCraftBookPlatform) CraftBook.getInstance().getPlatform()).resetCommandRegistration(plugin);
-                Bukkit.getOnlinePlayers().forEach(Player::updateCommands);
-            }
+            CraftBook.getInstance().getPlatform().refreshPlayerCommandMaps();
 
             actor.printInfo(TranslatableComponent.of(
                 "craftbook.mechanisms.enable-success",
@@ -105,16 +97,12 @@ public class MechanicCommands {
                             MechanicType<?> mechanicType,
                         @ArgFlag(name = 'l', desc = "Show the list box", def = "0")
                                 int listBoxPage) throws InvalidComponentException {
-        CraftBookPlugin plugin = CraftBookPlugin.inst();
         Optional<?> mech = CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(mechanicType);
         if (mech.isPresent() && CraftBook.getInstance().getPlatform().getMechanicManager().disableMechanic((CraftBookMechanic) mech.get())) {
             CraftBook.getInstance().getPlatform().getConfiguration().enabledMechanics.remove(mechanicType.id());
             CraftBook.getInstance().getPlatform().getConfiguration().save();
 
-            if (plugin.getCommandManager().getMechanicRegistrar().isDirty()) {
-                ((BukkitCraftBookPlatform) CraftBook.getInstance().getPlatform()).resetCommandRegistration(plugin);
-                Bukkit.getOnlinePlayers().forEach(Player::updateCommands);
-            }
+            CraftBook.getInstance().getPlatform().refreshPlayerCommandMaps();
 
             actor.printInfo(TranslatableComponent.of(
                 "craftbook.mechanisms.disable-success",

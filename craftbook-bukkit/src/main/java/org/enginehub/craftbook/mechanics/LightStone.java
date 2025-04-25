@@ -24,6 +24,7 @@ import com.sk89q.worldedit.world.item.ItemTypes;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -42,7 +43,7 @@ import org.enginehub.craftbook.util.ProtectionUtil;
 /**
  * This allows users to Right-click to check the light level.
  */
-public class LightStone extends AbstractCraftBookMechanic {
+public class LightStone extends AbstractCraftBookMechanic implements Listener {
 
     public LightStone(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

@@ -25,6 +25,7 @@ import org.bukkit.block.data.MultipleFacing;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
@@ -33,7 +34,7 @@ import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 
 
-public class MoreRails extends AbstractCraftBookMechanic {
+public class MoreRails extends AbstractCraftBookMechanic implements Listener {
 
     public MoreRails(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

@@ -19,13 +19,14 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 
-public class MinecartNoCollide extends AbstractCraftBookMechanic {
+public class MinecartNoCollide extends AbstractCraftBookMechanic implements Listener {
 
     public MinecartNoCollide(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

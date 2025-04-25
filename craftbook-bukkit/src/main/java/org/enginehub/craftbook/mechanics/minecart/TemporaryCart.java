@@ -26,6 +26,7 @@ import org.bukkit.entity.Vehicle;
 import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
@@ -43,7 +44,7 @@ import org.enginehub.craftbook.mechanic.exception.MechanicInitializationExceptio
 import org.enginehub.craftbook.util.CartUtil;
 import org.enginehub.craftbook.util.EventUtil;
 
-public class TemporaryCart extends AbstractCraftBookMechanic {
+public class TemporaryCart extends AbstractCraftBookMechanic implements Listener {
     private NamespacedKey temporaryCartKey;
 
     public TemporaryCart(MechanicType<? extends CraftBookMechanic> mechanicType) {

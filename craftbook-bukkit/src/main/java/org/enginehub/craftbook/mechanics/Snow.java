@@ -34,6 +34,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
@@ -62,7 +63,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Snow fall mechanism. Builds up/tramples snow
  */
-public class Snow extends AbstractCraftBookMechanic {
+public class Snow extends AbstractCraftBookMechanic implements Listener {
 
     private static final double SNOW_MELTING_TEMPERATURE = 0.05D;
     private static final double SNOW_FORM_TEMPERATURE = 0.15D;

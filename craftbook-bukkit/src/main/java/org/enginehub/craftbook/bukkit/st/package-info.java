@@ -14,5 +14,5 @@
  */
 
 @org.jspecify.annotations.NullMarked
-package org.enginehub.craftbook.st;
+package org.enginehub.craftbook.bukkit.st;
 

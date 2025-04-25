@@ -21,7 +21,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.BlockInventoryHolder;
 import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.mechanic.MechanicTypes;
+import org.enginehub.craftbook.bukkit.mechanic.MechanicTypes;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
 import org.enginehub.craftbook.util.InventoryUtil;
 

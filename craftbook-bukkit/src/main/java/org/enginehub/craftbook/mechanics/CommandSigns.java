@@ -22,6 +22,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
@@ -40,7 +41,7 @@ import org.enginehub.craftbook.util.events.SignClickEvent;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 import org.jspecify.annotations.Nullable;
 
-public class CommandSigns extends AbstractCraftBookMechanic {
+public class CommandSigns extends AbstractCraftBookMechanic implements Listener {
 
     public CommandSigns(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

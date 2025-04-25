@@ -29,6 +29,7 @@ import org.bukkit.block.data.type.Slab;
 import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
@@ -50,7 +51,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic {
+public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic implements Listener {
 
     private final NamespacedKey storedBlockTypeKey = new NamespacedKey("craftbook", "toggle_block_type");
     private final NamespacedKey storedBlockQuantityKey = new NamespacedKey("craftbook", "toggle_block_quantity");

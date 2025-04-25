@@ -34,6 +34,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -60,7 +61,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class HeadDrops extends AbstractCraftBookMechanic {
+public class HeadDrops extends AbstractCraftBookMechanic implements Listener {
 
     private static final Map<EntityType, PlayerProfile> TEXTURE_MAP = Maps.newHashMap();
 

@@ -17,7 +17,6 @@ package org.enginehub.craftbook;
 
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
-import org.bukkit.event.Listener;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 
@@ -25,7 +24,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public abstract class AbstractCraftBookMechanic implements CraftBookMechanic, Listener {
+public abstract class AbstractCraftBookMechanic implements CraftBookMechanic {
 
     private final MechanicType<? extends CraftBookMechanic> mechanicType;
 

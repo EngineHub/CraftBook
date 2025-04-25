@@ -34,6 +34,7 @@ import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -60,7 +61,7 @@ import java.util.Locale;
  * The default elevator mechanism -- wall signs in a vertical column that teleport the player
  * vertically when triggered.
  */
-public class Elevator extends AbstractCraftBookMechanic {
+public class Elevator extends AbstractCraftBookMechanic implements Listener {
 
     public Elevator(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

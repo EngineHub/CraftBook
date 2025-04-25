@@ -19,8 +19,8 @@ import com.sk89q.worldedit.util.report.DataReport;
 import com.sk89q.worldedit.util.report.HierarchyObjectReport;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlatform;
+import org.enginehub.craftbook.bukkit.st.BukkitSelfTriggerManager;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
-import org.enginehub.craftbook.st.BukkitSelfTriggerManager;
 
 public class MechanicReport extends DataReport {
 

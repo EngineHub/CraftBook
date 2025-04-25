@@ -31,6 +31,7 @@ import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -50,7 +51,7 @@ import org.enginehub.craftbook.util.SignUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HiddenSwitch extends AbstractCraftBookMechanic {
+public class HiddenSwitch extends AbstractCraftBookMechanic implements Listener {
 
     public HiddenSwitch(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

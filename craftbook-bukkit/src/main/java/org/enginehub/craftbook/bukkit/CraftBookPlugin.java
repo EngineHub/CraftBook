@@ -20,7 +20,6 @@ import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.wepif.PermissionsResolverManager;
 import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.internal.command.CommandUtil;
-import com.sk89q.worldedit.util.auth.AuthorizationException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -362,20 +361,6 @@ public class CraftBookPlugin extends JavaPlugin {
         }
 
         return false;
-    }
-
-    /**
-     * Checks permissions and throws an exception if permission is not met.
-     *
-     * @param sender The sender to check the permission on.
-     * @param perm The permission to check the permission on.
-     * @throws AuthorizationException if {@code sender} doesn't have {@code perm}
-     */
-    public void checkPermission(CommandSender sender, String perm)
-        throws AuthorizationException {
-        if (!hasPermission(sender, perm)) {
-            throw new AuthorizationException();
-        }
     }
 
     /**

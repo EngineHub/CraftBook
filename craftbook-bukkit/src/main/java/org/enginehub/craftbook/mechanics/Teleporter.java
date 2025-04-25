@@ -33,6 +33,7 @@ import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -56,7 +57,7 @@ import org.enginehub.craftbook.util.events.SignClickEvent;
 /**
  * Teleporter mechanic; teleports players to another location based on position.
  */
-public class Teleporter extends AbstractCraftBookMechanic {
+public class Teleporter extends AbstractCraftBookMechanic implements Listener {
 
     public Teleporter(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

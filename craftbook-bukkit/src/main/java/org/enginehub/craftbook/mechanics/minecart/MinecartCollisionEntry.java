@@ -20,13 +20,14 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 
-public class MinecartCollisionEntry extends AbstractCraftBookMechanic {
+public class MinecartCollisionEntry extends AbstractCraftBookMechanic implements Listener {
 
     public MinecartCollisionEntry(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

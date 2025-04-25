@@ -21,6 +21,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
@@ -42,7 +43,7 @@ import org.enginehub.craftbook.util.events.SignClickEvent;
  *
  * @author Me4502
  */
-public class Payment extends AbstractCraftBookMechanic {
+public class Payment extends AbstractCraftBookMechanic implements Listener {
 
     public Payment(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

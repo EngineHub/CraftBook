@@ -28,6 +28,7 @@ import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
@@ -49,7 +50,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public class PaintingSwitcher extends AbstractCraftBookMechanic {
+public class PaintingSwitcher extends AbstractCraftBookMechanic implements Listener {
 
     private final BiMap<UUID, Painting> paintingMap = HashBiMap.create();
     private @Nullable List<NamespacedKey> artKeys;

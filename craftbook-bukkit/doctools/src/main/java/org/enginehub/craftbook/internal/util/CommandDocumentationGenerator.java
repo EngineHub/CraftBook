@@ -41,6 +41,12 @@ public class CommandDocumentationGenerator {
 
     public static void generateCommandDocumentation() {
         try {
+            generateCommandsFile("craftbook", CommandUtils.dumpSection("CraftBook", List.of("craftbook")));
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
+        try {
             generateCommandsFile("headdrops", CommandUtils.dumpSection("HeadDrops", List.of("headdrops")));
         } catch (Throwable e) {
             e.printStackTrace();

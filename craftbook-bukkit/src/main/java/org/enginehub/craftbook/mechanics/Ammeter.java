@@ -29,6 +29,7 @@ import org.bukkit.block.data.Lightable;
 import org.bukkit.block.data.Powerable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -47,7 +48,7 @@ import org.enginehub.craftbook.util.ProtectionUtil;
 /**
  * This allows users to Right-click to check the power level of redstone.
  */
-public class Ammeter extends AbstractCraftBookMechanic {
+public class Ammeter extends AbstractCraftBookMechanic implements Listener {
 
     public Ammeter(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

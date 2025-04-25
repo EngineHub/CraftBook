@@ -24,6 +24,7 @@ import org.bukkit.block.data.Levelled;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -36,7 +37,7 @@ import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
-public class BetterSponge extends AbstractCraftBookMechanic {
+public class BetterSponge extends AbstractCraftBookMechanic implements Listener {
 
     public BetterSponge(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

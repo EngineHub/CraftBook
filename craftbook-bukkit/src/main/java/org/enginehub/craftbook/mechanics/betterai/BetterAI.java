@@ -34,6 +34,7 @@ import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -49,7 +50,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class BetterAI extends AbstractCraftBookMechanic {
+public class BetterAI extends AbstractCraftBookMechanic implements Listener {
 
     private static final NamespacedKey SIZE_VARIANCE = new NamespacedKey("craftbook", "size_variance");
     private static final NamespacedKey SIZE_VARIANCE_BREEDING = new NamespacedKey("craftbook", "size_variance_breeding");

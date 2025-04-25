@@ -13,13 +13,17 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanic;
+package org.enginehub.craftbook.bukkit.mechanic;
 
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicCategory;
+import org.enginehub.craftbook.mechanic.MechanicManager;
+import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.load.LoadPriority;
 import org.enginehub.craftbook.mechanic.load.MechanicDependency;
 
@@ -553,11 +557,15 @@ public class BukkitMechanicManager extends MechanicManager {
 
     @Override
     protected void enableMechanicPlatformListeners(CraftBookMechanic mechanic) {
-        Bukkit.getPluginManager().registerEvents((Listener) mechanic, CraftBookPlugin.inst());
+        if (mechanic instanceof Listener eventListener) {
+            Bukkit.getPluginManager().registerEvents(eventListener, CraftBookPlugin.inst());
+        }
     }
 
     @Override
     protected void disableMechanicPlatformListeners(CraftBookMechanic mechanic) {
-        HandlerList.unregisterAll((Listener) mechanic);
+        if (mechanic instanceof Listener eventListener) {
+            HandlerList.unregisterAll(eventListener);
+        }
     }
 }

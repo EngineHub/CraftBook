@@ -21,6 +21,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
@@ -33,7 +34,7 @@ import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 /**
  * This mechanism allow players to toggle the fire on top of Netherrack or Soul Soil.
  */
-public class RedstoneFire extends AbstractCraftBookMechanic {
+public class RedstoneFire extends AbstractCraftBookMechanic implements Listener {
 
     public RedstoneFire(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

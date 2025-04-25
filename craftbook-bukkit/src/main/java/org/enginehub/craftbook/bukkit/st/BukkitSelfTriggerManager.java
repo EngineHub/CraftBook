@@ -13,7 +13,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.st;
+package org.enginehub.craftbook.bukkit.st;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -30,6 +30,8 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.scheduler.BukkitTask;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.st.MechanicClock;
+import org.enginehub.craftbook.st.SelfTriggerManager;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.events.SelfTriggerPingEvent;

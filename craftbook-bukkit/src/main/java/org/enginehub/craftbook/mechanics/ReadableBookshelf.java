@@ -22,6 +22,7 @@ import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -45,7 +46,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * This mechanism allow players to read bookshelves and get a random line from a file as as "book."
  */
-public class ReadableBookshelf extends AbstractCraftBookMechanic {
+public class ReadableBookshelf extends AbstractCraftBookMechanic implements Listener {
 
     public List<String> lines;
 

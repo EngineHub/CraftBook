@@ -37,6 +37,7 @@ import org.bukkit.block.data.type.Piston;
 import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -70,7 +71,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public class Pipes extends AbstractCraftBookMechanic {
+public class Pipes extends AbstractCraftBookMechanic implements Listener {
 
     public Pipes(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

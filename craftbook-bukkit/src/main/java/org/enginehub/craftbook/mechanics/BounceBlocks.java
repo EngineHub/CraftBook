@@ -27,6 +27,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
@@ -47,7 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class BounceBlocks extends AbstractCraftBookMechanic {
+public class BounceBlocks extends AbstractCraftBookMechanic implements Listener {
 
     private List<BaseBlock> blocks;
     private double sensitivity;

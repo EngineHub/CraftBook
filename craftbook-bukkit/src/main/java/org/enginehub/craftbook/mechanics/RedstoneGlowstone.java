@@ -23,6 +23,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
@@ -34,7 +35,7 @@ import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 /**
  * This mechanism allow players to toggle GlowStone.
  */
-public class RedstoneGlowstone extends AbstractCraftBookMechanic {
+public class RedstoneGlowstone extends AbstractCraftBookMechanic implements Listener {
 
     public RedstoneGlowstone(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

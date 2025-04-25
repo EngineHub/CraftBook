@@ -33,6 +33,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -64,7 +65,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * @author Silthus
  */
-public class ImprovedCauldron extends AbstractCraftBookMechanic {
+public class ImprovedCauldron extends AbstractCraftBookMechanic implements Listener {
 
     public static ImprovedCauldron instance;
     public ImprovedCauldronCookbook recipes;

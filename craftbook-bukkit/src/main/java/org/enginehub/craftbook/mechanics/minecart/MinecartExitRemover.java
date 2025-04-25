@@ -23,20 +23,21 @@ import org.bukkit.entity.Vehicle;
 import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.mechanic.MechanicTypes;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
-import org.enginehub.craftbook.mechanic.MechanicTypes;
 import org.enginehub.craftbook.util.EventUtil;
 
 import java.util.Optional;
 
-public class MinecartExitRemover extends AbstractCraftBookMechanic {
+public class MinecartExitRemover extends AbstractCraftBookMechanic implements Listener {
 
     public MinecartExitRemover(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

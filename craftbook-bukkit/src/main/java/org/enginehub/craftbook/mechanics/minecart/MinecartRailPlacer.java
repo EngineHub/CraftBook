@@ -22,6 +22,7 @@ import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -30,7 +31,7 @@ import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 
-public class MinecartRailPlacer extends AbstractCraftBookMechanic {
+public class MinecartRailPlacer extends AbstractCraftBookMechanic implements Listener {
 
     public MinecartRailPlacer(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

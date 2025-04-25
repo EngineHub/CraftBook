@@ -32,7 +32,7 @@ import com.sk89q.worldedit.util.formatting.component.InvalidComponentException;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
-import org.bukkit.World;
+import com.sk89q.worldedit.world.World;
 import org.bukkit.block.Block;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
@@ -108,7 +108,7 @@ public class AreaCommands {
         }
 
         try {
-            com.sk89q.worldedit.world.World world = player.getWorld();
+            World world = player.getWorld();
             Region sel = WorldEdit.getInstance().getSessionManager().get(player).getSelection(world);
             if (sel == null) {
                 player.printError(TranslatableComponent.of("craftbook.togglearea.missing-selection"));
@@ -214,7 +214,7 @@ public class AreaCommands {
                        @Switch(name = 's', desc = "Silence output") boolean silent
     ) {
         if (world == null && actor instanceof CraftBookPlayer player) {
-            world = BukkitAdapter.adapt(player.getWorld());
+            world = player.getWorld();
         }
 
         if (world == null) {
@@ -222,7 +222,7 @@ public class AreaCommands {
             return;
         }
 
-        Block block = world.getBlockAt(position.x(), position.y(), position.z());
+        Block block = BukkitAdapter.adapt(world).getBlockAt(position.x(), position.y(), position.z());
         if (!SignUtil.isSign(block)) {
             actor.printError(TranslatableComponent.of("craftbook.togglearea.toggle.no-sign"));
             return;

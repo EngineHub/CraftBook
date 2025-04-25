@@ -25,6 +25,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
@@ -38,7 +39,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class BetterPlants extends AbstractCraftBookMechanic {
+public class BetterPlants extends AbstractCraftBookMechanic implements Listener {
 
     private @Nullable BukkitTask growthTask;
     private @Nullable Bisected topHalfData = null;

@@ -40,13 +40,13 @@ import org.enginehub.craftbook.util.SearchArea;
 import org.enginehub.craftbook.util.jinglenote.JingleNoteManager;
 import org.enginehub.craftbook.util.jinglenote.MidiJingleSequencer;
 
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiUnavailableException;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiUnavailableException;
 
 /**
  * @author Me4502

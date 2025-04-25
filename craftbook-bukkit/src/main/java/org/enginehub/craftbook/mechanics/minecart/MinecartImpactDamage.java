@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
@@ -29,7 +30,7 @@ import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 
-public class MinecartImpactDamage extends AbstractCraftBookMechanic {
+public class MinecartImpactDamage extends AbstractCraftBookMechanic implements Listener {
 
     private static final Vector HALF_BLOCK_UP = new Vector(0, 0.5, 0);
 

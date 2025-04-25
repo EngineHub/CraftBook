@@ -37,6 +37,7 @@ import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.ThrownExpBottle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.ExpBottleEvent;
@@ -52,10 +53,10 @@ import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.st.BukkitSelfTriggerManager;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
-import org.enginehub.craftbook.st.BukkitSelfTriggerManager;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.InventoryUtil;
@@ -70,7 +71,7 @@ import org.enginehub.craftbook.util.events.SelfTriggerThinkEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XPStorer extends AbstractCraftBookMechanic {
+public class XPStorer extends AbstractCraftBookMechanic implements Listener {
 
     private final NamespacedKey xpQuantityKey = new NamespacedKey("craftbook", "xp_quantity");
     private ItemStack mergeStack;

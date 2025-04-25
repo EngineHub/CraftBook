@@ -28,6 +28,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
@@ -42,7 +43,7 @@ import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
-public class ChunkAnchor extends AbstractCraftBookMechanic {
+public class ChunkAnchor extends AbstractCraftBookMechanic implements Listener {
 
     public ChunkAnchor(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

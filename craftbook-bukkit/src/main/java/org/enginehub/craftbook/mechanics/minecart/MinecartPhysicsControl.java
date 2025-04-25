@@ -19,6 +19,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
@@ -26,7 +27,7 @@ import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.EventUtil;
 
-public class MinecartPhysicsControl extends AbstractCraftBookMechanic {
+public class MinecartPhysicsControl extends AbstractCraftBookMechanic implements Listener {
     private Vector fallSpeed;
     private Vector derailedVelocityMod;
 

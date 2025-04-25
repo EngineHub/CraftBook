@@ -32,6 +32,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -48,7 +49,7 @@ import org.enginehub.craftbook.util.EventUtil;
 import java.util.List;
 import java.util.Set;
 
-public class BetterLeads extends AbstractCraftBookMechanic {
+public class BetterLeads extends AbstractCraftBookMechanic implements Listener {
 
     private static final int MAX_LEASH_DISTANCE = 10;
 

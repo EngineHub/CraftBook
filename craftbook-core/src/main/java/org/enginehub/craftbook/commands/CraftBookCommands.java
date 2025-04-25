@@ -13,9 +13,8 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.bukkit.commands;
+package org.enginehub.craftbook.commands;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
 import com.sk89q.worldedit.extension.platform.Actor;
@@ -28,18 +27,10 @@ import com.sk89q.worldedit.util.paste.ActorCallbackPaste;
 import com.sk89q.worldedit.util.report.ReportList;
 import com.sk89q.worldedit.util.report.SystemInfoReport;
 import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.report.LoadedICsReport;
-import org.enginehub.craftbook.bukkit.report.MechanicReport;
-import org.enginehub.craftbook.bukkit.report.PerformanceReport;
-import org.enginehub.craftbook.bukkit.report.PluginReport;
-import org.enginehub.craftbook.bukkit.report.SchedulerReport;
-import org.enginehub.craftbook.bukkit.report.ServerReport;
-import org.enginehub.craftbook.bukkit.report.ServicesReport;
-import org.enginehub.craftbook.bukkit.report.WorldReport;
 import org.enginehub.craftbook.exception.CraftBookException;
 import org.enginehub.craftbook.mechanic.MechanicCommands;
 import org.enginehub.craftbook.util.report.GlobalConfigReport;
+import org.enginehub.craftbook.util.report.ReportFlag;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.CommandManagerService;
 import org.enginehub.piston.annotation.Command;
@@ -51,6 +42,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,7 +74,7 @@ public class CraftBookCommands {
     @CommandPermissions({ "craftbook.reload" })
     public void reload(Actor actor) {
         try {
-            CraftBookPlugin.inst().reloadConfiguration();
+            CraftBook.getInstance().getPlatform().reloadConfiguration();
         } catch (Throwable e) {
             CraftBook.LOGGER.error(e);
             actor.printError(TranslatableComponent.of("craftbook.reload.failed"));
@@ -110,20 +102,16 @@ public class CraftBookCommands {
                        @Switch(name = 'p', desc = "Submit the report to pastebin.")
                            boolean pastebin) throws CraftBookException, AuthorizationException {
         ReportList report = new ReportList("Report");
-
-        report.add(new ServerReport());
-        report.add(new PluginReport());
-        report.add(new SchedulerReport());
-        report.add(new ServicesReport());
-        report.add(new WorldReport());
-        report.add(new PerformanceReport());
-        report.add(new SystemInfoReport());
-        report.add(new GlobalConfigReport());
-        report.add(new MechanicReport());
+        EnumSet<ReportFlag> reportFlags = EnumSet.noneOf(ReportFlag.class);
 
         if (loadedIcReport) {
-            report.add(new LoadedICsReport());
+            reportFlags.add(ReportFlag.IC_REPORT);
         }
+
+        report.add(new SystemInfoReport());
+        report.add(new GlobalConfigReport());
+
+        CraftBook.getInstance().getPlatform().addPlatformReports(report, reportFlags.toArray(new ReportFlag[0]));
 
         String result = report.toString();
 
@@ -137,7 +125,9 @@ public class CraftBookCommands {
         }
 
         if (pastebin) {
-            CraftBookPlugin.inst().checkPermission(BukkitAdapter.adapt(actor), "craftbook.report.pastebin");
+            if (!actor.hasPermission("craftbook.report.pastebin")) {
+                throw new AuthorizationException();
+            }
 
             ActorCallbackPaste.pastebin(
                 CraftBook.getInstance().getSupervisor(),

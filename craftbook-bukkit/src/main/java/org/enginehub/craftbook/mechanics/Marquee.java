@@ -22,6 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
@@ -40,7 +41,7 @@ import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.events.SignClickEvent;
 import org.enginehub.craftbook.util.persistence.OwnedSignHelper;
 
-public class Marquee extends AbstractCraftBookMechanic {
+public class Marquee extends AbstractCraftBookMechanic implements Listener {
 
     public Marquee(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
