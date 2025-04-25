@@ -23,12 +23,14 @@ import com.sk89q.worldedit.util.formatting.text.event.ClickEvent;
 import com.sk89q.worldedit.util.formatting.text.event.HoverEvent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import com.sk89q.worldedit.util.formatting.text.format.TextDecoration;
-import org.bukkit.Bukkit;
+import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.mechanics.variables.exception.InvalidVariableException;
 import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
+import org.enginehub.craftbook.util.profile.Profile;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -89,7 +91,7 @@ public class VariableKey {
     public Component getRichName() {
         TextComponent mainText;
         if (this.namespace.contains("-")) {
-            String fakeNamespace = Bukkit.getOfflinePlayer(UUID.fromString(this.namespace)).getName();
+            String fakeNamespace = Optional.ofNullable(CraftBook.getInstance().getProfileCache().getIfPresent(UUID.fromString(this.namespace))).map(Profile::getName).orElse(null);
             if (fakeNamespace != null) {
                 mainText = TextComponent.empty().append(
                     TextComponent.of("*" + fakeNamespace, TextColor.GRAY, TextDecoration.ITALIC)
@@ -154,7 +156,7 @@ public class VariableKey {
      * @return The variable key
      */
     public static @Nullable VariableKey fromString(String line, @Nullable Actor actor) throws VariableException {
-        Matcher matcher = VariableManager.DIRECT_VARIABLE_PATTERN.matcher(line);
+        Matcher matcher = AbstractVariableManager.DIRECT_VARIABLE_PATTERN.matcher(line);
 
         if (matcher.find()) {
             String namespace = matcher.group(1);
@@ -202,8 +204,8 @@ public class VariableKey {
         }
 
         if (namespace == null || namespace.trim().isEmpty()) {
-            if (VariableManager.instance.defaultToGlobal || actorUuid == null) {
-                namespace = VariableManager.GLOBAL_NAMESPACE;
+            if (AbstractVariableManager.instance.defaultToGlobal || actorUuid == null) {
+                namespace = AbstractVariableManager.GLOBAL_NAMESPACE;
             } else {
                 namespace = actorUuid.toString();
             }

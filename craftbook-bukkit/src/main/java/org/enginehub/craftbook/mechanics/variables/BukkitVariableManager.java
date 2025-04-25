@@ -15,8 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.variables;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.sk89q.util.yaml.YAMLFormat;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.extension.platform.Actor;
@@ -30,7 +28,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.ServerCommandEvent;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.mechanic.MechanicTypes;
@@ -46,30 +43,15 @@ import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class VariableManager extends AbstractCraftBookMechanic implements Listener {
-
-    public static final Pattern ALLOWED_VALUE_PATTERN = Pattern.compile("[a-zA-Z0-9_]+");
-    private static final Pattern VARIABLE_PATTERN = Pattern.compile("%(?:([a-zA-Z0-9_\\-]+)\\|)?([a-zA-Z0-9_]+)%");
-    protected static final Pattern DIRECT_VARIABLE_PATTERN = Pattern.compile("^(?:([a-zA-Z0-9_\\-]+)\\|)?([a-zA-Z0-9_]+)$");
-
-    public static final String GLOBAL_NAMESPACE = "global";
-
-    public static @Nullable VariableManager instance;
-
+public class BukkitVariableManager extends AbstractVariableManager implements Listener {
     private VariableConfiguration variableConfiguration;
 
-    private Map<String, Map<String, String>> variableStore;
-
-    public VariableManager(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public BukkitVariableManager(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 
@@ -78,7 +60,6 @@ public class VariableManager extends AbstractCraftBookMechanic implements Listen
         instance = this;
 
         CraftBookPlugin.logDebugMessage("Initializing Variables!", "startup.variables");
-        variableStore = new ConcurrentHashMap<>();
 
         try {
             File varFile = new File(CraftBookPlugin.inst().getDataFolder(), "variables.yml");
@@ -118,65 +99,9 @@ public class VariableManager extends AbstractCraftBookMechanic implements Listen
         instance = null;
     }
 
-    /**
-     * Gets whether a variable is set.
-     *
-     * @param key The variable key
-     * @return If the variable exists
-     */
-    public boolean hasVariable(VariableKey key) {
-        checkNotNull(key);
-
-        Map<String, String> namespacedVariables = this.variableStore.getOrDefault(key.getNamespace(), ImmutableMap.of());
-        return namespacedVariables.containsKey(key.getVariable());
-    }
-
-    /**
-     * Gets the value of a variable, with the given namespace.
-     *
-     * @param key The variable key
-     * @return The value, or null if unset
-     */
-    public @Nullable String getVariable(VariableKey key) {
-        checkNotNull(key);
-
-        Map<String, String> namespacedVariables = this.variableStore.getOrDefault(key.getNamespace(), ImmutableMap.of());
-        return namespacedVariables.get(key.getVariable());
-    }
-
-    /**
-     * Sets the value of a variable, with the given namespace.
-     *
-     * <p>
-     * To remove variables, use {@link VariableManager#removeVariable(VariableKey)}.
-     * </p>
-     *
-     * @param key The variable key
-     * @param value The value to set
-     */
-    public void setVariable(VariableKey key, String value) {
-        checkNotNull(key);
-        checkNotNull(value);
-        checkArgument(value.length() <= maxVariableSize, "Variable value too large");
-
-        Map<String, String> namespacedVariables = this.variableStore.computeIfAbsent(key.getNamespace(), s -> Maps.newHashMap());
-        namespacedVariables.put(key.getVariable(), value);
+    @Override
+    public void updateForVariableChange(VariableKey key) {
         resetICCache(key);
-    }
-
-    /**
-     * Removes a variable, with the given namespace.
-     *
-     * @param key The variable key
-     */
-    public void removeVariable(VariableKey key) {
-        checkNotNull(key);
-
-        Map<String, String> namespacedVariables = this.variableStore.get(key.getNamespace());
-        if (namespacedVariables != null) {
-            namespacedVariables.remove(key.getVariable());
-            resetICCache(key);
-        }
     }
 
     private boolean signHasVariable(VariableKey variableKey, ChangedSign sign) {
@@ -201,15 +126,6 @@ public class VariableManager extends AbstractCraftBookMechanic implements Listen
             ICManager.getCachedICs().entrySet()
                 .removeIf(ic -> signHasVariable(variableKey, ic.getValue().getSign()));
         }
-    }
-
-    /**
-     * Gets an immutable copy of the current variable store.
-     *
-     * @return The variable store
-     */
-    public Map<String, Map<String, String>> getVariableStore() {
-        return ImmutableMap.copyOf(this.variableStore);
     }
 
     public static Collection<VariableKey> getPossibleVariables(Component line, @Nullable Actor actor) {
@@ -292,29 +208,4 @@ public class VariableManager extends AbstractCraftBookMechanic implements Listen
             event.setCommand(renderVariables(event.getCommand(), null));
         }
     }
-
-    protected boolean defaultToGlobal;
-    private boolean consoleOverride;
-    private boolean playerCommandOverride;
-    private boolean playerChatOverride;
-    private int maxVariableSize;
-
-    @Override
-    public void loadFromConfiguration(YAMLProcessor config) {
-        config.setComment("default-to-global", "Whether to default to global or the player's namespace when no namespace is provided");
-        defaultToGlobal = config.getBoolean("default-to-global", false);
-
-        config.setComment("enable-in-console", "Allows variables to work when used in console commands");
-        consoleOverride = config.getBoolean("enable-in-console", false);
-
-        config.setComment("enable-in-player-commands", "Allows variables to work when used in player commands");
-        playerCommandOverride = config.getBoolean("enable-in-player-commands", false);
-
-        config.setComment("enable-in-player-chat", "Allows variables to work when used in chat");
-        playerChatOverride = config.getBoolean("enable-in-player-chat", false);
-
-        config.setComment("max-variable-length", "The maximum length of a value in a variable");
-        maxVariableSize = config.getInt("max-variable-length", 256);
-    }
-
 }

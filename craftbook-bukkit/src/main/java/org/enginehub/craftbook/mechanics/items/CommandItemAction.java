@@ -21,8 +21,8 @@ import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.ic.gates.variables.NumericModifier.MathFunction;
+import org.enginehub.craftbook.mechanics.variables.AbstractVariableManager;
 import org.enginehub.craftbook.mechanics.variables.VariableKey;
-import org.enginehub.craftbook.mechanics.variables.VariableManager;
 import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 import org.enginehub.craftbook.util.RegexUtil;
 
@@ -82,7 +82,7 @@ public class CommandItemAction {
             case SETVAR:
                 String[] svarParts = RegexUtil.EQUALS_PATTERN.split(newVal, 2);
                 VariableKey sVariableKey = VariableKey.fromString(svarParts[0], localPlayer);
-                VariableManager.instance.setVariable(sVariableKey, svarParts[1]);
+                AbstractVariableManager.instance.setVariable(sVariableKey, svarParts[1]);
                 return true;
             case MATHVAR:
                 String[] mvarParts = RegexUtil.EQUALS_PATTERN.split(newVal, 2);
@@ -91,7 +91,7 @@ public class CommandItemAction {
                 String[] mathFunctionParts = RegexUtil.COLON_PATTERN.split(mvarParts[1], 2);
                 MathFunction func = MathFunction.parseFunction(mathFunctionParts[0]);
 
-                String cur = VariableManager.instance.getVariable(mVariableKey);
+                String cur = AbstractVariableManager.instance.getVariable(mVariableKey);
                 if (cur == null || cur.isEmpty()) cur = "0";
 
                 double currentValue = Double.parseDouble(cur);
@@ -103,12 +103,12 @@ public class CommandItemAction {
                 if (val.endsWith(".0"))
                     val = val.replace(".0", "");
 
-                VariableManager.instance.setVariable(mVariableKey, val);
+                AbstractVariableManager.instance.setVariable(mVariableKey, val);
                 return true;
             case ISVAR: {
                 String[] isparts = RegexUtil.EQUALS_PATTERN.split(newVal, 2);
                 VariableKey isVariableKey = VariableKey.fromString(isparts[0], localPlayer);
-                return VariableManager.instance.getVariable(isVariableKey).equals(isparts[1]);
+                return AbstractVariableManager.instance.getVariable(isVariableKey).equals(isparts[1]);
             }
             case GREATERVAR: {
                 String[] isparts = RegexUtil.GREATER_THAN_PATTERN.split(newVal, 2);
@@ -116,7 +116,7 @@ public class CommandItemAction {
                 double variable = 0;
                 double test = 0;
                 try {
-                    variable = Double.parseDouble(VariableManager.instance.getVariable(isVariableKey));
+                    variable = Double.parseDouble(AbstractVariableManager.instance.getVariable(isVariableKey));
                     test = Double.parseDouble(isparts[1]);
                 } catch (NumberFormatException e) {
                     CraftBook.LOGGER.warn("Variable " + isparts[0] + " is not a number!");
@@ -129,7 +129,7 @@ public class CommandItemAction {
                 double variable = 0;
                 double test = 0;
                 try {
-                    variable = Double.parseDouble(VariableManager.instance.getVariable(isVariableKey));
+                    variable = Double.parseDouble(AbstractVariableManager.instance.getVariable(isVariableKey));
                     test = Double.parseDouble(isparts[1]);
                 } catch (NumberFormatException e) {
                     CraftBook.LOGGER.warn("Variable " + isparts[0] + " is not a number!");

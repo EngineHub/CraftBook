@@ -18,15 +18,16 @@ package org.enginehub.craftbook.mechanics.variables.exception;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import org.enginehub.craftbook.exception.CraftBookException;
 import org.enginehub.craftbook.mechanics.variables.VariableKey;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Refers to an error relating to variables or variable usage.
  */
 public class VariableException extends CraftBookException {
 
-    private final VariableKey variableKey;
+    private final @Nullable VariableKey variableKey;
 
-    public VariableException(Component message, VariableKey variableKey) {
+    public VariableException(Component message, @Nullable VariableKey variableKey) {
         super(message);
 
         this.variableKey = variableKey;
@@ -37,7 +38,7 @@ public class VariableException extends CraftBookException {
      *
      * @return the variable key involved in this exception
      */
-    public VariableKey getVariableKey() {
+    public @Nullable VariableKey getVariableKey() {
         return this.variableKey;
     }
 }

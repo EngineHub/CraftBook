@@ -71,7 +71,7 @@ import org.enginehub.craftbook.mechanics.minecart.blocks.speed.CartStrongBraker;
 import org.enginehub.craftbook.mechanics.minecart.blocks.station.CartStation;
 import org.enginehub.craftbook.mechanics.piston.BetterPistons;
 import org.enginehub.craftbook.mechanics.signcopier.SignCopier;
-import org.enginehub.craftbook.mechanics.variables.VariableManager;
+import org.enginehub.craftbook.mechanics.variables.AbstractVariableManager;
 import org.jspecify.annotations.Nullable;
 
 @SuppressWarnings("unused")
@@ -130,7 +130,7 @@ public class MechanicTypes {
     public static final @Nullable MechanicType<TemporaryCart> TEMPORARY_CART = get("temporary_cart");
     public static final @Nullable MechanicType<ToggleArea> TOGGLE_AREA = get("toggle_area");
     public static final @Nullable MechanicType<TreeLopper> TREE_LOPPER = get("tree_lopper");
-    public static final @Nullable MechanicType<VariableManager> VARIABLES = get("variables");
+    public static final @Nullable MechanicType<AbstractVariableManager> VARIABLES = get("variables");
     public static final @Nullable MechanicType<XPStorer> XP_STORER = get("xp_storer");
 
     private MechanicTypes() {

@@ -21,7 +21,7 @@ import com.sk89q.worldedit.world.World;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.enginehub.craftbook.mechanics.variables.VariableManager;
+import org.enginehub.craftbook.mechanics.variables.BukkitVariableManager;
 import org.jspecify.annotations.Nullable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -56,8 +56,8 @@ public final class ParsingUtil {
         if (player != null) {
             line = parsePlayerTags(line, player);
         }
-        if (VariableManager.instance != null) {
-            line = VariableManager.renderVariables(line, player);
+        if (BukkitVariableManager.instance != null) {
+            line = BukkitVariableManager.renderVariables(line, player);
         }
 
         return line;

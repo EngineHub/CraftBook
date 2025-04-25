@@ -156,7 +156,7 @@ import org.enginehub.craftbook.mechanics.ic.gates.world.weather.WeatherControlAd
 import org.enginehub.craftbook.mechanics.ic.gates.world.weather.WeatherFaker;
 import org.enginehub.craftbook.mechanics.ic.plc.PlcFactory;
 import org.enginehub.craftbook.mechanics.ic.plc.lang.Perlstone;
-import org.enginehub.craftbook.mechanics.variables.VariableManager;
+import org.enginehub.craftbook.mechanics.variables.AbstractVariableManager;
 import org.enginehub.craftbook.util.RegexUtil;
 
 import java.io.File;
@@ -590,7 +590,7 @@ public class ICManager {
         registerIC("MCT233", "weather set ad", new WeatherControlAdvanced.Factory(server), family3ISO);
 
         //Variable ICs
-        if (VariableManager.instance != null) {
+        if (AbstractVariableManager.instance != null) {
             registerIC("VAR100", "num mod", new NumericModifier.Factory(server), familySISO, familyAISO);
             registerIC("VAR170", "at least", new IsAtLeast.Factory(server), familySISO, familyAISO);
             registerIC("VAR200", "item count", new ItemCounter.Factory(server), familySISO, familyAISO);

@@ -25,8 +25,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
 import org.bukkit.block.sign.SignSide;
+import org.enginehub.craftbook.mechanics.variables.BukkitVariableManager;
 import org.enginehub.craftbook.mechanics.variables.VariableKey;
-import org.enginehub.craftbook.mechanics.variables.VariableManager;
 import org.enginehub.craftbook.util.ParsingUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -63,10 +63,10 @@ public class ChangedSign {
     }
 
     public void checkPlayerVariablePermissions(CraftBookPlayer player) {
-        if (this.lines != null && VariableManager.instance != null) {
+        if (this.lines != null && BukkitVariableManager.instance != null) {
             for (int i = 0; i < 4; i++) {
                 Component line = this.lines[i];
-                for (VariableKey variableKey : VariableManager.getPossibleVariables(line, player)) {
+                for (VariableKey variableKey : BukkitVariableManager.getPossibleVariables(line, player)) {
                     if (!variableKey.hasPermission(player, "use")) {
                         TextReplacementConfig config = TextReplacementConfig.builder()
                             .matchLiteral("%" + variableKey.getOriginalForm() + "%")

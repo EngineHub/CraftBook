@@ -37,7 +37,7 @@ import org.enginehub.craftbook.CraftBookPlatform;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.PlatformCommandManager;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
-import org.enginehub.craftbook.mechanics.variables.VariableManager;
+import org.enginehub.craftbook.mechanics.variables.AbstractVariableManager;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.companion.CompanionPlugins;
 import org.enginehub.craftbook.util.profile.Profile;
@@ -156,7 +156,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 boolean foundAMech = false;
 
                 for (CraftBookMechanic mech : platform.getMechanicManager().getLoadedMechanics()) {
-                    if (!(mech instanceof VariableManager)) {
+                    if (!(mech instanceof AbstractVariableManager)) {
                         foundAMech = true;
                         break;
                     }
@@ -171,7 +171,7 @@ public class CraftBookPlugin extends JavaPlugin {
         boolean foundAMech = false;
 
         for (CraftBookMechanic mech : platform.getMechanicManager().getLoadedMechanics()) {
-            if (!(mech instanceof VariableManager)) {
+            if (!(mech instanceof AbstractVariableManager)) {
                 foundAMech = true;
                 break;
             }

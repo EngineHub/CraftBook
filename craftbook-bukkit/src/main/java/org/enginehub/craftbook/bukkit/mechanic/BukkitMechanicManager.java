@@ -51,7 +51,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("variables")
             .name("Variables")
             .description(TranslatableComponent.of("craftbook.variables.description"))
-            .className("org.enginehub.craftbook.mechanics.variables.VariableManager")
+            .className("org.enginehub.craftbook.mechanics.variables.BukkitVariableManager")
             .category(MechanicCategory.GENERAL)
             .loadPriority(LoadPriority.EARLY)
             .buildAndRegister();
@@ -126,7 +126,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .description(TranslatableComponent.of("craftbook.marquee.description"))
             .className("org.enginehub.craftbook.mechanics.Marquee")
             .category(MechanicCategory.GENERAL)
-            .dependsOn(new MechanicDependency(MechanicType.REGISTRY.get("variables")))
+            .dependsOn(new MechanicDependency(MechanicTypes.VARIABLES))
             .buildAndRegister();
 
         MechanicType.Builder

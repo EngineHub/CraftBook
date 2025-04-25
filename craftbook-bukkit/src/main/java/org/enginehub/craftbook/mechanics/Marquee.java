@@ -32,8 +32,8 @@ import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanics.variables.AbstractVariableManager;
 import org.enginehub.craftbook.mechanics.variables.VariableKey;
-import org.enginehub.craftbook.mechanics.variables.VariableManager;
 import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
@@ -90,7 +90,7 @@ public class Marquee extends AbstractCraftBookMechanic implements Listener {
             return;
         }
 
-        String var = VariableManager.instance.getVariable(variableKey);
+        String var = AbstractVariableManager.instance.getVariable(variableKey);
         if (var == null) {
             lplayer.printError(TranslatableComponent.of(
                 "craftbook.variables.unknown-variable",
@@ -144,7 +144,7 @@ public class Marquee extends AbstractCraftBookMechanic implements Listener {
             return;
         }
 
-        String var = VariableManager.instance.getVariable(variableKey);
+        String var = AbstractVariableManager.instance.getVariable(variableKey);
         if (var == null) {
             lplayer.printError(TranslatableComponent.of(
                 "craftbook.variables.unknown-variable",

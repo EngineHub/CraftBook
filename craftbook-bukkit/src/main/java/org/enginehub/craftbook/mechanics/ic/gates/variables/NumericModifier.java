@@ -26,8 +26,8 @@ import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
+import org.enginehub.craftbook.mechanics.variables.AbstractVariableManager;
 import org.enginehub.craftbook.mechanics.variables.VariableKey;
-import org.enginehub.craftbook.mechanics.variables.VariableManager;
 import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 
 public class NumericModifier extends AbstractIC {
@@ -73,7 +73,7 @@ public class NumericModifier extends AbstractIC {
             try {
                 VariableKey variableKey = VariableKey.fromString(variable, null);
 
-                double currentValue = Double.parseDouble(VariableManager.instance.getVariable(variableKey));
+                double currentValue = Double.parseDouble(AbstractVariableManager.instance.getVariable(variableKey));
 
                 currentValue = function.parseNumber(currentValue, amount);
 
@@ -81,7 +81,7 @@ public class NumericModifier extends AbstractIC {
                 if (val.endsWith(".0"))
                     val = val.replace(".0", "");
 
-                VariableManager.instance.setVariable(variableKey, val);
+                AbstractVariableManager.instance.setVariable(variableKey, val);
                 chip.setOutput(0, true);
                 return;
             } catch (NumberFormatException | VariableException ignored) {
@@ -220,7 +220,7 @@ public class NumericModifier extends AbstractIC {
             try {
                 String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
                 VariableKey variableKey = VariableKey.fromString(line2, null);
-                if (variableKey == null || !VariableManager.instance.hasVariable(variableKey)) {
+                if (variableKey == null || !AbstractVariableManager.instance.hasVariable(variableKey)) {
                     throw new ICVerificationException("Unknown Variable!");
                 }
                 String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
