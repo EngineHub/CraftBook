@@ -13,9 +13,9 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics;
+package org.enginehub.craftbook.bukkit.mechanics;
 
-import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.util.HandSide;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import net.kyori.adventure.text.Component;
@@ -35,7 +35,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
@@ -43,6 +42,7 @@ import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.bukkit.st.BukkitSelfTriggerManager;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanics.CookingPot;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ItemUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
@@ -52,14 +52,13 @@ import org.enginehub.craftbook.util.events.SelfTriggerThinkEvent;
 import org.enginehub.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
 import org.enginehub.craftbook.util.events.SignClickEvent;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
-import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class CookingPot extends AbstractCraftBookMechanic implements Listener {
+public class BukkitCookingPot extends CookingPot implements Listener {
 
-    public CookingPot(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public BukkitCookingPot(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 
@@ -262,7 +261,7 @@ public class CookingPot extends AbstractCraftBookMechanic implements Listener {
                 return;
             }
 
-            CookingPotFuel fuel = CookingPotFuel.getByMaterial(player.getInventory().getItemInMainHand().getType());
+            CookingPotFuel fuel = CookingPotFuel.getByItemType(p.getItemInHand(HandSide.MAIN_HAND).getType());
 
             if (ItemUtil.isStackValid(player.getInventory().getItemInMainHand()) && fuel != null) {
                 increaseFuelLevel(sign, fuel.getFuelCount());
@@ -345,68 +344,5 @@ public class CookingPot extends AbstractCraftBookMechanic implements Listener {
         }
 
         return Math.max(requireFuel ? 0 : 1, multiplier);
-    }
-
-    private enum CookingPotFuel {
-        COAL(Material.COAL, 40),
-        CHARCOAL(Material.CHARCOAL, 40),
-        COALBLOCK(Material.COAL_BLOCK, 360),
-        BLAZEDUST(Material.BLAZE_POWDER, 250),
-        BLAZE(Material.BLAZE_ROD, 500),
-        LAVA(Material.LAVA_BUCKET, 6000);
-
-        private final Material id;
-        private final int fuelCount;
-
-        CookingPotFuel(Material id, int fuelCount) {
-            this.id = id;
-            this.fuelCount = fuelCount;
-        }
-
-        public int getFuelCount() {
-            return this.fuelCount;
-        }
-
-        public static @Nullable CookingPotFuel getByMaterial(Material id) {
-            for (CookingPotFuel in : values()) {
-                if (in.id == id) {
-                    return in;
-                }
-            }
-
-            return null;
-        }
-    }
-
-    private boolean allowRedstone;
-    private boolean requireFuel;
-    private boolean allowSmelting;
-    private boolean openSign;
-    private int progressPerFuel;
-    private int fuelPerTick;
-    private boolean emptyCooldown;
-
-    @Override
-    public void loadFromConfiguration(YAMLProcessor config) {
-        config.setComment("allow-redstone", "Allows for redstone to be used as a fuel source.");
-        allowRedstone = config.getBoolean("allow-redstone", false);
-
-        config.setComment("require-fuel", "Require fuel to cook.");
-        requireFuel = config.getBoolean("require-fuel", true);
-
-        config.setComment("allow-smelting", "Allows the cooking pot to cook ores and other smeltable items.");
-        allowSmelting = config.getBoolean("allow-smelting", false);
-
-        config.setComment("sign-click-open", "When enabled, right clicking the [Cook] sign will open the cooking pot.");
-        openSign = config.getBoolean("sign-click-open", true);
-
-        config.setComment("progress-per-fuel", "How much the current smelt progress increases per unit of fuel (line 4). Decreases fuel per cooked item and increases cooking speed.");
-        progressPerFuel = config.getInt("progress-per-fuel", 2);
-
-        config.setComment("fuel-per-tick", "How many fuel units (line 4) are used per tick. Increases cooking speed.");
-        fuelPerTick = config.getInt("fuel-per-tick", 5);
-
-        config.setComment("empty-cooldown", "Put the cooking pot in a \"low power\" mode while the chest is empty. Useful for low-performance machines or overloaded servers.");
-        emptyCooldown = config.getBoolean("empty-cooldown", false);
     }
 }

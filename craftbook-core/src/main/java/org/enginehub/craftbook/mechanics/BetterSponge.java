@@ -22,7 +22,7 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 
-public class BetterSponge extends AbstractCraftBookMechanic {
+public abstract class BetterSponge extends AbstractCraftBookMechanic {
 
     public BetterSponge(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

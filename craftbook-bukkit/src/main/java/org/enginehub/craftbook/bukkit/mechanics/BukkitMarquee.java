@@ -13,7 +13,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics;
+package org.enginehub.craftbook.bukkit.mechanics;
 
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
@@ -25,13 +25,13 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanics.Marquee;
 import org.enginehub.craftbook.mechanics.variables.VariableKey;
 import org.enginehub.craftbook.mechanics.variables.VariableManager;
 import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
@@ -41,9 +41,9 @@ import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.events.SignClickEvent;
 import org.enginehub.craftbook.util.persistence.OwnedSignHelper;
 
-public class Marquee extends AbstractCraftBookMechanic implements Listener {
+public class BukkitMarquee extends Marquee implements Listener {
 
-    public Marquee(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public BukkitMarquee(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 

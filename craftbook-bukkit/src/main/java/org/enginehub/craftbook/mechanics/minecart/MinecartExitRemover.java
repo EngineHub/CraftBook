@@ -30,9 +30,10 @@ import org.bukkit.persistence.PersistentDataType;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.mechanic.MechanicTypes;
+import org.enginehub.craftbook.bukkit.mechanics.minecart.BukkitTemporaryCart;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanic.MechanicTypes;
 import org.enginehub.craftbook.util.EventUtil;
 
 import java.util.Optional;
@@ -58,8 +59,8 @@ public class MinecartExitRemover extends AbstractCraftBookMechanic implements Li
 
             // Ignore temporary carts here, we don't want to handle them.
             Optional<TemporaryCart> temporaryCart = CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(MechanicTypes.TEMPORARY_CART);
-            if (temporaryCart.isPresent()) {
-                if (cart.getPersistentDataContainer().has(temporaryCart.get().getTemporaryCartKey(), PersistentDataType.BYTE)) {
+            if (temporaryCart.isPresent() && temporaryCart.get() instanceof BukkitTemporaryCart bukkitTemporaryCart) {
+                if (cart.getPersistentDataContainer().has(bukkitTemporaryCart.getTemporaryCartKey(), PersistentDataType.BYTE)) {
                     return;
                 }
             }

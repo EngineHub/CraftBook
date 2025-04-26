@@ -13,9 +13,8 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics;
+package org.enginehub.craftbook.bukkit.mechanics;
 
-import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
@@ -40,13 +39,13 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanics.Elevator;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.RegexUtil;
@@ -61,48 +60,10 @@ import java.util.Locale;
  * The default elevator mechanism -- wall signs in a vertical column that teleport the player
  * vertically when triggered.
  */
-public class Elevator extends AbstractCraftBookMechanic implements Listener {
+public class BukkitElevator extends Elevator implements Listener {
 
-    public Elevator(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public BukkitElevator(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
-    }
-
-    private enum LiftType {
-        UP("[Lift Up]"),
-        DOWN("[Lift Down]"),
-        BOTH("[Lift UpDown]"),
-        RECV("[Lift]");
-
-        private final String label;
-
-        LiftType(String label) {
-            this.label = label;
-        }
-
-        /**
-         * Get the label of this lift type.
-         *
-         * @return The label
-         */
-        public String getLabel() {
-            return this.label;
-        }
-
-        /**
-         * Get the lift type from this label.
-         *
-         * @param label The label
-         * @return The lift type, or null
-         */
-        public static @Nullable LiftType fromLabel(String label) {
-            for (LiftType liftType : values()) {
-                if (liftType.label.equalsIgnoreCase(label)) {
-                    return liftType;
-                }
-            }
-
-            return null;
-        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -460,25 +421,5 @@ public class Elevator extends AbstractCraftBookMechanic implements Listener {
         }
 
         return null;
-    }
-
-    private boolean elevatorAllowRedstone;
-    private int elevatorRedstoneRadius;
-    private boolean elevatorButtonEnabled;
-    private boolean elevatorLoop;
-
-    @Override
-    public void loadFromConfiguration(YAMLProcessor config) {
-        config.setComment("allow-redstone", "Allows elevators to be triggered by redstone, which will move all players in a radius.");
-        elevatorAllowRedstone = config.getBoolean("allow-redstone", false);
-
-        config.setComment("redstone-player-search-radius", "The radius that elevators will look for players in when triggered by redstone.");
-        elevatorRedstoneRadius = config.getInt("redstone-player-search-radius", 3);
-
-        config.setComment("enable-buttons", "Allow elevators to be used by a button on the other side of the block.");
-        elevatorButtonEnabled = config.getBoolean("enable-buttons", true);
-
-        config.setComment("allow-looping", "Allows elevators to loop the world height. The heighest lift up will go to the next lift on the bottom of the world and vice versa.");
-        elevatorLoop = config.getBoolean("allow-looping", false);
     }
 }

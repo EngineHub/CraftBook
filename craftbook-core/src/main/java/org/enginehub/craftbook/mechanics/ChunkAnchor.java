@@ -13,24 +13,24 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.boat;
+package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 
-public abstract class BoatImpactDamage extends AbstractCraftBookMechanic {
+public abstract class ChunkAnchor extends AbstractCraftBookMechanic {
 
-    public BoatImpactDamage(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public ChunkAnchor(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 
-    protected boolean removeOtherBoats;
+    protected boolean useRedstone;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-        config.setComment("remove-other-boats", "Allows boats to remove other boats on impact.");
-        removeOtherBoats = config.getBoolean("remove-other-boats", false);
+        config.setComment("redstone-toggle", "Allow Chunk Anchors to be turned on and off with redstone.");
+        useRedstone = config.getBoolean("redstone-toggle", true);
     }
 }

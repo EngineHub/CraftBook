@@ -13,24 +13,34 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.boat;
+package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 
-public abstract class BoatImpactDamage extends AbstractCraftBookMechanic {
+/**
+ * Handler for Light switches. Toggles all torches in the area from being redstone to normal
+ * torches. This is done
+ * every time a sign with [|] or [I]
+ * is right clicked by a player.
+ */
+public abstract class LightSwitch extends AbstractCraftBookMechanic {
 
-    public BoatImpactDamage(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public LightSwitch(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 
-    protected boolean removeOtherBoats;
+    protected int maxRange;
+    protected int maxLights;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-        config.setComment("remove-other-boats", "Allows boats to remove other boats on impact.");
-        removeOtherBoats = config.getBoolean("remove-other-boats", false);
+        config.setComment("max-range", "The maximum range that the mechanic searches for lights in.");
+        maxRange = config.getInt("max-range", 10);
+
+        config.setComment("max-lights", "The maximum amount of lights that a light switch can toggle per usage.");
+        maxLights = config.getInt("max-lights", 20);
     }
 }

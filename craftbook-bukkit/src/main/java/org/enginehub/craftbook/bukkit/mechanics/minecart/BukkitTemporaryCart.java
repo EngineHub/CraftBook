@@ -13,12 +13,13 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.minecart;
+package org.enginehub.craftbook.bukkit.mechanics.minecart;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.HandSide;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import com.sk89q.worldedit.world.block.BlockType;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
@@ -34,26 +35,21 @@ import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.persistence.PersistentDataType;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
-import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
+import org.enginehub.craftbook.mechanics.minecart.TemporaryCart;
 import org.enginehub.craftbook.util.CartUtil;
 import org.enginehub.craftbook.util.EventUtil;
+import org.enginehub.craftbook.util.RailUtil;
 
-public class TemporaryCart extends AbstractCraftBookMechanic implements Listener {
-    private NamespacedKey temporaryCartKey;
+public class BukkitTemporaryCart extends TemporaryCart implements Listener {
+    private final NamespacedKey temporaryCartKey = new NamespacedKey("craftbook", "temporary_cart");
 
-    public TemporaryCart(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public BukkitTemporaryCart(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
-    }
-
-    @Override
-    public void enable() throws MechanicInitializationException {
-        this.temporaryCartKey = new NamespacedKey("craftbook", "temporary_cart");
     }
 
     public NamespacedKey getTemporaryCartKey() {
@@ -70,7 +66,9 @@ public class TemporaryCart extends AbstractCraftBookMechanic implements Listener
             return;
         }
 
-        if (!RailUtil.isTrack(event.getClickedBlock().getType())) {
+        BlockType clickedBlockType = BukkitAdapter.asBlockType(event.getClickedBlock().getType());
+
+        if (!RailUtil.isTrack(clickedBlockType)) {
             return;
         }
 

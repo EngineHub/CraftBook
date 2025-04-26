@@ -13,17 +13,16 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.minecart;
+package org.enginehub.craftbook.util;
 
-import org.bukkit.Material;
-import org.bukkit.Tag;
+import com.sk89q.worldedit.world.block.BlockCategories;
+import com.sk89q.worldedit.world.block.BlockType;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.BlockInventoryHolder;
 import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.bukkit.mechanic.MechanicTypes;
+import org.enginehub.craftbook.mechanic.MechanicTypes;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
-import org.enginehub.craftbook.util.InventoryUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,13 +89,13 @@ public final class RailUtil {
         return containers;
     }
 
-    public static boolean isTrack(Material id) {
+    public static boolean isTrack(BlockType blockType) {
         if (CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(MechanicTypes.MORE_RAILS)
-            .map(moreRails -> moreRails.isValidRail(id))
+            .map(moreRails -> moreRails.isValidRail(blockType))
             .orElse(false)) {
             return true;
         }
 
-        return Tag.RAILS.isTagged(id);
+        return BlockCategories.RAILS.contains(blockType);
     }
 }

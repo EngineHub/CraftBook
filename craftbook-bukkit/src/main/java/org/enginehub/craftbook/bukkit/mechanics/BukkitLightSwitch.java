@@ -13,9 +13,8 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics;
+package org.enginehub.craftbook.bukkit.mechanics;
 
-import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import net.kyori.adventure.text.Component;
@@ -28,13 +27,13 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanics.LightSwitch;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
@@ -46,9 +45,9 @@ import org.enginehub.craftbook.util.events.SignClickEvent;
  * every time a sign with [|] or [I]
  * is right clicked by a player.
  */
-public class LightSwitch extends AbstractCraftBookMechanic implements Listener {
+public class BukkitLightSwitch extends LightSwitch implements Listener {
 
-    public LightSwitch(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public BukkitLightSwitch(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 
@@ -177,17 +176,5 @@ public class LightSwitch extends AbstractCraftBookMechanic implements Listener {
                 }
             }
         }
-    }
-
-    private int maxRange;
-    private int maxLights;
-
-    @Override
-    public void loadFromConfiguration(YAMLProcessor config) {
-        config.setComment("max-range", "The maximum range that the mechanic searches for lights in.");
-        maxRange = config.getInt("max-range", 10);
-
-        config.setComment("max-lights", "The maximum amount of lights that a light switch can toggle per usage.");
-        maxLights = config.getInt("max-lights", 20);
     }
 }

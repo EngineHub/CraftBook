@@ -13,9 +13,8 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.minecart;
+package org.enginehub.craftbook.bukkit.mechanics.minecart;
 
-import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -28,15 +27,15 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.util.Vector;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanics.minecart.MoreRails;
 import org.enginehub.craftbook.util.EventUtil;
 
 
-public class MoreRails extends AbstractCraftBookMechanic implements Listener {
+public class BukkitMoreRails extends MoreRails implements Listener {
 
-    public MoreRails(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public BukkitMoreRails(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 
@@ -87,32 +86,5 @@ public class MoreRails extends AbstractCraftBookMechanic implements Listener {
                 minecart.setVelocity(minecart.getVelocity().add(velocity));
             }
         }
-    }
-
-    /**
-     * Gets whether this block is a valid "MoreRails" rail block.
-     *
-     * @param material The material
-     * @return if it's valid
-     */
-    public boolean isValidRail(Material material) {
-        return ladder && (material == Material.LADDER || material == Material.VINE)
-            || pressurePlate && Tag.PRESSURE_PLATES.isTagged(material);
-    }
-
-    public boolean ladder;
-    private double ladderVerticalVelocity;
-    public boolean pressurePlate;
-
-    @Override
-    public void loadFromConfiguration(YAMLProcessor config) {
-        config.setComment("pressure-plate-intersection", "Allows use of pressure plates as rail intersections.");
-        pressurePlate = config.getBoolean("pressure-plate-intersection", true);
-
-        config.setComment("ladder-vertical-rail", "Allows use of ladders and vines as a vertical rail.");
-        ladder = config.getBoolean("ladder-vertical-rail", true);
-
-        config.setComment("ladder-vertical-rail-velocity", "Sets the velocity applied to the minecart on vertical rails.");
-        ladderVerticalVelocity = config.getDouble("ladder-vertical-rail-velocity", 0.1D);
     }
 }

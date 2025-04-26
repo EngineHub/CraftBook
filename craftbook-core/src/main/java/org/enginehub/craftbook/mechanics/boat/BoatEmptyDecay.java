@@ -20,7 +20,7 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 
-public class BoatEmptyDecay extends AbstractCraftBookMechanic {
+public abstract class BoatEmptyDecay extends AbstractCraftBookMechanic {
 
     public BoatEmptyDecay(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

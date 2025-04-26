@@ -13,24 +13,6 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics;
+@org.jspecify.annotations.NullMarked
+package org.enginehub.craftbook.bukkit.mechanics.minecart;
 
-import com.sk89q.util.yaml.YAMLProcessor;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.mechanic.CraftBookMechanic;
-import org.enginehub.craftbook.mechanic.MechanicType;
-
-public abstract class BetterPhysics extends AbstractCraftBookMechanic {
-
-    public BetterPhysics(MechanicType<? extends CraftBookMechanic> mechanicType) {
-        super(mechanicType);
-    }
-
-    protected boolean ladders;
-
-    @Override
-    public void loadFromConfiguration(YAMLProcessor config) {
-        config.setComment("falling-ladders", "Causes ladders to fall when not held up by anything.");
-        ladders = config.getBoolean("falling-ladders", true);
-    }
-}

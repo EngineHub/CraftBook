@@ -13,11 +13,10 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics;
+package org.enginehub.craftbook.bukkit.mechanics;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import io.papermc.paper.registry.RegistryAccess;
@@ -36,13 +35,13 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
+import org.enginehub.craftbook.mechanics.PaintingSwitcher;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
@@ -51,12 +50,12 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public class PaintingSwitcher extends AbstractCraftBookMechanic implements Listener {
+public class BukkitPaintingSwitcher extends PaintingSwitcher implements Listener {
 
     private final BiMap<UUID, Painting> paintingMap = HashBiMap.create();
     private @Nullable List<NamespacedKey> artKeys;
 
-    public PaintingSwitcher(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public BukkitPaintingSwitcher(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 
@@ -218,13 +217,5 @@ public class PaintingSwitcher extends AbstractCraftBookMechanic implements Liste
                 }
             }
         }
-    }
-
-    private int modifyRange;
-
-    @Override
-    public void loadFromConfiguration(YAMLProcessor config) {
-        config.setComment("modify-range", "The maximum distance from which you can modify paintings.");
-        modifyRange = config.getInt("modify-range", 5);
     }
 }

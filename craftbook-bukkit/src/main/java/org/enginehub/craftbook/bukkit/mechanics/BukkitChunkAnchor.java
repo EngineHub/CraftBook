@@ -13,9 +13,8 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics;
+package org.enginehub.craftbook.bukkit.mechanics;
 
-import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import net.kyori.adventure.text.Component;
@@ -32,20 +31,20 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanics.ChunkAnchor;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
-public class ChunkAnchor extends AbstractCraftBookMechanic implements Listener {
+public class BukkitChunkAnchor extends ChunkAnchor implements Listener {
 
-    public ChunkAnchor(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public BukkitChunkAnchor(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 
@@ -167,13 +166,5 @@ public class ChunkAnchor extends AbstractCraftBookMechanic implements Listener {
         } else {
             chunk.removePluginChunkTicket(CraftBookPlugin.inst());
         }
-    }
-
-    private boolean useRedstone;
-
-    @Override
-    public void loadFromConfiguration(YAMLProcessor config) {
-        config.setComment("redstone-toggle", "Allow Chunk Anchors to be turned on and off with redstone.");
-        useRedstone = config.getBoolean("redstone-toggle", true);
     }
 }

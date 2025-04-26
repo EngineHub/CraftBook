@@ -29,7 +29,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.util.BoundingBox;
 import org.enginehub.craftbook.ChangedSign;
-import org.enginehub.craftbook.mechanics.minecart.RailUtil;
+import org.enginehub.craftbook.util.RailUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -145,11 +145,9 @@ public record CartMechanismBlocks(Block rail, Block base, Block sign) {
      * @param unknown the block to examine.
      */
     public static @Nullable CartMechanismBlocks find(Block unknown) {
-        Material ti = unknown.getType();
-
         if (SignUtil.isSign(unknown)) {
             return findBySign(unknown);
-        } else if (RailUtil.isTrack(ti)) {
+        } else if (RailUtil.isTrack(BukkitAdapter.asBlockType(unknown.getType()))) {
             return findByRail(unknown);
         } else {
             return findByBase(unknown);
@@ -172,7 +170,7 @@ public record CartMechanismBlocks(Block rail, Block base, Block sign) {
      * @param rail the block containing the rails.
      */
     public static @Nullable CartMechanismBlocks findByRail(Block rail) {
-        if (!RailUtil.isTrack(rail.getType())) {
+        if (!RailUtil.isTrack(BukkitAdapter.asBlockType(rail.getType()))) {
             return null;
         }
 
@@ -218,7 +216,7 @@ public record CartMechanismBlocks(Block rail, Block base, Block sign) {
      *     the mechanism type.
      */
     private static @Nullable CartMechanismBlocks findByBase(Block base) {
-        if (!RailUtil.isTrack(base.getRelative(BlockFace.UP, 1).getType())) {
+        if (!RailUtil.isTrack(BukkitAdapter.asBlockType(base.getRelative(BlockFace.UP, 1).getType()))) {
             return null;
         }
 
@@ -253,11 +251,11 @@ public record CartMechanismBlocks(Block rail, Block base, Block sign) {
             return null;
         }
 
-        if (RailUtil.isTrack(sign.getRelative(BlockFace.UP, 2).getType())) {
+        if (RailUtil.isTrack(BukkitAdapter.asBlockType(sign.getRelative(BlockFace.UP, 2).getType()))) {
             return new CartMechanismBlocks(sign.getRelative(BlockFace.UP, 2), sign.getRelative(BlockFace.UP, 1), sign);
-        } else if (RailUtil.isTrack(sign.getRelative(BlockFace.UP, 3).getType())) {
+        } else if (RailUtil.isTrack(BukkitAdapter.asBlockType(sign.getRelative(BlockFace.UP, 3).getType()))) {
             return new CartMechanismBlocks(sign.getRelative(BlockFace.UP, 3), sign.getRelative(BlockFace.UP, 2), sign);
-        } else if (RailUtil.isTrack(sign.getRelative(SignUtil.getBack(sign), 1).getRelative(BlockFace.UP, 1).getType())) {
+        } else if (RailUtil.isTrack(BukkitAdapter.asBlockType(sign.getRelative(SignUtil.getBack(sign), 1).getRelative(BlockFace.UP, 1).getType()))) {
             return new CartMechanismBlocks(sign.getRelative(SignUtil.getBack(sign), 1).getRelative(BlockFace.UP, 1), sign.getRelative(SignUtil.getBack(sign), 1), sign);
         }
 

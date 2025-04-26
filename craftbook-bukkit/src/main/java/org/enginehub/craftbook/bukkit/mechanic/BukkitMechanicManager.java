@@ -126,7 +126,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .description(TranslatableComponent.of("craftbook.marquee.description"))
             .className("org.enginehub.craftbook.mechanics.Marquee")
             .category(MechanicCategory.GENERAL)
-            .dependsOn(new MechanicDependency(MechanicTypes.VARIABLES))
+            .dependsOn(new MechanicDependency(org.enginehub.craftbook.mechanic.MechanicTypes.VARIABLES))
             .buildAndRegister();
 
         MechanicType.Builder
@@ -332,7 +332,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("elevator")
             .name("Elevator")
             .description(TranslatableComponent.of("craftbook.elevator.description"))
-            .className("org.enginehub.craftbook.mechanics.Elevator")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitElevator")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
@@ -485,7 +485,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("cooking_pot")
             .name("CookingPot")
             .description(TranslatableComponent.of("craftbook.cookingpot.description"))
-            .className("org.enginehub.craftbook.mechanics.CookingPot")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitCookingPot")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 

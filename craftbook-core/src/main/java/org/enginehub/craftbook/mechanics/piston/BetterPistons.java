@@ -25,7 +25,7 @@ import org.enginehub.craftbook.util.BlockParser;
 
 import java.util.List;
 
-public class BetterPistons extends AbstractCraftBookMechanic {
+public abstract class BetterPistons extends AbstractCraftBookMechanic {
 
     public BetterPistons(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

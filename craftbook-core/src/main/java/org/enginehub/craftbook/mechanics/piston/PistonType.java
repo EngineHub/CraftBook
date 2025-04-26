@@ -28,7 +28,7 @@ public enum PistonType {
     CRUSH("[Crush]", Set.of(BlockTypes.PISTON, BlockTypes.STICKY_PISTON)),
     SUPER_STICKY("[SuperSticky]", Set.of(BlockTypes.STICKY_PISTON)),
     BOUNCE("[Bounce]", Set.of(BlockTypes.PISTON)),
-    SUPER_PUSH("SuperPush]", Set.of(BlockTypes.PISTON, BlockTypes.STICKY_PISTON));
+    SUPER_PUSH("[SuperPush]", Set.of(BlockTypes.PISTON, BlockTypes.STICKY_PISTON));
 
     private final String signText;
     private final Set<BlockType> allowedBlocks;
