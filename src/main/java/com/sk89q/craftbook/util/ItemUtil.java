@@ -582,7 +582,7 @@ public final class ItemUtil {
                 if (Tag.LEAVES.isTagged(item.getType())) {
                     return new ItemStack(Material.LEAF_LITTER);
                 }
-                return null;
+                return getBlastSmeltedResult(item);
         }
     }
 
