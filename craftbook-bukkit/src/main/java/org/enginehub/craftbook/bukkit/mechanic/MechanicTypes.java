@@ -43,6 +43,8 @@ import org.enginehub.craftbook.mechanics.minecart.blocks.station.CartStation;
 import org.jspecify.annotations.Nullable;
 
 /**
+ * A list of all known mechanic types.
+ *
  * @deprecated Use the {@link org.enginehub.craftbook.mechanic.MechanicTypes} class in -core instead.
  */
 @Deprecated
