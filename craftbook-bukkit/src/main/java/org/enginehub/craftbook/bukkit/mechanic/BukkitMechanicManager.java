@@ -124,7 +124,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("marquee")
             .name("Marquee")
             .description(TranslatableComponent.of("craftbook.marquee.description"))
-            .className("org.enginehub.craftbook.mechanics.Marquee")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitMarquee")
             .category(MechanicCategory.GENERAL)
             .dependsOn(new MechanicDependency(org.enginehub.craftbook.mechanic.MechanicTypes.VARIABLES))
             .buildAndRegister();
@@ -179,7 +179,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("painting_switcher")
             .name("PaintingSwitcher")
             .description(TranslatableComponent.of("craftbook.paintingswitcher.description"))
-            .className("org.enginehub.craftbook.mechanics.PaintingSwitcher")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitPaintingSwitcher")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
@@ -206,7 +206,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("chunk_anchor")
             .name("ChunkAnchor")
             .description(TranslatableComponent.of("craftbook.chunkanchor.description"))
-            .className("org.enginehub.craftbook.mechanics.ChunkAnchor")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitChunkAnchor")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
@@ -278,7 +278,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("temporary_cart")
             .name("TemporaryCart")
             .description(TranslatableComponent.of("craftbook.temporarycart.description"))
-            .className("org.enginehub.craftbook.mechanics.minecart.TemporaryCart")
+            .className("org.enginehub.craftbook.bukkit.mechanics.minecart.BukkitTemporaryCart")
             .category(MechanicCategory.MINECART)
             .buildAndRegister();
 
@@ -323,7 +323,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("more_rails")
             .name("MoreRails")
             .description(TranslatableComponent.of("craftbook.morerails.description"))
-            .className("org.enginehub.craftbook.mechanics.minecart.MoreRails")
+            .className("org.enginehub.craftbook.bukkit.mechanics.minecart.BukkitMoreRails")
             .category(MechanicCategory.MINECART)
             .buildAndRegister();
 
@@ -350,7 +350,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("light_switch")
             .name("LightSwitch")
             .description(TranslatableComponent.of("craftbook.lightswitch.description"))
-            .className("org.enginehub.craftbook.mechanics.LightSwitch")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitLightSwitch")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 
