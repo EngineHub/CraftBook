@@ -124,17 +124,21 @@ public final class BlockUtil {
         return drops.toArray(new ItemStack[0]);
     }
 
-    public static Block[] getTouchingBlocks(Block block) {
-        List<Block> blocks = new ArrayList<>();
-        for (BlockFace face : LocationUtil.getDirectFaces()) {
+    public static List<Block> getTouchingBlocks(Block block) {
+        var directFaces = LocationUtil.getDirectFaces();
+
+        List<Block> blocks = new ArrayList<>(directFaces.length);
+
+        for (BlockFace face : directFaces) {
             blocks.add(block.getRelative(face));
         }
 
-        return blocks.toArray(new Block[0]);
+        return blocks;
     }
 
-    public static Block[] getIndirectlyTouchingBlocks(Block block) {
-        List<Block> blocks = new ArrayList<>();
+    public static List<Block> getIndirectlyTouchingBlocks(Block block) {
+        List<Block> blocks = new ArrayList<>(26);
+
         for (int x = -1; x < 2; x++) {
             for (int y = -1; y < 2; y++) {
                 for (int z = -1; z < 2; z++) {
@@ -145,7 +149,7 @@ public final class BlockUtil {
             }
         }
 
-        return blocks.toArray(new Block[0]);
+        return blocks;
     }
 
     public static BlockVector3 toVector(BlockFace face) {

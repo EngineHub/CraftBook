@@ -52,9 +52,9 @@ import java.util.Set;
 
 public class BukkitTreeLopper extends TreeLopper implements Listener {
 
-    private final Map<Material, Material> logsToSaplings = new HashMap<>();
-    private final Map<Material, Material> leavesToSaplings = new HashMap<>();
+    private final Map<Material, Material> blockToSaplings = new HashMap<>();
     private final Map<Material, Material> logsToLeaves = new HashMap<>();
+    private final Map<Material, Material> logsToRoots = new HashMap<>();
 
     public BukkitTreeLopper(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
@@ -64,20 +64,20 @@ public class BukkitTreeLopper extends TreeLopper implements Listener {
     public void enable() throws MechanicInitializationException {
         super.enable();
 
-        logsToSaplings.clear();
-        leavesToSaplings.clear();
+        blockToSaplings.clear();
+        logsToLeaves.clear();
 
         // A few special cases
         logsToLeaves.put(Material.CRIMSON_STEM, Material.NETHER_WART_BLOCK);
-        logsToSaplings.put(Material.CRIMSON_STEM, Material.CRIMSON_FUNGUS);
-        leavesToSaplings.put(Material.NETHER_WART_BLOCK, Material.CRIMSON_FUNGUS);
+        blockToSaplings.put(Material.CRIMSON_STEM, Material.CRIMSON_FUNGUS);
+        blockToSaplings.put(Material.NETHER_WART_BLOCK, Material.CRIMSON_FUNGUS);
 
         logsToLeaves.put(Material.WARPED_STEM, Material.WARPED_WART_BLOCK);
-        logsToSaplings.put(Material.WARPED_STEM, Material.WARPED_FUNGUS);
-        leavesToSaplings.put(Material.WARPED_WART_BLOCK, Material.WARPED_FUNGUS);
+        blockToSaplings.put(Material.WARPED_STEM, Material.WARPED_FUNGUS);
+        blockToSaplings.put(Material.WARPED_WART_BLOCK, Material.WARPED_FUNGUS);
 
-        logsToSaplings.put(Material.MANGROVE_LOG, Material.MANGROVE_PROPAGULE);
-        leavesToSaplings.put(Material.MANGROVE_LEAVES, Material.MANGROVE_PROPAGULE);
+        blockToSaplings.put(Material.MANGROVE_LOG, Material.MANGROVE_PROPAGULE);
+        blockToSaplings.put(Material.MANGROVE_LEAVES, Material.MANGROVE_PROPAGULE);
 
         Tag.PLANKS.getValues().stream().map(Material::getKey).map(NamespacedKey::asString).forEach(key -> {
             if (key.endsWith("crimson_planks") || key.endsWith("warped_planks")) {
@@ -86,21 +86,34 @@ public class BukkitTreeLopper extends TreeLopper implements Listener {
             Material sapling = Material.matchMaterial(key.replace("planks", "sapling"));
             Material leaves = Material.matchMaterial(key.replace("planks", "leaves"));
             Material log = Material.matchMaterial(key.replace("planks", "log"));
+            Material roots = Material.matchMaterial(key.replace("planks", "roots"));
 
-            if (leaves == null || log == null) {
-                CraftBook.LOGGER.debug("Failed to find leaves, or log for " + key);
+            if (leaves == null && log == null && roots == null) {
+                CraftBook.LOGGER.debug("Failed to find any of leaves, roots, or logs for " + key);
                 return;
             }
 
-            logsToLeaves.put(log, leaves);
+            if (log != null && leaves != null) {
+                logsToLeaves.put(log, leaves);
+            }
+            if (log != null && roots != null) {
+                logsToRoots.put(log, roots);
+            }
 
-            if (sapling == null && !logsToSaplings.containsKey(log)) {
-                CraftBook.LOGGER.debug("Failed to find sapling for " + key);
+            if (sapling == null) {
+                if (!blockToSaplings.containsKey(leaves) && !blockToSaplings.containsKey(log)) {
+                    // Don't log if we already have a sapling for this leaf or log
+                    CraftBook.LOGGER.debug("Failed to find sapling for " + key);
+                }
                 return;
             }
 
-            logsToSaplings.put(log, sapling);
-            leavesToSaplings.put(leaves, sapling);
+            if (log != null) {
+                blockToSaplings.put(log, sapling);
+            }
+            if (leaves != null) {
+                blockToSaplings.put(leaves, sapling);
+            }
         });
     }
 
@@ -108,8 +121,8 @@ public class BukkitTreeLopper extends TreeLopper implements Listener {
     public void disable() {
         super.disable();
 
-        logsToSaplings.clear();
-        leavesToSaplings.clear();
+        blockToSaplings.clear();
+        logsToLeaves.clear();
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -164,11 +177,20 @@ public class BukkitTreeLopper extends TreeLopper implements Listener {
         Material toBreakType = toBreak.getType();
 
         if (originalBlock != toBreakType) {
+            boolean canBreak = false;
+
             if (breakLeaves && logsToLeaves.containsKey(originalBlock)) {
-                if (logsToLeaves.get(originalBlock) != toBreakType) {
-                    return false;
+                if (logsToLeaves.get(originalBlock) == toBreakType) {
+                    canBreak = true;
                 }
-            } else {
+            }
+            if (!canBreak && breakRoots && logsToRoots.containsKey(originalBlock)) {
+                if (logsToRoots.get(originalBlock) == toBreakType) {
+                    canBreak = true;
+                }
+            }
+
+            if (!canBreak) {
                 return false;
             }
         }
@@ -201,12 +223,8 @@ public class BukkitTreeLopper extends TreeLopper implements Listener {
             Material belowBlockType = block.getRelative(0, -1, 0).getType();
 
             Material saplingType = null;
-            if (placeSaplings && allowPlanting) {
-                if (leavesToSaplings.containsKey(currentType)) {
-                    saplingType = leavesToSaplings.get(currentType);
-                } else if (logsToSaplings.containsKey(currentType)) {
-                    saplingType = logsToSaplings.get(currentType);
-                }
+            if (placeSaplings && allowPlanting && blockToSaplings.containsKey(currentType)) {
+                saplingType = blockToSaplings.get(currentType);
             }
 
             if (saplingType != null && planted < getMaximumSaplingCount(saplingType) && canPlaceOn(saplingType, belowBlockType)) {
@@ -226,7 +244,9 @@ public class BukkitTreeLopper extends TreeLopper implements Listener {
             visitedLocations.add(block.getLocation());
             broken++;
 
-            for (Block relativeBlock : allowDiagonals ? BlockUtil.getIndirectlyTouchingBlocks(block) : BlockUtil.getTouchingBlocks(block)) {
+            var searchBlocks = allowDiagonals ? BlockUtil.getIndirectlyTouchingBlocks(block) : BlockUtil.getTouchingBlocks(block);
+
+            for (Block relativeBlock : searchBlocks) {
                 if (visitedLocations.contains(relativeBlock.getLocation())) {
                     continue;
                 }

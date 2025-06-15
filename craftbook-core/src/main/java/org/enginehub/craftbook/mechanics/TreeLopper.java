@@ -44,6 +44,7 @@ public abstract class TreeLopper extends AbstractCraftBookMechanic {
     protected boolean allowDiagonals;
     protected boolean placeSaplings;
     protected boolean breakLeaves;
+    protected boolean breakRoots;
     protected boolean singleDamageAxe;
     protected boolean leavesDamageAxe;
     protected TernaryState allowSneaking;
@@ -65,13 +66,16 @@ public abstract class TreeLopper extends AbstractCraftBookMechanic {
         enabledItems = ItemParser.getItems(config.getStringList("tool-list", ConfigUtil.getIdsFromCategory(ItemCategories.AXES)), true).stream().map(BaseItem::getType).toList();
 
         config.setComment("max-size", "The maximum amount of blocks the TreeLopper can break.");
-        maxSearchSize = config.getInt("max-size", 75);
+        maxSearchSize = config.getInt("max-size", 150);
 
         config.setComment("allow-diagonals", "Allow the TreeLopper to break blocks that are diagonal from each other.");
         allowDiagonals = config.getBoolean("allow-diagonals", false);
 
         config.setComment("place-saplings", "If enabled, TreeLopper will plant a sapling automatically when a tree is broken.");
         placeSaplings = config.getBoolean("place-saplings", false);
+
+        config.setComment("break-roots", "If enabled, TreeLopper will break roots connected to the tree.");
+        breakRoots = config.getBoolean("break-roots", true);
 
         config.setComment("break-leaves", "If enabled, TreeLopper will break leaves connected to the tree.");
         breakLeaves = config.getBoolean("break-leaves", true);
