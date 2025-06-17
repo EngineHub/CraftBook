@@ -41,7 +41,7 @@ paperApi = "io.papermc.paper:paper-api:1.21.5-R0.1-SNAPSHOT"
 vaultApi = "com.github.MilkBowl:VaultAPI:1.7.1"
 
 dummypermscompat = "com.sk89q:dummypermscompat:1.10"
-bstats-bukkit = "org.bstats:bstats-bukkit:2.2.1"
+bstats-bukkit = "org.bstats:bstats-bukkit:3.1.0"
 
 # Also update in build-logic/src/main/kotlin/buildlogic.platform.gradle.kts
 flyway-core = "org.flywaydb:flyway-core:3.0"
