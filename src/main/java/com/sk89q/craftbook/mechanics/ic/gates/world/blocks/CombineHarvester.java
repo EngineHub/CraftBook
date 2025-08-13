@@ -86,6 +86,8 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
             case COCOA:
                 Ageable ageable = (Ageable) block.getBlockData();
                 return ageable.getAge() == ageable.getMaximumAge();
+            case CACTUS_FLOWER:
+                return below == Material.CACTUS;
             case CACTUS:
                 return below == Material.CACTUS && above != Material.CACTUS;
             case SUGAR_CANE:
