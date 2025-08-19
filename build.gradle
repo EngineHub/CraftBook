@@ -82,21 +82,13 @@ allprojects {
             name = 'Vault Repo'
             url = 'https://jitpack.io'
         }
-		maven {
-            name = 'Dmulloy2 Repo'
-            url = 'https://repo.dmulloy2.net/nexus/repository/public/'
-        }
-        maven {
-            name = 'Destroystokyo Repo'
-            url = 'https://repo.destroystokyo.com/repository/maven-public/'
-        }
         maven {
 			name = 'bstats repo'
             url = 'https://repo.codemc.org/repository/maven-public'
 		}
         maven {
             name "papermc"
-            url "https://papermc.io/repo/repository/maven-public/"
+            url "https://repo.papermc.io/repository/maven-public/"
         }
     }
 
@@ -107,7 +99,7 @@ allprojects {
         compileOnly 'com.sk89q.worldguard:worldguard-core:7.0.14-SNAPSHOT'
         compileOnly 'com.sk89q.worldguard:worldguard-bukkit:7.0.14-SNAPSHOT'
         compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
-        compileOnly 'com.comphenix.protocol:ProtocolLib:5.3.0'
+        compileOnly 'net.dmulloy2:ProtocolLib:5.4.0'
         compileOnly 'fr.neatmonster:nocheatplus:3.15.1-RC'
 
         implementation 'com.sk89q:squirrelid:0.1.0'
