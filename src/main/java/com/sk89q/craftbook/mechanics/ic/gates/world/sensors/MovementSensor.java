@@ -52,9 +52,9 @@ public class MovementSensor extends AbstractSelfTriggeredIC {
         // the given string should look something like that:
         // radius=x:y:z or radius, e.g. 1=-2:5:11
         radius = ICUtil.parseRadius(getSign());
-        String radiusString = radius.getX() + "," + radius.getY() + "," + radius.getZ();
-        if(radius.getX() == radius.getY() && radius.getY() == radius.getZ())
-            radiusString = String.valueOf(radius.getX());
+        String radiusString = radius.x() + "," + radius.y() + "," + radius.z();
+        if(radius.x() == radius.y() && radius.y() == radius.z())
+            radiusString = String.valueOf(radius.x());
         if (getSign().getLine(2).contains("=")) {
             getSign().setLine(2, radiusString + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
             center = ICUtil.parseBlockLocation(getSign());

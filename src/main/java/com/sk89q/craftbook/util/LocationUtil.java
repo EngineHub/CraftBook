@@ -30,9 +30,9 @@ public final class LocationUtil {
     public static boolean isWithinRadiusPolygon(Location l1, Location l2, Vector3 radius) {
 
         if(!l1.getWorld().equals(l2.getWorld())) return false;
-        if(l2.getX() < l1.getX() + radius.getX() && l2.getX() > l1.getX() - radius.getX())
-            if(l2.getY() < l1.getY() + radius.getY() && l2.getY() > l1.getY() - radius.getY())
-                if(l2.getZ() < l1.getZ() + radius.getZ() && l2.getZ() > l1.getZ() - radius.getX())
+        if(l2.getX() < l1.getX() + radius.x() && l2.getX() > l1.getX() - radius.x())
+            if(l2.getY() < l1.getY() + radius.y() && l2.getY() > l1.getY() - radius.y())
+                if(l2.getZ() < l1.getZ() + radius.z() && l2.getZ() > l1.getZ() - radius.z())
                     return true;
         return false;
     }
@@ -47,12 +47,12 @@ public final class LocationUtil {
      */
     public static boolean isWithinRadius(Location l1, Location l2, Vector3 radius) {
 
-        return radius.getX() == radius.getZ() && radius.getX() == radius.getY() && isWithinSphericalRadius(l1,l2,radius.getX()) || (radius.getX() != radius.getY() || radius.getY() != radius.getZ() || radius.getX() != radius.getZ()) && isWithinRadiusPolygon(l1,l2,radius);
+        return radius.x() == radius.z() && radius.x() == radius.y() && isWithinSphericalRadius(l1,l2,radius.x()) || (radius.x() != radius.y() || radius.y() != radius.z() || radius.x() != radius.z()) && isWithinRadiusPolygon(l1,l2,radius);
     }
 
     public static Entity[] getNearbyEntities(Location l, Vector3 radius) {
-        int chunkRadiusX = (int) radius.getX() < 16 ? 1 : (int) radius.getX() / 16;
-        int chunkRadiusZ = (int) radius.getZ() < 16 ? 1 : (int) radius.getZ() / 16;
+        int chunkRadiusX = (int) radius.x() < 16 ? 1 : (int) radius.x() / 16;
+        int chunkRadiusZ = (int) radius.z() < 16 ? 1 : (int) radius.z() / 16;
         HashSet<Entity> radiusEntities = new HashSet<>();
         for (int chX = 0 - chunkRadiusX; chX <= chunkRadiusX; chX++) {
             for (int chZ = 0 - chunkRadiusZ; chZ <= chunkRadiusZ; chZ++) {

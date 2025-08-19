@@ -88,6 +88,6 @@ public class CartTeleporter extends CartBlockMechanism {
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "block", "Sets the block that is the base of the teleport mechanic.");
-        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.EMERALD_BLOCK.getId()), true);
+        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.EMERALD_BLOCK.id()), true);
     }
 }

@@ -82,6 +82,6 @@ public class CartMessenger extends CartBlockMechanism {
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "block", "Sets the block that is the base of the messager mechanic.");
-        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.END_STONE.getId()), true);
+        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.END_STONE.id()), true);
     }
 }

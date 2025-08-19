@@ -90,7 +90,7 @@ public class AreaCommands {
             BlockVector3 size = max.subtract(min).add(1, 1, 1);
 
             // Check maximum size
-            if (Area.instance.maxAreaSize != -1 && size.getBlockX() * size.getBlockY() * size.getBlockZ()
+            if (Area.instance.maxAreaSize != -1 && size.x() * size.y() * size.z()
                     > Area.instance.maxAreaSize) {
                 throw new CommandException("Area is larger than allowed " + Area.instance.maxAreaSize + " blocks.");
             }

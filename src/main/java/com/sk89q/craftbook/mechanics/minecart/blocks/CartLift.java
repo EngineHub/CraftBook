@@ -75,6 +75,6 @@ public class CartLift extends CartBlockMechanism {
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "block", "Sets the block that is the base of the elevator mechanic.");
-        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.NETHER_BRICKS.getId()), true);
+        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.NETHER_BRICKS.id()), true);
     }
 }

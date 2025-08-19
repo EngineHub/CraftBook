@@ -100,7 +100,7 @@ public class BlockSyntax {
     }
 
     public static String toMinifiedId(BlockType holder) {
-        String output = holder.getId();
+        String output = holder.id();
         if (output.startsWith("minecraft:")) {
             output = output.substring(10);
         }

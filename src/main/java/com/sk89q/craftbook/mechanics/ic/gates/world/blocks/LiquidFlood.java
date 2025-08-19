@@ -50,9 +50,9 @@ public class LiquidFlood extends AbstractSelfTriggeredIC {
     public void doStuff(ChipState chip) {
 
         if (chip.getInput(0)) {
-            for (int x = -radius.getBlockX() + 1; x < radius.getBlockX(); x++) {
-                for (int y = -radius.getBlockY() + 1; y < radius.getBlockY(); y++) {
-                    for (int z = -radius.getBlockZ() + 1; z < radius.getBlockZ(); z++) {
+            for (int x = -radius.x() + 1; x < radius.x(); x++) {
+                for (int y = -radius.y() + 1; y < radius.y(); y++) {
+                    for (int z = -radius.z() + 1; z < radius.z(); z++) {
                         int rx = centre.getBlockX() - x;
                         int ry = centre.getBlockY() - y;
                         int rz = centre.getBlockZ() - z;
@@ -64,9 +64,9 @@ public class LiquidFlood extends AbstractSelfTriggeredIC {
                 }
             }
         } else if (!chip.getInput(0)) {
-            for (int x = -radius.getBlockX() + 1; x < radius.getBlockX(); x++) {
-                for (int y = -radius.getBlockY() + 1; y < radius.getBlockY(); y++) {
-                    for (int z = -radius.getBlockZ() + 1; z < radius.getBlockZ(); z++) {
+            for (int x = -radius.x() + 1; x < radius.x(); x++) {
+                for (int y = -radius.y() + 1; y < radius.y(); y++) {
+                    for (int z = -radius.z() + 1; z < radius.z(); z++) {
                         int rx = centre.getBlockX() - x;
                         int ry = centre.getBlockY() - y;
                         int rz = centre.getBlockZ() - z;

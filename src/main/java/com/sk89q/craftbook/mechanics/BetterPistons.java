@@ -453,12 +453,12 @@ public class BetterPistons extends AbstractCraftBookMechanic {
 
     public static List<String> getDefaultBlacklist() {
         return Lists.newArrayList(
-                BlockTypes.OBSIDIAN.getId(),
-                BlockTypes.BEDROCK.getId(),
-                BlockTypes.NETHER_PORTAL.getId(),
-                BlockTypes.END_PORTAL.getId(),
-                BlockTypes.END_PORTAL_FRAME.getId(),
-                BlockTypes.END_GATEWAY.getId()
+                BlockTypes.OBSIDIAN.id(),
+                BlockTypes.BEDROCK.id(),
+                BlockTypes.NETHER_PORTAL.id(),
+                BlockTypes.END_PORTAL.id(),
+                BlockTypes.END_PORTAL_FRAME.id(),
+                BlockTypes.END_GATEWAY.id()
         );
     }
 

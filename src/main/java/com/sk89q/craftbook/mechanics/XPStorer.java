@@ -297,7 +297,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         xpPerBottle = config.getInt(path + "xp-per-bottle", 16);
 
         config.setComment(path + "block", "The block that is an XP Storer.");
-        block = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.SPAWNER.getId()), true);
+        block = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.SPAWNER.id()), true);
 
         config.setComment(path + "require-sneaking-state", "Sets how the player must be sneaking in order to use the XP Storer.");
         sneakingState = TernaryState.getFromString(config.getString(path + "require-sneaking-state", "no"));

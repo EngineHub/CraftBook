@@ -58,15 +58,15 @@ public class CartBooster extends CartBlockMechanism {
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "max-boost-block", "Sets the block that is the base of the max boost block.");
-        minecartSpeedModMaxBoostBlock = BlockSyntax.getBlock(config.getString(path + "max-boost-block", BlockTypes.GOLD_BLOCK.getId()), true);
+        minecartSpeedModMaxBoostBlock = BlockSyntax.getBlock(config.getString(path + "max-boost-block", BlockTypes.GOLD_BLOCK.id()), true);
 
         config.setComment(path + "25x-boost-block", "Sets the block that is the base of the 25x boost block.");
-        minecartSpeedMod25xBoostBlock = BlockSyntax.getBlock(config.getString(path + "25x-boost-block", BlockTypes.GOLD_ORE.getId()), true);
+        minecartSpeedMod25xBoostBlock = BlockSyntax.getBlock(config.getString(path + "25x-boost-block", BlockTypes.GOLD_ORE.id()), true);
 
         config.setComment(path + "50x-slow-block", "Sets the block that is the base of the 50x slower block.");
-        minecartSpeedMod50xSlowBlock = BlockSyntax.getBlock(config.getString(path + "50x-slow-block", BlockTypes.SOUL_SAND.getId()), true);
+        minecartSpeedMod50xSlowBlock = BlockSyntax.getBlock(config.getString(path + "50x-slow-block", BlockTypes.SOUL_SAND.id()), true);
 
         config.setComment(path + "20x-slow-block", "Sets the block that is the base of the 20x slower block.");
-        minecartSpeedMod20xSlowBlock = BlockSyntax.getBlock(config.getString(path + "20x-slow-block", BlockTypes.GRAVEL.getId()), true);
+        minecartSpeedMod20xSlowBlock = BlockSyntax.getBlock(config.getString(path + "20x-slow-block", BlockTypes.GRAVEL.id()), true);
     }
 }

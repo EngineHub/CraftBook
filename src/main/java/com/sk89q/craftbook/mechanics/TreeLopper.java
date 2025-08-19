@@ -178,11 +178,11 @@ public class TreeLopper extends AbstractCraftBookMechanic {
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "block-list", "A list of log blocks. This can be modified to include more logs. (for mod support etc)");
-        enabledBlocks = BlockSyntax.getBlocks(config.getStringList(path + "block-list", BlockCategories.LOGS.getAll().stream().map(BlockType::getId).sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
+        enabledBlocks = BlockSyntax.getBlocks(config.getStringList(path + "block-list", BlockCategories.LOGS.getAll().stream().map(BlockType::id).sorted(String::compareToIgnoreCase).collect(Collectors.toList())), true);
 
         config.setComment(path + "tool-list", "A list of tools that can trigger the TreeLopper mechanic.");
-        enabledItems = config.getStringList(path + "tool-list", Arrays.asList(ItemTypes.IRON_AXE.getId(), ItemTypes.WOODEN_AXE.getId(),
-                ItemTypes.STONE_AXE.getId(), ItemTypes.DIAMOND_AXE.getId(), ItemTypes.GOLDEN_AXE.getId()))
+        enabledItems = config.getStringList(path + "tool-list", Arrays.asList(ItemTypes.IRON_AXE.id(), ItemTypes.WOODEN_AXE.id(),
+                ItemTypes.STONE_AXE.id(), ItemTypes.DIAMOND_AXE.id(), ItemTypes.GOLDEN_AXE.id()))
                 .stream().map(ItemSyntax::getItem).map(ItemStack::getType).map(BukkitAdapter::asItemType).collect(Collectors.toList());
 
         config.setComment(path + "max-size", "The maximum amount of blocks the TreeLopper can break.");

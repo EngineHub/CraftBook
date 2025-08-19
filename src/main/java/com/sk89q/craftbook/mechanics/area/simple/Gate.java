@@ -224,7 +224,7 @@ public class Gate extends AbstractCraftBookMechanic {
             } else
                 blo.setBlockData(item, true);
 
-            CraftBookPlugin.logDebugMessage("Set block " + bl.getX() + ':' + bl.getY() + ':' + bl.getZ() + " to " + item.toString(), "gates.search");
+            CraftBookPlugin.logDebugMessage("Set block " + bl.x() + ':' + bl.y() + ':' + bl.z() + " to " + item.toString(), "gates.search");
 
             recurseColumn(player, sign, blo.getRelative(1, 0, 0), visitedColumns, close, smallSearchSize);
             recurseColumn(player, sign, blo.getRelative(-1, 0, 0), visitedColumns, close, smallSearchSize);
@@ -687,15 +687,15 @@ public class Gate extends AbstractCraftBookMechanic {
 
     public List<String> getDefaultBlocks() {
         List<String> materials = new ArrayList<>();
-        materials.add(BlockTypes.ACACIA_FENCE.getId());
-        materials.add(BlockTypes.BIRCH_FENCE.getId());
-        materials.add(BlockTypes.JUNGLE_FENCE.getId());
-        materials.add(BlockTypes.OAK_FENCE.getId());
-        materials.add(BlockTypes.SPRUCE_FENCE.getId());
-        materials.add(BlockTypes.DARK_OAK_FENCE.getId());
-        materials.add(BlockTypes.NETHER_BRICK_FENCE.getId());
-        materials.add(BlockTypes.IRON_BARS.getId());
-        materials.add(BlockTypes.GLASS_PANE.getId());
+        materials.add(BlockTypes.ACACIA_FENCE.id());
+        materials.add(BlockTypes.BIRCH_FENCE.id());
+        materials.add(BlockTypes.JUNGLE_FENCE.id());
+        materials.add(BlockTypes.OAK_FENCE.id());
+        materials.add(BlockTypes.SPRUCE_FENCE.id());
+        materials.add(BlockTypes.DARK_OAK_FENCE.id());
+        materials.add(BlockTypes.NETHER_BRICK_FENCE.id());
+        materials.add(BlockTypes.IRON_BARS.id());
+        materials.add(BlockTypes.GLASS_PANE.id());
         return materials;
     }
 

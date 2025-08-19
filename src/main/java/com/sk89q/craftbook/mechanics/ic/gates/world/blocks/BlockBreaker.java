@@ -140,7 +140,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         public void addConfiguration (YAMLProcessor config, String path) {
 
             config.setComment(path + "blacklist", "Stops the IC from breaking the listed blocks.");
-            blockBlacklist = BlockSyntax.getBlocks(config.getStringList(path + "blacklist", Lists.newArrayList(BlockTypes.BEDROCK.getId())), true);
+            blockBlacklist = BlockSyntax.getBlocks(config.getStringList(path + "blacklist", Lists.newArrayList(BlockTypes.BEDROCK.id())), true);
         }
     }
 }

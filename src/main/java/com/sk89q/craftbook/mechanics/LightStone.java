@@ -87,6 +87,6 @@ public class LightStone extends AbstractCraftBookMechanic {
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "item", "The item that the lightstone mechanic uses.");
-        item = BukkitAdapter.asItemType(ItemSyntax.getItem(config.getString(path + "item", ItemTypes.GLOWSTONE_DUST.getId())).getType());
+        item = BukkitAdapter.asItemType(ItemSyntax.getItem(config.getString(path + "item", ItemTypes.GLOWSTONE_DUST.id())).getType());
     }
 }

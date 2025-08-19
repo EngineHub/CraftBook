@@ -233,6 +233,6 @@ public class CartDeposit extends CartBlockMechanism {
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "block", "Sets the block that is the base of the deposit mechanic.");
-        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.IRON_ORE.getId()), true);
+        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.IRON_ORE.id()), true);
     }
 }

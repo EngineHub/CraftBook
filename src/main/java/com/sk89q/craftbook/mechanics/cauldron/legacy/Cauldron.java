@@ -302,6 +302,6 @@ public class Cauldron extends AbstractCraftBookMechanic {
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "block", "The block to use as the casing for the legacy cauldron.");
-        cauldronBlock = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.STONE.getId()), true);
+        cauldronBlock = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.STONE.id()), true);
     }
 }

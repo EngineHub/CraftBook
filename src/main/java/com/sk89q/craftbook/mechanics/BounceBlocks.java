@@ -39,7 +39,7 @@ public class BounceBlocks extends AbstractCraftBookMechanic {
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "blocks", "A list of blocks that can be jumped on.");
-        blocks = BlockSyntax.getBlocks(config.getStringList(path + "blocks", Collections.singletonList(BlockTypes.DIAMOND_BLOCK.getId())), true);
+        blocks = BlockSyntax.getBlocks(config.getStringList(path + "blocks", Collections.singletonList(BlockTypes.DIAMOND_BLOCK.id())), true);
 
         config.setComment(path + "sensitivity", "The sensitivity of jumping.");
         sensitivity = config.getDouble(path + "sensitivity", 0.1);

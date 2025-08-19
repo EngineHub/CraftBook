@@ -65,6 +65,6 @@ public class CartEjector extends CartBlockMechanism {
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "block", "Sets the block that is the base of the ejector mechanic.");
-        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.IRON_BLOCK.getId()), true);
+        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.IRON_BLOCK.id()), true);
     }
 }

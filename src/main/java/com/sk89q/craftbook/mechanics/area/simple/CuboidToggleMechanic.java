@@ -47,7 +47,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
         ChangedSign other = CraftBookBukkitUtil.toChangedSign(farSide);
         for (BlockVector3 bv : toggle) {
-            Block b = sign.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
+            Block b = sign.getWorld().getBlockAt(bv.x(), bv.y(), bv.z());
             if (b.getType() == type.getMaterial() || BlockUtil.isBlockReplacable(b.getType())) {
                 if (CraftBookPlugin.inst().getConfiguration().safeDestruction && (b.getType() == type.getMaterial()))
                     addBlocks(s, other, 1);
@@ -63,7 +63,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
         ChangedSign other = CraftBookBukkitUtil.toChangedSign(farSide);
         for (BlockVector3 bv : toggle) {
-            Block b = sign.getWorld().getBlockAt(bv.getBlockX(), bv.getBlockY(), bv.getBlockZ());
+            Block b = sign.getWorld().getBlockAt(bv.x(), bv.y(), bv.z());
             if (BlockUtil.isBlockReplacable(b.getType())) {
                 if (CraftBookPlugin.inst().getConfiguration().safeDestruction) {
                     if (hasEnoughBlocks(s, other)) {

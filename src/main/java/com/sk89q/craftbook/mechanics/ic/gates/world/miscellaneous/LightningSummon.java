@@ -85,9 +85,9 @@ public class LightningSummon extends AbstractIC {
 
         if (chip.getInput(0)) {
 
-            for (int x = -radius.getBlockX() + 1; x < radius.getBlockX(); x++) {
-                for (int y = -radius.getBlockY() + 1; y < radius.getBlockY(); y++) {
-                    for (int z = -radius.getBlockZ() + 1; z < radius.getBlockZ(); z++) {
+            for (int x = -radius.x() + 1; x < radius.x(); x++) {
+                for (int y = -radius.y() + 1; y < radius.y(); y++) {
+                    for (int z = -radius.z() + 1; z < radius.z(); z++) {
                         int rx = center.getBlockX() - x;
                         int ry = center.getBlockY() - y;
                         int rz = center.getBlockZ() - z;

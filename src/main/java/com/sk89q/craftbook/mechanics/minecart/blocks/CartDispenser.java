@@ -248,7 +248,7 @@ public class CartDispenser extends CartBlockMechanism {
     public void loadConfiguration (YAMLProcessor config, String path) {
 
         config.setComment(path + "block", "Sets the block that is the base of the dispenser mechanic.");
-        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.EMERALD_ORE.getId()), true);
+        material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.EMERALD_ORE.id()), true);
 
         config.setComment(path + "spawn-infront", "Sets whether the minecarts should spawn infront of the mechanic instead of directly above.");
         minecartDispenserLegacy = config.getBoolean(path + "spawn-infront", false);
