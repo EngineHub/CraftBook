@@ -41,23 +41,42 @@ public class FleeFromWeaponsGoal implements Goal<Creature> {
         this.creature = creature;
     }
 
-    @Override
-    public boolean shouldActivate() {
-        return !creature.isDead();
-    }
-
-    @Override
-    public void tick() {
+    private boolean isNearbyPlayerWithWeapon() {
         var entities = this.creature.getNearbyEntities(5, 5, 5);
         for (Entity entity : entities) {
             if (entity instanceof Player player) {
                 Material mainHandType = player.getInventory().getItemInMainHand().getType();
-                if (Tag.ITEMS_SWORDS.isTagged(mainHandType)) {
-                    Goal<Creature> panicGoal = Bukkit.getServer().getMobGoals().getGoal(this.creature, VanillaGoal.PANIC);
-                    if (panicGoal != null) {
-                        panicGoal.start();
-                    }
+                Material offHandType = player.getInventory().getItemInOffHand().getType();
+
+                if (Tag.ITEMS_SWORDS.isTagged(mainHandType) || Tag.ITEMS_SWORDS.isTagged(offHandType)) {
+                    return true;
                 }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean shouldActivate() {
+        return !creature.isDead() && isNearbyPlayerWithWeapon();
+    }
+
+    @Override
+    public void start() {
+        if (isNearbyPlayerWithWeapon()) {
+            Goal<Creature> panicGoal = Bukkit.getServer().getMobGoals().getGoal(this.creature, VanillaGoal.PANIC);
+            if (panicGoal != null) {
+                panicGoal.start();
+            }
+        }
+    }
+
+    @Override
+    public void tick() {
+        if (isNearbyPlayerWithWeapon()) {
+            Goal<Creature> panicGoal = Bukkit.getServer().getMobGoals().getGoal(this.creature, VanillaGoal.PANIC);
+            if (panicGoal != null) {
+                panicGoal.start();
             }
         }
     }
