@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 
 public class MechanicConfigurationGenerator {
@@ -47,11 +48,11 @@ public class MechanicConfigurationGenerator {
                 CraftBookMechanic me = mechanicRegistration.getMechanicClass().getDeclaredConstructor(MechanicType.class).newInstance(mechanicRegistration);
                 Path file = getMechanicConfigFolder().resolve(mechanicRegistration.id() + ".yml");
 
-                YAMLProcessor mechanicConfig = new YAMLProcessor(file.toFile(), true, YAMLFormat.EXTENDED);
+                YAMLProcessor mechanicConfig = new YAMLProcessor(file, true, YAMLFormat.EXTENDED);
 
                 try {
                     mechanicConfig.load();
-                } catch (FileNotFoundException e) {
+                } catch (FileNotFoundException | NoSuchFileException e) {
                     // Ignore this one.
                 } catch (Throwable e) {
                     System.out.println("Failed to load config for " + mechanicRegistration.id() + " - " + e.getMessage());

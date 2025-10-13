@@ -66,10 +66,10 @@ public class HeadDrops extends AbstractCraftBookMechanic implements Listener {
     private static final Map<EntityType, PlayerProfile> TEXTURE_MAP = Maps.newHashMap();
 
     static {
-        try {
+        // skip if the CRAFTBOOK_DOCGEN environment variable is set
+        // This breaks docgen currently.
+        if (System.getenv("CRAFTBOOK_DOCGEN") == null) {
             SkinData.addDefaultSkinData(TEXTURE_MAP);
-        } catch (Throwable e) {
-            CraftBook.LOGGER.error("Failed to load default head textures", e);
         }
     }
 

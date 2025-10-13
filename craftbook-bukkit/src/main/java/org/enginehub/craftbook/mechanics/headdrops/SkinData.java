@@ -272,13 +272,19 @@ public class SkinData {
         skinMap.put(EntityType.CREAKING, createProfile(
             "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTJmZmNlNDU2MWYzYjA3NjkwZjU4Y2Q2MmM2ZjJiNWY4Y2NjMjc2ZjQ0M2MyZDFkN2NmZGU0ODcwYTJiYWYwMyJ9fX0="
         ));
+        skinMap.put(EntityType.COPPER_GOLEM, createProfile(
+                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTllMjRlOTRkYmU0MmUyMzBkODMyOTNhNzdkNjFmZjcxMDFhOGM2OGFiNjhiYmM2YTkzZjk2MzBmYjJmZGI0In19fQ=="
+        ));
+        skinMap.put(EntityType.HAPPY_GHAST, createProfile(
+                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTFhMzZjYjkzZDAxNjc1YzQ2MjJkZDVjOGQ4NzIxMTA5MTFlYzEyYzM3MmU4OWFmYThiYTAzODYyODY3ZjZmYiJ9fX0="
+        ));
     }
 
     private static final Set<EntityType> IGNORED_ENTITIES = Set.of(
         EntityType.PLAYER, EntityType.ZOMBIE, EntityType.CREEPER,
         EntityType.SKELETON, EntityType.WITHER_SKELETON,
         EntityType.ARMOR_STAND, EntityType.ENDER_DRAGON, EntityType.PIGLIN,
-        EntityType.UNKNOWN
+        EntityType.UNKNOWN, EntityType.MANNEQUIN
     );
 
     @SuppressWarnings("unused")
