@@ -62,8 +62,10 @@ public class MapChanger extends AbstractCraftBookMechanic {
         }
 
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
-        if (item == null || (item.getType() != Material.MAP && item.getType() != Material.FILLED_MAP)) 
+        if (item == null 
+            || (item.getType() != Material.MAP && item.getType() != Material.FILLED_MAP)) {
             return;
+        }
 
         final int mapId;
         try {
