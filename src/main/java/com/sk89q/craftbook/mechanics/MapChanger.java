@@ -15,6 +15,7 @@ import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.events.SignClickEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.MapMeta;
 
 public class MapChanger extends AbstractCraftBookMechanic {
@@ -59,20 +60,31 @@ public class MapChanger extends AbstractCraftBookMechanic {
                 player.printError("area.use-permissions");
             return;
         }
-        if (event.getPlayer().getInventory().getItemInMainHand() != null && event.getPlayer().getInventory().getItemInMainHand().getType() == Material.MAP) {
-            byte id;
-            try {
-                id = Byte.parseByte(sign.getLine(2));
-            } catch (Exception e) {
-                id = -1;
-            }
-            if (id <= -1) {
-                player.printError("mech.map.invalid");
-                return;
-            }
-            MapMeta meta = (MapMeta) event.getPlayer().getInventory().getItemInMainHand().getItemMeta();
-            meta.setMapId(id);
-            event.getPlayer().getInventory().getItemInMainHand().setItemMeta(meta);
+
+        ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
+        if (item == null 
+            || (item.getType() != Material.MAP && item.getType() != Material.FILLED_MAP)) {
+            return;
+        }
+
+        final int mapId;
+        try {
+            mapId = Integer.parseInt(sign.getLine(2).trim());
+        } catch (Exception e) {
+            player.printError("mech.map.invalid");
+            return;
+        }
+
+        if (item.getType() == Material.MAP) {
+            ItemStack filled = new ItemStack(Material.FILLED_MAP, item.getAmount());
+            MapMeta meta = (MapMeta) filled.getItemMeta();
+            meta.setMapId(mapId);
+            filled.setItemMeta(meta);
+            event.getPlayer().getInventory().setItemInMainHand(filled);
+        } else {
+            MapMeta meta = (MapMeta) item.getItemMeta();
+            meta.setMapId(mapId);
+            item.setItemMeta(meta);
         }
     }
 
