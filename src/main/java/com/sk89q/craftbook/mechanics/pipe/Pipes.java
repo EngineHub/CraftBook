@@ -26,7 +26,6 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Dropper;
 import org.bukkit.block.Furnace;
 import org.bukkit.block.Jukebox;
 import org.bukkit.block.Crafter;
@@ -201,40 +200,6 @@ public class Pipes extends AbstractCraftBookMechanic {
                     items.removeAll(filteredItems);
                     items.addAll(newItems);
                 }
-            } else if (blType == Material.DROPPER) {
-                ChangedSign sign = getSignOnPiston(bl);
-
-                HashSet<ItemStack> pFilters = new HashSet<>();
-                HashSet<ItemStack> pExceptions = new HashSet<>();
-
-                if(sign != null) {
-                    for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
-                        pFilters.add(ItemSyntax.getItem(line3.trim()));
-                    }
-                    for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
-                        pExceptions.add(ItemSyntax.getItem(line4.trim()));
-                    }
-
-                    pFilters.removeAll(Collections.<ItemStack>singleton(null));
-                    pExceptions.removeAll(Collections.<ItemStack>singleton(null));
-                }
-
-                List<ItemStack> filteredItems = new ArrayList<>(VerifyUtil.withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
-
-                if(filteredItems.isEmpty())
-                    continue;
-
-                Dropper dropper = (Dropper) bl.getState();
-                List<ItemStack> newItems =
-                        new ArrayList<>(dropper.getInventory().addItem(filteredItems.toArray(new ItemStack[filteredItems.size()])).values());
-
-                for(ItemStack stack : dropper.getInventory().getContents())
-                    if(ItemUtil.isStackValid(stack))
-                        for(int i = 0; i < stack.getAmount(); i++)
-                            dropper.drop();
-
-                items.removeAll(filteredItems);
-                items.addAll(newItems);
             }
 
             if (!items.isEmpty()) {
@@ -315,10 +280,8 @@ public class Pipes extends AbstractCraftBookMechanic {
 
     private static boolean isValidPipeBlock(Material type) {
         return switch (type) {
-            case GLASS, PISTON, STICKY_PISTON, DROPPER, GLASS_PANE -> true;
-            default -> ItemUtil.isStainedGlass(type)
-                    || ItemUtil.isStainedGlassPane(type)
-                    || SignUtil.isWallSign(type);
+            case GLASS, PISTON, STICKY_PISTON, GLASS_PANE -> true;
+            default -> ItemUtil.isStainedGlass(type) || ItemUtil.isStainedGlassPane(type);
         };
     }
 
