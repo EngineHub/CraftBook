@@ -129,15 +129,8 @@ public class Pipes extends AbstractCraftBookMechanic {
         return null;
     }
 
-    private void searchNearbyPipes(Block block, Set<Vector> visitedPipes, List<ItemStack> items) {
-        Deque<Block> searchQueue = new ArrayDeque<>();
-        searchQueue.addFirst(block);
-
-        //Use the queue to search blocks.
-        while (!searchQueue.isEmpty()) {
-            Block bl = searchQueue.poll();
-            Material blType = bl.getType();
-            if (blType == Material.PISTON) {
+    private EnumerationHandleResult handlePipeBlock(Block bl, List<ItemStack> items) {
+            if (bl.getType() == Material.PISTON) {
                 Piston p = (Piston) bl.getBlockData();
 
                 ChangedSign sign = getSignOnPiston(bl);
@@ -165,7 +158,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 filteredItems = filterEvent.getFilteredItems();
 
                 if(filteredItems.isEmpty())
-                    continue;
+                    return EnumerationHandleResult.CONTINUE;
 
                 List<ItemStack> newItems = new ArrayList<>();
 
@@ -202,14 +195,23 @@ public class Pipes extends AbstractCraftBookMechanic {
                 }
             }
 
-            if (!items.isEmpty()) {
-                //Enumerate the search queue.
+        return items.isEmpty() ? EnumerationHandleResult.DONE : EnumerationHandleResult.CONTINUE;
+    }
+
+    private void enumeratePipeBlocks(Block block, Set<Vector> visitedPipes, PipeEnumerationHandler handler) {
+        Deque<Block> searchQueue = new ArrayDeque<>();
+        searchQueue.addFirst(block);
+
+        while (!searchQueue.isEmpty()) {
+            Block bl = searchQueue.poll();
+            var handleResult = handler.handle(bl);
+
+            if (handleResult == EnumerationHandleResult.CONTINUE) {
+                Material blType = bl.getType();
+
                 for (int x = -1; x < 2; x++) {
                     for (int y = -1; y < 2; y++) {
                         for (int z = -1; z < 2; z++) {
-
-                            if(items.isEmpty())
-                                return;
 
                             if (!pipesDiagonal) {
                                 if (x != 0 && y != 0) continue;
@@ -274,6 +276,8 @@ public class Pipes extends AbstractCraftBookMechanic {
                         }
                     }
                 }
+            } else {
+                return;
             }
         }
     }
@@ -344,7 +348,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.addAll(event.getItems());
                 if(!event.isCancelled()) {
                     visitedPipes.add(fac.getLocation().toVector());
-                    searchNearbyPipes(block, visitedPipes, items);
+                    enumeratePipeBlocks(block, visitedPipes, bl -> handlePipeBlock(bl, items));
                 }
 
                 if (!items.isEmpty()) {
@@ -375,7 +379,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.addAll(event.getItems());
                 if(!event.isCancelled()) {
                     visitedPipes.add(fac.getLocation().toVector());
-                    searchNearbyPipes(block, visitedPipes, items);
+                    enumeratePipeBlocks(block, visitedPipes, bl -> handlePipeBlock(bl, items));
                 }
 
                 if (!items.isEmpty()) {
@@ -401,7 +405,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                     if (!event.isCancelled()) {
                         visitedPipes.add(fac.getLocation().toVector());
-                        searchNearbyPipes(block, visitedPipes, items);
+                        enumeratePipeBlocks(block, visitedPipes, bl -> handlePipeBlock(bl, items));
                     }
 
                     if (!items.isEmpty()) {
@@ -421,7 +425,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.addAll(event.getItems());
                 if(!event.isCancelled() && !items.isEmpty()) {
                     visitedPipes.add(fac.getLocation().toVector());
-                    searchNearbyPipes(block, visitedPipes, items);
+                    enumeratePipeBlocks(block, visitedPipes, bl -> handlePipeBlock(bl, items));
                 }
                 leftovers.addAll(items);
             }
