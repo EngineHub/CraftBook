@@ -32,6 +32,7 @@ import org.bukkit.block.data.type.Piston;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -343,15 +344,17 @@ public class Pipes extends AbstractCraftBookMechanic {
         } else if (containerType == Material.FURNACE || containerType == Material.BLAST_FURNACE || containerType == Material.SMOKER) {
             inventoryHolder = (InventoryHolder) containerBlock.getState();
 
-            Furnace furnace = (Furnace) inventoryHolder;
+            FurnaceInventory inventory = ((Furnace) inventoryHolder).getInventory();
+            ItemStack result = inventory.getResult();
 
-            if (!ItemUtil.isStackValid(furnace.getInventory().getResult()))
+            if (!ItemUtil.isStackValid(result))
                 return;
 
-            if(!ItemUtil.doesItemPassFilters(furnace.getInventory().getResult(), filters, exceptions))
+            if(!ItemUtil.doesItemPassFilters(result, filters, exceptions))
                 return;
-            itemsInPipe.add(furnace.getInventory().getResult());
-            if (furnace.getInventory().getResult() != null) furnace.getInventory().setResult(null);
+
+            itemsInPipe.add(result);
+            inventory.setResult(null);
         }
         // else if (containerType == Material.JUKEBOX) {}
         // TODO: Handle jukeboxes (removed due to odd behavior)
