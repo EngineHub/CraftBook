@@ -129,78 +129,80 @@ public class Pipes extends AbstractCraftBookMechanic {
         return null;
     }
 
-    private EnumerationHandleResult handlePipeBlock(Block bl, List<ItemStack> items) {
-        if (items.isEmpty())
-            return EnumerationHandleResult.DONE;
+    private void locateExitNodesForItems(Block block, Set<Vector> visitedPipes, List<ItemStack> items) {
+        enumeratePipeBlocks(block, visitedPipes, bl -> {
+            if (items.isEmpty())
+                return EnumerationHandleResult.DONE;
 
-        if (bl.getType() != Material.PISTON)
-            return EnumerationHandleResult.CONTINUE;
+            if (bl.getType() != Material.PISTON)
+                return EnumerationHandleResult.CONTINUE;
 
-        Piston p = (Piston) bl.getBlockData();
+            Piston p = (Piston) bl.getBlockData();
 
-        ChangedSign sign = getSignOnPiston(bl);
+            ChangedSign sign = getSignOnPiston(bl);
 
-        HashSet<ItemStack> pFilters = new HashSet<>();
-        HashSet<ItemStack> pExceptions = new HashSet<>();
+            HashSet<ItemStack> pFilters = new HashSet<>();
+            HashSet<ItemStack> pExceptions = new HashSet<>();
 
-        if(sign != null) {
-            for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
-                pFilters.add(ItemSyntax.getItem(line3.trim()));
-            }
-            for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
-                pExceptions.add(ItemSyntax.getItem(line4.trim()));
-            }
-
-            pFilters.removeAll(Collections.<ItemStack>singleton(null));
-            pExceptions.removeAll(Collections.<ItemStack>singleton(null));
-        }
-
-        List<ItemStack> filteredItems = new ArrayList<>(VerifyUtil.withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
-
-        PipeFilterEvent filterEvent = new PipeFilterEvent(bl, items, pFilters, pExceptions, filteredItems);
-        Bukkit.getPluginManager().callEvent(filterEvent);
-
-        filteredItems = filterEvent.getFilteredItems();
-
-        if(filteredItems.isEmpty())
-            return EnumerationHandleResult.CONTINUE;
-
-        List<ItemStack> newItems = new ArrayList<>();
-
-        Block fac = bl.getRelative(p.getFacing());
-
-        PipePutEvent event = new PipePutEvent(bl, new ArrayList<>(filteredItems), fac);
-        Bukkit.getPluginManager().callEvent(event);
-
-        if (event.isCancelled())
-            return EnumerationHandleResult.CONTINUE;
-
-        if (InventoryUtil.doesBlockHaveInventory(fac)) {
-            InventoryHolder holder = (InventoryHolder) fac.getState();
-            newItems.addAll(InventoryUtil.addItemsToInventory(holder, event.getItems().toArray(new ItemStack[event.getItems().size()])));
-        } else if (fac.getType() == Material.JUKEBOX) {
-            Jukebox juke = (Jukebox) fac.getState();
-            List<ItemStack> its = new ArrayList<>(event.getItems());
-            if (juke.getPlaying() != Material.AIR) {
-                Iterator<ItemStack> iter = its.iterator();
-                while (iter.hasNext()) {
-                    ItemStack st = iter.next();
-                    if (!st.getType().isRecord()) continue;
-                    juke.setPlaying(st.getType());
-                    juke.update();
-                    iter.remove();
-                    break;
+            if(sign != null) {
+                for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
+                    pFilters.add(ItemSyntax.getItem(line3.trim()));
                 }
+                for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
+                    pExceptions.add(ItemSyntax.getItem(line4.trim()));
+                }
+
+                pFilters.removeAll(Collections.<ItemStack>singleton(null));
+                pExceptions.removeAll(Collections.<ItemStack>singleton(null));
             }
-            newItems.addAll(its);
-        } else {
-            newItems.addAll(event.getItems());
-        }
 
-        items.removeAll(filteredItems);
-        items.addAll(newItems);
+            List<ItemStack> filteredItems = new ArrayList<>(VerifyUtil.withoutNulls(ItemUtil.filterItems(items, pFilters, pExceptions)));
 
-        return items.isEmpty() ? EnumerationHandleResult.DONE : EnumerationHandleResult.CONTINUE;
+            PipeFilterEvent filterEvent = new PipeFilterEvent(bl, items, pFilters, pExceptions, filteredItems);
+            Bukkit.getPluginManager().callEvent(filterEvent);
+
+            filteredItems = filterEvent.getFilteredItems();
+
+            if(filteredItems.isEmpty())
+                return EnumerationHandleResult.CONTINUE;
+
+            List<ItemStack> newItems = new ArrayList<>();
+
+            Block fac = bl.getRelative(p.getFacing());
+
+            PipePutEvent event = new PipePutEvent(bl, new ArrayList<>(filteredItems), fac);
+            Bukkit.getPluginManager().callEvent(event);
+
+            if (event.isCancelled())
+                return EnumerationHandleResult.CONTINUE;
+
+            if (InventoryUtil.doesBlockHaveInventory(fac)) {
+                InventoryHolder holder = (InventoryHolder) fac.getState();
+                newItems.addAll(InventoryUtil.addItemsToInventory(holder, event.getItems().toArray(new ItemStack[event.getItems().size()])));
+            } else if (fac.getType() == Material.JUKEBOX) {
+                Jukebox juke = (Jukebox) fac.getState();
+                List<ItemStack> its = new ArrayList<>(event.getItems());
+                if (juke.getPlaying() != Material.AIR) {
+                    Iterator<ItemStack> iter = its.iterator();
+                    while (iter.hasNext()) {
+                        ItemStack st = iter.next();
+                        if (!st.getType().isRecord()) continue;
+                        juke.setPlaying(st.getType());
+                        juke.update();
+                        iter.remove();
+                        break;
+                    }
+                }
+                newItems.addAll(its);
+            } else {
+                newItems.addAll(event.getItems());
+            }
+
+            items.removeAll(filteredItems);
+            items.addAll(newItems);
+
+            return items.isEmpty() ? EnumerationHandleResult.DONE : EnumerationHandleResult.CONTINUE;
+        });
     }
 
     private void enumeratePipeBlocks(Block block, Set<Vector> visitedPipes, PipeEnumerationHandler handler) {
@@ -352,7 +354,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.addAll(event.getItems());
                 if(!event.isCancelled()) {
                     visitedPipes.add(fac.getLocation().toVector());
-                    enumeratePipeBlocks(block, visitedPipes, bl -> handlePipeBlock(bl, items));
+                    locateExitNodesForItems(block, visitedPipes, items);
                 }
 
                 if (!items.isEmpty()) {
@@ -383,7 +385,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.addAll(event.getItems());
                 if(!event.isCancelled()) {
                     visitedPipes.add(fac.getLocation().toVector());
-                    enumeratePipeBlocks(block, visitedPipes, bl -> handlePipeBlock(bl, items));
+                    locateExitNodesForItems(block, visitedPipes, items);
                 }
 
                 if (!items.isEmpty()) {
@@ -409,7 +411,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                     if (!event.isCancelled()) {
                         visitedPipes.add(fac.getLocation().toVector());
-                        enumeratePipeBlocks(block, visitedPipes, bl -> handlePipeBlock(bl, items));
+                        locateExitNodesForItems(block, visitedPipes, items);
                     }
 
                     if (!items.isEmpty()) {
@@ -429,7 +431,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 items.addAll(event.getItems());
                 if(!event.isCancelled() && !items.isEmpty()) {
                     visitedPipes.add(fac.getLocation().toVector());
-                    enumeratePipeBlocks(block, visitedPipes, bl -> handlePipeBlock(bl, items));
+                    locateExitNodesForItems(block, visitedPipes, items);
                 }
                 leftovers.addAll(items);
             }
