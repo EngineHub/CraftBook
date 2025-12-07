@@ -296,6 +296,8 @@ public class Pipes extends AbstractCraftBookMechanic {
     }
 
     private void startPipe(Block block, List<ItemStack> items, boolean request) {
+        if (block.getType() != Material.STICKY_PISTON)
+            return;
 
         Set<ItemStack> filters = new HashSet<>();
         Set<ItemStack> exceptions = new HashSet<>();
@@ -316,137 +318,134 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         Set<Vector> visitedPipes = new HashSet<>();
 
-        if (block.getType() == Material.STICKY_PISTON) {
+        List<ItemStack> leftovers = new ArrayList<>();
 
-            List<ItemStack> leftovers = new ArrayList<>();
+        Piston p = (Piston) block.getBlockData();
+        Block fac = block.getRelative(p.getFacing());
+        Material facType = fac.getType();
 
-            Piston p = (Piston) block.getBlockData();
-            Block fac = block.getRelative(p.getFacing());
-            Material facType = fac.getType();
+        if (facType == Material.CHEST
+                || facType == Material.TRAPPED_CHEST
+                || facType == Material.DROPPER
+                || facType == Material.DISPENSER
+                || facType == Material.HOPPER
+                || facType == Material.BARREL
+                || facType == Material.CHISELED_BOOKSHELF
+                || facType == Material.CRAFTER
+                || facType == Material.DECORATED_POT
+                || Tag.SHULKER_BOXES.isTagged(facType)) {
+            for (ItemStack stack : ((InventoryHolder) fac.getState()).getInventory().getContents()) {
 
-            if (facType == Material.CHEST
-                    || facType == Material.TRAPPED_CHEST
-                    || facType == Material.DROPPER
-                    || facType == Material.DISPENSER
-                    || facType == Material.HOPPER
-                    || facType == Material.BARREL
-                    || facType == Material.CHISELED_BOOKSHELF
-                    || facType == Material.CRAFTER
-                    || facType == Material.DECORATED_POT
-                    || Tag.SHULKER_BOXES.isTagged(facType)) {
-                for (ItemStack stack : ((InventoryHolder) fac.getState()).getInventory().getContents()) {
+                if (!ItemUtil.isStackValid(stack))
+                    continue;
 
-                    if (!ItemUtil.isStackValid(stack))
-                        continue;
+                if(!ItemUtil.doesItemPassFilters(stack, filters, exceptions))
+                    continue;
 
-                    if(!ItemUtil.doesItemPassFilters(stack, filters, exceptions))
-                        continue;
+                items.add(stack);
+                ((InventoryHolder) fac.getState()).getInventory().removeItem(stack);
+                if (pipeStackPerPull)
+                    break;
+            }
 
-                    items.add(stack);
-                    ((InventoryHolder) fac.getState()).getInventory().removeItem(stack);
-                    if (pipeStackPerPull)
-                        break;
-                }
+            PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
+            Bukkit.getPluginManager().callEvent(event);
+            items.clear();
+            items.addAll(event.getItems());
+            if(!event.isCancelled()) {
+                visitedPipes.add(fac.getLocation().toVector());
+                locateExitNodesForItems(block, visitedPipes, items);
+            }
 
-                PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
-                Bukkit.getPluginManager().callEvent(event);
-                items.clear();
-                items.addAll(event.getItems());
-                if(!event.isCancelled()) {
-                    visitedPipes.add(fac.getLocation().toVector());
-                    locateExitNodesForItems(block, visitedPipes, items);
-                }
-
-                if (!items.isEmpty()) {
-                    if (facType == Material.CRAFTER)
-                        leftovers.addAll(InventoryUtil.addItemsToCrafter((Crafter) fac.getState(), items.toArray(new ItemStack[items.size()])));
-                    else {
-                        for (ItemStack item : items) {
-                            if (item == null) continue;
-                            leftovers.addAll(((InventoryHolder) fac.getState()).getInventory().addItem(item).values());
-                        }
+            if (!items.isEmpty()) {
+                if (facType == Material.CRAFTER)
+                    leftovers.addAll(InventoryUtil.addItemsToCrafter((Crafter) fac.getState(), items.toArray(new ItemStack[items.size()])));
+                else {
+                    for (ItemStack item : items) {
+                        if (item == null) continue;
+                        leftovers.addAll(((InventoryHolder) fac.getState()).getInventory().addItem(item).values());
                     }
                 }
-            } else if (facType == Material.FURNACE || facType == Material.BLAST_FURNACE || facType == Material.SMOKER) {
+            }
+        } else if (facType == Material.FURNACE || facType == Material.BLAST_FURNACE || facType == Material.SMOKER) {
 
-                Furnace f = (Furnace) fac.getState();
+            Furnace f = (Furnace) fac.getState();
 
-                if (!ItemUtil.isStackValid(f.getInventory().getResult()))
-                    return;
+            if (!ItemUtil.isStackValid(f.getInventory().getResult()))
+                return;
 
-                if(!ItemUtil.doesItemPassFilters(f.getInventory().getResult(), filters, exceptions))
-                    return;
-                items.add(f.getInventory().getResult());
-                if (f.getInventory().getResult() != null) f.getInventory().setResult(null);
+            if(!ItemUtil.doesItemPassFilters(f.getInventory().getResult(), filters, exceptions))
+                return;
+            items.add(f.getInventory().getResult());
+            if (f.getInventory().getResult() != null) f.getInventory().setResult(null);
+
+            PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
+            Bukkit.getPluginManager().callEvent(event);
+            items.clear();
+            items.addAll(event.getItems());
+            if(!event.isCancelled()) {
+                visitedPipes.add(fac.getLocation().toVector());
+                locateExitNodesForItems(block, visitedPipes, items);
+            }
+
+            if (!items.isEmpty()) {
+                for (ItemStack item : items) {
+                    if (item == null) continue;
+                    if(f.getInventory().getResult() == null)
+                        f.getInventory().setResult(item);
+                    else
+                        leftovers.add(ItemUtil.addToStack(f.getInventory().getResult(), item));
+                }
+            } else f.getInventory().setResult(null);
+        } else if (facType == Material.JUKEBOX) {
+
+            Jukebox juke = (Jukebox) fac.getState();
+
+            if (juke.getPlaying() != Material.AIR) {
+                items.add(new ItemStack(juke.getPlaying()));
 
                 PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
                 Bukkit.getPluginManager().callEvent(event);
                 items.clear();
                 items.addAll(event.getItems());
-                if(!event.isCancelled()) {
+
+                if (!event.isCancelled()) {
                     visitedPipes.add(fac.getLocation().toVector());
                     locateExitNodesForItems(block, visitedPipes, items);
                 }
 
                 if (!items.isEmpty()) {
                     for (ItemStack item : items) {
-                        if (item == null) continue;
-                        if(f.getInventory().getResult() == null)
-                            f.getInventory().setResult(item);
-                        else
-                            leftovers.add(ItemUtil.addToStack(f.getInventory().getResult(), item));
+                        if (!ItemUtil.isStackValid(item)) continue;
+                        block.getWorld().dropItem(BlockUtil.getBlockCentre(block), item);
                     }
-                } else f.getInventory().setResult(null);
-            } else if (facType == Material.JUKEBOX) {
-
-                Jukebox juke = (Jukebox) fac.getState();
-
-                if (juke.getPlaying() != Material.AIR) {
-                    items.add(new ItemStack(juke.getPlaying()));
-
-                    PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
-                    Bukkit.getPluginManager().callEvent(event);
-                    items.clear();
-                    items.addAll(event.getItems());
-
-                    if (!event.isCancelled()) {
-                        visitedPipes.add(fac.getLocation().toVector());
-                        locateExitNodesForItems(block, visitedPipes, items);
-                    }
-
-                    if (!items.isEmpty()) {
-                        for (ItemStack item : items) {
-                            if (!ItemUtil.isStackValid(item)) continue;
-                            block.getWorld().dropItem(BlockUtil.getBlockCentre(block), item);
-                        }
-                    } else {
-                        juke.setPlaying(Material.AIR);
-                        juke.update();
-                    }
+                } else {
+                    juke.setPlaying(Material.AIR);
+                    juke.update();
                 }
-            } else {
-                PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
-                Bukkit.getPluginManager().callEvent(event);
-                items.clear();
-                items.addAll(event.getItems());
-                if(!event.isCancelled() && !items.isEmpty()) {
-                    visitedPipes.add(fac.getLocation().toVector());
-                    locateExitNodesForItems(block, visitedPipes, items);
-                }
-                leftovers.addAll(items);
             }
-
-            PipeFinishEvent fEvent = new PipeFinishEvent(block, leftovers, fac, request);
-            Bukkit.getPluginManager().callEvent(fEvent);
-
-            leftovers = fEvent.getItems();
+        } else {
+            PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
+            Bukkit.getPluginManager().callEvent(event);
             items.clear();
+            items.addAll(event.getItems());
+            if(!event.isCancelled() && !items.isEmpty()) {
+                visitedPipes.add(fac.getLocation().toVector());
+                locateExitNodesForItems(block, visitedPipes, items);
+            }
+            leftovers.addAll(items);
+        }
 
-            if (!leftovers.isEmpty()) {
-                for (ItemStack item : leftovers) {
-                    if (!ItemUtil.isStackValid(item)) continue;
-                    block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), item);
-                }
+        PipeFinishEvent fEvent = new PipeFinishEvent(block, leftovers, fac, request);
+        Bukkit.getPluginManager().callEvent(fEvent);
+
+        leftovers = fEvent.getItems();
+        items.clear();
+
+        if (!leftovers.isEmpty()) {
+            for (ItemStack item : leftovers) {
+                if (!ItemUtil.isStackValid(item)) continue;
+                block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), item);
             }
         }
     }
