@@ -6,7 +6,6 @@ import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.BlockSyntax;
-import com.sk89q.craftbook.util.BlockUtil;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemSyntax;
@@ -27,13 +26,13 @@ import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Furnace;
-import org.bukkit.block.Crafter;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.Piston;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -283,6 +282,8 @@ public class Pipes extends AbstractCraftBookMechanic {
         if (inputPistonBlock.getType() != Material.STICKY_PISTON)
             return;
 
+        // Parse sign
+
         Set<ItemStack> filters = new HashSet<>();
         Set<ItemStack> exceptions = new HashSet<>();
 
@@ -300,16 +301,19 @@ public class Pipes extends AbstractCraftBookMechanic {
         filters.removeAll(Collections.<ItemStack>singleton(null));
         exceptions.removeAll(Collections.<ItemStack>singleton(null));
 
-        Set<Vector> visitedBlocks = new HashSet<>();
+        // Setup auxiliaries
 
-        List<ItemStack> leftovers = new ArrayList<>();
+        Set<Vector> visitedBlocks = new HashSet<>();
 
         Piston piston = (Piston) inputPistonBlock.getBlockData();
         Block containerBlock = inputPistonBlock.getRelative(piston.getFacing());
 
         visitedBlocks.add(containerBlock.getLocation().toVector());
 
+        // Suck items from container-block
+
         Material containerType = containerBlock.getType();
+        InventoryHolder inventoryHolder = null;
 
         if (containerType == Material.CHEST
                 || containerType == Material.TRAPPED_CHEST
@@ -321,7 +325,9 @@ public class Pipes extends AbstractCraftBookMechanic {
                 || containerType == Material.CRAFTER
                 || containerType == Material.DECORATED_POT
                 || Tag.SHULKER_BOXES.isTagged(containerType)) {
-            for (ItemStack stack : ((InventoryHolder) containerBlock.getState()).getInventory().getContents()) {
+            inventoryHolder = ((InventoryHolder) containerBlock.getState());
+            Inventory inventory = inventoryHolder.getInventory();
+            for (ItemStack stack : inventory.getContents()) {
 
                 if (!ItemUtil.isStackValid(stack))
                     continue;
@@ -330,32 +336,14 @@ public class Pipes extends AbstractCraftBookMechanic {
                     continue;
 
                 itemsInPipe.add(stack);
-                ((InventoryHolder) containerBlock.getState()).getInventory().removeItem(stack);
+                inventory.removeItem(stack);
                 if (pipeStackPerPull)
                     break;
             }
-
-            PipeSuckEvent suckEvent = new PipeSuckEvent(inputPistonBlock, new ArrayList<>(itemsInPipe), containerBlock);
-            Bukkit.getPluginManager().callEvent(suckEvent);
-            itemsInPipe.clear();
-            itemsInPipe.addAll(suckEvent.getItems());
-            if(!suckEvent.isCancelled()) {
-                locateExitNodesForItems(inputPistonBlock, visitedBlocks, itemsInPipe);
-            }
-
-            if (!itemsInPipe.isEmpty()) {
-                if (containerType == Material.CRAFTER)
-                    leftovers.addAll(InventoryUtil.addItemsToCrafter((Crafter) containerBlock.getState(), itemsInPipe.toArray(new ItemStack[itemsInPipe.size()])));
-                else {
-                    for (ItemStack item : itemsInPipe) {
-                        if (item == null) continue;
-                        leftovers.addAll(((InventoryHolder) containerBlock.getState()).getInventory().addItem(item).values());
-                    }
-                }
-            }
         } else if (containerType == Material.FURNACE || containerType == Material.BLAST_FURNACE || containerType == Material.SMOKER) {
+            inventoryHolder = (InventoryHolder) containerBlock.getState();
 
-            Furnace furnace = (Furnace) containerBlock.getState();
+            Furnace furnace = (Furnace) inventoryHolder;
 
             if (!ItemUtil.isStackValid(furnace.getInventory().getResult()))
                 return;
@@ -364,36 +352,36 @@ public class Pipes extends AbstractCraftBookMechanic {
                 return;
             itemsInPipe.add(furnace.getInventory().getResult());
             if (furnace.getInventory().getResult() != null) furnace.getInventory().setResult(null);
-
-            PipeSuckEvent suckEvent = new PipeSuckEvent(inputPistonBlock, new ArrayList<>(itemsInPipe), containerBlock);
-            Bukkit.getPluginManager().callEvent(suckEvent);
-            itemsInPipe.clear();
-            itemsInPipe.addAll(suckEvent.getItems());
-            if(!suckEvent.isCancelled()) {
-                locateExitNodesForItems(inputPistonBlock, visitedBlocks, itemsInPipe);
-            }
-
-            if (!itemsInPipe.isEmpty()) {
-                for (ItemStack item : itemsInPipe) {
-                    if (item == null) continue;
-                    if(furnace.getInventory().getResult() == null)
-                        furnace.getInventory().setResult(item);
-                    else
-                        leftovers.add(ItemUtil.addToStack(furnace.getInventory().getResult(), item));
-                }
-            } else furnace.getInventory().setResult(null);
         }
+        // else if (containerType == Material.JUKEBOX) {}
         // TODO: Handle jukeboxes (removed due to odd behavior)
-        else {
-            PipeSuckEvent suckEvent = new PipeSuckEvent(inputPistonBlock, new ArrayList<>(itemsInPipe), containerBlock);
-            Bukkit.getPluginManager().callEvent(suckEvent);
-            itemsInPipe.clear();
-            itemsInPipe.addAll(suckEvent.getItems());
-            if(!suckEvent.isCancelled() && !itemsInPipe.isEmpty()) {
-                locateExitNodesForItems(inputPistonBlock, visitedBlocks, itemsInPipe);
-            }
-            leftovers.addAll(itemsInPipe);
+
+        // BEGIN
+        // 1
+        PipeSuckEvent suckEvent = new PipeSuckEvent(inputPistonBlock, new ArrayList<>(itemsInPipe), containerBlock);
+        Bukkit.getPluginManager().callEvent(suckEvent);
+
+        itemsInPipe.clear();
+        itemsInPipe.addAll(suckEvent.getItems());
+
+        // Walk pipe to store as many items as possible
+
+        if (!suckEvent.isCancelled() && !itemsInPipe.isEmpty())
+            locateExitNodesForItems(inputPistonBlock, visitedBlocks, itemsInPipe);
+
+        // Try to put leftovers back into the block
+        List<ItemStack> leftovers = new ArrayList<>();
+
+        if (!itemsInPipe.isEmpty()) {
+            if (inventoryHolder != null)
+                leftovers.addAll(InventoryUtil.addItemsToInventory(inventoryHolder, itemsInPipe.toArray(new ItemStack[0])));
+            // else if (containerType == Material.JUKEBOX) {}
+            // TODO: Handle jukeboxes (removed due to odd behavior)
+            else
+                leftovers.addAll(itemsInPipe);
         }
+
+        // Finish up the pipe and possibly drop leftovers
 
         PipeFinishEvent finishEvent = new PipeFinishEvent(inputPistonBlock, leftovers, containerBlock, wasRequest);
         Bukkit.getPluginManager().callEvent(finishEvent);
