@@ -306,6 +306,9 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         Piston piston = (Piston) inputPistonBlock.getBlockData();
         Block containerBlock = inputPistonBlock.getRelative(piston.getFacing());
+
+        visitedBlocks.add(containerBlock.getLocation().toVector());
+
         Material containerType = containerBlock.getType();
 
         if (containerType == Material.CHEST
@@ -337,7 +340,6 @@ public class Pipes extends AbstractCraftBookMechanic {
             itemsInPipe.clear();
             itemsInPipe.addAll(suckEvent.getItems());
             if(!suckEvent.isCancelled()) {
-                visitedBlocks.add(containerBlock.getLocation().toVector());
                 locateExitNodesForItems(inputPistonBlock, visitedBlocks, itemsInPipe);
             }
 
@@ -368,7 +370,6 @@ public class Pipes extends AbstractCraftBookMechanic {
             itemsInPipe.clear();
             itemsInPipe.addAll(suckEvent.getItems());
             if(!suckEvent.isCancelled()) {
-                visitedBlocks.add(containerBlock.getLocation().toVector());
                 locateExitNodesForItems(inputPistonBlock, visitedBlocks, itemsInPipe);
             }
 
@@ -389,7 +390,6 @@ public class Pipes extends AbstractCraftBookMechanic {
             itemsInPipe.clear();
             itemsInPipe.addAll(suckEvent.getItems());
             if(!suckEvent.isCancelled() && !itemsInPipe.isEmpty()) {
-                visitedBlocks.add(containerBlock.getLocation().toVector());
                 locateExitNodesForItems(inputPistonBlock, visitedBlocks, itemsInPipe);
             }
             leftovers.addAll(itemsInPipe);
