@@ -22,10 +22,8 @@ import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.Furnace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.Piston;
@@ -313,49 +311,46 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         // Suck items from container-block
 
-        Material containerType = containerBlock.getType();
         InventoryHolder inventoryHolder = null;
 
-        if (containerType == Material.CHEST
-                || containerType == Material.TRAPPED_CHEST
-                || containerType == Material.DROPPER
-                || containerType == Material.DISPENSER
-                || containerType == Material.HOPPER
-                || containerType == Material.BARREL
-                || containerType == Material.CHISELED_BOOKSHELF
-                || containerType == Material.CRAFTER
-                || containerType == Material.DECORATED_POT
-                || Tag.SHULKER_BOXES.isTagged(containerType)) {
+        if (InventoryUtil.doesBlockHaveInventory(containerBlock)) {
             inventoryHolder = ((InventoryHolder) containerBlock.getState());
-            Inventory inventory = inventoryHolder.getInventory();
-            for (ItemStack stack : inventory.getContents()) {
+            Inventory blockInventory = inventoryHolder.getInventory();
 
-                if (!ItemUtil.isStackValid(stack))
-                    continue;
+            if (blockInventory instanceof FurnaceInventory furnaceInventory) {
+                ItemStack result = furnaceInventory.getResult();
 
-                if(!ItemUtil.doesItemPassFilters(stack, filters, exceptions))
-                    continue;
+                if (!ItemUtil.isStackValid(result))
+                    return;
 
-                itemsInPipe.add(stack);
-                inventory.removeItem(stack);
-                if (pipeStackPerPull)
-                    break;
+                if (!ItemUtil.doesItemPassFilters(result, filters, exceptions))
+                    return;
+
+                itemsInPipe.add(result);
+                furnaceInventory.setResult(null);
             }
-        } else if (containerType == Material.FURNACE || containerType == Material.BLAST_FURNACE || containerType == Material.SMOKER) {
-            inventoryHolder = (InventoryHolder) containerBlock.getState();
 
-            FurnaceInventory inventory = ((Furnace) inventoryHolder).getInventory();
-            ItemStack result = inventory.getResult();
+            // else if (inventoryHolder instanceof BrewingStand brewingStand) {}
+            // TODO: Handle brewing-stands separately, as they're included in #doesHaveBlockInventory
 
-            if (!ItemUtil.isStackValid(result))
-                return;
+            else {
+                for (ItemStack stack : blockInventory.getContents()) {
 
-            if(!ItemUtil.doesItemPassFilters(result, filters, exceptions))
-                return;
+                    if (!ItemUtil.isStackValid(stack))
+                        continue;
 
-            itemsInPipe.add(result);
-            inventory.setResult(null);
+                    if (!ItemUtil.doesItemPassFilters(stack, filters, exceptions))
+                        continue;
+
+                    itemsInPipe.add(stack);
+                    blockInventory.removeItem(stack);
+
+                    if (pipeStackPerPull)
+                        break;
+                }
+            }
         }
+
         // else if (containerType == Material.JUKEBOX) {}
         // TODO: Handle jukeboxes (removed due to odd behavior)
 
