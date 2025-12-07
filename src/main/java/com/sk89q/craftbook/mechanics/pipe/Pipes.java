@@ -27,7 +27,6 @@ import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Furnace;
-import org.bukkit.block.Jukebox;
 import org.bukkit.block.Crafter;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
@@ -44,7 +43,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -178,24 +176,9 @@ public class Pipes extends AbstractCraftBookMechanic {
             if (InventoryUtil.doesBlockHaveInventory(containerBlock)) {
                 InventoryHolder holder = (InventoryHolder) containerBlock.getState();
                 leftovers.addAll(InventoryUtil.addItemsToInventory(holder, putEvent.getItems().toArray(new ItemStack[0])));
-            } else if (containerBlock.getType() == Material.JUKEBOX) {
-                Jukebox jukebox = (Jukebox) containerBlock.getState();
-                // FIXME: This seems odd... Putting the item in if there's already one inside?
-                //        Also, that iterator seems totally needless.
-                List<ItemStack> its = new ArrayList<>(putEvent.getItems());
-                if (jukebox.getPlaying() != Material.AIR) {
-                    Iterator<ItemStack> iter = its.iterator();
-                    while (iter.hasNext()) {
-                        ItemStack st = iter.next();
-                        if (!st.getType().isRecord()) continue;
-                        jukebox.setPlaying(st.getType());
-                        jukebox.update();
-                        iter.remove();
-                        break;
-                    }
-                }
-                leftovers.addAll(its);
-            } else {
+            }
+            // TODO: Handle jukeboxes (removed due to odd behavior)
+            else {
                 leftovers.addAll(putEvent.getItems());
             }
 
@@ -398,34 +381,9 @@ public class Pipes extends AbstractCraftBookMechanic {
                         leftovers.add(ItemUtil.addToStack(furnace.getInventory().getResult(), item));
                 }
             } else furnace.getInventory().setResult(null);
-        } else if (containerType == Material.JUKEBOX) {
-
-            Jukebox jukebox = (Jukebox) containerBlock.getState();
-
-            if (jukebox.getPlaying() != Material.AIR) {
-                itemsInPipe.add(new ItemStack(jukebox.getPlaying()));
-
-                PipeSuckEvent suckEvent = new PipeSuckEvent(inputPistonBlock, new ArrayList<>(itemsInPipe), containerBlock);
-                Bukkit.getPluginManager().callEvent(suckEvent);
-                itemsInPipe.clear();
-                itemsInPipe.addAll(suckEvent.getItems());
-
-                if (!suckEvent.isCancelled()) {
-                    visitedBlocks.add(containerBlock.getLocation().toVector());
-                    locateExitNodesForItems(inputPistonBlock, visitedBlocks, itemsInPipe);
-                }
-
-                if (!itemsInPipe.isEmpty()) {
-                    for (ItemStack item : itemsInPipe) {
-                        if (!ItemUtil.isStackValid(item)) continue;
-                        inputPistonBlock.getWorld().dropItem(BlockUtil.getBlockCentre(inputPistonBlock), item);
-                    }
-                } else {
-                    jukebox.setPlaying(Material.AIR);
-                    jukebox.update();
-                }
-            }
-        } else {
+        }
+        // TODO: Handle jukeboxes (removed due to odd behavior)
+        else {
             PipeSuckEvent suckEvent = new PipeSuckEvent(inputPistonBlock, new ArrayList<>(itemsInPipe), containerBlock);
             Bukkit.getPluginManager().callEvent(suckEvent);
             itemsInPipe.clear();
