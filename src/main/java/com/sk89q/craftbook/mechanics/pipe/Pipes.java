@@ -320,14 +320,10 @@ public class Pipes extends AbstractCraftBookMechanic {
             if (blockInventory instanceof FurnaceInventory furnaceInventory) {
                 ItemStack result = furnaceInventory.getResult();
 
-                if (!ItemUtil.isStackValid(result))
-                    return;
-
-                if (!ItemUtil.doesItemPassFilters(result, filters, exceptions))
-                    return;
-
-                itemsInPipe.add(result);
-                furnaceInventory.setResult(null);
+                if (ItemUtil.isStackValid(result) && ItemUtil.doesItemPassFilters(result, filters, exceptions)) {
+                    itemsInPipe.add(result);
+                    furnaceInventory.setResult(null);
+                }
             }
 
             // else if (inventoryHolder instanceof BrewingStand brewingStand) {}
