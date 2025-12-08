@@ -25,8 +25,7 @@ import java.util.logging.Level;
 
 public class BlockCache implements Listener {
 
-  // TODO: This value should be configurable
-  private static final long CHUNK_TICKET_DURATION = 1000 * 60 * 5;
+  public static final int DEFAULT_CHUNK_TICKET_DURATION = 60 * 5;
 
   private static final MethodHandle getChunkAtAsync = findGetChunkAtAsync();
 
@@ -36,15 +35,28 @@ public class BlockCache implements Listener {
   private final BukkitTask chunkTicketTask;
 
   private int cacheLoadCounter = 0;
+  private int chunkTicketDuration = DEFAULT_CHUNK_TICKET_DURATION;
 
   public BlockCache(Consumer<Block> externalInvalidationHandler) {
     this.chunkTicketByCompactId = new Long2ObjectOpenHashMap<>();
     this.externalInvalidationHandler = externalInvalidationHandler;
     this.cachedBlockByCompactId = new Long2IntOpenHashMap();
     this.cachedBlockByCompactId.defaultReturnValue(CachedBlock.NULL_SENTINEL);
+    this.chunkTicketTask = Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), () -> removeExpiredChunkTickets(false), 0, 20);
 
     Bukkit.getServer().getPluginManager().registerEvents(this, CraftBookPlugin.inst());
-    this.chunkTicketTask = Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), () -> removeExpiredChunkTickets(false), 0, 20);
+
+    if (getChunkAtAsync == null)
+      CraftBookPlugin.logger().log(Level.WARNING, "[Pipes] Could not find API to load chunks asynchronously; use Paper to experience better performance.");
+  }
+
+  public void setChunkTicketDuration(int chunkTicketDuration) {
+    if (chunkTicketDuration <= 0) {
+      this.chunkTicketDuration = DEFAULT_CHUNK_TICKET_DURATION;
+      return;
+    }
+
+    this.chunkTicketDuration = chunkTicketDuration;
   }
 
   private void removeExpiredChunkTickets(boolean all) {
@@ -53,13 +65,11 @@ public class BlockCache implements Listener {
     for (var iterator = chunkTicketByCompactId.values().iterator(); iterator.hasNext();) {
       var chunkTicket = iterator.next();
 
-      if (all || now - chunkTicket.getLastUse() >= CHUNK_TICKET_DURATION) {
+      if (all || (now - chunkTicket.getLastUse()) / 1000 >= chunkTicketDuration) {
         iterator.remove();
 
         if (!chunkTicket.chunk.removePluginChunkTicket(CraftBookPlugin.inst()))
           CraftBookPlugin.logger().log(Level.WARNING, "Could not remove plugin-ticket from chunk at " + chunkTicket.chunk.getX() + " " + chunkTicket.chunk.getZ());
-
-        System.out.println("unloaded chunk");
       }
     }
   }
@@ -171,9 +181,6 @@ public class BlockCache implements Listener {
   }
 
   private void handleChunkLoading(Block block) throws LoadingChunkException {
-    if (getChunkAtAsync == null)
-      return;
-
     int chunkX = block.getX() >> 4;
     int chunkZ = block.getZ() >> 4;
     World world = block.getWorld();
@@ -189,24 +196,33 @@ public class BlockCache implements Listener {
       return;
     }
 
-    try {
-      getChunkAtAsync.invoke(world, chunkX, chunkZ, true, (Consumer<Chunk>) chunk -> {
-        // This request to load the chunk could've been called twice if loading took longer
-        // than the remaining tick-time since encountering this pipe-block. Ensure to not try
-        // to register the ticket twice, which would cause the warning below.
-        if (!chunkTicketByCompactId.containsKey(compactChunkId)) {
-          chunkTicketByCompactId.put(compactChunkId, new ChunkTicket(chunk));
-
-          if (!chunk.addPluginChunkTicket(CraftBookPlugin.inst()))
-            CraftBookPlugin.logger().log(Level.WARNING, "Could not add plugin-ticket to chunk at " + chunk.getX() + " " + chunk.getZ());
-        }
-      });
-    } catch (Throwable e) {
-      CraftBookPlugin.logger().log(Level.SEVERE, "An error occurred while trying to load the chunk at " + chunkX + "," + chunkZ + " asynchronously ", e);
-      return;
+    if (getChunkAtAsync != null) {
+      try {
+        getChunkAtAsync.invoke(world, chunkX, chunkZ, true, (Consumer<Chunk>) chunk -> addChunkTicket(chunk, compactChunkId));
+      } catch (Throwable e) {
+        CraftBookPlugin.logger().log(Level.SEVERE, "An error occurred while trying to load the chunk at " + chunkX + "," + chunkZ + " asynchronously ", e);
+        return;
+      }
     }
 
+    else
+      addChunkTicket(world.getChunkAt(chunkX, chunkZ, true), compactChunkId);
+
+    // Stop walking the pipe despite loading sync also, as to not completely starve the tick-loop
     throw new LoadingChunkException();
+  }
+
+  private void addChunkTicket(Chunk chunk, long compactChunkId) {
+    // The request to load the chunk could've been called twice if loading took longer
+    // than the remaining tick-time since encountering this pipe-block (if async).
+    // Ensure to not try to register the ticket twice, which would print the warning below.
+    if (chunkTicketByCompactId.containsKey(compactChunkId))
+      return;
+
+    chunkTicketByCompactId.put(compactChunkId, new ChunkTicket(chunk));
+
+    if (!chunk.addPluginChunkTicket(CraftBookPlugin.inst()))
+      CraftBookPlugin.logger().log(Level.WARNING, "Could not add plugin-ticket to chunk at " + chunk.getX() + " " + chunk.getZ());
   }
 
   private static MethodHandle findGetChunkAtAsync() {

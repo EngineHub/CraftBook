@@ -364,6 +364,7 @@ mechanics:
         max-tube-block-count: -1
         max-piston-block-count: -1
         max-cache-load-count: 500
+        chunk-retain-duration: 300
     SignCopier:
         item: minecraft:ink_sac
     Snow:
