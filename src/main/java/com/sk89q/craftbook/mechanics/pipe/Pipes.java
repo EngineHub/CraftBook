@@ -27,7 +27,6 @@ import org.bukkit.block.data.type.Piston;
 import org.bukkit.block.data.type.WallSign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.*;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +39,6 @@ import java.util.List;
 public class Pipes extends AbstractCraftBookMechanic {
 
     // TODO: Consider porting my actionbar cache-warmup status-indicator to this branch
-    // TODO: If loaded on Paper: stop when encountering a block in an unloaded chunk and load it async
 
     private int currentTubeBlockCounter;
     private int currentPistonBlockCounter;
@@ -59,8 +57,7 @@ public class Pipes extends AbstractCraftBookMechanic {
     public void disable() {
         super.disable();
 
-        HandlerList.unregisterAll(blockCache);
-        blockCache.clear();
+        blockCache.disable();
         pipeSignByPistonCompactId.clear();
     }
 
@@ -133,7 +130,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             pipeSignByPistonCompactId.remove(CompactId.computeWorldfulBlockId(block.getRelative(wallSign.getFacing().getOppositeFace())));
     }
 
-    private PipeSign getSignOnPiston(Block pistonBlock, int cachedPistonBlock) {
+    private PipeSign getSignOnPiston(Block pistonBlock, int cachedPistonBlock) throws LoadingChunkException {
         long pistonCompactId = CompactId.computeWorldfulBlockId(pistonBlock);
 
         PipeSign cachedSign = pipeSignByPistonCompactId.get(pistonCompactId);
@@ -180,7 +177,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         return cachedSign;
     }
 
-    private void locateExitNodesForItems(Block inputPistonBlock, LongSet visitedBlocks, List<ItemStack> itemsInPipe) {
+    private void locateExitNodesForItems(Block inputPistonBlock, LongSet visitedBlocks, List<ItemStack> itemsInPipe) throws LoadingChunkException {
         enumeratePipeBlocks(inputPistonBlock, visitedBlocks, (pipeBlock, cachedPipeBlock) -> {
             if (itemsInPipe.isEmpty())
                 return EnumerationHandleResult.DONE;
@@ -251,7 +248,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         });
     }
 
-    private void enumeratePipeBlocks(Block inputPistonBlock, LongSet visitedBlocks, PipeEnumerationHandler enumerationHandler) {
+    private void enumeratePipeBlocks(Block inputPistonBlock, LongSet visitedBlocks, PipeEnumerationHandler enumerationHandler) throws LoadingChunkException {
         currentTubeBlockCounter = currentPistonBlockCounter = 0;
         blockCache.resetCacheLoadCounter();
 
@@ -358,24 +355,31 @@ public class Pipes extends AbstractCraftBookMechanic {
     }
 
     private void startPipe(Block inputPistonBlock, List<ItemStack> itemsInPipe, boolean wasRequest) {
-        int cachedInputPistonBlock = blockCache.getCachedBlock(inputPistonBlock);
+        PipeSign sign;
+        Block containerBlock;
+        int containerBlockCache;
 
-        if (!CachedBlock.isMaterial(cachedInputPistonBlock, Material.STICKY_PISTON))
+        try {
+            int cachedInputPistonBlock = blockCache.getCachedBlock(inputPistonBlock);
+
+            if (!CachedBlock.isMaterial(cachedInputPistonBlock, Material.STICKY_PISTON))
+                return;
+
+            sign = getSignOnPiston(inputPistonBlock, cachedInputPistonBlock);
+
+            if (pipeRequireSign && sign == PipeSign.NO_SIGN)
+                return;
+
+            containerBlock = inputPistonBlock.getRelative(CachedBlock.getPistonFacing(cachedInputPistonBlock));
+            containerBlockCache = blockCache.getCachedBlock(containerBlock);
+        }
+        // If the very beginning of the pipe already (partially) is within an unloaded chunk,
+        // there's no need to start the process at all.
+        catch (LoadingChunkException ignored) {
             return;
-
-        PipeSign sign = getSignOnPiston(inputPistonBlock, cachedInputPistonBlock);
-
-        if (pipeRequireSign && sign == PipeSign.NO_SIGN)
-            return;
-
-        // Setup auxiliaries
+        }
 
         LongSet visitedBlocks = new LongOpenHashSet();
-
-        Piston piston = (Piston) inputPistonBlock.getBlockData();
-        Block containerBlock = inputPistonBlock.getRelative(piston.getFacing());
-        int containerBlockCache = blockCache.getCachedBlock(containerBlock);
-
         visitedBlocks.add(CompactId.computeWorldlessBlockId(containerBlock));
 
         // Suck items from container-block
@@ -451,8 +455,13 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         // Walk pipe to store as many items as possible
 
-        if (!suckEvent.isCancelled() && !itemsInPipe.isEmpty())
-            locateExitNodesForItems(inputPistonBlock, visitedBlocks, itemsInPipe);
+        if (!suckEvent.isCancelled() && !itemsInPipe.isEmpty()) {
+            try {
+                locateExitNodesForItems(inputPistonBlock, visitedBlocks, itemsInPipe);
+            }
+            // Simply terminate walking the pipe early - but do put the leftovers back
+            catch (LoadingChunkException ignored) {}
+        }
 
         // Try to put leftovers back into the block
         List<ItemStack> leftovers = new ArrayList<>();

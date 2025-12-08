@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.mechanics.pipe;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 
 import java.util.UUID;
@@ -8,6 +9,22 @@ import java.util.UUID;
 public class CompactId {
 
   private static final UUID[] knownWorldIds = new UUID[8];
+
+  public static long computeWorldfulChunkId(World world, int chunkX, int chunkZ) {
+    var worldId = getKnownWorldId(world.getUID());
+
+    // x/z in [-30M;30M] => chunk x/z in [-1.875M;+1.875M], adding 1.875M will result in [0;3.75M], 22 bits
+
+    // <17b unused><3b world_id><22b chunk_x><22b chunk_z>
+
+    // 2^22 - 1 = 0x3FFFFF
+    // 2^3 - 1 = 0x7
+    return (
+      (((chunkX + 1_875_000L) & 0x3FFFFF) << 22)
+        | ((chunkZ + 1_875_000L) & 0x3FFFFF)
+        | (((long) worldId & 0x7) << (22 * 2))
+    );
+  }
 
   public static long computeWorldfulBlockId(Block block) {
     var worldId = getKnownWorldId(block.getWorld().getUID());
