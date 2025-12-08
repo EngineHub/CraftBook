@@ -155,7 +155,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
             List<ItemStack> leftovers = new ArrayList<>();
 
-            Block containerBlock = pipeBlock.getRelative(cachedPipeBlock.pistonFacing);
+            Block containerBlock = cachedPipeBlock.getBlockAtThisPistonFacing(pipeBlock);
             CachedBlock cachedContainerBlock = blockCache.getCachedBlock(containerBlock);
 
             PipePutEvent putEvent = new PipePutEvent(pipeBlock, new ArrayList<>(filteredPipeItems), containerBlock);
@@ -166,7 +166,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
             List<ItemStack> itemsToPut = putEvent.getItems();
 
-            if (cachedContainerBlock.hasInventory) {
+            if (cachedContainerBlock.hasInventory()) {
                 InventoryHolder holder = (InventoryHolder) containerBlock.getState();
                 leftovers.addAll(InventoryUtil.addItemsToInventory(holder, itemsToPut.toArray(new ItemStack[0])));
             }
@@ -245,17 +245,17 @@ public class Pipes extends AbstractCraftBookMechanic {
                         Block enumeratedBlock = pipeBlock.getRelative(x, y, z);
                         CachedBlock cachedEnumeratedBlock = blockCache.getCachedBlock(enumeratedBlock);
 
-                        if (!cachedEnumeratedBlock.validPipeBlock)
+                        if (!cachedEnumeratedBlock.isIsValidPipeBlock())
                             continue;
 
                         if (!visitedBlocks.add(CompactId.computeWorldlessBlockId(enumeratedBlock)))
                             continue;
 
                         // Ensure that the block we came from is of the same color as the one we're enumerating.
-                        if (cachedPipeBlock.tubeColor != TubeColor.NONE && cachedEnumeratedBlock.tubeColor != TubeColor.NONE && cachedPipeBlock.tubeColor != cachedEnumeratedBlock.tubeColor)
+                        if (cachedPipeBlock.doTubeColorsMismatch(cachedEnumeratedBlock))
                             continue;
 
-                        if (cachedEnumeratedBlock.tubeColor == TubeColor.NONE) {
+                        if (!cachedEnumeratedBlock.hasTubeColor()) {
                             // Pistons are treated with higher priority.
                             if (cachedEnumeratedBlock.isMaterial(Material.PISTON))
                                 searchQueue.addFirst(enumeratedBlock);
@@ -263,7 +263,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                             continue;
                         }
 
-                        if (!cachedEnumeratedBlock.isPane) {
+                        if (!cachedEnumeratedBlock.isPane()) {
                             searchQueue.add(enumeratedBlock);
                             continue;
                         }
@@ -271,7 +271,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                         Block nextEnumeratedBlock = enumeratedBlock.getRelative(x, y, z);
                         CachedBlock cachedNextEnumeratedBlock = blockCache.getCachedBlock(nextEnumeratedBlock);
 
-                        if (!cachedNextEnumeratedBlock.validPipeBlock)
+                        if (!cachedNextEnumeratedBlock.isIsValidPipeBlock())
                             continue;
 
                         long nextEnumeratedId = CompactId.computeWorldlessBlockId(nextEnumeratedBlock);
@@ -281,7 +281,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                         // Ensure that if the block we came from had a color, the one we jumped across to after
                         // passing a pane is also of the same color.
-                        if (cachedPipeBlock.tubeColor != TubeColor.NONE && cachedNextEnumeratedBlock.tubeColor != TubeColor.NONE && cachedPipeBlock.tubeColor != cachedNextEnumeratedBlock.tubeColor)
+                        if (cachedPipeBlock.doTubeColorsMismatch(cachedNextEnumeratedBlock))
                             continue;
 
                         visitedBlocks.add(nextEnumeratedId);
