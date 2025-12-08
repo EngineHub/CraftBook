@@ -331,48 +331,30 @@ public class InventoryUtil {
     }
 
     /**
+     * Checks whether the block-type has an inventory.
+     *
+     * @param blockType The block's type
+     * @return If it has an inventory.
+     */
+    public static boolean doesBlockHaveInventory(Material blockType) {
+      return switch (blockType) {
+        case CHEST, TRAPPED_CHEST, DROPPER, DISPENSER, FURNACE, BREWING_STAND, HOPPER, WHITE_SHULKER_BOX,
+             ORANGE_SHULKER_BOX, MAGENTA_SHULKER_BOX, LIGHT_BLUE_SHULKER_BOX, YELLOW_SHULKER_BOX, GREEN_SHULKER_BOX,
+             PINK_SHULKER_BOX, GRAY_SHULKER_BOX, LIGHT_GRAY_SHULKER_BOX, BLUE_SHULKER_BOX, PURPLE_SHULKER_BOX,
+             CYAN_SHULKER_BOX, BROWN_SHULKER_BOX, LIME_SHULKER_BOX, BLACK_SHULKER_BOX, RED_SHULKER_BOX, SHULKER_BOX,
+             BLAST_FURNACE, SMOKER, BARREL, CHISELED_BOOKSHELF, DECORATED_POT, CRAFTER -> true;
+        default -> false;
+      };
+    }
+
+    /**
      * Checks whether the block has an inventory.
      * 
      * @param block The block.
      * @return If it has an inventory.
      */
     public static boolean doesBlockHaveInventory(Block block) {
-
-        switch(block.getType()) {
-            case CHEST:
-            case TRAPPED_CHEST:
-            case DROPPER:
-            case DISPENSER:
-            case FURNACE:
-            case BREWING_STAND:
-            case HOPPER:
-            case WHITE_SHULKER_BOX:
-            case ORANGE_SHULKER_BOX:
-            case MAGENTA_SHULKER_BOX:
-            case LIGHT_BLUE_SHULKER_BOX:
-            case YELLOW_SHULKER_BOX:
-            case GREEN_SHULKER_BOX:
-            case PINK_SHULKER_BOX:
-            case GRAY_SHULKER_BOX:
-            case LIGHT_GRAY_SHULKER_BOX:
-            case BLUE_SHULKER_BOX:
-            case PURPLE_SHULKER_BOX:
-            case CYAN_SHULKER_BOX:
-            case BROWN_SHULKER_BOX:
-            case LIME_SHULKER_BOX:
-            case BLACK_SHULKER_BOX:
-            case RED_SHULKER_BOX:
-            case SHULKER_BOX:
-            case BLAST_FURNACE:
-            case SMOKER:
-            case BARREL:
-            case CHISELED_BOOKSHELF:
-            case DECORATED_POT:
-            case CRAFTER:
-                return true;
-            default:
-                return false;
-        }
+        return doesBlockHaveInventory(block.getType());
     }
 
     public static ItemStack getItemInHand(Player player, EquipmentSlot slot) {

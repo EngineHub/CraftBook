@@ -5,6 +5,6 @@ import org.bukkit.block.Block;
 @FunctionalInterface
 public interface PipeEnumerationHandler {
 
-  EnumerationHandleResult handle(Block block);
+  EnumerationHandleResult handle(Block pipeBlock, CachedBlock cachedPipeBlock);
 
 }
