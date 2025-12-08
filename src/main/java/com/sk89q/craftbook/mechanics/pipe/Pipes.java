@@ -452,7 +452,8 @@ public class Pipes extends AbstractCraftBookMechanic {
             }
 
             else {
-                for (ItemStack stack : blockInventory.getContents()) {
+                for (int slot = 0; slot < blockInventory.getSize(); ++slot) {
+                    ItemStack stack = blockInventory.getItem(slot);
 
                     if (!ItemUtil.isStackValid(stack))
                         continue;
@@ -461,7 +462,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                         continue;
 
                     itemsInPipe.add(stack);
-                    blockInventory.removeItem(stack);
+                    blockInventory.setItem(slot, null);
 
                     if (pipeStackPerPull)
                         break;
