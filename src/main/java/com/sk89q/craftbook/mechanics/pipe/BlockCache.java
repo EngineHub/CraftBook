@@ -15,13 +15,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
+import java.util.function.Consumer;
+
 public class BlockCache implements Listener {
 
   // TODO: Should remove cache-entries on world unload
 
+  private final Consumer<Block> externalInvalidationHandler;
   private final Long2IntMap cachedBlockByCompactId;
 
-  public BlockCache() {
+  public BlockCache(Consumer<Block> externalInvalidationHandler) {
+    this.externalInvalidationHandler = externalInvalidationHandler;
     this.cachedBlockByCompactId = new Long2IntOpenHashMap();
     this.cachedBlockByCompactId.defaultReturnValue(CachedBlock.NULL_SENTINEL);
 
@@ -99,6 +103,7 @@ public class BlockCache implements Listener {
 
   private void invalidateCache(Block block) {
     cachedBlockByCompactId.remove(CompactId.computeWorldfulBlockId(block));
+    externalInvalidationHandler.accept(block);
   }
 
   public int getCachedBlock(Block block) {

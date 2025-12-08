@@ -2,6 +2,7 @@ package com.sk89q.craftbook.mechanics.pipe;
 
 import com.sk89q.craftbook.util.InventoryUtil;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Piston;
@@ -18,6 +19,14 @@ public class CachedBlock {
 
   public static boolean hasInventory(int cachedBlock) {
     return (cachedBlock & (1 << 2)) != 0;
+  }
+
+  public static boolean isStandingSign(int cachedBlock) {
+    return (cachedBlock & (1 << 3)) != 0;
+  }
+
+  public static boolean isWallSign(int cachedBlock) {
+    return (cachedBlock & (1 << 4)) != 0;
   }
 
   @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -44,11 +53,11 @@ public class CachedBlock {
   }
 
   private static int getTubeColorOrdinal(int cachedBlock) {
-    return (cachedBlock >> 3) & (32 - 1);
+    return (cachedBlock >> 5) & (32 - 1);
   }
 
   public static BlockFace getPistonFacing(int cachedBlock) {
-    int index = (cachedBlock >> 8) & (32 - 1);
+    int index = (cachedBlock >> 10) & (32 - 1);
 
     if (index > BLOCK_FACE_VALUES.length)
       return BlockFace.SELF;
@@ -57,7 +66,7 @@ public class CachedBlock {
   }
 
   public static boolean isMaterial(int cachedBlock, Material material) {
-    return ((cachedBlock >> 13) & (8192 - 1)) == material.ordinal();
+    return ((cachedBlock >> 15) & (8192 - 1)) == material.ordinal();
   }
 
   public static int fromBlock(Block block) {
@@ -72,10 +81,22 @@ public class CachedBlock {
       isValidPipeBlock = true;
     }
 
+    boolean isStandingSign = false;
+    boolean isWallSign = false;
+
+    if (!isValidPipeBlock) {
+      isWallSign = Tag.WALL_SIGNS.isTagged(material);
+
+      if (!isWallSign)
+        isStandingSign = Tag.STANDING_SIGNS.isTagged(material);
+    }
+
     return (
-      ((material.ordinal() & (8192 - 1))            << 13)
-        | ((pistonFacing.ordinal() & (32 - 1))      << 8)
-        | ((tubeColor.color().ordinal() & (32 - 1)) << 3)
+      ((material.ordinal() & (8192 - 1))            << 15)
+        | ((pistonFacing.ordinal() & (32 - 1))      << 10)
+        | ((tubeColor.color().ordinal() & (32 - 1)) << 5)
+        | ((isWallSign ? 1 : 0)                     << 4)
+        | ((isStandingSign ? 1 : 0)                 << 3)
         | ((hasInventory ? 1 : 0)                   << 2)
         | ((isValidPipeBlock ? 1 : 0)               << 1)
         | (tubeColor.isPane() ? 1 : 0)
