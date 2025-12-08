@@ -264,12 +264,25 @@ public class Pipes extends AbstractCraftBookMechanic {
         });
     }
 
-    private EnumerationResult enumeratePipeBlocks(Block inputPistonBlock, LongSet visitedBlocks, PipeEnumerationHandler enumerationHandler) throws LoadingChunkException {
+    /**
+     * A publicly available, correct and efficient way to walk pipes
+     * @param firstBlock The very first block of the pipe from which to start enumerating outwards.
+     * @param visitedBlocks Pre-allocated set to store visited block-ids in; provide null to create it internally.
+     * @param enumerationHandler Handler called at each step of the way.
+     * @throws LoadingChunkException Thrown if a chunk was absent and is now loading asynchronously; try again next tick.
+     */
+    public EnumerationResult enumeratePipeBlocks(Block firstBlock, @Nullable LongSet visitedBlocks, PipeEnumerationHandler enumerationHandler) throws LoadingChunkException {
+        if (!Bukkit.isPrimaryThread())
+            throw new IllegalStateException("This method must be called on the main server thread");
+
+        if (visitedBlocks == null)
+            visitedBlocks = new LongOpenHashSet();
+
         currentTubeBlockCounter = currentPistonBlockCounter = 0;
         blockCache.resetCacheLoadCounter();
 
         Deque<Block> searchQueue = new ArrayDeque<>();
-        searchQueue.addFirst(inputPistonBlock);
+        searchQueue.addFirst(firstBlock);
 
         while (!searchQueue.isEmpty()) {
             Block pipeBlock = searchQueue.poll();
