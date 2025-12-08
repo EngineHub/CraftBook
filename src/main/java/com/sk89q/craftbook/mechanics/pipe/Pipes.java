@@ -24,6 +24,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Jukebox;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
@@ -31,10 +32,7 @@ import org.bukkit.block.data.type.Piston;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.inventory.FurnaceInventory;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.*;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayDeque;
@@ -340,8 +338,20 @@ public class Pipes extends AbstractCraftBookMechanic {
                 }
             }
 
-            // else if (inventoryHolder instanceof BrewingStand brewingStand) {}
-            // TODO: Handle brewing-stands separately, as they're included in #doesHaveBlockInventory
+             else if (inventoryHolder instanceof BrewingStand brewingStand) {
+                 if (brewingStand.getBrewingTime() <= 0) {
+                     BrewerInventory inventory = brewingStand.getInventory();
+
+                     for (int i = 0; i < 3; ++i) {
+                         ItemStack item = inventory.getItem(i);
+
+                         if (ItemUtil.isStackValid(item) && ItemUtil.doesItemPassFilters(item, filters, exceptions)) {
+                             itemsInPipe.add(item);
+                             inventory.setItem(i, null);
+                         }
+                     }
+                 }
+            }
 
             else {
                 for (ItemStack stack : blockInventory.getContents()) {
