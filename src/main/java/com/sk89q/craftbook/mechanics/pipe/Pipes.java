@@ -39,7 +39,7 @@ import java.util.List;
 
 public class Pipes extends AbstractCraftBookMechanic {
 
-    // TODO: max cache-init per tick count (or -1 for no limit)
+    // TODO: Consider porting my actionbar cache-warmup status-indicator to this branch
     // TODO: If loaded on Paper: stop when encountering a block in an unloaded chunk and load it async
 
     private int currentTubeBlockCounter;
@@ -181,8 +181,6 @@ public class Pipes extends AbstractCraftBookMechanic {
     }
 
     private void locateExitNodesForItems(Block inputPistonBlock, LongSet visitedBlocks, List<ItemStack> itemsInPipe) {
-        currentTubeBlockCounter = currentPistonBlockCounter = 0;
-
         enumeratePipeBlocks(inputPistonBlock, visitedBlocks, (pipeBlock, cachedPipeBlock) -> {
             if (itemsInPipe.isEmpty())
                 return EnumerationHandleResult.DONE;
@@ -254,6 +252,9 @@ public class Pipes extends AbstractCraftBookMechanic {
     }
 
     private void enumeratePipeBlocks(Block inputPistonBlock, LongSet visitedBlocks, PipeEnumerationHandler enumerationHandler) {
+        currentTubeBlockCounter = currentPistonBlockCounter = 0;
+        blockCache.resetCacheLoadCounter();
+
         Deque<Block> searchQueue = new ArrayDeque<>();
         searchQueue.addFirst(inputPistonBlock);
 
@@ -264,6 +265,11 @@ public class Pipes extends AbstractCraftBookMechanic {
             EnumerationHandleResult handleResult = enumerationHandler.handle(pipeBlock, cachedPipeBlock);
 
             if (handleResult != EnumerationHandleResult.CONTINUE)
+                return;
+
+            // While we could check for exceeding the load-counter at countless call-sites, and while there already have been
+            // a few cache-lookups prior to enumerating, a hand-full blocks more don't matter in the grand scheme of things.
+            if (maxCacheLoadCount >= 0 && blockCache.getCacheLoadCounter() >= maxCacheLoadCount)
                 return;
 
             for (int x = -1; x < 2; x++) {
@@ -507,6 +513,7 @@ public class Pipes extends AbstractCraftBookMechanic {
     private boolean pipeRequireSign;
     private int maxTubeBlockCount;
     private int maxPistonBlockCount;
+    private int maxCacheLoadCount;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
@@ -529,5 +536,8 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         config.setComment(path + "max-piston-block-count", "After how many encountered output-pistons to stop walking the pipe; -1 for no limit.");
         maxPistonBlockCount = config.getInt(path + "max-piston-block-count", -1);
+
+        config.setComment(path + "max-cache-load-count", "When initially warming up caches, how many blocks to load in one go at max; -1 for no limit.");
+        maxCacheLoadCount = config.getInt(path + "max-cache-load-count", 500);
     }
 }

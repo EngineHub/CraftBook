@@ -22,12 +22,22 @@ public class BlockCache implements Listener {
   private final Consumer<Block> externalInvalidationHandler;
   private final Long2IntMap cachedBlockByCompactId;
 
+  private int cacheLoadCounter = 0;
+
   public BlockCache(Consumer<Block> externalInvalidationHandler) {
     this.externalInvalidationHandler = externalInvalidationHandler;
     this.cachedBlockByCompactId = new Long2IntOpenHashMap();
     this.cachedBlockByCompactId.defaultReturnValue(CachedBlock.NULL_SENTINEL);
 
     Bukkit.getServer().getPluginManager().registerEvents(this, CraftBookPlugin.inst());
+  }
+
+  public void resetCacheLoadCounter() {
+    cacheLoadCounter = 0;
+  }
+
+  public int getCacheLoadCounter() {
+    return cacheLoadCounter;
   }
 
   public void clear() {
@@ -115,8 +125,10 @@ public class BlockCache implements Listener {
 
     // Do not cache this intermediate state - it can trip the whole system up.
     // Let's simply get the real state from the world until it finalized.
-    if (!CachedBlock.isMaterial(cachedBlock, Material.MOVING_PISTON))
+    if (!CachedBlock.isMaterial(cachedBlock, Material.MOVING_PISTON)) {
       cachedBlockByCompactId.put(compactId, cachedBlock);
+      ++cacheLoadCounter;
+    }
 
     return cachedBlock;
   }

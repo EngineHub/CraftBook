@@ -363,6 +363,7 @@ mechanics:
         require-sign: false
         max-tube-block-count: -1
         max-piston-block-count: -1
+        max-cache-load-count: 500
     SignCopier:
         item: minecraft:ink_sac
     Snow:
