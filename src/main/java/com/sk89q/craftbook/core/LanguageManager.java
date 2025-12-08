@@ -255,6 +255,7 @@ public class LanguageManager {
 
         put("circuits.pipes.create","Pipe created!");
         put("circuits.pipes.pipe-not-found", "Failed to find pipe!");
+        put("circuits.pipes.warmup-notification", "[Pipes] Warming up... {tubes}T {pistons}P");
 
 
         put("vehicles.create-permission","You don't have permissions to create this vehicle mechanic!");

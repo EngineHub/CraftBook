@@ -3,6 +3,7 @@ package com.sk89q.craftbook.mechanics.pipe;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
+import com.sk89q.craftbook.core.LanguageManager;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -22,6 +23,7 @@ import it.unimi.dsi.fastutil.longs.LongSet;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.*;
@@ -520,16 +522,18 @@ public class Pipes extends AbstractCraftBookMechanic {
         if (result == EnumerationResult.COMPLETED || warmupNotificationRadiusSquared <= 0)
             return;
 
-        // TODO: This message should be configurable
-        String message = "§6[Pipes] Warming up... " + currentTubeBlockCounter + "T " + currentPistonBlockCounter + "P";
-
         Location inputLocation = inputPistonBlock.getLocation();
+        LanguageManager languageManager = CraftBookPlugin.inst().getLanguageManager();
 
         for (Player player : inputPistonBlock.getWorld().getPlayers()) {
             if (player.getLocation().distanceSquared(inputLocation) > warmupNotificationRadiusSquared)
                 continue;
 
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+            String message = languageManager.getString("circuits.pipes.warmup-notification", LanguageManager.getPlayersLanguage(player))
+              .replace("{tubes}", String.valueOf(currentTubeBlockCounter))
+              .replace("{pistons}", String.valueOf(currentPistonBlockCounter));
+
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.GOLD + message));
         }
     }
 
