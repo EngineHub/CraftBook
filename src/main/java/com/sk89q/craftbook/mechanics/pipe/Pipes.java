@@ -24,6 +24,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Jukebox;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.Piston;
@@ -175,7 +176,19 @@ public class Pipes extends AbstractCraftBookMechanic {
                 InventoryHolder holder = (InventoryHolder) containerBlock.getState();
                 leftovers.addAll(InventoryUtil.addItemsToInventory(holder, putEvent.getItems().toArray(new ItemStack[0])));
             }
-            // TODO: Handle jukeboxes (removed due to odd behavior)
+            else if (containerBlock.getType() == Material.JUKEBOX) {
+                Jukebox jukebox = (Jukebox) containerBlock.getState();
+
+                for (ItemStack item : itemsInPipe) {
+                    if (jukebox.hasRecord() || !item.getType().isRecord()) {
+                        leftovers.add(item);
+                        continue;
+                    }
+
+                    jukebox.setRecord(item);
+                    jukebox.update();
+                }
+            }
             else {
                 leftovers.addAll(putEvent.getItems());
             }
@@ -312,6 +325,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         // Suck items from container-block
 
         InventoryHolder inventoryHolder = null;
+        Jukebox jukebox = null;
 
         if (InventoryUtil.doesBlockHaveInventory(containerBlock)) {
             inventoryHolder = ((InventoryHolder) containerBlock.getState());
@@ -347,16 +361,25 @@ public class Pipes extends AbstractCraftBookMechanic {
             }
         }
 
-        // else if (containerType == Material.JUKEBOX) {}
-        // TODO: Handle jukeboxes (removed due to odd behavior)
+        else if (containerBlock.getType() == Material.JUKEBOX) {
+            jukebox = (Jukebox) containerBlock.getState();
 
-        // BEGIN
-        // 1
+            if (jukebox.hasRecord()) {
+                itemsInPipe.add(jukebox.getRecord());
+                jukebox.setRecord(null);
+                jukebox.update();
+            }
+        }
+
         PipeSuckEvent suckEvent = new PipeSuckEvent(inputPistonBlock, new ArrayList<>(itemsInPipe), containerBlock);
         Bukkit.getPluginManager().callEvent(suckEvent);
 
         itemsInPipe.clear();
-        itemsInPipe.addAll(suckEvent.getItems());
+
+        for (ItemStack item : suckEvent.getItems()) {
+            if (ItemUtil.isStackValid(item))
+                itemsInPipe.add(item);
+        }
 
         // Walk pipe to store as many items as possible
 
@@ -369,8 +392,17 @@ public class Pipes extends AbstractCraftBookMechanic {
         if (!itemsInPipe.isEmpty()) {
             if (inventoryHolder != null)
                 leftovers.addAll(InventoryUtil.addItemsToInventory(inventoryHolder, itemsInPipe.toArray(new ItemStack[0])));
-            // else if (containerType == Material.JUKEBOX) {}
-            // TODO: Handle jukeboxes (removed due to odd behavior)
+            else if (jukebox != null) {
+                for (ItemStack item : itemsInPipe) {
+                    if (jukebox.hasRecord() || !item.getType().isRecord()) {
+                        leftovers.add(item);
+                        continue;
+                    }
+
+                    jukebox.setRecord(item);
+                    jukebox.update();
+                }
+            }
             else
                 leftovers.addAll(itemsInPipe);
         }
