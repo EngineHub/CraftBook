@@ -6,17 +6,16 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.Set;
 
 public class PipeFilterEvent extends PipeEvent {
 
     private static final HandlerList handlers = new HandlerList();
 
-    private Set<ItemStack> includeFilters;
-    private Set<ItemStack> excludeFilters;
+    private List<ItemStack> includeFilters;
+    private List<ItemStack> excludeFilters;
     private List<ItemStack> filteredItems;
 
-    public PipeFilterEvent(Block theBlock, List<ItemStack> items, Set<ItemStack> includeFilters, Set<ItemStack> excludeFilters, List<ItemStack> filteredItems) {
+    public PipeFilterEvent(Block theBlock, List<ItemStack> items, List<ItemStack> includeFilters, List<ItemStack> excludeFilters, List<ItemStack> filteredItems) {
         super(theBlock, items);
 
         this.includeFilters = includeFilters;
@@ -24,11 +23,11 @@ public class PipeFilterEvent extends PipeEvent {
         this.filteredItems = filteredItems;
     }
 
-    public Set<ItemStack> getIncludeFilters() {
+    public List<ItemStack> getIncludeFilters() {
         return includeFilters;
     }
 
-    public Set<ItemStack> getExcludeFilters() {
+    public List<ItemStack> getExcludeFilters() {
         return excludeFilters;
     }
 

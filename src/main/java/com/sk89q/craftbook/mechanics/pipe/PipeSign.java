@@ -5,27 +5,25 @@ import com.sk89q.craftbook.util.RegexUtil;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class PipeSign {
 
-  private static final Set<ItemStack> EMPTY_SET = new HashSet<>();
+  private static final List<ItemStack> EMPTY_LIST = new ArrayList<>();
 
-  public static final PipeSign NO_SIGN = new PipeSign(EMPTY_SET, EMPTY_SET);
+  public static final PipeSign NO_SIGN = new PipeSign(EMPTY_LIST, EMPTY_LIST);
 
-  public final Set<ItemStack> filters;
-  public final Set<ItemStack> exceptions;
+  public final List<ItemStack> filters;
+  public final List<ItemStack> exceptions;
 
-  private PipeSign(Set<ItemStack> filters, Set<ItemStack> exceptions) {
-    this.filters = Collections.unmodifiableSet(filters);
-    this.exceptions = Collections.unmodifiableSet(exceptions);
+  private PipeSign(List<ItemStack> filters, List<ItemStack> exceptions) {
+    this.filters = Collections.unmodifiableList(filters);
+    this.exceptions = Collections.unmodifiableList(exceptions);
   }
 
   public static PipeSign fromSign(Sign sign) {
-    HashSet<ItemStack> filters = new HashSet<>();
-    HashSet<ItemStack> exceptions = new HashSet<>();
+    List<ItemStack> filters = new ArrayList<>();
+    List<ItemStack> exceptions = new ArrayList<>();
 
     parseLineItems(sign.getLine(2), filters);
     parseLineItems(sign.getLine(3), exceptions);
@@ -33,7 +31,7 @@ public class PipeSign {
     return new PipeSign(filters, exceptions);
   }
 
-  private static void parseLineItems(String line, Set<ItemStack> output) {
+  private static void parseLineItems(String line, List<ItemStack> output) {
     for(String token : RegexUtil.COMMA_PATTERN.split(line)) {
       // TODO: This can throw on malformed input - wrap it in a catch-block and log, including the location
       ItemStack item = ItemSyntax.getItem(token.trim());

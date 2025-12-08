@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 public final class ItemUtil {
@@ -60,7 +59,7 @@ public final class ItemUtil {
      * @param exclusions The list of items to exclude, skipped if empty.
      * @return The list of items that have been filtered.
      */
-    public static List<ItemStack> filterItems(List<ItemStack> stacks, Set<ItemStack> inclusions, Set<ItemStack> exclusions) {
+    public static List<ItemStack> filterItems(List<ItemStack> stacks, List<ItemStack> inclusions, List<ItemStack> exclusions) {
 
         List<ItemStack> ret = new ArrayList<>();
 
@@ -81,10 +80,10 @@ public final class ItemUtil {
      * @param exclusions The list of items to exclude, skipped if empty.
      * @return If the item passes the filters.
      */
-    public static boolean doesItemPassFilters(ItemStack stack, Set<ItemStack> inclusions, Set<ItemStack> exclusions) {
+    public static boolean doesItemPassFilters(ItemStack stack, List<ItemStack> inclusions, List<ItemStack> exclusions) {
 
         boolean passesFilters = true;
-        if(inclusions != null && inclusions.size() > 0) {
+        if(inclusions != null) {
             for (ItemStack fil : inclusions) {
 
                 if(!ItemUtil.isStackValid(fil))
@@ -99,7 +98,7 @@ public final class ItemUtil {
             if(!passesFilters)
                 return false;
         }
-        if(exclusions != null && exclusions.size() > 0) {
+        if(exclusions != null) {
             for (ItemStack fil : exclusions) {
 
                 if(!ItemUtil.isStackValid(fil))
