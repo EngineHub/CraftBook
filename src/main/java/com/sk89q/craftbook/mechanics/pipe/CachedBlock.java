@@ -8,73 +8,77 @@ import org.bukkit.block.data.type.Piston;
 
 public class CachedBlock {
 
-  private final Material material;         // remaining bits
-  private final BlockFace pistonFacing;    // 3b
-  private final boolean hasInventory;      // 1b
-  private final boolean isValidPipeBlock;  // 1b
-  private final TubeColor tubeColor;       // 9b
-  private final boolean isPane;            // 1b
+  public static final int NULL_SENTINEL = (1 << 31);
 
-  public CachedBlock(
-    Material material,
-    BlockFace pistonFacing,
-    boolean hasInventory,
-    boolean isValidPipeBlock,
-    TubeColor tubeColor,
-    boolean isPane
-  ) {
-    this.material = material;
-    this.pistonFacing = pistonFacing;
-    this.hasInventory = hasInventory;
-    this.isValidPipeBlock = isValidPipeBlock;
-    this.tubeColor = tubeColor;
-    this.isPane = isPane;
+  private static final BlockFace[] BLOCK_FACE_VALUES = BlockFace.values();
+
+  public static boolean isPane(int cachedBlock) {
+    return (cachedBlock & 1) != 0;
   }
 
-  public boolean isPane() {
-    return isPane;
+  public static boolean hasInventory(int cachedBlock) {
+    return (cachedBlock & (1 << 2)) != 0;
   }
 
-  public boolean hasInventory() {
-    return hasInventory;
+  @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+  public static boolean isIsValidPipeBlock(int cachedBlock) {
+    return (cachedBlock & (1 << 1)) != 0;
   }
 
-  public boolean isIsValidPipeBlock() {
-    return isValidPipeBlock;
+  public static boolean doTubeColorsMismatch(int cachedBlockA, int cachedBlockB) {
+    int ordinalA = getTubeColorOrdinal(cachedBlockA);
+
+    if (ordinalA == TubeColor.NONE.ordinal())
+      return false;
+
+    int ordinalB = getTubeColorOrdinal(cachedBlockB);
+
+    if (ordinalB == TubeColor.NONE.ordinal())
+      return false;
+
+    return ordinalA != ordinalB;
   }
 
-  public Block getBlockAtThisPistonFacing(Block block) {
-    return block.getRelative(pistonFacing);
+  public static boolean isTube(int cachedBlock) {
+    return getTubeColorOrdinal(cachedBlock) != TubeColor.NONE.ordinal();
   }
 
-  public boolean doTubeColorsMismatch(CachedBlock other) {
-    return this.tubeColor != TubeColor.NONE && other.tubeColor != TubeColor.NONE && this.tubeColor != other.tubeColor;
+  private static int getTubeColorOrdinal(int cachedBlock) {
+    return (cachedBlock >> 3) & (32 - 1);
   }
 
-  public boolean hasTubeColor() {
-    return this.tubeColor != TubeColor.NONE;
+  public static BlockFace getPistonFacing(int cachedBlock) {
+    int index = (cachedBlock >> 8) & (32 - 1);
+
+    if (index > BLOCK_FACE_VALUES.length)
+      return BlockFace.SELF;
+
+    return BLOCK_FACE_VALUES[index];
   }
 
-  public boolean isMaterial(Material material) {
-    return this.material == material;
+  public static boolean isMaterial(int cachedBlock, Material material) {
+    return ((cachedBlock >> 13) & (8192 - 1)) == material.ordinal();
   }
 
-  public static CachedBlock fromBlock(Block block) {
-    Material type = block.getType();
-    BlockFace facing = BlockFace.SELF;
+  public static int fromBlock(Block block) {
+    Material material = block.getType();
+    TubeColor.TypeAwareTubeColor tubeColor = TubeColor.fromMaterial(material);
+    boolean hasInventory = InventoryUtil.doesBlockHaveInventory(material);
+    BlockFace pistonFacing = BlockFace.SELF;
+    boolean isValidPipeBlock = tubeColor.color() != TubeColor.NONE;
 
-    if (type == Material.PISTON || type == Material.STICKY_PISTON)
-      facing = ((Piston) block.getBlockData()).getFacing();
+    if (material == Material.PISTON || material == Material.STICKY_PISTON) {
+      pistonFacing = ((Piston) block.getBlockData()).getFacing();
+      isValidPipeBlock = true;
+    }
 
-    TubeColor.TypeAwareTubeColor tubeColor = TubeColor.fromMaterial(type);
-
-    return new CachedBlock(
-      type,
-      facing,
-      InventoryUtil.doesBlockHaveInventory(type),
-      tubeColor.color() != TubeColor.NONE || facing != BlockFace.SELF,
-      tubeColor.color(),
-      tubeColor.isPane()
+    return (
+      ((material.ordinal() & (8192 - 1))            << 13)
+        | ((pistonFacing.ordinal() & (32 - 1))      << 8)
+        | ((tubeColor.color().ordinal() & (32 - 1)) << 3)
+        | ((hasInventory ? 1 : 0)                   << 2)
+        | ((isValidPipeBlock ? 1 : 0)               << 1)
+        | (tubeColor.isPane() ? 1 : 0)
     );
   }
 }

@@ -1,8 +1,8 @@
 package com.sk89q.craftbook.mechanics.pipe;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
+import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -19,11 +19,11 @@ public class BlockCache implements Listener {
 
   // TODO: Should remove cache-entries on world unload
 
-  private final Long2ObjectMap<CachedBlock> cachedBlockByCompactId;
+  private final Long2IntMap cachedBlockByCompactId;
 
   public BlockCache() {
-    this.cachedBlockByCompactId = new Long2ObjectOpenHashMap<>();
-    this.cachedBlockByCompactId.defaultReturnValue(null);
+    this.cachedBlockByCompactId = new Long2IntOpenHashMap();
+    this.cachedBlockByCompactId.defaultReturnValue(CachedBlock.NULL_SENTINEL);
 
     Bukkit.getServer().getPluginManager().registerEvents(this, CraftBookPlugin.inst());
   }
@@ -101,18 +101,18 @@ public class BlockCache implements Listener {
     cachedBlockByCompactId.remove(CompactId.computeWorldfulBlockId(block));
   }
 
-  public CachedBlock getCachedBlock(Block block) {
+  public int getCachedBlock(Block block) {
     var compactId = CompactId.computeWorldfulBlockId(block);
     var cachedBlock = cachedBlockByCompactId.get(compactId);
 
-    if (cachedBlock != null)
+    if (cachedBlock != CachedBlock.NULL_SENTINEL)
       return cachedBlock;
 
     cachedBlock = CachedBlock.fromBlock(block);
 
     // Do not cache this intermediate state - it can trip the whole system up.
     // Let's simply get the real state from the world until it finalized.
-    if (!cachedBlock.isMaterial(Material.MOVING_PISTON))
+    if (!CachedBlock.isMaterial(cachedBlock, Material.MOVING_PISTON))
       cachedBlockByCompactId.put(compactId, cachedBlock);
 
     return cachedBlock;
