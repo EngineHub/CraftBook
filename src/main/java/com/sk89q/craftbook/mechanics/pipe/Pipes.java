@@ -341,6 +341,9 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         PipeSign sign = getSignOnPiston(inputPistonBlock, cachedInputPistonBlock);
 
+        if (pipeRequireSign && sign == PipeSign.NO_SIGN)
+            return;
+
         // Setup auxiliaries
 
         LongSet visitedBlocks = new LongOpenHashSet();
@@ -466,38 +469,18 @@ public class Pipes extends AbstractCraftBookMechanic {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
-        Block pistonBlock = event.getBlock();
-        int cachedPistonBlock = blockCache.getCachedBlock(pistonBlock);
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if (CachedBlock.isMaterial(cachedPistonBlock, Material.STICKY_PISTON)) {
-
-            PipeSign sign = getSignOnPiston(pistonBlock, cachedPistonBlock);
-
-            if (pipeRequireSign && sign == PipeSign.NO_SIGN)
-                return;
-
-            if(!EventUtil.passesFilter(event)) return;
-
-            startPipe(pistonBlock, new ArrayList<>(), false);
-        }
+        startPipe(event.getBlock(), new ArrayList<>(), false);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPipeRequest(PipeRequestEvent event) {
-        Block pistonBlock = event.getBlock();
-        int cachedPistonBlock = blockCache.getCachedBlock(pistonBlock);
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if (CachedBlock.isMaterial(cachedPistonBlock, Material.STICKY_PISTON)) {
-
-            PipeSign sign = getSignOnPiston(pistonBlock, cachedPistonBlock);
-
-            if (pipeRequireSign && sign == PipeSign.NO_SIGN)
-                return;
-
-            if(!EventUtil.passesFilter(event)) return;
-
-            startPipe(pistonBlock, event.getItems(), true);
-        }
+        startPipe(event.getBlock(), event.getItems(), true);
     }
 
     private boolean pipesDiagonal;
