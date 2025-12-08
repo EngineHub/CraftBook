@@ -3,7 +3,6 @@ package com.sk89q.craftbook.mechanics.pipe;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemUtil;
@@ -14,7 +13,7 @@ import com.sk89q.craftbook.util.VerifyUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
@@ -31,6 +30,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.*;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -256,28 +256,28 @@ public class Pipes extends AbstractCraftBookMechanic {
                             if (x != 0 && y != 0) continue;
                             if (x != 0 && z != 0) continue;
                             if (y != 0 && z != 0) continue;
-                        } else {
+                        } else if (pipeInsulator != null) {
                             boolean xIsY = Math.abs(x) == Math.abs(y);
                             boolean xIsZ = Math.abs(x) == Math.abs(z);
                             if (xIsY && xIsZ) {
-                                if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(pipeBlock.getRelative(x, 0, 0).getBlockData()))
-                                        && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(pipeBlock.getRelative(0, y, 0).getBlockData()))
-                                        && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(pipeBlock.getRelative(0, 0, z).getBlockData()))) {
+                                if (CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(x, 0, 0)), pipeInsulator)
+                                      && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)
+                                      && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
                                     continue;
                                 }
                             } else if (xIsY) {
-                                if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(pipeBlock.getRelative(x, 0, 0).getBlockData()))
-                                        && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(pipeBlock.getRelative(0, y, 0).getBlockData()))) {
+                                if (CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(x, 0, 0)), pipeInsulator)
+                                      && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)) {
                                     continue;
                                 }
                             } else if (xIsZ) {
-                                if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(pipeBlock.getRelative(x, 0, 0).getBlockData()))
-                                        && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(pipeBlock.getRelative(0, 0, z).getBlockData()))) {
+                                if (CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(x, 0, 0)), pipeInsulator)
+                                      && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
                                     continue;
                                 }
                             } else {
-                                if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(pipeBlock.getRelative(0, y, 0).getBlockData()))
-                                        && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(pipeBlock.getRelative(0, 0, z).getBlockData()))) {
+                                if (CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)
+                                      && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
                                     continue;
                                 }
                             }
@@ -334,10 +334,11 @@ public class Pipes extends AbstractCraftBookMechanic {
     }
 
     private void startPipe(Block inputPistonBlock, List<ItemStack> itemsInPipe, boolean wasRequest) {
-        if (inputPistonBlock.getType() != Material.STICKY_PISTON)
+        int cachedInputPistonBlock = blockCache.getCachedBlock(inputPistonBlock);
+
+        if (!CachedBlock.isMaterial(cachedInputPistonBlock, Material.STICKY_PISTON))
             return;
 
-        int cachedInputPistonBlock = blockCache.getCachedBlock(inputPistonBlock);
         PipeSign sign = getSignOnPiston(inputPistonBlock, cachedInputPistonBlock);
 
         // Setup auxiliaries
@@ -346,6 +347,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         Piston piston = (Piston) inputPistonBlock.getBlockData();
         Block containerBlock = inputPistonBlock.getRelative(piston.getFacing());
+        int containerBlockCache = blockCache.getCachedBlock(containerBlock);
 
         visitedBlocks.add(CompactId.computeWorldlessBlockId(containerBlock));
 
@@ -354,7 +356,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         InventoryHolder inventoryHolder = null;
         Jukebox jukebox = null;
 
-        if (InventoryUtil.doesBlockHaveInventory(containerBlock)) {
+        if (CachedBlock.hasInventory(containerBlockCache)) {
             inventoryHolder = ((InventoryHolder) containerBlock.getState());
             Inventory blockInventory = inventoryHolder.getInventory();
 
@@ -400,7 +402,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             }
         }
 
-        else if (containerBlock.getType() == Material.JUKEBOX) {
+        else if (CachedBlock.isMaterial(containerBlockCache, Material.JUKEBOX)) {
             jukebox = (Jukebox) containerBlock.getState();
 
             if (jukebox.hasRecord()) {
@@ -499,7 +501,7 @@ public class Pipes extends AbstractCraftBookMechanic {
     }
 
     private boolean pipesDiagonal;
-    private BlockStateHolder<?> pipeInsulator;
+    private @Nullable Material pipeInsulator;
     private boolean pipeStackPerPull;
     private boolean pipeRequireSign;
 
@@ -510,7 +512,8 @@ public class Pipes extends AbstractCraftBookMechanic {
         pipesDiagonal = config.getBoolean(path + "allow-diagonal", false);
 
         config.setComment(path + "insulator-block", "When pipes work diagonally, this block allows the pipe to be insulated to not work diagonally.");
-        pipeInsulator = BlockSyntax.getBlock(config.getString(path + "insulator-block", BlockTypes.WHITE_WOOL.id()), true);
+        BlockType insulatorType = BlockTypes.get(config.getString(path + "insulator-block", BlockTypes.WHITE_WOOL.id()));
+        pipeInsulator = insulatorType == null ? null : BukkitAdapter.adapt(insulatorType);
 
         config.setComment(path + "stack-per-move", "This option stops the pipes taking the entire chest on power, and makes it just take a single stack.");
         pipeStackPerPull = config.getBoolean(path + "stack-per-move", true);
