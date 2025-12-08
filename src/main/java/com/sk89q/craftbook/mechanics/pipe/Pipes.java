@@ -39,6 +39,12 @@ import java.util.List;
 
 public class Pipes extends AbstractCraftBookMechanic {
 
+    // TODO: max cache-init per tick count (or -1 for no limit)
+    // TODO: If loaded on Paper: stop when encountering a block in an unloaded chunk and load it async
+
+    private int currentTubeBlockCounter;
+    private int currentPistonBlockCounter;
+
     private final BlockCache blockCache;
     private final Long2ObjectMap<PipeSign> pipeSignByPistonCompactId;
 
@@ -175,12 +181,24 @@ public class Pipes extends AbstractCraftBookMechanic {
     }
 
     private void locateExitNodesForItems(Block inputPistonBlock, LongSet visitedBlocks, List<ItemStack> itemsInPipe) {
+        currentTubeBlockCounter = currentPistonBlockCounter = 0;
+
         enumeratePipeBlocks(inputPistonBlock, visitedBlocks, (pipeBlock, cachedPipeBlock) -> {
             if (itemsInPipe.isEmpty())
                 return EnumerationHandleResult.DONE;
 
+            if (CachedBlock.isTube(cachedPipeBlock)) {
+                if (maxTubeBlockCount >= 0 && ++currentTubeBlockCounter >= maxTubeBlockCount)
+                    return EnumerationHandleResult.DONE;
+
+                return EnumerationHandleResult.CONTINUE;
+            }
+
             if (!CachedBlock.isMaterial(cachedPipeBlock, Material.PISTON))
                 return EnumerationHandleResult.CONTINUE;
+
+            if (maxPistonBlockCount >= 0 && ++currentPistonBlockCounter >= maxPistonBlockCount)
+                return EnumerationHandleResult.DONE;
 
             PipeSign sign = getSignOnPiston(pipeBlock, cachedPipeBlock);
 
@@ -487,6 +505,8 @@ public class Pipes extends AbstractCraftBookMechanic {
     private @Nullable Material pipeInsulator;
     private boolean pipeStackPerPull;
     private boolean pipeRequireSign;
+    private int maxTubeBlockCount;
+    private int maxPistonBlockCount;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
@@ -503,5 +523,11 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         config.setComment(path + "require-sign", "Requires pipes to have a [Pipe] sign connected to them. This is the only way to require permissions to make pipes.");
         pipeRequireSign = config.getBoolean(path + "require-sign", false);
+
+        config.setComment(path + "max-tube-block-count", "After how many encountered tube-blocks to stop walking the pipe; -1 for no limit.");
+        maxTubeBlockCount = config.getInt(path + "max-pipe-block-count", -1);
+
+        config.setComment(path + "max-piston-block-count", "After how many encountered output-pistons to stop walking the pipe; -1 for no limit.");
+        maxPistonBlockCount = config.getInt(path + "max-piston-block-count", -1);
     }
 }

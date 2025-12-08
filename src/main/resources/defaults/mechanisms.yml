@@ -361,6 +361,8 @@ mechanics:
         insulator-block: minecraft:white_wool
         stack-per-move: true
         require-sign: false
+        max-tube-block-count: -1
+        max-piston-block-count: -1
     SignCopier:
         item: minecraft:ink_sac
     Snow:
