@@ -25,6 +25,7 @@ public enum TubeColor {
   GREEN(Material.GREEN_STAINED_GLASS, Material.GREEN_STAINED_GLASS_PANE),
   RED(Material.RED_STAINED_GLASS, Material.RED_STAINED_GLASS_PANE),
   BLACK(Material.BLACK_STAINED_GLASS, Material.BLACK_STAINED_GLASS_PANE),
+  TINTED(Material.TINTED_GLASS, null),
   ;
 
   public record TypeAwareTubeColor(TubeColor color, boolean isPane) {}
