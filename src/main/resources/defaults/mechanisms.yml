@@ -365,6 +365,7 @@ mechanics:
         max-piston-block-count: -1
         max-cache-load-count: 500
         chunk-retain-duration: 300
+        warmup-notification-radius: 5
     SignCopier:
         item: minecraft:ink_sac
     Snow:

@@ -19,12 +19,16 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.*;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Piston;
 import org.bukkit.block.data.type.WallSign;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
@@ -37,8 +41,6 @@ import java.util.Deque;
 import java.util.List;
 
 public class Pipes extends AbstractCraftBookMechanic {
-
-    // TODO: Consider porting my actionbar cache-warmup status-indicator to this branch
 
     private int currentTubeBlockCounter;
     private int currentPistonBlockCounter;
@@ -177,13 +179,15 @@ public class Pipes extends AbstractCraftBookMechanic {
         return cachedSign;
     }
 
-    private void locateExitNodesForItems(Block inputPistonBlock, LongSet visitedBlocks, List<ItemStack> itemsInPipe) throws LoadingChunkException {
-        enumeratePipeBlocks(inputPistonBlock, visitedBlocks, (pipeBlock, cachedPipeBlock) -> {
+    private EnumerationResult locateExitNodesForItems(Block inputPistonBlock, LongSet visitedBlocks, List<ItemStack> itemsInPipe) throws LoadingChunkException {
+        return enumeratePipeBlocks(inputPistonBlock, visitedBlocks, (pipeBlock, cachedPipeBlock) -> {
             if (itemsInPipe.isEmpty())
                 return EnumerationHandleResult.DONE;
 
             if (CachedBlock.isTube(cachedPipeBlock)) {
-                if (maxTubeBlockCount >= 0 && ++currentTubeBlockCounter >= maxTubeBlockCount)
+                ++currentTubeBlockCounter;
+
+                if (maxTubeBlockCount >= 0 && currentTubeBlockCounter >= maxTubeBlockCount)
                     return EnumerationHandleResult.DONE;
 
                 return EnumerationHandleResult.CONTINUE;
@@ -192,7 +196,9 @@ public class Pipes extends AbstractCraftBookMechanic {
             if (!CachedBlock.isMaterial(cachedPipeBlock, Material.PISTON))
                 return EnumerationHandleResult.CONTINUE;
 
-            if (maxPistonBlockCount >= 0 && ++currentPistonBlockCounter >= maxPistonBlockCount)
+            ++currentPistonBlockCounter;
+
+            if (maxPistonBlockCount >= 0 && currentPistonBlockCounter >= maxPistonBlockCount)
                 return EnumerationHandleResult.DONE;
 
             PipeSign sign = getSignOnPiston(pipeBlock, cachedPipeBlock);
@@ -248,7 +254,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         });
     }
 
-    private void enumeratePipeBlocks(Block inputPistonBlock, LongSet visitedBlocks, PipeEnumerationHandler enumerationHandler) throws LoadingChunkException {
+    private EnumerationResult enumeratePipeBlocks(Block inputPistonBlock, LongSet visitedBlocks, PipeEnumerationHandler enumerationHandler) throws LoadingChunkException {
         currentTubeBlockCounter = currentPistonBlockCounter = 0;
         blockCache.resetCacheLoadCounter();
 
@@ -262,12 +268,12 @@ public class Pipes extends AbstractCraftBookMechanic {
             EnumerationHandleResult handleResult = enumerationHandler.handle(pipeBlock, cachedPipeBlock);
 
             if (handleResult != EnumerationHandleResult.CONTINUE)
-                return;
+                return EnumerationResult.COMPLETED;
 
             // While we could check for exceeding the load-counter at countless call-sites, and while there already have been
             // a few cache-lookups prior to enumerating, a hand-full blocks more don't matter in the grand scheme of things.
             if (maxCacheLoadCount >= 0 && blockCache.getCacheLoadCounter() >= maxCacheLoadCount)
-                return;
+                return EnumerationResult.STOPPED_EARLY;
 
             for (int x = -1; x < 2; x++) {
                 for (int y = -1; y < 2; y++) {
@@ -352,9 +358,11 @@ public class Pipes extends AbstractCraftBookMechanic {
                 }
             }
         }
+
+        return EnumerationResult.COMPLETED;
     }
 
-    private void startPipe(Block inputPistonBlock, List<ItemStack> itemsInPipe, boolean wasRequest) {
+    private EnumerationResult startPipe(Block inputPistonBlock, List<ItemStack> itemsInPipe, boolean wasRequest) {
         PipeSign sign;
         Block containerBlock;
         int containerBlockCache;
@@ -363,12 +371,12 @@ public class Pipes extends AbstractCraftBookMechanic {
             int cachedInputPistonBlock = blockCache.getCachedBlock(inputPistonBlock);
 
             if (!CachedBlock.isMaterial(cachedInputPistonBlock, Material.STICKY_PISTON))
-                return;
+                return EnumerationResult.COMPLETED;
 
             sign = getSignOnPiston(inputPistonBlock, cachedInputPistonBlock);
 
             if (pipeRequireSign && sign == PipeSign.NO_SIGN)
-                return;
+                return EnumerationResult.COMPLETED;
 
             containerBlock = inputPistonBlock.getRelative(CachedBlock.getPistonFacing(cachedInputPistonBlock));
             containerBlockCache = blockCache.getCachedBlock(containerBlock);
@@ -376,7 +384,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         // If the very beginning of the pipe already (partially) is within an unloaded chunk,
         // there's no need to start the process at all.
         catch (LoadingChunkException ignored) {
-            return;
+            return EnumerationResult.STOPPED_EARLY;
         }
 
         LongSet visitedBlocks = new LongOpenHashSet();
@@ -455,12 +463,16 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         // Walk pipe to store as many items as possible
 
+        EnumerationResult enumerationResult = EnumerationResult.COMPLETED;
+
         if (!suckEvent.isCancelled() && !itemsInPipe.isEmpty()) {
             try {
-                locateExitNodesForItems(inputPistonBlock, visitedBlocks, itemsInPipe);
+                enumerationResult = locateExitNodesForItems(inputPistonBlock, visitedBlocks, itemsInPipe);
             }
             // Simply terminate walking the pipe early - but do put the leftovers back
-            catch (LoadingChunkException ignored) {}
+            catch (LoadingChunkException ignored) {
+                enumerationResult = EnumerationResult.STOPPED_EARLY;
+            }
         }
 
         // Try to put leftovers back into the block
@@ -498,6 +510,27 @@ public class Pipes extends AbstractCraftBookMechanic {
                 inputPistonBlock.getWorld().dropItemNaturally(inputPistonBlock.getLocation().add(0.5, 0.5, 0.5), item);
             }
         }
+
+        return enumerationResult;
+    }
+
+    private void startPipeAndHandleNotifications(Block inputPistonBlock, List<ItemStack> itemsInPipe, boolean wasRequest) {
+        EnumerationResult result = startPipe(inputPistonBlock, itemsInPipe, wasRequest);
+
+        if (result == EnumerationResult.COMPLETED || warmupNotificationRadiusSquared <= 0)
+            return;
+
+        // TODO: This message should be configurable
+        String message = "§6[Pipes] Warming up... " + currentTubeBlockCounter + "T " + currentPistonBlockCounter + "P";
+
+        Location inputLocation = inputPistonBlock.getLocation();
+
+        for (Player player : inputPistonBlock.getWorld().getPlayers()) {
+            if (player.getLocation().distanceSquared(inputLocation) > warmupNotificationRadiusSquared)
+                continue;
+
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -505,7 +538,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         if (!EventUtil.passesFilter(event))
             return;
 
-        startPipe(event.getBlock(), new ArrayList<>(), false);
+        startPipeAndHandleNotifications(event.getBlock(), new ArrayList<>(), false);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -513,7 +546,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         if (!EventUtil.passesFilter(event))
             return;
 
-        startPipe(event.getBlock(), event.getItems(), true);
+        startPipeAndHandleNotifications(event.getBlock(), event.getItems(), true);
     }
 
     private boolean pipesDiagonal;
@@ -523,6 +556,7 @@ public class Pipes extends AbstractCraftBookMechanic {
     private int maxTubeBlockCount;
     private int maxPistonBlockCount;
     private int maxCacheLoadCount;
+    private int warmupNotificationRadiusSquared;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
@@ -552,5 +586,8 @@ public class Pipes extends AbstractCraftBookMechanic {
         config.setComment(path + "chunk-retain-duration", "For how long, in seconds, to retain chunks in memory after having loaded them while traversing pipes");
         blockCache.setChunkTicketDuration(config.getInt(path + "chunk-retain-duration", BlockCache.DEFAULT_CHUNK_TICKET_DURATION));
 
+        config.setComment(path + "warmup-notification-radius", "In what radius around an input-block to send warmup-notifications to player's action-bars; -1 to hide them");
+        warmupNotificationRadiusSquared = config.getInt(path + "warmup-notification-radius", 5);
+        warmupNotificationRadiusSquared = warmupNotificationRadiusSquared * warmupNotificationRadiusSquared;
     }
 }
