@@ -166,7 +166,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
             List<ItemStack> itemsToPut = putEvent.getItems();
 
-            if (InventoryUtil.doesBlockHaveInventory(cachedContainerBlock.material)) {
+            if (cachedContainerBlock.hasInventory) {
                 InventoryHolder holder = (InventoryHolder) containerBlock.getState();
                 leftovers.addAll(InventoryUtil.addItemsToInventory(holder, itemsToPut.toArray(new ItemStack[0])));
             }
@@ -245,7 +245,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                         Block enumeratedBlock = pipeBlock.getRelative(x, y, z);
                         CachedBlock cachedEnumeratedBlock = blockCache.getCachedBlock(enumeratedBlock);
 
-                        if (!isValidPipeBlock(cachedEnumeratedBlock.material))
+                        if (!cachedEnumeratedBlock.validPipeBlock)
                             continue;
 
                         if (!visitedBlocks.add(CompactId.computeWorldlessBlockId(enumeratedBlock)))
@@ -260,7 +260,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                             Block nextEnumeratedBlock = enumeratedBlock.getRelative(x, y, z);
                             CachedBlock cachedNextEnumeratedBlock = blockCache.getCachedBlock(nextEnumeratedBlock);
 
-                            if (!isValidPipeBlock(cachedNextEnumeratedBlock.material))
+                            if (!cachedNextEnumeratedBlock.validPipeBlock)
                                 continue;
 
                             long nextEnumeratedId = CompactId.computeWorldlessBlockId(nextEnumeratedBlock);
@@ -285,13 +285,6 @@ public class Pipes extends AbstractCraftBookMechanic {
                 }
             }
         }
-    }
-
-    private static boolean isValidPipeBlock(Material type) {
-        return switch (type) {
-            case GLASS, PISTON, STICKY_PISTON, GLASS_PANE -> true;
-            default -> ItemUtil.isStainedGlass(type) || ItemUtil.isStainedGlassPane(type);
-        };
     }
 
     private void startPipe(Block inputPistonBlock, List<ItemStack> itemsInPipe, boolean wasRequest) {
