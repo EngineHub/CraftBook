@@ -19,8 +19,6 @@ import java.util.function.Consumer;
 
 public class BlockCache implements Listener {
 
-  // TODO: Should remove cache-entries on world unload
-
   private final Consumer<Block> externalInvalidationHandler;
   private final Long2IntMap cachedBlockByCompactId;
 
