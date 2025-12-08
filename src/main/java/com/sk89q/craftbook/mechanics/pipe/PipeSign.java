@@ -13,22 +13,22 @@ public class PipeSign {
 
   public static final PipeSign NO_SIGN = new PipeSign(EMPTY_LIST, EMPTY_LIST);
 
-  public final List<ItemStack> filters;
-  public final List<ItemStack> exceptions;
+  public final List<ItemStack> includeFilters;
+  public final List<ItemStack> excludeFilters;
 
-  private PipeSign(List<ItemStack> filters, List<ItemStack> exceptions) {
-    this.filters = Collections.unmodifiableList(filters);
-    this.exceptions = Collections.unmodifiableList(exceptions);
+  private PipeSign(List<ItemStack> includeFilters, List<ItemStack> excludeFilters) {
+    this.includeFilters = Collections.unmodifiableList(includeFilters);
+    this.excludeFilters = Collections.unmodifiableList(excludeFilters);
   }
 
   public static PipeSign fromSign(Sign sign) {
-    List<ItemStack> filters = new ArrayList<>();
-    List<ItemStack> exceptions = new ArrayList<>();
+    List<ItemStack> includeFilters = new ArrayList<>();
+    List<ItemStack> excludeFilters = new ArrayList<>();
 
-    parseLineItems(sign.getLine(2), filters);
-    parseLineItems(sign.getLine(3), exceptions);
+    parseLineItems(sign.getLine(2), includeFilters);
+    parseLineItems(sign.getLine(3), excludeFilters);
 
-    return new PipeSign(filters, exceptions);
+    return new PipeSign(includeFilters, excludeFilters);
   }
 
   private static void parseLineItems(String line, List<ItemStack> output) {

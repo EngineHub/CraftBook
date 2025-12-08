@@ -128,9 +128,9 @@ public class Pipes extends AbstractCraftBookMechanic {
 
             PipeSign sign = getSignOnPiston(pipeBlock);
 
-            List<ItemStack> filteredPipeItems = new ArrayList<>(VerifyUtil.withoutNulls(ItemUtil.filterItems(itemsInPipe, sign.filters, sign.exceptions)));
+            List<ItemStack> filteredPipeItems = new ArrayList<>(VerifyUtil.withoutNulls(ItemUtil.filterItems(itemsInPipe, sign.includeFilters, sign.excludeFilters)));
 
-            PipeFilterEvent filterEvent = new PipeFilterEvent(pipeBlock, itemsInPipe, sign.filters, sign.exceptions, filteredPipeItems);
+            PipeFilterEvent filterEvent = new PipeFilterEvent(pipeBlock, itemsInPipe, sign.includeFilters, sign.excludeFilters, filteredPipeItems);
             Bukkit.getPluginManager().callEvent(filterEvent);
 
             filteredPipeItems = filterEvent.getFilteredItems();
@@ -296,7 +296,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             if (blockInventory instanceof FurnaceInventory furnaceInventory) {
                 ItemStack result = furnaceInventory.getResult();
 
-                if (ItemUtil.isStackValid(result) && ItemUtil.doesItemPassFilters(result, sign.filters, sign.exceptions)) {
+                if (ItemUtil.isStackValid(result) && ItemUtil.doesItemPassFilters(result, sign.includeFilters, sign.excludeFilters)) {
                     itemsInPipe.add(result);
                     furnaceInventory.setResult(null);
                 }
@@ -309,7 +309,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                      for (int i = 0; i < 3; ++i) {
                          ItemStack item = inventory.getItem(i);
 
-                         if (ItemUtil.isStackValid(item) && ItemUtil.doesItemPassFilters(item, sign.filters, sign.exceptions)) {
+                         if (ItemUtil.isStackValid(item) && ItemUtil.doesItemPassFilters(item, sign.includeFilters, sign.excludeFilters)) {
                              itemsInPipe.add(item);
                              inventory.setItem(i, null);
                          }
@@ -323,7 +323,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                     if (!ItemUtil.isStackValid(stack))
                         continue;
 
-                    if (!ItemUtil.doesItemPassFilters(stack, sign.filters, sign.exceptions))
+                    if (!ItemUtil.doesItemPassFilters(stack, sign.includeFilters, sign.excludeFilters))
                         continue;
 
                     itemsInPipe.add(stack);

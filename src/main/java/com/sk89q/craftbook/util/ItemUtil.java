@@ -55,17 +55,17 @@ public final class ItemUtil {
      * Filter a list of items by inclusions and exclusions.
      * 
      * @param stacks The base list of items.
-     * @param inclusions The list of items to include, skipped if empty.
-     * @param exclusions The list of items to exclude, skipped if empty.
+     * @param includeFilters The list of items to include, skipped if empty.
+     * @param excludeFilters The list of items to exclude, skipped if empty.
      * @return The list of items that have been filtered.
      */
-    public static List<ItemStack> filterItems(List<ItemStack> stacks, List<ItemStack> inclusions, List<ItemStack> exclusions) {
+    public static List<ItemStack> filterItems(List<ItemStack> stacks, List<ItemStack> includeFilters, List<ItemStack> excludeFilters) {
 
         List<ItemStack> ret = new ArrayList<>();
 
         for(ItemStack stack : stacks) {
 
-            if(doesItemPassFilters(stack, inclusions, exclusions))
+            if(doesItemPassFilters(stack, includeFilters, excludeFilters))
                 ret.add(stack);
         }
 
@@ -76,15 +76,15 @@ public final class ItemUtil {
      * Check whether or not an item passes filters.
      * 
      * @param stack The item to check if it passes.
-     * @param inclusions The list of items to include, skipped if empty.
-     * @param exclusions The list of items to exclude, skipped if empty.
+     * @param includeFilters The list of items to include, skipped if empty.
+     * @param excludeFilters The list of items to exclude, skipped if empty.
      * @return If the item passes the filters.
      */
-    public static boolean doesItemPassFilters(ItemStack stack, List<ItemStack> inclusions, List<ItemStack> exclusions) {
+    public static boolean doesItemPassFilters(ItemStack stack, List<ItemStack> includeFilters, List<ItemStack> excludeFilters) {
 
         boolean passesFilters = true;
-        if(inclusions != null) {
-            for (ItemStack fil : inclusions) {
+        if(includeFilters != null) {
+            for (ItemStack fil : includeFilters) {
 
                 if(!ItemUtil.isStackValid(fil))
                     continue;
@@ -98,8 +98,8 @@ public final class ItemUtil {
             if(!passesFilters)
                 return false;
         }
-        if(exclusions != null) {
-            for (ItemStack fil : exclusions) {
+        if(excludeFilters != null) {
+            for (ItemStack fil : excludeFilters) {
 
                 if(!ItemUtil.isStackValid(fil))
                     continue;
