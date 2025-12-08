@@ -170,14 +170,16 @@ public class Pipes extends AbstractCraftBookMechanic {
             if (putEvent.isCancelled())
                 return EnumerationHandleResult.CONTINUE;
 
+            List<ItemStack> itemsToPut = putEvent.getItems();
+
             if (InventoryUtil.doesBlockHaveInventory(containerBlock)) {
                 InventoryHolder holder = (InventoryHolder) containerBlock.getState();
-                leftovers.addAll(InventoryUtil.addItemsToInventory(holder, putEvent.getItems().toArray(new ItemStack[0])));
+                leftovers.addAll(InventoryUtil.addItemsToInventory(holder, itemsToPut.toArray(new ItemStack[0])));
             }
             else if (containerBlock.getType() == Material.JUKEBOX) {
                 Jukebox jukebox = (Jukebox) containerBlock.getState();
 
-                for (ItemStack item : itemsInPipe) {
+                for (ItemStack item : itemsToPut) {
                     if (jukebox.hasRecord() || !item.getType().isRecord()) {
                         leftovers.add(item);
                         continue;
@@ -188,10 +190,10 @@ public class Pipes extends AbstractCraftBookMechanic {
                 }
             }
             else {
-                leftovers.addAll(putEvent.getItems());
+                leftovers.addAll(itemsToPut);
             }
 
-            itemsInPipe.removeAll(filteredPipeItems);
+            itemsInPipe.removeAll(itemsToPut);
             itemsInPipe.addAll(leftovers);
 
             return itemsInPipe.isEmpty() ? EnumerationHandleResult.DONE : EnumerationHandleResult.CONTINUE;
