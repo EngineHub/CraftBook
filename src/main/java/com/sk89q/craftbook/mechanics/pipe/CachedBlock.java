@@ -6,11 +6,15 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Piston;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CachedBlock {
 
   public static final int NULL_SENTINEL = (1 << 31);
 
   private static final BlockFace[] BLOCK_FACE_VALUES = BlockFace.values();
+  private static final List<Material> additionalChests = findAdditionalChestTypes();
 
   public static boolean isPane(int cachedBlock) {
     return (cachedBlock & 1) != 0;
@@ -113,8 +117,6 @@ public class CachedBlock {
   // The CHISELED_BOOKSHELF is excluded from this list, since there have been severe bugs
   // leading to item-duplication when trying to suck/put, despite calling BlockState#update.
 
-  // TODO: Adding copper-chests would be handy
-
   private static boolean hasHandledInputInventory(Material material) {
     // Do NOT try to get items from a CRAFTER - it doesn't have a result-slot, but merely drops the crafted item
     if (material == Material.CRAFTER)
@@ -130,7 +132,30 @@ public class CachedBlock {
            FURNACE, SMOKER, BLAST_FURNACE,
            // v- BrewingStand state
            BREWING_STAND -> true;
-      default -> Tag.SHULKER_BOXES.isTagged(material);
+      default -> additionalChests.contains(material) || Tag.SHULKER_BOXES.isTagged(material);
     };
+  }
+
+  // Currently, this includes copper-chests - because why not? Linear search on such a small contiguous
+  // chunk of memory is more than fast enough (plus, we're caching it). Once we're adding them to the switches
+  // above when bumping to 1.21.10 API, the dynamic loading of additional chest-types can be removed again.
+
+  private static List<Material> findAdditionalChestTypes() {
+    List<Material> additionalChests = new ArrayList<>();
+
+    for (var material : Material.values()) {
+      if (material == Material.CHEST || material == Material.TRAPPED_CHEST || material == Material.ENDER_CHEST)
+        continue;
+
+      var name = material.name();
+
+      if (name.contains("LEGACY"))
+        continue;
+
+      if (name.endsWith("_CHEST"))
+        additionalChests.add(material);
+    }
+
+    return additionalChests;
   }
 }
