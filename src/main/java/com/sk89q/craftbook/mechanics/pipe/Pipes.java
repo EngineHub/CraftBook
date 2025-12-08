@@ -120,18 +120,25 @@ public class Pipes extends AbstractCraftBookMechanic {
         return type == Material.PISTON || type == Material.STICKY_PISTON;
     }
 
+    private void invalidateSignBlock(Block signBlock, BlockFace mountingFace) {
+        Block pistonBlock = signBlock.getRelative(mountingFace);
+
+        if (pipeSignByPistonCompactId.remove(CompactId.computeWorldfulBlockId(pistonBlock)) != null)
+          Bukkit.getPluginManager().callEvent(new PipeSignCacheInvalidedEvent(pistonBlock));
+    }
+
     private void invalidateCache(Block block) {
         BlockData blockData = block.getBlockData();
 
         if (blockData instanceof org.bukkit.block.data.type.Sign) {
             // Since, unfortunately, pipe-signs are accepted above and below, we have to invalidate both possibilities
-            pipeSignByPistonCompactId.remove(CompactId.computeWorldfulBlockId(block.getRelative(BlockFace.DOWN)));
-            pipeSignByPistonCompactId.remove(CompactId.computeWorldfulBlockId(block.getRelative(BlockFace.UP)));
+            invalidateSignBlock(block, BlockFace.UP);
+            invalidateSignBlock(block, BlockFace.DOWN);
             return;
         }
 
-        if (block.getBlockData() instanceof WallSign wallSign)
-            pipeSignByPistonCompactId.remove(CompactId.computeWorldfulBlockId(block.getRelative(wallSign.getFacing().getOppositeFace())));
+        if (blockData instanceof WallSign wallSign)
+            invalidateSignBlock(block, wallSign.getFacing().getOppositeFace());
     }
 
     private PipeSign getSignOnPiston(Block pistonBlock, int cachedPistonBlock) throws LoadingChunkException {
@@ -170,6 +177,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 continue;
 
             cachedSign = PipeSign.fromSign(sign);
+            Bukkit.getPluginManager().callEvent(new PipeSignCacheCreatedEvent(pistonBlock, sign));
             break;
         }
 
