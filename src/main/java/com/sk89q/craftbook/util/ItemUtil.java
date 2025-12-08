@@ -22,7 +22,6 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -61,7 +60,7 @@ public final class ItemUtil {
      * @param exclusions The list of items to exclude, skipped if empty.
      * @return The list of items that have been filtered.
      */
-    public static List<ItemStack> filterItems(List<ItemStack> stacks, HashSet<ItemStack> inclusions, HashSet<ItemStack> exclusions) {
+    public static List<ItemStack> filterItems(List<ItemStack> stacks, Set<ItemStack> inclusions, Set<ItemStack> exclusions) {
 
         List<ItemStack> ret = new ArrayList<>();
 

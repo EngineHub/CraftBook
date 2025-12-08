@@ -1,18 +1,14 @@
 package com.sk89q.craftbook.mechanics.pipe;
 
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
-import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
-import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.craftbook.util.BlockSyntax;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
-import com.sk89q.craftbook.util.ItemSyntax;
 import com.sk89q.craftbook.util.ItemUtil;
 import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
-import com.sk89q.craftbook.util.RegexUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.VerifyUtil;
 import com.sk89q.craftbook.util.events.SourcedBlockRedstoneEvent;
@@ -22,10 +18,7 @@ import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BrewingStand;
-import org.bukkit.block.Jukebox;
+import org.bukkit.block.*;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.Piston;
@@ -37,7 +30,6 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
@@ -100,7 +92,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         return type == Material.PISTON || type == Material.STICKY_PISTON;
     }
 
-    private static ChangedSign getSignOnPiston(Block block) {
+    private static PipeSign getSignOnPiston(Block block) {
         BlockData blockData = block.getBlockData();
         BlockFace facing = BlockFace.SELF;
         if(blockData instanceof Directional directional) {
@@ -116,12 +108,14 @@ public class Pipes extends AbstractCraftBookMechanic {
                 continue;
             if(!SignUtil.isStandingSign(block.getRelative(face)) && !SignUtil.getBackBlock(block.getRelative(face)).getLocation().equals(block.getLocation()))
                 continue;
-            ChangedSign sign = CraftBookBukkitUtil.toChangedSign(block.getRelative(face));
-            if(sign != null && sign.getLine(1).equalsIgnoreCase("[Pipe]"))
-                return sign;
+            if(!(block.getRelative(face).getState() instanceof Sign sign))
+                continue;
+            if(!sign.getLine(1).equalsIgnoreCase("[Pipe]"))
+                continue;
+            return PipeSign.fromSign(sign);
         }
 
-        return null;
+        return PipeSign.NO_SIGN;
     }
 
     private void locateExitNodesForItems(Block inputPistonBlock, Set<Vector> visitedBlocks, List<ItemStack> itemsInPipe) {
@@ -132,26 +126,11 @@ public class Pipes extends AbstractCraftBookMechanic {
             if (pipeBlock.getType() != Material.PISTON)
                 return EnumerationHandleResult.CONTINUE;
 
-            ChangedSign sign = getSignOnPiston(pipeBlock);
+            PipeSign sign = getSignOnPiston(pipeBlock);
 
-            HashSet<ItemStack> filters = new HashSet<>();
-            HashSet<ItemStack> exceptions = new HashSet<>();
+            List<ItemStack> filteredPipeItems = new ArrayList<>(VerifyUtil.withoutNulls(ItemUtil.filterItems(itemsInPipe, sign.filters, sign.exceptions)));
 
-            if(sign != null) {
-                for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
-                    filters.add(ItemSyntax.getItem(line3.trim()));
-                }
-                for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
-                    exceptions.add(ItemSyntax.getItem(line4.trim()));
-                }
-
-                filters.removeAll(Collections.<ItemStack>singleton(null));
-                exceptions.removeAll(Collections.<ItemStack>singleton(null));
-            }
-
-            List<ItemStack> filteredPipeItems = new ArrayList<>(VerifyUtil.withoutNulls(ItemUtil.filterItems(itemsInPipe, filters, exceptions)));
-
-            PipeFilterEvent filterEvent = new PipeFilterEvent(pipeBlock, itemsInPipe, filters, exceptions, filteredPipeItems);
+            PipeFilterEvent filterEvent = new PipeFilterEvent(pipeBlock, itemsInPipe, sign.filters, sign.exceptions, filteredPipeItems);
             Bukkit.getPluginManager().callEvent(filterEvent);
 
             filteredPipeItems = filterEvent.getFilteredItems();
@@ -294,24 +273,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         if (inputPistonBlock.getType() != Material.STICKY_PISTON)
             return;
 
-        // Parse sign
-
-        Set<ItemStack> filters = new HashSet<>();
-        Set<ItemStack> exceptions = new HashSet<>();
-
-        ChangedSign sign = getSignOnPiston(inputPistonBlock);
-
-        if(sign != null) {
-            for(String line3 : RegexUtil.COMMA_PATTERN.split(sign.getLine(2))) {
-                filters.add(ItemSyntax.getItem(line3.trim()));
-            }
-            for(String line4 : RegexUtil.COMMA_PATTERN.split(sign.getLine(3))) {
-                exceptions.add(ItemSyntax.getItem(line4.trim()));
-            }
-        }
-
-        filters.removeAll(Collections.<ItemStack>singleton(null));
-        exceptions.removeAll(Collections.<ItemStack>singleton(null));
+        PipeSign sign = getSignOnPiston(inputPistonBlock);
 
         // Setup auxiliaries
 
@@ -334,7 +296,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             if (blockInventory instanceof FurnaceInventory furnaceInventory) {
                 ItemStack result = furnaceInventory.getResult();
 
-                if (ItemUtil.isStackValid(result) && ItemUtil.doesItemPassFilters(result, filters, exceptions)) {
+                if (ItemUtil.isStackValid(result) && ItemUtil.doesItemPassFilters(result, sign.filters, sign.exceptions)) {
                     itemsInPipe.add(result);
                     furnaceInventory.setResult(null);
                 }
@@ -347,7 +309,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                      for (int i = 0; i < 3; ++i) {
                          ItemStack item = inventory.getItem(i);
 
-                         if (ItemUtil.isStackValid(item) && ItemUtil.doesItemPassFilters(item, filters, exceptions)) {
+                         if (ItemUtil.isStackValid(item) && ItemUtil.doesItemPassFilters(item, sign.filters, sign.exceptions)) {
                              itemsInPipe.add(item);
                              inventory.setItem(i, null);
                          }
@@ -361,7 +323,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                     if (!ItemUtil.isStackValid(stack))
                         continue;
 
-                    if (!ItemUtil.doesItemPassFilters(stack, filters, exceptions))
+                    if (!ItemUtil.doesItemPassFilters(stack, sign.filters, sign.exceptions))
                         continue;
 
                     itemsInPipe.add(stack);
@@ -441,9 +403,9 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         if (pistonBlock.getType() == Material.STICKY_PISTON) {
 
-            ChangedSign sign = getSignOnPiston(pistonBlock);
+            PipeSign sign = getSignOnPiston(pistonBlock);
 
-            if (pipeRequireSign && sign == null)
+            if (pipeRequireSign && sign == PipeSign.NO_SIGN)
                 return;
 
             if(!EventUtil.passesFilter(event)) return;
@@ -458,9 +420,9 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         if (pistonBlock.getType() == Material.STICKY_PISTON) {
 
-            ChangedSign sign = getSignOnPiston(pistonBlock);
+            PipeSign sign = getSignOnPiston(pistonBlock);
 
-            if (pipeRequireSign && sign == null)
+            if (pipeRequireSign && sign == PipeSign.NO_SIGN)
                 return;
 
             if(!EventUtil.passesFilter(event)) return;
