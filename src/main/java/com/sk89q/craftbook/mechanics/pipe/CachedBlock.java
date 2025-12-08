@@ -1,6 +1,5 @@
 package com.sk89q.craftbook.mechanics.pipe;
 
-import com.sk89q.craftbook.util.InventoryUtil;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -17,8 +16,12 @@ public class CachedBlock {
     return (cachedBlock & 1) != 0;
   }
 
-  public static boolean hasInventory(int cachedBlock) {
+  public static boolean hasHandledInputInventory(int cachedBlock) {
     return (cachedBlock & (1 << 2)) != 0;
+  }
+
+  public static boolean hasHandledOutputInventory(int cachedBlock) {
+    return (cachedBlock & (1 << 3)) != 0;
   }
 
   public static boolean isSign(int cachedBlock) {
@@ -26,11 +29,11 @@ public class CachedBlock {
   }
 
   public static boolean isStandingSign(int cachedBlock) {
-    return (cachedBlock & (1 << 3)) != 0;
+    return (cachedBlock & (1 << 4)) != 0;
   }
 
   public static boolean isWallSign(int cachedBlock) {
-    return (cachedBlock & (1 << 4)) != 0;
+    return (cachedBlock & (1 << 5)) != 0;
   }
 
   @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -57,11 +60,11 @@ public class CachedBlock {
   }
 
   private static int getTubeColorOrdinal(int cachedBlock) {
-    return (cachedBlock >> 5) & (32 - 1);
+    return (cachedBlock >> 6) & (32 - 1);
   }
 
   public static BlockFace getPistonFacing(int cachedBlock) {
-    int index = (cachedBlock >> 10) & (32 - 1);
+    int index = (cachedBlock >> 11) & (32 - 1);
 
     if (index > BLOCK_FACE_VALUES.length)
       return BlockFace.SELF;
@@ -70,13 +73,12 @@ public class CachedBlock {
   }
 
   public static boolean isMaterial(int cachedBlock, Material material) {
-    return ((cachedBlock >> 15) & (8192 - 1)) == material.ordinal();
+    return ((cachedBlock >> 16) & (8192 - 1)) == material.ordinal();
   }
 
   public static int fromBlock(Block block) {
     Material material = block.getType();
     TubeColor.TypeAwareTubeColor tubeColor = TubeColor.fromMaterial(material);
-    boolean hasInventory = InventoryUtil.doesBlockHaveInventory(material);
     BlockFace pistonFacing = BlockFace.SELF;
     boolean isValidPipeBlock = tubeColor.color() != TubeColor.NONE;
 
@@ -96,14 +98,39 @@ public class CachedBlock {
     }
 
     return (
-      ((material.ordinal() & (8192 - 1))            << 15)
-        | ((pistonFacing.ordinal() & (32 - 1))      << 10)
-        | ((tubeColor.color().ordinal() & (32 - 1)) << 5)
-        | ((isWallSign ? 1 : 0)                     << 4)
-        | ((isStandingSign ? 1 : 0)                 << 3)
-        | ((hasInventory ? 1 : 0)                   << 2)
-        | ((isValidPipeBlock ? 1 : 0)               << 1)
+      ((material.ordinal() & (8192 - 1))                 << 16)
+        | ((pistonFacing.ordinal() & (32 - 1))           << 11)
+        | ((tubeColor.color().ordinal() & (32 - 1))      << 6)
+        | ((isWallSign ? 1 : 0)                          << 5)
+        | ((isStandingSign ? 1 : 0)                      << 4)
+        | ((hasHandledOutputInventory(material) ? 1 : 0) << 3)
+        | ((hasHandledInputInventory(material) ? 1 : 0)  << 2)
+        | ((isValidPipeBlock ? 1 : 0)                    << 1)
         | (tubeColor.isPane() ? 1 : 0)
     );
+  }
+
+  // The CHISELED_BOOKSHELF is excluded from this list, since there have been severe bugs
+  // leading to item-duplication when trying to suck/put, despite calling BlockState#update.
+
+  // TODO: Adding copper-chests would be handy
+
+  private static boolean hasHandledInputInventory(Material material) {
+    // Do NOT try to get items from a CRAFTER - it doesn't have a result-slot, but merely drops the crafted item
+    if (material == Material.CRAFTER)
+      return false;
+
+    return hasHandledOutputInventory(material);
+  }
+
+  private static boolean hasHandledOutputInventory(Material material) {
+    return switch (material) {
+      case CHEST, TRAPPED_CHEST, DROPPER, DISPENSER, HOPPER, BARREL, DECORATED_POT, CRAFTER,
+           // v- FurnaceInventory
+           FURNACE, SMOKER, BLAST_FURNACE,
+           // v- BrewingStand state
+           BREWING_STAND -> true;
+      default -> Tag.SHULKER_BOXES.isTagged(material);
+    };
   }
 }

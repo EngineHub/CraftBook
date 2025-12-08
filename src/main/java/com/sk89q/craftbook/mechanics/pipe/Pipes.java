@@ -236,7 +236,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
             List<ItemStack> itemsToPut = putEvent.getItems();
 
-            if (CachedBlock.hasInventory(cachedContainerBlock)) {
+            if (CachedBlock.hasHandledOutputInventory(cachedContainerBlock)) {
                 InventoryHolder holder = (InventoryHolder) containerBlock.getState();
                 leftovers.addAll(InventoryUtil.addItemsToInventory(holder, itemsToPut.toArray(new ItemStack[0])));
             }
@@ -418,7 +418,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         InventoryHolder inventoryHolder = null;
         Jukebox jukebox = null;
 
-        if (CachedBlock.hasInventory(cachedContainerBlock)) {
+        if (CachedBlock.hasHandledInputInventory(cachedContainerBlock)) {
             inventoryHolder = ((InventoryHolder) containerBlock.getState());
             Inventory blockInventory = inventoryHolder.getInventory();
 
