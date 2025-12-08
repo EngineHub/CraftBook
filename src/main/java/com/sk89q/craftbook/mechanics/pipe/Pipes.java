@@ -16,6 +16,8 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.*;
@@ -26,14 +28,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.*;
-import org.bukkit.util.Vector;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Pipes extends AbstractCraftBookMechanic {
 
@@ -118,7 +117,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         return PipeSign.NO_SIGN;
     }
 
-    private void locateExitNodesForItems(Block inputPistonBlock, Set<Vector> visitedBlocks, List<ItemStack> itemsInPipe) {
+    private void locateExitNodesForItems(Block inputPistonBlock, LongSet visitedBlocks, List<ItemStack> itemsInPipe) {
         enumeratePipeBlocks(inputPistonBlock, visitedBlocks, pipeBlock -> {
             if (itemsInPipe.isEmpty())
                 return EnumerationHandleResult.DONE;
@@ -179,7 +178,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         });
     }
 
-    private void enumeratePipeBlocks(Block inputPistonBlock, Set<Vector> visitedBlocks, PipeEnumerationHandler enumerationHandler) {
+    private void enumeratePipeBlocks(Block inputPistonBlock, LongSet visitedBlocks, PipeEnumerationHandler enumerationHandler) {
         Deque<Block> searchQueue = new ArrayDeque<>();
         searchQueue.addFirst(inputPistonBlock);
 
@@ -230,10 +229,11 @@ public class Pipes extends AbstractCraftBookMechanic {
                         Block enumeratedBlock = pipeBlock.getRelative(x, y, z);
                         Material enumeratedType = enumeratedBlock.getType();
 
-                        if (!isValidPipeBlock(enumeratedType)) continue;
+                        if (!isValidPipeBlock(enumeratedType))
+                            continue;
 
-                        if (visitedBlocks.contains(enumeratedBlock.getLocation().toVector())) continue;
-                        visitedBlocks.add(enumeratedBlock.getLocation().toVector());
+                        if (!visitedBlocks.add(CompactId.computeWorldlessBlockId(enumeratedBlock)))
+                            continue;
 
                         if(ItemUtil.isStainedGlass(pipeBlockType) && ItemUtil.isStainedGlass(enumeratedType) && pipeBlockType != enumeratedType) continue;
 
@@ -242,8 +242,15 @@ public class Pipes extends AbstractCraftBookMechanic {
                         } else if (enumeratedType == Material.GLASS_PANE || ItemUtil.isStainedGlassPane(enumeratedType)) {
                             Block nextEnumeratedBlock = enumeratedBlock.getRelative(x, y, z);
                             Material nextEnumeratedType = nextEnumeratedBlock.getType();
-                            if (!isValidPipeBlock(nextEnumeratedType)) continue;
-                            if (visitedBlocks.contains(nextEnumeratedBlock.getLocation().toVector())) continue;
+
+                            if (!isValidPipeBlock(nextEnumeratedType))
+                                continue;
+
+                            long nextEnumeratedId = CompactId.computeWorldlessBlockId(nextEnumeratedBlock);
+
+                            if (visitedBlocks.contains(nextEnumeratedId))
+                                continue;
+
                             if(ItemUtil.isStainedGlassPane(enumeratedType)) {
                                 if((ItemUtil.isStainedGlass(pipeBlockType)
                                         || ItemUtil.isStainedGlassPane(pipeBlockType)) && ItemUtil.getStainedColor(enumeratedType) != ItemUtil
@@ -252,8 +259,9 @@ public class Pipes extends AbstractCraftBookMechanic {
                                         || ItemUtil.isStainedGlassPane(nextEnumeratedType)) && ItemUtil.getStainedColor(enumeratedType) != ItemUtil
                                         .getStainedColor(nextEnumeratedType)) continue;
                             }
-                            visitedBlocks.add(nextEnumeratedBlock.getLocation().toVector());
-                            searchQueue.add(enumeratedBlock.getRelative(x, y, z));
+
+                            visitedBlocks.add(nextEnumeratedId);
+                            searchQueue.add(nextEnumeratedBlock);
                         } else if(enumeratedType == Material.PISTON)
                             searchQueue.addFirst(enumeratedBlock); //Pistons are treated with higher priority.
                     }
@@ -277,12 +285,12 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         // Setup auxiliaries
 
-        Set<Vector> visitedBlocks = new HashSet<>();
+        LongSet visitedBlocks = new LongOpenHashSet();
 
         Piston piston = (Piston) inputPistonBlock.getBlockData();
         Block containerBlock = inputPistonBlock.getRelative(piston.getFacing());
 
-        visitedBlocks.add(containerBlock.getLocation().toVector());
+        visitedBlocks.add(CompactId.computeWorldlessBlockId(containerBlock));
 
         // Suck items from container-block
 
