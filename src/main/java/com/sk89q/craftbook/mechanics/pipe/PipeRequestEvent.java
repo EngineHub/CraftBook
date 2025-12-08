@@ -11,7 +11,7 @@ public class PipeRequestEvent extends PipeSuckEvent {
     private static final HandlerList handlers = new HandlerList();
 
     public PipeRequestEvent (Block theBlock, List<ItemStack> items, Block sucked) {
-        super(theBlock, items, sucked);
+        super(theBlock, items, sucked, CachedBlock.NULL_SENTINEL);
     }
 
     @Override

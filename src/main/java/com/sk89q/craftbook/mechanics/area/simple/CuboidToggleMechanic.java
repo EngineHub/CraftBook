@@ -5,6 +5,7 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.craftbook.mechanics.pipe.CachedBlock;
 import com.sk89q.craftbook.mechanics.pipe.PipeFinishEvent;
 import com.sk89q.craftbook.mechanics.pipe.PipePutEvent;
 import com.sk89q.craftbook.mechanics.pipe.PipeSuckEvent;
@@ -116,7 +117,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        if(!SignUtil.isSign(event.getPuttingBlock())) return;
+        if(!CachedBlock.isSign(event.getCachedPuttingBlock())) return;
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getPuttingBlock());
 
         if(!isApplicableSign(sign.getLine(1))) return;
@@ -143,7 +144,7 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
-        if(!SignUtil.isSign(event.getSuckedBlock())) return;
+        if (!CachedBlock.isSign(event.getCachedSuckedBlock())) return;
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getSuckedBlock());
 
         if(!isApplicableSign(sign.getLine(1))) return;

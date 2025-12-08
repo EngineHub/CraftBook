@@ -10,10 +10,12 @@ import java.util.List;
 public class PipePutEvent extends PipeEvent implements Cancellable {
 
     private Block put;
+    private int cachedPut;
 
-    public PipePutEvent (Block theBlock, List<ItemStack> items, Block put) {
+    public PipePutEvent (Block theBlock, List<ItemStack> items, Block put, int cachedPut) {
         super(theBlock, items);
         this.put = put;
+        this.cachedPut = cachedPut;
     }
 
     @Override
@@ -26,6 +28,10 @@ public class PipePutEvent extends PipeEvent implements Cancellable {
     }
 
     private static final HandlerList handlers = new HandlerList();
+
+    public int getCachedPuttingBlock() {
+        return cachedPut;
+    }
 
     public Block getPuttingBlock() {
 

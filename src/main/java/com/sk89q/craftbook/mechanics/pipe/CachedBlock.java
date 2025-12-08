@@ -21,6 +21,10 @@ public class CachedBlock {
     return (cachedBlock & (1 << 2)) != 0;
   }
 
+  public static boolean isSign(int cachedBlock) {
+    return isStandingSign(cachedBlock) || isWallSign(cachedBlock);
+  }
+
   public static boolean isStandingSign(int cachedBlock) {
     return (cachedBlock & (1 << 3)) != 0;
   }

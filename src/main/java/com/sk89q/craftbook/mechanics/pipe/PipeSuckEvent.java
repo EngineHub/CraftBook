@@ -12,10 +12,16 @@ public class PipeSuckEvent extends PipeEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     private Block sucked;
+    private int cachedSucked;
 
-    public PipeSuckEvent(Block theBlock, List<ItemStack> items, Block sucked) {
+    public PipeSuckEvent(Block theBlock, List<ItemStack> items, Block sucked, int cachedSucked) {
         super(theBlock, items);
         this.sucked = sucked;
+        this.cachedSucked = cachedSucked;
+    }
+
+    public int getCachedSuckedBlock() {
+        return cachedSucked;
     }
 
     public Block getSuckedBlock() {

@@ -218,7 +218,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             Block containerBlock = pipeBlock.getRelative(CachedBlock.getPistonFacing(cachedPipeBlock));
             int cachedContainerBlock = blockCache.getCachedBlock(containerBlock);
 
-            PipePutEvent putEvent = new PipePutEvent(pipeBlock, new ArrayList<>(filteredPipeItems), containerBlock);
+            PipePutEvent putEvent = new PipePutEvent(pipeBlock, new ArrayList<>(filteredPipeItems), containerBlock, cachedContainerBlock);
             Bukkit.getPluginManager().callEvent(putEvent);
 
             if (putEvent.isCancelled())
@@ -365,7 +365,7 @@ public class Pipes extends AbstractCraftBookMechanic {
     private EnumerationResult startPipe(Block inputPistonBlock, List<ItemStack> itemsInPipe, boolean wasRequest) {
         PipeSign sign;
         Block containerBlock;
-        int containerBlockCache;
+        int cachedContainerBlock;
 
         try {
             int cachedInputPistonBlock = blockCache.getCachedBlock(inputPistonBlock);
@@ -379,7 +379,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 return EnumerationResult.COMPLETED;
 
             containerBlock = inputPistonBlock.getRelative(CachedBlock.getPistonFacing(cachedInputPistonBlock));
-            containerBlockCache = blockCache.getCachedBlock(containerBlock);
+            cachedContainerBlock = blockCache.getCachedBlock(containerBlock);
         }
         // If the very beginning of the pipe already (partially) is within an unloaded chunk,
         // there's no need to start the process at all.
@@ -395,7 +395,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         InventoryHolder inventoryHolder = null;
         Jukebox jukebox = null;
 
-        if (CachedBlock.hasInventory(containerBlockCache)) {
+        if (CachedBlock.hasInventory(cachedContainerBlock)) {
             inventoryHolder = ((InventoryHolder) containerBlock.getState());
             Inventory blockInventory = inventoryHolder.getInventory();
 
@@ -441,7 +441,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             }
         }
 
-        else if (CachedBlock.isMaterial(containerBlockCache, Material.JUKEBOX)) {
+        else if (CachedBlock.isMaterial(cachedContainerBlock, Material.JUKEBOX)) {
             jukebox = (Jukebox) containerBlock.getState();
 
             if (jukebox.hasRecord()) {
@@ -451,7 +451,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             }
         }
 
-        PipeSuckEvent suckEvent = new PipeSuckEvent(inputPistonBlock, new ArrayList<>(itemsInPipe), containerBlock);
+        PipeSuckEvent suckEvent = new PipeSuckEvent(inputPistonBlock, new ArrayList<>(itemsInPipe), containerBlock, cachedContainerBlock);
         Bukkit.getPluginManager().callEvent(suckEvent);
 
         itemsInPipe.clear();

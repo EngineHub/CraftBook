@@ -21,6 +21,7 @@ import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
+import com.sk89q.craftbook.mechanics.pipe.CachedBlock;
 import com.sk89q.craftbook.mechanics.pipe.PipePutEvent;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.ICUtil;
@@ -330,6 +331,8 @@ public class ICMechanic extends AbstractCraftBookMechanic {
     public void onPipePut(PipePutEvent event) {
 
         if(!EventUtil.passesFilter(event)) return;
+
+        if (!CachedBlock.isSign(event.getCachedPuttingBlock())) return;
 
         final Object[] icData = setupIC(event.getPuttingBlock(), true);
 
