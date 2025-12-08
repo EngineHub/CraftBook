@@ -138,7 +138,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             if (itemsInPipe.isEmpty())
                 return EnumerationHandleResult.DONE;
 
-            if (cachedPipeBlock.material != Material.PISTON)
+            if (!cachedPipeBlock.isMaterial(Material.PISTON))
                 return EnumerationHandleResult.CONTINUE;
 
             PipeSign sign = getSignOnPiston(pipeBlock);
@@ -170,7 +170,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                 InventoryHolder holder = (InventoryHolder) containerBlock.getState();
                 leftovers.addAll(InventoryUtil.addItemsToInventory(holder, itemsToPut.toArray(new ItemStack[0])));
             }
-            else if (cachedContainerBlock.material == Material.JUKEBOX) {
+            else if (cachedContainerBlock.isMaterial(Material.JUKEBOX)) {
                 Jukebox jukebox = (Jukebox) containerBlock.getState();
 
                 for (ItemStack item : itemsToPut) {
@@ -251,36 +251,41 @@ public class Pipes extends AbstractCraftBookMechanic {
                         if (!visitedBlocks.add(CompactId.computeWorldlessBlockId(enumeratedBlock)))
                             continue;
 
-                        if (ItemUtil.isStainedGlass(cachedPipeBlock.material) && ItemUtil.isStainedGlass(cachedEnumeratedBlock.material) && cachedPipeBlock.material != cachedEnumeratedBlock.material)
+                        // Ensure that the block we came from is of the same color as the one we're enumerating.
+                        if (cachedPipeBlock.tubeColor != TubeColor.NONE && cachedEnumeratedBlock.tubeColor != TubeColor.NONE && cachedPipeBlock.tubeColor != cachedEnumeratedBlock.tubeColor)
                             continue;
 
-                        if (cachedEnumeratedBlock.material == Material.GLASS || ItemUtil.isStainedGlass(cachedEnumeratedBlock.material)) {
+                        if (cachedEnumeratedBlock.tubeColor == TubeColor.NONE) {
+                            // Pistons are treated with higher priority.
+                            if (cachedEnumeratedBlock.isMaterial(Material.PISTON))
+                                searchQueue.addFirst(enumeratedBlock);
+
+                            continue;
+                        }
+
+                        if (!cachedEnumeratedBlock.isPane) {
                             searchQueue.add(enumeratedBlock);
-                        } else if (cachedEnumeratedBlock.material == Material.GLASS_PANE || ItemUtil.isStainedGlassPane(cachedEnumeratedBlock.material)) {
-                            Block nextEnumeratedBlock = enumeratedBlock.getRelative(x, y, z);
-                            CachedBlock cachedNextEnumeratedBlock = blockCache.getCachedBlock(nextEnumeratedBlock);
+                            continue;
+                        }
 
-                            if (!cachedNextEnumeratedBlock.validPipeBlock)
-                                continue;
+                        Block nextEnumeratedBlock = enumeratedBlock.getRelative(x, y, z);
+                        CachedBlock cachedNextEnumeratedBlock = blockCache.getCachedBlock(nextEnumeratedBlock);
 
-                            long nextEnumeratedId = CompactId.computeWorldlessBlockId(nextEnumeratedBlock);
+                        if (!cachedNextEnumeratedBlock.validPipeBlock)
+                            continue;
 
-                            if (visitedBlocks.contains(nextEnumeratedId))
-                                continue;
+                        long nextEnumeratedId = CompactId.computeWorldlessBlockId(nextEnumeratedBlock);
 
-                            if(ItemUtil.isStainedGlassPane(cachedEnumeratedBlock.material)) {
-                                if((ItemUtil.isStainedGlass(cachedPipeBlock.material)
-                                        || ItemUtil.isStainedGlassPane(cachedPipeBlock.material)) && ItemUtil.getStainedColor(cachedEnumeratedBlock.material) != ItemUtil
-                                        .getStainedColor(cachedNextEnumeratedBlock.material)
-                                        || (ItemUtil.isStainedGlass(cachedNextEnumeratedBlock.material)
-                                        || ItemUtil.isStainedGlassPane(cachedNextEnumeratedBlock.material)) && ItemUtil.getStainedColor(cachedEnumeratedBlock.material) != ItemUtil
-                                        .getStainedColor(cachedNextEnumeratedBlock.material)) continue;
-                            }
+                        if (visitedBlocks.contains(nextEnumeratedId))
+                            continue;
 
-                            visitedBlocks.add(nextEnumeratedId);
-                            searchQueue.add(nextEnumeratedBlock);
-                        } else if(cachedEnumeratedBlock.material == Material.PISTON)
-                            searchQueue.addFirst(enumeratedBlock); //Pistons are treated with higher priority.
+                        // Ensure that if the block we came from had a color, the one we jumped across to after
+                        // passing a pane is also of the same color.
+                        if (cachedPipeBlock.tubeColor != TubeColor.NONE && cachedNextEnumeratedBlock.tubeColor != TubeColor.NONE && cachedPipeBlock.tubeColor != cachedNextEnumeratedBlock.tubeColor)
+                            continue;
+
+                        visitedBlocks.add(nextEnumeratedId);
+                        searchQueue.add(nextEnumeratedBlock);
                     }
                 }
             }

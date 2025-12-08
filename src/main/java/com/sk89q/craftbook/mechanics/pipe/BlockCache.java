@@ -112,7 +112,7 @@ public class BlockCache implements Listener {
 
     // Do not cache this intermediate state - it can trip the whole system up.
     // Let's simply get the real state from the world until it finalized.
-    if (cachedBlock.material != Material.MOVING_PISTON)
+    if (!cachedBlock.isMaterial(Material.MOVING_PISTON))
       cachedBlockByCompactId.put(compactId, cachedBlock);
 
     return cachedBlock;

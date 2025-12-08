@@ -102,6 +102,7 @@ allprojects {
         compileOnly 'net.dmulloy2:ProtocolLib:5.4.0'
         compileOnly 'fr.neatmonster:nocheatplus:3.15.1-RC'
         compileOnly 'it.unimi.dsi:fastutil'
+        compileOnly 'org.jetbrains:annotations:24.1.0'
 
         implementation 'com.sk89q:squirrelid:0.1.0'
         implementation "io.papermc:paperlib:1.0.7"
