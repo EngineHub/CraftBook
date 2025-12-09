@@ -3,9 +3,6 @@ package com.sk89q.craftbook.mechanics.pipe;
 import org.bukkit.Material;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public enum TubeColor {
   NONE(null, null),
   TRANSPARENT(Material.GLASS, Material.GLASS_PANE),
@@ -33,48 +30,6 @@ public enum TubeColor {
   private static final TubeColor[] VALUES = values();
   private static final TypeAwareTubeColor AWARE_NONE = new TypeAwareTubeColor(NONE, false);
 
-  private static final TypeAwareTubeColor[] tubeColorByMaterialOrdinal;
-  private static final int tubeColorByMaterialOrdinalOffset;
-
-  static {
-    var materials = Material.values();
-
-    int lowestIndex = -1;
-    int highestIndex = -1;
-
-    List<TypeAwareTubeColor> mappedColors = new ArrayList<>();
-
-    for (var index = 0; index < materials.length; ++index) {
-      var color = awareColorFromMaterialOrNull(materials[index]);
-
-      if (lowestIndex < 0) {
-        if (color != null) {
-          lowestIndex = index;
-          highestIndex = index;
-          mappedColors.add(color);
-          continue;
-        }
-        continue;
-      }
-
-      if (color != null)
-        highestIndex = index;
-      else
-        color = AWARE_NONE;
-
-      mappedColors.add(color);
-    }
-
-    if (lowestIndex < 0)
-      throw new IllegalStateException("Did not encounter a single tube-color!");
-
-    tubeColorByMaterialOrdinal = new TypeAwareTubeColor[highestIndex - lowestIndex + 1];
-    tubeColorByMaterialOrdinalOffset = -lowestIndex;
-
-    for (var i = 0; i < tubeColorByMaterialOrdinal.length; ++i)
-      tubeColorByMaterialOrdinal[i] = mappedColors.get(i);
-  }
-
   private final @Nullable Material blockType;
   private final @Nullable Material paneType;
 
@@ -84,15 +39,6 @@ public enum TubeColor {
   }
 
   public static TypeAwareTubeColor fromMaterial(Material material) {
-    var index = material.ordinal() + tubeColorByMaterialOrdinalOffset;
-
-    if (index < 0 || index >= tubeColorByMaterialOrdinal.length)
-      return AWARE_NONE;
-
-    return tubeColorByMaterialOrdinal[index];
-  }
-
-  private static @Nullable TypeAwareTubeColor awareColorFromMaterialOrNull(Material material) {
     for (var tubeColor : VALUES) {
       if (tubeColor.paneType == material)
         return new TypeAwareTubeColor(tubeColor, true);
@@ -101,6 +47,6 @@ public enum TubeColor {
         return new TypeAwareTubeColor(tubeColor, false);
     }
 
-    return null;
+    return AWARE_NONE;
   }
 }

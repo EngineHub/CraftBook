@@ -37,6 +37,10 @@ public class BlockCache implements Listener {
   private int cacheLoadCounter = 0;
   private int chunkTicketDuration = DEFAULT_CHUNK_TICKET_DURATION;
 
+  static {
+    CachedBlock.setupPresetTable();
+  }
+
   public BlockCache(Consumer<Block> externalInvalidationHandler) {
     this.chunkTicketByCompactId = new Long2ObjectOpenHashMap<>();
     this.externalInvalidationHandler = externalInvalidationHandler;

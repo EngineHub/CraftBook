@@ -20,7 +20,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 @Ignore
@@ -55,11 +54,11 @@ public class ItemUtilTest {
         items.add(newMockItemStack(Material.GRASS_BLOCK,(byte) 0,1));
         items.add(newMockItemStack(Material.GRAVEL,(byte) 0,1));
         items.add(newMockItemStack(Material.STONE,(byte) 0,1));
-        HashSet<ItemStack> inclusions = new HashSet<>();
+        List<ItemStack> inclusions = new ArrayList<>();
         inclusions.add(newMockItemStack(Material.GRASS_BLOCK,(byte) 0,1));
         List<ItemStack> filtered = ItemUtil.filterItems(items, inclusions, null);
         assertEquals(1, filtered.size());
-        HashSet<ItemStack> exclusions = new HashSet<>();
+        List<ItemStack> exclusions = new ArrayList<>();
         exclusions.add(newMockItemStack(Material.GRAVEL,(byte) 0,1));
         filtered = ItemUtil.filterItems(items, null, exclusions);
         assertEquals(2, filtered.size());

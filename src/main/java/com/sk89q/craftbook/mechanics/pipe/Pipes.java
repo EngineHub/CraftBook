@@ -338,7 +338,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                         Block enumeratedBlock = pipeBlock.getRelative(x, y, z);
                         int cachedEnumeratedBlock = blockCache.getCachedBlock(enumeratedBlock);
 
-                        if (!CachedBlock.isIsValidPipeBlock(cachedEnumeratedBlock))
+                        if (!CachedBlock.isValidPipeBlock(cachedEnumeratedBlock))
                             continue;
 
                         if (!visitedBlocks.add(CompactId.computeWorldlessBlockId(enumeratedBlock)))
@@ -364,7 +364,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                         Block nextEnumeratedBlock = enumeratedBlock.getRelative(x, y, z);
                         int cachedNextEnumeratedBlock = blockCache.getCachedBlock(nextEnumeratedBlock);
 
-                        if (!CachedBlock.isIsValidPipeBlock(cachedNextEnumeratedBlock))
+                        if (!CachedBlock.isValidPipeBlock(cachedNextEnumeratedBlock))
                             continue;
 
                         long nextEnumeratedId = CompactId.computeWorldlessBlockId(nextEnumeratedBlock);
