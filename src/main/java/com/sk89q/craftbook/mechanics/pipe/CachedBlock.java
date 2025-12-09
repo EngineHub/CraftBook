@@ -79,6 +79,10 @@ public class CachedBlock {
         return ((cachedBlock >> 16) & (8192 - 1)) == material.ordinal();
     }
 
+    public static boolean shouldContinueToRetainChunks(int cachedBlock) {
+        return hasHandledOutputInventory(cachedBlock);
+    }
+
     public static int fromBlock(Block block) {
         Material material = block.getType();
         BlockFace pistonFacing = BlockFace.SELF;

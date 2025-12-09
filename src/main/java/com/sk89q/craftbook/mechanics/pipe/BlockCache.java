@@ -167,10 +167,14 @@ public class BlockCache implements Listener {
         var compactId = CompactId.computeWorldfulBlockId(block);
         var cachedBlock = cachedBlockByCompactId.get(compactId);
 
-        if (cachedBlock != CachedBlock.NULL_SENTINEL)
-            return cachedBlock;
+        if (cachedBlock != CachedBlock.NULL_SENTINEL) {
+            if (CachedBlock.shouldContinueToRetainChunks(cachedBlock))
+                ensureChunkIsLoaded(block);
 
-        handleChunkLoading(block);
+            return cachedBlock;
+        }
+
+        ensureChunkIsLoaded(block);
 
         cachedBlock = CachedBlock.fromBlock(block);
 
@@ -184,7 +188,7 @@ public class BlockCache implements Listener {
         return cachedBlock;
     }
 
-    private void handleChunkLoading(Block block) throws LoadingChunkException {
+    private void ensureChunkIsLoaded(Block block) throws LoadingChunkException {
         int chunkX = block.getX() >> 4;
         int chunkZ = block.getZ() >> 4;
         World world = block.getWorld();
@@ -192,35 +196,34 @@ public class BlockCache implements Listener {
         var compactChunkId = CompactId.computeWorldfulChunkId(world, chunkX, chunkZ);
 
         if (world.isChunkLoaded(chunkX, chunkZ)) {
-            var chunkTicket = chunkTicketByCompactId.get(compactChunkId);
-
-            if (chunkTicket != null)
-                chunkTicket.touch();
-
+            addOrTouchChunkTicket(block, compactChunkId);
             return;
         }
 
         if (getChunkAtAsync != null) {
             try {
-                getChunkAtAsync.invoke(world, chunkX, chunkZ, true, (Consumer<Chunk>) chunk -> addChunkTicket(chunk, compactChunkId));
+                getChunkAtAsync.invoke(world, chunkX, chunkZ, true, (Consumer<Chunk>) chunk -> addOrTouchChunkTicket(block, compactChunkId));
             } catch (Throwable e) {
                 CraftBookPlugin.logger().log(Level.SEVERE, "An error occurred while trying to load the chunk at " + chunkX + "," + chunkZ + " asynchronously ", e);
                 return;
             }
         } else {
-            addChunkTicket(world.getChunkAt(chunkX, chunkZ, true), compactChunkId);
+            addOrTouchChunkTicket(block, compactChunkId);
         }
 
         // Stop walking the pipe despite loading sync also, as to not completely starve the tick-loop
         throw new LoadingChunkException();
     }
 
-    private void addChunkTicket(Chunk chunk, long compactChunkId) {
-        // The request to load the chunk could've been called twice if loading took longer
-        // than the remaining tick-time since encountering this pipe-block (if async).
-        // Ensure to not try to register the ticket twice, which would print the warning below.
-        if (chunkTicketByCompactId.containsKey(compactChunkId))
+    private void addOrTouchChunkTicket(Block block, long compactChunkId) {
+        var existingTicket = chunkTicketByCompactId.get(compactChunkId);
+
+        if (existingTicket != null) {
+            existingTicket.touch();
             return;
+        }
+
+        var chunk = block.getChunk();
 
         chunkTicketByCompactId.put(compactChunkId, new ChunkTicket(chunk));
 
