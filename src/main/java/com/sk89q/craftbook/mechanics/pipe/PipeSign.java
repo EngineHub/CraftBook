@@ -43,6 +43,9 @@ public class PipeSign {
             ItemStack item;
 
             try {
+                // This method can throw (missing resource-key), even if I only ever experienced it on FaWe-Paper with
+                // a token of "twisting_vines_plant". The user should be able to locate the malformed sign and the pipe
+                // should *not* lose items due to unwinding the stack before putting leftovers back. Better safe than sorry.
                 item = ItemSyntax.getItem(token);
             } catch (Throwable e) {
                 String position = sign.getX() + "," + sign.getY() + "," + sign.getZ() + "@" + sign.getWorld().getName();
