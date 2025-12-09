@@ -303,6 +303,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             for (int x = -1; x < 2; x++) {
                 for (int y = -1; y < 2; y++) {
                     for (int z = -1; z < 2; z++) {
+                        if (x == 0 && y == 0 && z == 0) continue;
 
                         if (!pipesDiagonal) {
                             if (x != 0 && y != 0) continue;
