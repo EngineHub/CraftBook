@@ -12,7 +12,7 @@ public class PipeEvent extends BlockEvent {
     private List<ItemStack> items;
     private static final HandlerList handlers = new HandlerList();
 
-    public PipeEvent (Block theBlock, List<ItemStack> items) {
+    public PipeEvent(Block theBlock, List<ItemStack> items) {
         super(theBlock);
         this.items = items;
     }

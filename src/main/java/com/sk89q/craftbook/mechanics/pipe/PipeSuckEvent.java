@@ -38,12 +38,12 @@ public class PipeSuckEvent extends PipeEvent implements Cancellable {
     }
 
     @Override
-    public boolean isCancelled () {
+    public boolean isCancelled() {
         return isCancelled;
     }
 
     @Override
-    public void setCancelled (boolean arg0) {
+    public void setCancelled(boolean arg0) {
         isCancelled = arg0;
     }
 

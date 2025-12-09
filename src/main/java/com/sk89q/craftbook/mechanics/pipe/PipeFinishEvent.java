@@ -11,7 +11,7 @@ public class PipeFinishEvent extends PipeEvent {
 
     private boolean request;
 
-    public PipeFinishEvent (Block theBlock, List<ItemStack> items, Block origin, boolean request) {
+    public PipeFinishEvent(Block theBlock, List<ItemStack> items, Block origin, boolean request) {
         super(theBlock, items);
         this.origin = origin;
         this.request = request;

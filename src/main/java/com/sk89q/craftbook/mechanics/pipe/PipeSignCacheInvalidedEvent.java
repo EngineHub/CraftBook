@@ -6,24 +6,24 @@ import org.bukkit.event.HandlerList;
 
 public class PipeSignCacheInvalidedEvent extends Event {
 
-  private static final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
-  private final Block pistonBlock;
+    private final Block pistonBlock;
 
-  public PipeSignCacheInvalidedEvent(Block pistonBlock) {
-    this.pistonBlock = pistonBlock;
-  }
+    public PipeSignCacheInvalidedEvent(Block pistonBlock) {
+        this.pistonBlock = pistonBlock;
+    }
 
-  public Block getPistonBlock() {
-    return pistonBlock;
-  }
+    public Block getPistonBlock() {
+        return pistonBlock;
+    }
 
-  @Override
-  public HandlerList getHandlers() {
-    return handlers;
-  }
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
 
-  public static HandlerList getHandlerList() {
-    return handlers;
-  }
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 }

@@ -12,7 +12,7 @@ public class PipePutEvent extends PipeEvent implements Cancellable {
     private Block put;
     private int cachedPut;
 
-    public PipePutEvent (Block theBlock, List<ItemStack> items, Block put, int cachedPut) {
+    public PipePutEvent(Block theBlock, List<ItemStack> items, Block put, int cachedPut) {
         super(theBlock, items);
         this.put = put;
         this.cachedPut = cachedPut;
@@ -39,12 +39,12 @@ public class PipePutEvent extends PipeEvent implements Cancellable {
     }
 
     @Override
-    public boolean isCancelled () {
+    public boolean isCancelled() {
         return isCancelled;
     }
 
     @Override
-    public void setCancelled (boolean arg0) {
+    public void setCancelled(boolean arg0) {
         isCancelled = arg0;
     }
 

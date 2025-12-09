@@ -4,19 +4,19 @@ import org.bukkit.Chunk;
 
 public class ChunkTicket {
 
-  public final Chunk chunk;
-  private long lastUse;
+    public final Chunk chunk;
+    private long lastUse;
 
-  public ChunkTicket(Chunk chunk) {
-    this.chunk = chunk;
-    this.lastUse = System.currentTimeMillis();
-  }
+    public ChunkTicket(Chunk chunk) {
+        this.chunk = chunk;
+        this.lastUse = System.currentTimeMillis();
+    }
 
-  public void touch() {
-    this.lastUse = System.currentTimeMillis();
-  }
+    public void touch() {
+        this.lastUse = System.currentTimeMillis();
+    }
 
-  public long getLastUse() {
-    return lastUse;
-  }
+    public long getLastUse() {
+        return lastUse;
+    }
 }

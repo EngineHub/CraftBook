@@ -68,20 +68,20 @@ public class Pipes extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event)) return;
 
-        if(!event.getLine(1).equalsIgnoreCase("[pipe]")) return;
+        if (!event.getLine(1).equalsIgnoreCase("[pipe]")) return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if(!player.hasPermission("craftbook.circuits.pipes")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (!player.hasPermission("craftbook.circuits.pipes")) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
             SignUtil.cancelSign(event);
             return;
         }
 
-        if(ProtectionUtil.shouldUseProtection()) {
+        if (ProtectionUtil.shouldUseProtection()) {
             Block pistonBlock = null;
 
             if (SignUtil.isWallSign(event.getBlock())) {
@@ -93,7 +93,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                     pistonBlock = event.getBlock().getRelative(BlockFace.UP);
                 }
             }
-            if(pistonBlock != null && isPiston(pistonBlock)) {
+            if (pistonBlock != null && isPiston(pistonBlock)) {
                 Piston pis = (Piston) pistonBlock.getBlockData();
                 Block off = pistonBlock.getRelative(pis.getFacing());
                 if (InventoryUtil.doesBlockHaveInventory(off)) {
@@ -124,7 +124,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         Block pistonBlock = signBlock.getRelative(mountingFace);
 
         if (pipeSignByPistonCompactId.remove(CompactId.computeWorldfulBlockId(pistonBlock)) != null)
-          Bukkit.getPluginManager().callEvent(new PipeSignCacheInvalidedEvent(pistonBlock));
+            Bukkit.getPluginManager().callEvent(new PipeSignCacheInvalidedEvent(pistonBlock));
     }
 
     private void invalidateCache(Block block) {
@@ -237,12 +237,11 @@ public class Pipes extends AbstractCraftBookMechanic {
             List<ItemStack> itemsToPut = putEvent.getItems();
 
             if (
-              CachedBlock.hasHandledOutputInventory(cachedContainerBlock)
-                && containerBlock.getState() instanceof InventoryHolder holder
+                CachedBlock.hasHandledOutputInventory(cachedContainerBlock)
+                    && containerBlock.getState() instanceof InventoryHolder holder
             ) {
                 leftovers.addAll(InventoryUtil.addItemsToInventory(holder, itemsToPut.toArray(new ItemStack[0])));
-            }
-            else if (CachedBlock.isMaterial(cachedContainerBlock, Material.JUKEBOX)) {
+            } else if (CachedBlock.isMaterial(cachedContainerBlock, Material.JUKEBOX)) {
                 Jukebox jukebox = (Jukebox) containerBlock.getState();
 
                 for (ItemStack item : itemsToPut) {
@@ -254,8 +253,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                     jukebox.setRecord(item);
                     jukebox.update();
                 }
-            }
-            else {
+            } else {
                 leftovers.addAll(itemsToPut);
             }
 
@@ -268,8 +266,9 @@ public class Pipes extends AbstractCraftBookMechanic {
 
     /**
      * A publicly available, correct and efficient way to walk pipes
-     * @param firstBlock The very first block of the pipe from which to start enumerating outwards.
-     * @param visitedBlocks Pre-allocated set to store visited block-ids in; provide null to create it internally.
+     *
+     * @param firstBlock         The very first block of the pipe from which to start enumerating outwards.
+     * @param visitedBlocks      Pre-allocated set to store visited block-ids in; provide null to create it internally.
      * @param enumerationHandler Handler called at each step of the way.
      * @throws LoadingChunkException Thrown if a chunk was absent and is now loading asynchronously; try again next tick.
      */
@@ -314,23 +313,23 @@ public class Pipes extends AbstractCraftBookMechanic {
                             boolean xIsZ = Math.abs(x) == Math.abs(z);
                             if (xIsY && xIsZ) {
                                 if (CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(x, 0, 0)), pipeInsulator)
-                                      && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)
-                                      && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
+                                    && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)
+                                    && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
                                     continue;
                                 }
                             } else if (xIsY) {
                                 if (CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(x, 0, 0)), pipeInsulator)
-                                      && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)) {
+                                    && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)) {
                                     continue;
                                 }
                             } else if (xIsZ) {
                                 if (CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(x, 0, 0)), pipeInsulator)
-                                      && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
+                                    && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
                                     continue;
                                 }
                             } else {
                                 if (CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)
-                                      && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
+                                    && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
                                     continue;
                                 }
                             }
@@ -422,8 +421,8 @@ public class Pipes extends AbstractCraftBookMechanic {
         Jukebox jukebox = null;
 
         if (
-          CachedBlock.hasHandledInputInventory(cachedContainerBlock)
-            && containerBlock.getState() instanceof InventoryHolder holder
+            CachedBlock.hasHandledInputInventory(cachedContainerBlock)
+                && containerBlock.getState() instanceof InventoryHolder holder
         ) {
             inventoryHolder = holder;
             Inventory blockInventory = inventoryHolder.getInventory();
@@ -435,24 +434,20 @@ public class Pipes extends AbstractCraftBookMechanic {
                     itemsInPipe.add(result);
                     furnaceInventory.setResult(null);
                 }
-            }
+            } else if (inventoryHolder instanceof BrewingStand brewingStand) {
+                if (brewingStand.getBrewingTime() <= 0) {
+                    BrewerInventory inventory = brewingStand.getInventory();
 
-             else if (inventoryHolder instanceof BrewingStand brewingStand) {
-                 if (brewingStand.getBrewingTime() <= 0) {
-                     BrewerInventory inventory = brewingStand.getInventory();
+                    for (int i = 0; i < 3; ++i) {
+                        ItemStack item = inventory.getItem(i);
 
-                     for (int i = 0; i < 3; ++i) {
-                         ItemStack item = inventory.getItem(i);
-
-                         if (ItemUtil.isStackValid(item) && ItemUtil.doesItemPassFilters(item, sign.includeFilters, sign.excludeFilters)) {
-                             itemsInPipe.add(item);
-                             inventory.setItem(i, null);
-                         }
-                     }
-                 }
-            }
-
-            else {
+                        if (ItemUtil.isStackValid(item) && ItemUtil.doesItemPassFilters(item, sign.includeFilters, sign.excludeFilters)) {
+                            itemsInPipe.add(item);
+                            inventory.setItem(i, null);
+                        }
+                    }
+                }
+            } else {
                 for (int slot = 0; slot < blockInventory.getSize(); ++slot) {
                     ItemStack stack = blockInventory.getItem(slot);
 
@@ -469,9 +464,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                         break;
                 }
             }
-        }
-
-        else if (CachedBlock.isMaterial(cachedContainerBlock, Material.JUKEBOX)) {
+        } else if (CachedBlock.isMaterial(cachedContainerBlock, Material.JUKEBOX)) {
             jukebox = (Jukebox) containerBlock.getState();
 
             if (jukebox.hasRecord()) {
@@ -521,9 +514,9 @@ public class Pipes extends AbstractCraftBookMechanic {
                     jukebox.setRecord(item);
                     jukebox.update();
                 }
-            }
-            else
+            } else {
                 leftovers.addAll(itemsInPipe);
+            }
         }
 
         // Finish up the pipe and possibly drop leftovers
@@ -558,8 +551,8 @@ public class Pipes extends AbstractCraftBookMechanic {
                 continue;
 
             String message = languageManager.getString("circuits.pipes.warmup-notification", LanguageManager.getPlayersLanguage(player))
-              .replace("{tubes}", String.valueOf(currentTubeBlockCounter))
-              .replace("{pistons}", String.valueOf(currentPistonBlockCounter));
+                .replace("{tubes}", String.valueOf(currentTubeBlockCounter))
+                .replace("{pistons}", String.valueOf(currentPistonBlockCounter));
 
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.GOLD + message));
         }
@@ -591,7 +584,7 @@ public class Pipes extends AbstractCraftBookMechanic {
     private int warmupNotificationRadiusSquared;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "allow-diagonal", "Allow pipes to work diagonally. Required for insulators to work.");
         pipesDiagonal = config.getBoolean(path + "allow-diagonal", false);

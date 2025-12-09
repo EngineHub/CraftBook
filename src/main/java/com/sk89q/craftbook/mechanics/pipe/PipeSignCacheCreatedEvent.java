@@ -7,30 +7,30 @@ import org.bukkit.event.HandlerList;
 
 public class PipeSignCacheCreatedEvent extends Event {
 
-  private static final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
-  private final Block pistonBlock;
-  private final Sign pipeSign;
+    private final Block pistonBlock;
+    private final Sign pipeSign;
 
-  public PipeSignCacheCreatedEvent(Block pistonBlock, Sign pipeSign) {
-    this.pistonBlock = pistonBlock;
-    this.pipeSign = pipeSign;
-  }
+    public PipeSignCacheCreatedEvent(Block pistonBlock, Sign pipeSign) {
+        this.pistonBlock = pistonBlock;
+        this.pipeSign = pipeSign;
+    }
 
-  public Sign getPipeSign() {
-    return pipeSign;
-  }
+    public Sign getPipeSign() {
+        return pipeSign;
+    }
 
-  public Block getPistonBlock() {
-    return pistonBlock;
-  }
+    public Block getPistonBlock() {
+        return pistonBlock;
+    }
 
-  @Override
-  public HandlerList getHandlers() {
-    return handlers;
-  }
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
 
-  public static HandlerList getHandlerList() {
-    return handlers;
-  }
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 }
