@@ -332,7 +332,7 @@ public class InventoryUtil {
 
     /**
      * Checks whether the block has an inventory.
-     *
+     * 
      * @param block The block.
      * @return If it has an inventory.
      */
