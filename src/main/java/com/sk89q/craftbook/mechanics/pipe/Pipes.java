@@ -608,8 +608,11 @@ public class Pipes extends AbstractCraftBookMechanic {
         config.setComment(path + "max-cache-load-count", "When initially warming up caches, how many blocks to load in one go at max; -1 for no limit.");
         maxCacheLoadCount = config.getInt(path + "max-cache-load-count", 500);
 
-        config.setComment(path + "chunk-retain-duration", "For how long, in seconds, to retain chunks in memory after having loaded them while traversing pipes");
-        blockCache.setChunkTicketDuration(config.getInt(path + "chunk-retain-duration", BlockCache.DEFAULT_CHUNK_TICKET_DURATION));
+        config.setComment(path + "initial-chunk-retain-duration", "For how long, in seconds, to retain chunks in memory after having loaded them while traversing pipes");
+        blockCache.setInitialChunkTicketDuration(config.getInt(path + "initial-chunk-retain-duration", BlockCache.DEFAULT_INITIAL_CHUNK_TICKET_DURATION) * 1000);
+
+        config.setComment(path + "continued-chunk-retain-duration", "For how long, in seconds, to retain chunks in memory that contain regularly accessed blocks");
+        blockCache.setContinuedChunkTicketDuration(config.getInt(path + "continued-chunk-retain-duration", BlockCache.DEFAULT_CONTINUED_CHUNK_TICKET_DURATION) * 1000);
 
         config.setComment(path + "warmup-notification-radius", "In what radius around an input-block to send warmup-notifications to player's action-bars; -1 to hide them");
         warmupNotificationRadiusSquared = config.getInt(path + "warmup-notification-radius", 5);

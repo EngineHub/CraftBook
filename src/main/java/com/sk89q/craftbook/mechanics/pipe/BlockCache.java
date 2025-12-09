@@ -25,7 +25,8 @@ import java.util.logging.Level;
 
 public class BlockCache implements Listener {
 
-    public static final int DEFAULT_CHUNK_TICKET_DURATION = 60 * 5;
+    public static final int DEFAULT_INITIAL_CHUNK_TICKET_DURATION = 60;
+    public static final int DEFAULT_CONTINUED_CHUNK_TICKET_DURATION = 60 * 5;
 
     private static final MethodHandle getChunkAtAsync = findGetChunkAtAsync();
 
@@ -35,7 +36,8 @@ public class BlockCache implements Listener {
     private final BukkitTask chunkTicketTask;
 
     private int cacheLoadCounter = 0;
-    private int chunkTicketDuration = DEFAULT_CHUNK_TICKET_DURATION;
+    private int initialChunkTicketDuration = DEFAULT_INITIAL_CHUNK_TICKET_DURATION;
+    private int continuedChunkTicketDuration = DEFAULT_CONTINUED_CHUNK_TICKET_DURATION;
 
     static {
         CachedBlock.setupPresetTable();
@@ -54,13 +56,22 @@ public class BlockCache implements Listener {
             CraftBookPlugin.logger().log(Level.WARNING, "[Pipes] Could not find API to load chunks asynchronously; use Paper to experience better performance.");
     }
 
-    public void setChunkTicketDuration(int chunkTicketDuration) {
-        if (chunkTicketDuration <= 0) {
-            this.chunkTicketDuration = DEFAULT_CHUNK_TICKET_DURATION;
+    public void setInitialChunkTicketDuration(int duration) {
+        if (duration <= 0) {
+            this.initialChunkTicketDuration = DEFAULT_INITIAL_CHUNK_TICKET_DURATION;
             return;
         }
 
-        this.chunkTicketDuration = chunkTicketDuration;
+        this.initialChunkTicketDuration = duration;
+    }
+
+    public void setContinuedChunkTicketDuration(int duration) {
+        if (duration <= 0) {
+            this.continuedChunkTicketDuration = DEFAULT_CONTINUED_CHUNK_TICKET_DURATION;
+            return;
+        }
+
+        this.continuedChunkTicketDuration = duration;
     }
 
     private void removeExpiredChunkTickets(boolean all) {
@@ -69,7 +80,7 @@ public class BlockCache implements Listener {
         for (var iterator = chunkTicketByCompactId.values().iterator(); iterator.hasNext(); ) {
             var chunkTicket = iterator.next();
 
-            if (all || (now - chunkTicket.getLastUse()) / 1000 >= chunkTicketDuration) {
+            if (all || (now >= chunkTicket.getExpiryStamp())) {
                 iterator.remove();
 
                 if (!chunkTicket.chunk.removePluginChunkTicket(CraftBookPlugin.inst()))
@@ -219,13 +230,13 @@ public class BlockCache implements Listener {
         var existingTicket = chunkTicketByCompactId.get(compactChunkId);
 
         if (existingTicket != null) {
-            existingTicket.touch();
+            existingTicket.touch(continuedChunkTicketDuration);
             return;
         }
 
         var chunk = block.getChunk();
 
-        chunkTicketByCompactId.put(compactChunkId, new ChunkTicket(chunk));
+        chunkTicketByCompactId.put(compactChunkId, new ChunkTicket(chunk, initialChunkTicketDuration));
 
         if (!chunk.addPluginChunkTicket(CraftBookPlugin.inst()))
             CraftBookPlugin.logger().log(Level.WARNING, "Could not add plugin-ticket to chunk at " + chunk.getX() + " " + chunk.getZ());

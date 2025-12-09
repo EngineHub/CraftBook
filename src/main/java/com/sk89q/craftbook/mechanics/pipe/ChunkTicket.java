@@ -5,18 +5,18 @@ import org.bukkit.Chunk;
 public class ChunkTicket {
 
     public final Chunk chunk;
-    private long lastUse;
+    private long expiryStamp;
 
-    public ChunkTicket(Chunk chunk) {
+    public ChunkTicket(Chunk chunk, long initialDuration) {
         this.chunk = chunk;
-        this.lastUse = System.currentTimeMillis();
+        this.expiryStamp = System.currentTimeMillis() + initialDuration;
     }
 
-    public void touch() {
-        this.lastUse = System.currentTimeMillis();
+    public void touch(long continuedDuration) {
+        this.expiryStamp = System.currentTimeMillis() + continuedDuration;
     }
 
-    public long getLastUse() {
-        return lastUse;
+    public long getExpiryStamp() {
+        return expiryStamp;
     }
 }
