@@ -57,20 +57,10 @@ public class BlockCache implements Listener {
     }
 
     public void setInitialChunkTicketDuration(int duration) {
-        if (duration <= 0) {
-            this.initialChunkTicketDuration = DEFAULT_INITIAL_CHUNK_TICKET_DURATION;
-            return;
-        }
-
         this.initialChunkTicketDuration = duration;
     }
 
     public void setContinuedChunkTicketDuration(int duration) {
-        if (duration <= 0) {
-            this.continuedChunkTicketDuration = DEFAULT_CONTINUED_CHUNK_TICKET_DURATION;
-            return;
-        }
-
         this.continuedChunkTicketDuration = duration;
     }
 
@@ -229,10 +219,13 @@ public class BlockCache implements Listener {
     private void addOrTouchChunkTicket(Block block, long compactChunkId) {
         var existingTicket = chunkTicketByCompactId.get(compactChunkId);
 
-        if (existingTicket != null) {
+        if (existingTicket != null && continuedChunkTicketDuration > 0) {
             existingTicket.touch(continuedChunkTicketDuration);
             return;
         }
+
+        if (initialChunkTicketDuration <= 0)
+            return;
 
         var chunk = block.getChunk();
 
