@@ -513,7 +513,9 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         List<ItemStack> leftovers = new ArrayList<>();
 
-        if (!itemsInPipe.isEmpty() && !enumerationResult.didExceedLimits) {
+        if (enumerationResult.didExceedLimits) {
+            leftovers.addAll(itemsInPipe);
+        } else if (!itemsInPipe.isEmpty()) {
             if (inventoryHolder != null) {
                 leftovers.addAll(InventoryUtil.addItemsToInventory(inventoryHolder, itemsInPipe.toArray(new ItemStack[0])));
             } else if (jukebox != null) {
@@ -567,23 +569,23 @@ public class Pipes extends AbstractCraftBookMechanic {
             if (player.getLocation().distanceSquared(inputLocation) > notificationRadiusSquared)
                 continue;
 
-            // TODO: Add the notifications regarding exceeded limits to the language-manager
-
             String message;
 
             if (result == EnumerationResult.STILL_WARMING_UP) {
-                message = languageManager.getString("circuits.pipes.warmup-notification", LanguageManager.getPlayersLanguage(player))
+                message = ChatColor.GOLD + languageManager.getString("circuits.pipes.warmup-notification", LanguageManager.getPlayersLanguage(player))
                     .replace("{tubes}", String.valueOf(currentTubeBlockCounter))
                     .replace("{pistons}", String.valueOf(currentPistonBlockCounter));
             } else if (result == EnumerationResult.EXCEEDED_TUBE_COUNT_LIMIT) {
-                message = "§c[Pipe] Exceeded the tube-block limit of " + maxTubeBlockCount + "; dropping";
+                message = ChatColor.RED + languageManager.getString("circuits.pipes.exceeded-tube-count-notification", LanguageManager.getPlayersLanguage(player))
+                    .replace("{limit}", String.valueOf(maxTubeBlockCount));
             } else if (result == EnumerationResult.EXCEEDED_PISTON_COUNT_LIMIT) {
-                message = "§c[Pipe] Exceeded the piston-block limit of " + maxPistonBlockCount + "; dropping";
+                message = ChatColor.RED + languageManager.getString("circuits.pipes.exceeded-piston-count-notification", LanguageManager.getPlayersLanguage(player))
+                    .replace("{limit}", String.valueOf(maxPistonBlockCount));
             } else {
                 continue;
             }
 
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.GOLD + message));
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
         }
     }
 
