@@ -505,9 +505,9 @@ public class Pipes extends AbstractCraftBookMechanic {
         List<ItemStack> leftovers = new ArrayList<>();
 
         if (!itemsInPipe.isEmpty()) {
-            if (inventoryHolder != null)
+            if (inventoryHolder != null) {
                 leftovers.addAll(InventoryUtil.addItemsToInventory(inventoryHolder, itemsInPipe.toArray(new ItemStack[0])));
-            else if (jukebox != null) {
+            } else if (jukebox != null) {
                 for (ItemStack item : itemsInPipe) {
                     if (jukebox.hasRecord() || !item.getType().isRecord()) {
                         leftovers.add(item);
@@ -532,7 +532,9 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         if (!leftovers.isEmpty()) {
             for (ItemStack item : leftovers) {
-                if (!ItemUtil.isStackValid(item)) continue;
+                if (!ItemUtil.isStackValid(item))
+                    continue;
+
                 inputPistonBlock.getWorld().dropItemNaturally(inputPistonBlock.getLocation().add(0.5, 0.5, 0.5), item);
             }
         }
