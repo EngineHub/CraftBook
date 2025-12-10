@@ -11,10 +11,19 @@ public class PipeSignCacheCreatedEvent extends Event {
 
     private final Block pistonBlock;
     private final Sign pipeSign;
+    private final String[] lines;
 
-    public PipeSignCacheCreatedEvent(Block pistonBlock, Sign pipeSign) {
+    public PipeSignCacheCreatedEvent(Block pistonBlock, Sign pipeSign, String[] lines) {
         this.pistonBlock = pistonBlock;
         this.pipeSign = pipeSign;
+        this.lines = lines;
+    }
+
+    public String getLine(int index) {
+        if (index < 0 || index > 3)
+            return "";
+
+        return lines[index];
     }
 
     public Sign getPipeSign() {

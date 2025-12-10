@@ -178,11 +178,13 @@ public class Pipes extends AbstractCraftBookMechanic {
             if (!(faceBlock.getState() instanceof Sign sign))
                 continue;
 
-            if (!sign.getLine(1).equalsIgnoreCase("[Pipe]"))
+            String[] lines = sign.getLines();
+
+            if (!lines[1].equalsIgnoreCase("[Pipe]"))
                 continue;
 
-            cachedSign = PipeSign.fromSign(sign);
-            Bukkit.getPluginManager().callEvent(new PipeSignCacheCreatedEvent(pistonBlock, sign));
+            cachedSign = PipeSign.fromSign(sign, lines);
+            Bukkit.getPluginManager().callEvent(new PipeSignCacheCreatedEvent(pistonBlock, sign, lines));
             break;
         }
 

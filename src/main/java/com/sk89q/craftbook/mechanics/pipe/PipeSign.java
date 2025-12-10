@@ -23,18 +23,18 @@ public class PipeSign {
         this.excludeFilters = Collections.unmodifiableList(excludeFilters);
     }
 
-    public static PipeSign fromSign(Sign sign) {
+    public static PipeSign fromSign(Sign sign, String[] lines) {
         List<ItemStack> includeFilters = new ArrayList<>();
         List<ItemStack> excludeFilters = new ArrayList<>();
 
-        parseLineItems(sign, 2, includeFilters);
-        parseLineItems(sign, 3, excludeFilters);
+        parseLineItems(sign, lines, 2, includeFilters);
+        parseLineItems(sign, lines, 3, excludeFilters);
 
         return new PipeSign(includeFilters, excludeFilters);
     }
 
-    private static void parseLineItems(Sign sign, int lineId, List<ItemStack> output) {
-        for (String token : RegexUtil.COMMA_PATTERN.split(sign.getLine(lineId))) {
+    private static void parseLineItems(Sign sign, String[] lines, int lineId, List<ItemStack> output) {
+        for (String token : RegexUtil.COMMA_PATTERN.split(lines[lineId])) {
             token = token.trim();
 
             if (token.isEmpty())
