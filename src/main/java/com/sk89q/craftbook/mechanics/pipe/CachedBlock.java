@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.Piston;
 
 public class CachedBlock {
@@ -66,7 +67,7 @@ public class CachedBlock {
         return (cachedBlock >> 6) & (32 - 1);
     }
 
-    public static BlockFace getPistonFacing(int cachedBlock) {
+    public static BlockFace getFacing(int cachedBlock) {
         int index = (cachedBlock >> 11) & (32 - 1);
 
         if (index >= BLOCK_FACE_VALUES.length)
@@ -85,15 +86,17 @@ public class CachedBlock {
 
     public static int fromBlock(Block block) {
         Material material = block.getType();
-        BlockFace pistonFacing = BlockFace.SELF;
+        BlockFace facing = BlockFace.SELF;
 
-        if (material == Material.PISTON || material == Material.STICKY_PISTON)
-            pistonFacing = ((Piston) block.getBlockData()).getFacing();
+        int preset = getPreset(material);
+
+        if (material == Material.PISTON || material == Material.STICKY_PISTON || isWallSign(preset))
+            facing = ((Directional) block.getBlockData()).getFacing();
 
         return (
-            getPreset(material)
+            preset
                 | ((material.ordinal() & (8192 - 1)) << 16)
-                | ((pistonFacing.ordinal() & (32 - 1)) << 11)
+                | ((facing.ordinal() & (32 - 1)) << 11)
         );
     }
 

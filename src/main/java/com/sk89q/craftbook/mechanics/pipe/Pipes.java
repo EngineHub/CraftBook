@@ -149,7 +149,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         if (cachedSign != null)
             return cachedSign;
 
-        BlockFace facing = CachedBlock.getPistonFacing(cachedPistonBlock);
+        BlockFace facing = CachedBlock.getFacing(cachedPistonBlock);
 
         for (BlockFace face : LocationUtil.getDirectFaces()) {
             if (face == facing)
@@ -158,17 +158,22 @@ public class Pipes extends AbstractCraftBookMechanic {
             Block faceBlock = pistonBlock.getRelative(face);
             int cachedFaceBlock = blockCache.getCachedBlock(faceBlock);
 
-            boolean isStandingSign = CachedBlock.isStandingSign(cachedFaceBlock);
-            boolean isWallSign = CachedBlock.isWallSign(cachedFaceBlock);
+            if (CachedBlock.isStandingSign(cachedFaceBlock)) {
+                // Standing-signs may only be on or under the piston
+                if (face != BlockFace.UP && face != BlockFace.DOWN)
+                    continue;
+            } else if (CachedBlock.isWallSign(cachedFaceBlock)) {
+                // Wall-signs may only be attached N/E/S/W on the piston
+                if (face == BlockFace.UP || face == BlockFace.DOWN)
+                    continue;
 
-            if (isWallSign && (face == BlockFace.UP || face == BlockFace.DOWN))
+                // The sign has to be mounted on this piston, not on an adjacent one
+                if (CachedBlock.getFacing(cachedFaceBlock) != face)
+                    continue;
+            } else {
+                // Not a sign at all, do not needlessly try to get its state
                 continue;
-
-            if (isStandingSign && face != BlockFace.UP && face != BlockFace.DOWN)
-                continue;
-
-            if (isWallSign && !SignUtil.getBackBlock(faceBlock).getLocation().equals(pistonBlock.getLocation()))
-                continue;
+            }
 
             if (!(faceBlock.getState() instanceof Sign sign))
                 continue;
@@ -225,7 +230,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
             List<ItemStack> leftovers = new ArrayList<>();
 
-            Block containerBlock = pipeBlock.getRelative(CachedBlock.getPistonFacing(cachedPipeBlock));
+            Block containerBlock = pipeBlock.getRelative(CachedBlock.getFacing(cachedPipeBlock));
             int cachedContainerBlock = blockCache.getCachedBlock(containerBlock);
 
             PipePutEvent putEvent = new PipePutEvent(pipeBlock, new ArrayList<>(filteredPipeItems), containerBlock, cachedContainerBlock);
@@ -403,7 +408,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             if (pipeRequireSign && sign == PipeSign.NO_SIGN)
                 return EnumerationResult.COMPLETED;
 
-            containerBlock = inputPistonBlock.getRelative(CachedBlock.getPistonFacing(cachedInputPistonBlock));
+            containerBlock = inputPistonBlock.getRelative(CachedBlock.getFacing(cachedInputPistonBlock));
             cachedContainerBlock = blockCache.getCachedBlock(containerBlock);
         }
         // If the very beginning of the pipe already (partially) is within an unloaded chunk,
