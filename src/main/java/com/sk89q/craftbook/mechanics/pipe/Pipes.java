@@ -285,14 +285,14 @@ public class Pipes extends AbstractCraftBookMechanic {
             if (CachedBlock.isTube(cachedPipeBlock)) {
                 ++currentTubeBlockCounter;
 
-                if (maxTubeBlockCount >= 0 && currentTubeBlockCounter > maxTubeBlockCount)
+                if (getMaxTubeBlockCount() >= 0 && currentTubeBlockCounter > getMaxTubeBlockCount())
                     return EnumerationResult.EXCEEDED_TUBE_COUNT_LIMIT;
             }
 
             if (CachedBlock.isMaterial(cachedPipeBlock, Material.PISTON)) {
                 ++currentPistonBlockCounter;
 
-                if (maxPistonBlockCount >= 0 && currentPistonBlockCounter > maxPistonBlockCount)
+                if (getMaxPistonBlockCount() >= 0 && currentPistonBlockCounter > getMaxPistonBlockCount())
                     return EnumerationResult.EXCEEDED_PISTON_COUNT_LIMIT;
             }
 
@@ -392,6 +392,24 @@ public class Pipes extends AbstractCraftBookMechanic {
         }
 
         return EnumerationResult.COMPLETED;
+    }
+
+    /**
+     * The currently configured maximum number of tubes (glass) after which the pipe-block enumerator will
+     * stop automatically with a result of {@link EnumerationResult#EXCEEDED_TUBE_COUNT_LIMIT}.
+     * @return Limit, or a negative number if unlimited
+     */
+    public int getMaxTubeBlockCount() {
+        return maxTubeBlockCount;
+    }
+
+    /**
+     * The currently configured maximum number of pistons after which the pipe-block enumerator will
+     * stop automatically with a result of {@link EnumerationResult#EXCEEDED_PISTON_COUNT_LIMIT}.
+     * @return Limit, or a negative number if unlimited
+     */
+    public int getMaxPistonBlockCount() {
+        return maxPistonBlockCount;
     }
 
     private EnumerationResult startPipe(Block inputPistonBlock, List<ItemStack> itemsInPipe, boolean wasRequest) {
