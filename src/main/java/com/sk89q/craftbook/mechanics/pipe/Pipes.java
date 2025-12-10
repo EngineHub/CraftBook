@@ -379,9 +379,8 @@ public class Pipes extends AbstractCraftBookMechanic {
                         if (visitedBlocks.contains(nextEnumeratedId))
                             continue;
 
-                        // Ensure that if the block we came from had a color, the one we jumped across to after
-                        // passing a pane is also of the same color.
-                        if (CachedBlock.doTubeColorsMismatch(cachedPipeBlock, cachedNextEnumeratedBlock))
+                        // Ensure that the pane is allowed to link with the block we're jumping across to
+                        if (CachedBlock.doTubeColorsMismatch(cachedEnumeratedBlock, cachedNextEnumeratedBlock))
                             continue;
 
                         visitedBlocks.add(nextEnumeratedId);

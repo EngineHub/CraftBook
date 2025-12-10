@@ -48,12 +48,15 @@ public class CachedBlock {
     public static boolean doTubeColorsMismatch(int cachedBlockA, int cachedBlockB) {
         int ordinalA = getTubeColorOrdinal(cachedBlockA);
 
-        if (ordinalA == TubeColor.NONE.ordinal())
+        // Important note: transparent tubes are allowed to link with any color, so if
+        // either side of the connection is transparent, there cannot be a mismatch.
+
+        if (ordinalA == TubeColor.NONE.ordinal() || ordinalA == TubeColor.TRANSPARENT.ordinal())
             return false;
 
         int ordinalB = getTubeColorOrdinal(cachedBlockB);
 
-        if (ordinalB == TubeColor.NONE.ordinal())
+        if (ordinalB == TubeColor.NONE.ordinal() || ordinalB == TubeColor.TRANSPARENT.ordinal())
             return false;
 
         return ordinalA != ordinalB;
