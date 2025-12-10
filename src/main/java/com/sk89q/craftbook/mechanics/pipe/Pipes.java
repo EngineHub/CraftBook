@@ -444,6 +444,9 @@ public class Pipes extends AbstractCraftBookMechanic {
                         if (ItemUtil.isStackValid(item) && ItemUtil.doesItemPassFilters(item, sign.includeFilters, sign.excludeFilters)) {
                             itemsInPipe.add(item);
                             inventory.setItem(i, null);
+
+                            if (pipeStackPerPull)
+                                break;
                         }
                     }
                 }
