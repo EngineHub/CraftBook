@@ -201,22 +201,8 @@ public class Pipes extends AbstractCraftBookMechanic {
             if (itemsInPipe.isEmpty())
                 return EnumerationHandleResult.DONE;
 
-            if (CachedBlock.isTube(cachedPipeBlock)) {
-                ++currentTubeBlockCounter;
-
-                if (maxTubeBlockCount >= 0 && currentTubeBlockCounter >= maxTubeBlockCount)
-                    return EnumerationHandleResult.DONE;
-
-                return EnumerationHandleResult.CONTINUE;
-            }
-
             if (!CachedBlock.isMaterial(cachedPipeBlock, Material.PISTON))
                 return EnumerationHandleResult.CONTINUE;
-
-            ++currentPistonBlockCounter;
-
-            if (maxPistonBlockCount >= 0 && currentPistonBlockCounter >= maxPistonBlockCount)
-                return EnumerationHandleResult.DONE;
 
             PipeSign sign = getSignOnPiston(pipeBlock, cachedPipeBlock);
 
@@ -296,6 +282,20 @@ public class Pipes extends AbstractCraftBookMechanic {
             Block pipeBlock = searchQueue.poll();
             int cachedPipeBlock = blockCache.getCachedBlock(pipeBlock);
 
+            if (CachedBlock.isTube(cachedPipeBlock)) {
+                ++currentTubeBlockCounter;
+
+                if (maxTubeBlockCount >= 0 && currentTubeBlockCounter > maxTubeBlockCount)
+                    return EnumerationResult.EXCEEDED_TUBE_COUNT_LIMIT;
+            }
+
+            if (CachedBlock.isMaterial(cachedPipeBlock, Material.PISTON)) {
+                ++currentPistonBlockCounter;
+
+                if (maxPistonBlockCount >= 0 && currentPistonBlockCounter > maxPistonBlockCount)
+                    return EnumerationResult.EXCEEDED_PISTON_COUNT_LIMIT;
+            }
+
             EnumerationHandleResult handleResult = enumerationHandler.handle(pipeBlock, cachedPipeBlock);
 
             if (handleResult != EnumerationHandleResult.CONTINUE)
@@ -304,7 +304,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             // While we could check for exceeding the load-counter at countless call-sites, and while there already have been
             // a few cache-lookups prior to enumerating, a hand-full blocks more don't matter in the grand scheme of things.
             if (maxCacheLoadCount >= 0 && blockCache.getCacheLoadCounter() >= maxCacheLoadCount)
-                return EnumerationResult.STOPPED_EARLY;
+                return EnumerationResult.STILL_WARMING_UP;
 
             for (int x = -1; x < 2; x++) {
                 for (int y = -1; y < 2; y++) {
@@ -416,7 +416,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         // If the very beginning of the pipe already (partially) is within an unloaded chunk,
         // there's no need to start the process at all.
         catch (LoadingChunkException ignored) {
-            return EnumerationResult.STOPPED_EARLY;
+            return EnumerationResult.STILL_WARMING_UP;
         }
 
         LongSet visitedBlocks = new LongOpenHashSet();
@@ -504,14 +504,16 @@ public class Pipes extends AbstractCraftBookMechanic {
             }
             // Simply terminate walking the pipe early - but do put the leftovers back
             catch (LoadingChunkException ignored) {
-                enumerationResult = EnumerationResult.STOPPED_EARLY;
+                enumerationResult = EnumerationResult.STILL_WARMING_UP;
             }
         }
 
-        // Try to put leftovers back into the block
+        // Try to put leftovers back into the block, if the limits have not been exceeded; otherwise,
+        // let them be dropped at the input-container, as to avoid unending loops.
+
         List<ItemStack> leftovers = new ArrayList<>();
 
-        if (!itemsInPipe.isEmpty()) {
+        if (!itemsInPipe.isEmpty() && !enumerationResult.didExceedLimits) {
             if (inventoryHolder != null) {
                 leftovers.addAll(InventoryUtil.addItemsToInventory(inventoryHolder, itemsInPipe.toArray(new ItemStack[0])));
             } else if (jukebox != null) {
@@ -552,19 +554,34 @@ public class Pipes extends AbstractCraftBookMechanic {
     private void startPipeAndHandleNotifications(Block inputPistonBlock, List<ItemStack> itemsInPipe, boolean wasRequest) {
         EnumerationResult result = startPipe(inputPistonBlock, itemsInPipe, wasRequest);
 
-        if (result == EnumerationResult.COMPLETED || warmupNotificationRadiusSquared <= 0)
+        if (result == EnumerationResult.COMPLETED)
+            return;
+
+        if (notificationRadiusSquared <= 0)
             return;
 
         Location inputLocation = inputPistonBlock.getLocation();
         LanguageManager languageManager = CraftBookPlugin.inst().getLanguageManager();
 
         for (Player player : inputPistonBlock.getWorld().getPlayers()) {
-            if (player.getLocation().distanceSquared(inputLocation) > warmupNotificationRadiusSquared)
+            if (player.getLocation().distanceSquared(inputLocation) > notificationRadiusSquared)
                 continue;
 
-            String message = languageManager.getString("circuits.pipes.warmup-notification", LanguageManager.getPlayersLanguage(player))
-                .replace("{tubes}", String.valueOf(currentTubeBlockCounter))
-                .replace("{pistons}", String.valueOf(currentPistonBlockCounter));
+            // TODO: Add the notifications regarding exceeded limits to the language-manager
+
+            String message;
+
+            if (result == EnumerationResult.STILL_WARMING_UP) {
+                message = languageManager.getString("circuits.pipes.warmup-notification", LanguageManager.getPlayersLanguage(player))
+                    .replace("{tubes}", String.valueOf(currentTubeBlockCounter))
+                    .replace("{pistons}", String.valueOf(currentPistonBlockCounter));
+            } else if (result == EnumerationResult.EXCEEDED_TUBE_COUNT_LIMIT) {
+                message = "§c[Pipe] Exceeded the tube-block limit of " + maxTubeBlockCount + "; dropping";
+            } else if (result == EnumerationResult.EXCEEDED_PISTON_COUNT_LIMIT) {
+                message = "§c[Pipe] Exceeded the piston-block limit of " + maxPistonBlockCount + "; dropping";
+            } else {
+                continue;
+            }
 
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.GOLD + message));
         }
@@ -593,7 +610,7 @@ public class Pipes extends AbstractCraftBookMechanic {
     private int maxTubeBlockCount;
     private int maxPistonBlockCount;
     private int maxCacheLoadCount;
-    private int warmupNotificationRadiusSquared;
+    private int notificationRadiusSquared;
 
     @Override
     public void loadConfiguration(YAMLProcessor config, String path) {
@@ -626,8 +643,8 @@ public class Pipes extends AbstractCraftBookMechanic {
         config.setComment(path + "continued-chunk-retain-duration", "For how long, in seconds, to retain chunks in memory that contain regularly accessed blocks; -1 for no continued retainment.");
         blockCache.setContinuedChunkTicketDuration(config.getInt(path + "continued-chunk-retain-duration", BlockCache.DEFAULT_CONTINUED_CHUNK_TICKET_DURATION) * 1000);
 
-        config.setComment(path + "warmup-notification-radius", "In what radius around an input-block to send warmup-notifications to player's action-bars; -1 to hide them");
-        warmupNotificationRadiusSquared = config.getInt(path + "warmup-notification-radius", 5);
-        warmupNotificationRadiusSquared = warmupNotificationRadiusSquared * warmupNotificationRadiusSquared;
+        config.setComment(path + "notification-radius", "In what radius around an input-block to send notifications to player's action-bars; -1 to hide them");
+        notificationRadiusSquared = config.getInt(path + "notification-radius", 5);
+        notificationRadiusSquared = notificationRadiusSquared * notificationRadiusSquared;
     }
 }

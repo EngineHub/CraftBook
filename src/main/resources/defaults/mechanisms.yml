@@ -366,7 +366,7 @@ mechanics:
         max-cache-load-count: 500
         initial-chunk-retain-duration: 60
         continued-chunk-retain-duration: 300
-        warmup-notification-radius: 5
+        notification-radius: 5
     SignCopier:
         item: minecraft:ink_sac
     Snow:
