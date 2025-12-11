@@ -7,7 +7,6 @@ import com.sk89q.craftbook.core.LanguageManager;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.craftbook.util.InventoryUtil;
 import com.sk89q.craftbook.util.ItemUtil;
-import com.sk89q.craftbook.util.LocationUtil;
 import com.sk89q.craftbook.util.ProtectionUtil;
 import com.sk89q.craftbook.util.SignUtil;
 import com.sk89q.craftbook.util.VerifyUtil;
@@ -16,8 +15,6 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.md_5.bungee.api.ChatMessageType;
@@ -27,9 +24,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.*;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Piston;
-import org.bukkit.block.data.type.WallSign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -48,11 +43,9 @@ public class Pipes extends AbstractCraftBookMechanic {
     private int currentPistonBlockCounter;
 
     private final BlockCache blockCache;
-    private final Long2ObjectMap<PipeSign> pipeSignByPistonCompactId;
 
     public Pipes() {
-        this.blockCache = new BlockCache(this::invalidateCache);
-        this.pipeSignByPistonCompactId = new Long2ObjectOpenHashMap<>();
+        this.blockCache = new BlockCache();
 
         Bukkit.getServer().getPluginManager().registerEvents(blockCache, CraftBookPlugin.inst());
     }
@@ -62,7 +55,6 @@ public class Pipes extends AbstractCraftBookMechanic {
         super.disable();
 
         blockCache.disable();
-        pipeSignByPistonCompactId.clear();
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -120,82 +112,6 @@ public class Pipes extends AbstractCraftBookMechanic {
         return type == Material.PISTON || type == Material.STICKY_PISTON;
     }
 
-    private void invalidateSignBlock(Block signBlock, BlockFace mountingFace) {
-        Block pistonBlock = signBlock.getRelative(mountingFace);
-
-        if (pipeSignByPistonCompactId.remove(CompactId.computeWorldfulBlockId(pistonBlock)) != null)
-            Bukkit.getPluginManager().callEvent(new PipeSignCacheInvalidedEvent(pistonBlock));
-    }
-
-    private void invalidateCache(Block block) {
-        BlockData blockData = block.getBlockData();
-
-        if (blockData instanceof org.bukkit.block.data.type.Sign) {
-            // Since, unfortunately, pipe-signs are accepted above and below, we have to invalidate both possibilities
-            invalidateSignBlock(block, BlockFace.UP);
-            invalidateSignBlock(block, BlockFace.DOWN);
-            return;
-        }
-
-        if (blockData instanceof WallSign wallSign)
-            invalidateSignBlock(block, wallSign.getFacing().getOppositeFace());
-    }
-
-    private PipeSign getSignOnPiston(Block pistonBlock, int cachedPistonBlock) throws LoadingChunkException {
-        long pistonCompactId = CompactId.computeWorldfulBlockId(pistonBlock);
-
-        PipeSign cachedSign = pipeSignByPistonCompactId.get(pistonCompactId);
-
-        if (cachedSign != null)
-            return cachedSign;
-
-        BlockFace facing = CachedBlock.getFacing(cachedPistonBlock);
-
-        for (BlockFace face : LocationUtil.getDirectFaces()) {
-            if (face == facing)
-                continue;
-
-            Block faceBlock = pistonBlock.getRelative(face);
-            int cachedFaceBlock = blockCache.getCachedBlock(faceBlock);
-
-            if (CachedBlock.isStandingSign(cachedFaceBlock)) {
-                // Standing-signs may only be on or under the piston
-                if (face != BlockFace.UP && face != BlockFace.DOWN)
-                    continue;
-            } else if (CachedBlock.isWallSign(cachedFaceBlock)) {
-                // Wall-signs may only be attached N/E/S/W on the piston
-                if (face == BlockFace.UP || face == BlockFace.DOWN)
-                    continue;
-
-                // The sign has to be mounted on this piston, not on an adjacent one
-                if (CachedBlock.getFacing(cachedFaceBlock) != face)
-                    continue;
-            } else {
-                // Not a sign at all, do not needlessly try to get its state
-                continue;
-            }
-
-            if (!(faceBlock.getState() instanceof Sign sign))
-                continue;
-
-            String[] lines = sign.getLines();
-
-            if (!lines[1].equalsIgnoreCase("[Pipe]"))
-                continue;
-
-            cachedSign = PipeSign.fromSign(sign, lines);
-            Bukkit.getPluginManager().callEvent(new PipeSignCacheCreatedEvent(pistonBlock, sign, lines));
-            break;
-        }
-
-        if (cachedSign == null)
-            cachedSign = PipeSign.NO_SIGN;
-
-        pipeSignByPistonCompactId.put(pistonCompactId, cachedSign);
-
-        return cachedSign;
-    }
-
     private EnumerationResult locateExitNodesForItems(Block inputPistonBlock, LongSet visitedBlocks, List<ItemStack> itemsInPipe) throws LoadingChunkException {
         return enumeratePipeBlocks(inputPistonBlock, visitedBlocks, (pipeBlock, cachedPipeBlock) -> {
             if (itemsInPipe.isEmpty())
@@ -204,7 +120,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             if (!CachedBlock.isMaterial(cachedPipeBlock, Material.PISTON))
                 return EnumerationHandleResult.CONTINUE;
 
-            PipeSign sign = getSignOnPiston(pipeBlock, cachedPipeBlock);
+            PipeSign sign = blockCache.getSignOnPiston(pipeBlock, cachedPipeBlock);
 
             List<ItemStack> filteredPipeItems = new ArrayList<>(VerifyUtil.withoutNulls(ItemUtil.filterItems(itemsInPipe, sign.includeFilters, sign.excludeFilters)));
 
@@ -422,7 +338,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             if (!CachedBlock.isMaterial(cachedInputPistonBlock, Material.STICKY_PISTON))
                 return EnumerationResult.COMPLETED;
 
-            sign = getSignOnPiston(inputPistonBlock, cachedInputPistonBlock);
+            sign = blockCache.getSignOnPiston(inputPistonBlock, cachedInputPistonBlock);
 
             if (pipeRequireSign && sign == PipeSign.NO_SIGN)
                 return EnumerationResult.COMPLETED;

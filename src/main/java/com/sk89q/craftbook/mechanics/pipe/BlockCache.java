@@ -8,6 +8,8 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.WallSign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -25,14 +27,18 @@ import java.util.logging.Level;
 
 public class BlockCache implements Listener {
 
+    private static final BlockFace[] DIRECT_FACES = new BlockFace[] {
+      BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST
+    };
+
     public static final int DEFAULT_INITIAL_CHUNK_TICKET_DURATION = 60;
     public static final int DEFAULT_CONTINUED_CHUNK_TICKET_DURATION = 60 * 5;
 
     private static final MethodHandle getChunkAtAsync = findGetChunkAtAsync();
 
     private final Long2ObjectMap<ChunkTicket> chunkTicketByCompactId;
-    private final Consumer<Block> externalInvalidationHandler;
     private final Long2IntMap cachedBlockByCompactId;
+    private final Long2ObjectMap<PipeSign> pipeSignByPistonCompactId;
     private final BukkitTask chunkTicketTask;
 
     private int cacheLoadCounter = 0;
@@ -43,11 +49,11 @@ public class BlockCache implements Listener {
         CachedBlock.setupPresetTable();
     }
 
-    public BlockCache(Consumer<Block> externalInvalidationHandler) {
+    public BlockCache() {
         this.chunkTicketByCompactId = new Long2ObjectOpenHashMap<>();
-        this.externalInvalidationHandler = externalInvalidationHandler;
         this.cachedBlockByCompactId = new Long2IntOpenHashMap();
         this.cachedBlockByCompactId.defaultReturnValue(CachedBlock.NULL_SENTINEL);
+        this.pipeSignByPistonCompactId = new Long2ObjectOpenHashMap<>();
         this.chunkTicketTask = Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), () -> removeExpiredChunkTickets(false), 0, 20);
 
         Bukkit.getServer().getPluginManager().registerEvents(this, CraftBookPlugin.inst());
@@ -82,6 +88,7 @@ public class BlockCache implements Listener {
     public void disable() {
         HandlerList.unregisterAll(this);
         this.cachedBlockByCompactId.clear();
+        this.pipeSignByPistonCompactId.clear();
         this.chunkTicketTask.cancel();
         removeExpiredChunkTickets(true);
     }
@@ -161,7 +168,25 @@ public class BlockCache implements Listener {
 
     private void invalidateCache(Block block) {
         cachedBlockByCompactId.remove(CompactId.computeWorldfulBlockId(block));
-        externalInvalidationHandler.accept(block);
+
+        BlockData blockData = block.getBlockData();
+
+        if (blockData instanceof org.bukkit.block.data.type.Sign) {
+            // Since, unfortunately, pipe-signs are accepted above and below, we have to invalidate both possibilities
+            invalidateSignBlock(block, BlockFace.UP);
+            invalidateSignBlock(block, BlockFace.DOWN);
+            return;
+        }
+
+        if (blockData instanceof WallSign wallSign)
+            invalidateSignBlock(block, wallSign.getFacing().getOppositeFace());
+    }
+
+    private void invalidateSignBlock(Block signBlock, BlockFace mountingFace) {
+        Block pistonBlock = signBlock.getRelative(mountingFace);
+
+        if (pipeSignByPistonCompactId.remove(CompactId.computeWorldfulBlockId(pistonBlock)) != null)
+            Bukkit.getPluginManager().callEvent(new PipeSignCacheInvalidedEvent(pistonBlock));
     }
 
     public int getCachedBlock(Block block) throws LoadingChunkException {
@@ -187,6 +212,61 @@ public class BlockCache implements Listener {
         }
 
         return cachedBlock;
+    }
+
+    public PipeSign getSignOnPiston(Block pistonBlock, int cachedPistonBlock) throws LoadingChunkException {
+        long pistonCompactId = CompactId.computeWorldfulBlockId(pistonBlock);
+
+        PipeSign cachedSign = pipeSignByPistonCompactId.get(pistonCompactId);
+
+        if (cachedSign != null)
+            return cachedSign;
+
+        BlockFace facing = CachedBlock.getFacing(cachedPistonBlock);
+
+        for (BlockFace face : DIRECT_FACES) {
+            if (face == facing)
+                continue;
+
+            Block faceBlock = pistonBlock.getRelative(face);
+            int cachedFaceBlock = getCachedBlock(faceBlock);
+
+            if (CachedBlock.isStandingSign(cachedFaceBlock)) {
+                // Standing-signs may only be on or under the piston
+                if (face != BlockFace.UP && face != BlockFace.DOWN)
+                    continue;
+            } else if (CachedBlock.isWallSign(cachedFaceBlock)) {
+                // Wall-signs may only be attached N/E/S/W on the piston
+                if (face == BlockFace.UP || face == BlockFace.DOWN)
+                    continue;
+
+                // The sign has to be mounted on this piston, not on an adjacent one
+                if (CachedBlock.getFacing(cachedFaceBlock) != face)
+                    continue;
+            } else {
+                // Not a sign at all, do not needlessly try to get its state
+                continue;
+            }
+
+            if (!(faceBlock.getState() instanceof Sign sign))
+                continue;
+
+            String[] lines = sign.getLines();
+
+            if (!lines[1].equalsIgnoreCase("[Pipe]"))
+                continue;
+
+            cachedSign = PipeSign.fromSign(sign, lines);
+            Bukkit.getPluginManager().callEvent(new PipeSignCacheCreatedEvent(pistonBlock, sign, lines));
+            break;
+        }
+
+        if (cachedSign == null)
+            cachedSign = PipeSign.NO_SIGN;
+
+        pipeSignByPistonCompactId.put(pistonCompactId, cachedSign);
+
+        return cachedSign;
     }
 
     private void ensureChunkIsLoaded(Block block) throws LoadingChunkException {
