@@ -5,6 +5,6 @@ import org.bukkit.block.Block;
 @FunctionalInterface
 public interface PipeEnumerationHandler {
 
-    EnumerationHandleResult handle(Block pipeBlock, int cachedPipeBlock) throws LoadingChunkException;
+    EnumerationDecision handle(Block pipeBlock, int cachedPipeBlock) throws LoadingChunkException;
 
 }

@@ -4,12 +4,13 @@ public enum EnumerationResult {
     COMPLETED(false),
     EXCEEDED_TUBE_COUNT_LIMIT(true),
     EXCEEDED_PISTON_COUNT_LIMIT(true),
-    STILL_WARMING_UP(false),
+    EXCEEDED_CACHE_LOAD_LIMIT(false),
+    NEEDS_CHUNK_LOADING(false),
     ;
 
-    public final boolean didExceedLimits;
+    public final boolean didExceedExtentLimits;
 
-    EnumerationResult(boolean didExceedLimits) {
-        this.didExceedLimits = didExceedLimits;
+    EnumerationResult(boolean didExceedExtentLimits) {
+        this.didExceedExtentLimits = didExceedExtentLimits;
     }
 }

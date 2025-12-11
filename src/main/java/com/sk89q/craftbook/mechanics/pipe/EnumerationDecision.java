@@ -1,6 +1,6 @@
 package com.sk89q.craftbook.mechanics.pipe;
 
-public enum EnumerationHandleResult {
+public enum EnumerationDecision {
     CONTINUE,
-    DONE,
+    STOP,
 }

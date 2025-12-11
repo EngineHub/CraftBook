@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-public class Pipes extends AbstractCraftBookMechanic {
+public class Pipes extends AbstractCraftBookMechanic implements PipesApi {
 
     private int currentTubeBlockCounter;
     private int currentPistonBlockCounter;
@@ -112,13 +112,13 @@ public class Pipes extends AbstractCraftBookMechanic {
         return type == Material.PISTON || type == Material.STICKY_PISTON;
     }
 
-    private EnumerationResult locateExitNodesForItems(Block inputPistonBlock, LongSet visitedBlocks, List<ItemStack> itemsInPipe) throws LoadingChunkException {
+    private EnumerationResult locateExitNodesForItems(Block inputPistonBlock, LongSet visitedBlocks, List<ItemStack> itemsInPipe) {
         return enumeratePipeBlocks(inputPistonBlock, visitedBlocks, (pipeBlock, cachedPipeBlock) -> {
             if (itemsInPipe.isEmpty())
-                return EnumerationHandleResult.DONE;
+                return EnumerationDecision.STOP;
 
             if (!CachedBlock.isMaterial(cachedPipeBlock, Material.PISTON))
-                return EnumerationHandleResult.CONTINUE;
+                return EnumerationDecision.CONTINUE;
 
             PipeSign sign = currentBlockCache.getSignOnPiston(pipeBlock, cachedPipeBlock);
 
@@ -130,7 +130,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             filteredPipeItems = filterEvent.getFilteredItems();
 
             if (filteredPipeItems.isEmpty())
-                return EnumerationHandleResult.CONTINUE;
+                return EnumerationDecision.CONTINUE;
 
             List<ItemStack> leftovers = new ArrayList<>();
 
@@ -141,7 +141,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             Bukkit.getPluginManager().callEvent(putEvent);
 
             if (putEvent.isCancelled())
-                return EnumerationHandleResult.CONTINUE;
+                return EnumerationDecision.CONTINUE;
 
             List<ItemStack> itemsToPut = putEvent.getItems();
 
@@ -169,166 +169,160 @@ public class Pipes extends AbstractCraftBookMechanic {
             itemsInPipe.removeAll(itemsToPut);
             itemsInPipe.addAll(leftovers);
 
-            return itemsInPipe.isEmpty() ? EnumerationHandleResult.DONE : EnumerationHandleResult.CONTINUE;
+            return itemsInPipe.isEmpty() ? EnumerationDecision.STOP : EnumerationDecision.CONTINUE;
         });
     }
 
-    /**
-     * A publicly available, correct and efficient way to walk pipes
-     *
-     * @param firstBlock         The very first block of the pipe from which to start enumerating outwards.
-     * @param visitedBlocks      Pre-allocated set to store visited block-ids in; provide null to create it internally.
-     * @param enumerationHandler Handler called at each step of the way.
-     * @throws LoadingChunkException Thrown if a chunk was absent and is now loading asynchronously; try again next tick.
-     */
-    public EnumerationResult enumeratePipeBlocks(Block firstBlock, @Nullable LongSet visitedBlocks, PipeEnumerationHandler enumerationHandler) throws LoadingChunkException {
+    @Override
+    public EnumerationResult enumeratePipeBlocks(Block firstBlock, @Nullable LongSet visitedBlocks, PipeEnumerationHandler enumerationHandler) {
         if (!Bukkit.isPrimaryThread())
             throw new IllegalStateException("This method must be called on the main server thread");
 
-        // Seeing how this is public API, assign the current block-cache again, because it
-        // will only be correctly set when called through #startPipe.
-        this.currentBlockCache = cacheRegistry.getBlockCache(firstBlock.getWorld());
+        try {
+            // Seeing how this is public API, assign the current block-cache again, because it
+            // will only be correctly set when called through #startPipe.
+            this.currentBlockCache = cacheRegistry.getBlockCache(firstBlock.getWorld());
 
-        if (visitedBlocks == null)
-            visitedBlocks = new LongOpenHashSet();
+            if (visitedBlocks == null)
+                visitedBlocks = new LongOpenHashSet();
 
-        currentTubeBlockCounter = currentPistonBlockCounter = 0;
-        currentBlockCache.resetCacheLoadCounter();
+            currentTubeBlockCounter = currentPistonBlockCounter = 0;
+            currentBlockCache.resetCacheLoadCounter();
 
-        Deque<Block> searchQueue = new ArrayDeque<>();
-        searchQueue.addFirst(firstBlock);
+            Deque<Block> searchQueue = new ArrayDeque<>();
+            searchQueue.addFirst(firstBlock);
 
-        while (!searchQueue.isEmpty()) {
-            Block pipeBlock = searchQueue.poll();
-            int cachedPipeBlock = currentBlockCache.getCachedBlock(pipeBlock);
+            while (!searchQueue.isEmpty()) {
+                Block pipeBlock = searchQueue.poll();
+                int cachedPipeBlock = currentBlockCache.getCachedBlock(pipeBlock);
 
-            if (CachedBlock.isTube(cachedPipeBlock)) {
-                ++currentTubeBlockCounter;
+                if (CachedBlock.isTube(cachedPipeBlock)) {
+                    ++currentTubeBlockCounter;
 
-                if (getMaxTubeBlockCount() >= 0 && currentTubeBlockCounter > getMaxTubeBlockCount())
-                    return EnumerationResult.EXCEEDED_TUBE_COUNT_LIMIT;
-            }
+                    if (maxTubeBlockCount >= 0 && currentTubeBlockCounter > maxTubeBlockCount)
+                        return EnumerationResult.EXCEEDED_TUBE_COUNT_LIMIT;
+                }
 
-            if (CachedBlock.isMaterial(cachedPipeBlock, Material.PISTON)) {
-                ++currentPistonBlockCounter;
+                if (CachedBlock.isMaterial(cachedPipeBlock, Material.PISTON)) {
+                    ++currentPistonBlockCounter;
 
-                if (getMaxPistonBlockCount() >= 0 && currentPistonBlockCounter > getMaxPistonBlockCount())
-                    return EnumerationResult.EXCEEDED_PISTON_COUNT_LIMIT;
-            }
+                    if (maxPistonBlockCount >= 0 && currentPistonBlockCounter > maxPistonBlockCount)
+                        return EnumerationResult.EXCEEDED_PISTON_COUNT_LIMIT;
+                }
 
-            EnumerationHandleResult handleResult = enumerationHandler.handle(pipeBlock, cachedPipeBlock);
+                EnumerationDecision handleResult = enumerationHandler.handle(pipeBlock, cachedPipeBlock);
 
-            if (handleResult != EnumerationHandleResult.CONTINUE)
-                return EnumerationResult.COMPLETED;
+                if (handleResult != EnumerationDecision.CONTINUE)
+                    return EnumerationResult.COMPLETED;
 
-            // While we could check for exceeding the load-counter at countless call-sites, and while there already have been
-            // a few cache-lookups prior to enumerating, a hand-full blocks more don't matter in the grand scheme of things.
-            if (maxCacheLoadCount >= 0 && currentBlockCache.getCacheLoadCounter() >= maxCacheLoadCount)
-                return EnumerationResult.STILL_WARMING_UP;
+                // While we could check for exceeding the load-counter at countless call-sites, and while there already have been
+                // a few cache-lookups prior to enumerating, a hand-full blocks more don't matter in the grand scheme of things.
+                if (maxCacheLoadCount >= 0 && currentBlockCache.getCacheLoadCounter() >= maxCacheLoadCount)
+                    return EnumerationResult.EXCEEDED_CACHE_LOAD_LIMIT;
 
-            for (int x = -1; x < 2; x++) {
-                for (int y = -1; y < 2; y++) {
-                    for (int z = -1; z < 2; z++) {
-                        if (x == 0 && y == 0 && z == 0) continue;
+                for (int x = -1; x < 2; x++) {
+                    for (int y = -1; y < 2; y++) {
+                        for (int z = -1; z < 2; z++) {
+                            if (x == 0 && y == 0 && z == 0) continue;
 
-                        if (!pipesDiagonal) {
-                            if (x != 0 && y != 0) continue;
-                            if (x != 0 && z != 0) continue;
-                            if (y != 0 && z != 0) continue;
-                        } else if (pipeInsulator != null) {
-                            boolean xIsY = Math.abs(x) == Math.abs(y);
-                            boolean xIsZ = Math.abs(x) == Math.abs(z);
-                            if (xIsY && xIsZ) {
-                                if (CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(x, 0, 0)), pipeInsulator)
-                                    && CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)
-                                    && CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
-                                    continue;
-                                }
-                            } else if (xIsY) {
-                                if (CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(x, 0, 0)), pipeInsulator)
-                                    && CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)) {
-                                    continue;
-                                }
-                            } else if (xIsZ) {
-                                if (CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(x, 0, 0)), pipeInsulator)
-                                    && CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
-                                    continue;
-                                }
-                            } else {
-                                if (CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)
-                                    && CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
-                                    continue;
+                            if (!pipesDiagonal) {
+                                if (x != 0 && y != 0) continue;
+                                if (x != 0 && z != 0) continue;
+                                if (y != 0 && z != 0) continue;
+                            } else if (pipeInsulator != null) {
+                                boolean xIsY = Math.abs(x) == Math.abs(y);
+                                boolean xIsZ = Math.abs(x) == Math.abs(z);
+                                if (xIsY && xIsZ) {
+                                    if (CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(x, 0, 0)), pipeInsulator)
+                                      && CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)
+                                      && CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
+                                        continue;
+                                    }
+                                } else if (xIsY) {
+                                    if (CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(x, 0, 0)), pipeInsulator)
+                                      && CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)) {
+                                        continue;
+                                    }
+                                } else if (xIsZ) {
+                                    if (CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(x, 0, 0)), pipeInsulator)
+                                      && CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
+                                        continue;
+                                    }
+                                } else {
+                                    if (CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)
+                                      && CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
+                                        continue;
+                                    }
                                 }
                             }
+
+                            Block enumeratedBlock = pipeBlock.getRelative(x, y, z);
+                            int cachedEnumeratedBlock = currentBlockCache.getCachedBlock(enumeratedBlock);
+
+                            if (!CachedBlock.isValidPipeBlock(cachedEnumeratedBlock))
+                                continue;
+
+                            if (!visitedBlocks.add(CompactId.computeWorldlessBlockId(enumeratedBlock)))
+                                continue;
+
+                            // Ensure that the block we came from is of the same color as the one we're enumerating.
+                            if (CachedBlock.doTubeColorsMismatch(cachedPipeBlock, cachedEnumeratedBlock))
+                                continue;
+
+                            if (!CachedBlock.isTube(cachedEnumeratedBlock)) {
+                                // Pistons are treated with higher priority.
+                                if (CachedBlock.isMaterial(cachedEnumeratedBlock, Material.PISTON))
+                                    searchQueue.addFirst(enumeratedBlock);
+
+                                continue;
+                            }
+
+                            if (!CachedBlock.isPane(cachedEnumeratedBlock)) {
+                                searchQueue.add(enumeratedBlock);
+                                continue;
+                            }
+
+                            Block nextEnumeratedBlock = enumeratedBlock.getRelative(x, y, z);
+                            int cachedNextEnumeratedBlock = currentBlockCache.getCachedBlock(nextEnumeratedBlock);
+
+                            if (!CachedBlock.isValidPipeBlock(cachedNextEnumeratedBlock))
+                                continue;
+
+                            long nextEnumeratedId = CompactId.computeWorldlessBlockId(nextEnumeratedBlock);
+
+                            if (visitedBlocks.contains(nextEnumeratedId))
+                                continue;
+
+                            // Ensure that the pane is allowed to link with the block we're jumping across to
+                            if (CachedBlock.doTubeColorsMismatch(cachedEnumeratedBlock, cachedNextEnumeratedBlock))
+                                continue;
+
+                            visitedBlocks.add(nextEnumeratedId);
+                            searchQueue.add(nextEnumeratedBlock);
                         }
-
-                        Block enumeratedBlock = pipeBlock.getRelative(x, y, z);
-                        int cachedEnumeratedBlock = currentBlockCache.getCachedBlock(enumeratedBlock);
-
-                        if (!CachedBlock.isValidPipeBlock(cachedEnumeratedBlock))
-                            continue;
-
-                        if (!visitedBlocks.add(CompactId.computeWorldlessBlockId(enumeratedBlock)))
-                            continue;
-
-                        // Ensure that the block we came from is of the same color as the one we're enumerating.
-                        if (CachedBlock.doTubeColorsMismatch(cachedPipeBlock, cachedEnumeratedBlock))
-                            continue;
-
-                        if (!CachedBlock.isTube(cachedEnumeratedBlock)) {
-                            // Pistons are treated with higher priority.
-                            if (CachedBlock.isMaterial(cachedEnumeratedBlock, Material.PISTON))
-                                searchQueue.addFirst(enumeratedBlock);
-
-                            continue;
-                        }
-
-                        if (!CachedBlock.isPane(cachedEnumeratedBlock)) {
-                            searchQueue.add(enumeratedBlock);
-                            continue;
-                        }
-
-                        Block nextEnumeratedBlock = enumeratedBlock.getRelative(x, y, z);
-                        int cachedNextEnumeratedBlock = currentBlockCache.getCachedBlock(nextEnumeratedBlock);
-
-                        if (!CachedBlock.isValidPipeBlock(cachedNextEnumeratedBlock))
-                            continue;
-
-                        long nextEnumeratedId = CompactId.computeWorldlessBlockId(nextEnumeratedBlock);
-
-                        if (visitedBlocks.contains(nextEnumeratedId))
-                            continue;
-
-                        // Ensure that the pane is allowed to link with the block we're jumping across to
-                        if (CachedBlock.doTubeColorsMismatch(cachedEnumeratedBlock, cachedNextEnumeratedBlock))
-                            continue;
-
-                        visitedBlocks.add(nextEnumeratedId);
-                        searchQueue.add(nextEnumeratedBlock);
                     }
                 }
             }
-        }
 
-        return EnumerationResult.COMPLETED;
+            return EnumerationResult.COMPLETED;
+        } catch (LoadingChunkException e) {
+            return EnumerationResult.NEEDS_CHUNK_LOADING;
+        }
     }
 
-    /**
-     * The currently configured maximum number of tubes (glass) after which the pipe-block enumerator will
-     * stop automatically with a result of {@link EnumerationResult#EXCEEDED_TUBE_COUNT_LIMIT}.
-     * @return Limit, or a negative number if unlimited
-     */
+    @Override
     public int getMaxTubeBlockCount() {
         return maxTubeBlockCount;
     }
 
-    /**
-     * The currently configured maximum number of pistons after which the pipe-block enumerator will
-     * stop automatically with a result of {@link EnumerationResult#EXCEEDED_PISTON_COUNT_LIMIT}.
-     * @return Limit, or a negative number if unlimited
-     */
+    @Override
     public int getMaxPistonBlockCount() {
         return maxPistonBlockCount;
+    }
+
+    @Override
+    public int getMaxCacheLoadCount() {
+        return maxCacheLoadCount;
     }
 
     private EnumerationResult startPipe(Block inputPistonBlock, List<ItemStack> itemsInPipe, boolean wasRequest) {
@@ -355,7 +349,7 @@ public class Pipes extends AbstractCraftBookMechanic {
         // If the very beginning of the pipe already (partially) is within an unloaded chunk,
         // there's no need to start the process at all.
         catch (LoadingChunkException ignored) {
-            return EnumerationResult.STILL_WARMING_UP;
+            return EnumerationResult.NEEDS_CHUNK_LOADING;
         }
 
         LongSet visitedBlocks = new LongOpenHashSet();
@@ -437,22 +431,15 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         EnumerationResult enumerationResult = EnumerationResult.COMPLETED;
 
-        if (!suckEvent.isCancelled() && !itemsInPipe.isEmpty()) {
-            try {
-                enumerationResult = locateExitNodesForItems(inputPistonBlock, visitedBlocks, itemsInPipe);
-            }
-            // Simply terminate walking the pipe early - but do put the leftovers back
-            catch (LoadingChunkException ignored) {
-                enumerationResult = EnumerationResult.STILL_WARMING_UP;
-            }
-        }
+        if (!suckEvent.isCancelled() && !itemsInPipe.isEmpty())
+            enumerationResult = locateExitNodesForItems(inputPistonBlock, visitedBlocks, itemsInPipe);
 
         // Try to put leftovers back into the block, if the limits have not been exceeded; otherwise,
         // let them be dropped at the input-container, as to avoid unending loops.
 
         List<ItemStack> leftovers = new ArrayList<>();
 
-        if (enumerationResult.didExceedLimits) {
+        if (enumerationResult.didExceedExtentLimits) {
             leftovers.addAll(itemsInPipe);
         } else if (!itemsInPipe.isEmpty()) {
             if (inventoryHolder != null) {
@@ -510,7 +497,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
             String message;
 
-            if (result == EnumerationResult.STILL_WARMING_UP) {
+            if (result == EnumerationResult.NEEDS_CHUNK_LOADING || result == EnumerationResult.EXCEEDED_CACHE_LOAD_LIMIT) {
                 message = ChatColor.GOLD + languageManager.getString("circuits.pipes.warmup-notification", LanguageManager.getPlayersLanguage(player))
                     .replace("{tubes}", String.valueOf(currentTubeBlockCounter))
                     .replace("{pistons}", String.valueOf(currentPistonBlockCounter));
