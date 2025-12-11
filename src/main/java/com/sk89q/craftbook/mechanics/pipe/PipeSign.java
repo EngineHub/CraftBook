@@ -2,6 +2,7 @@ package com.sk89q.craftbook.mechanics.pipe;
 
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.util.ItemSyntax;
+import com.sk89q.craftbook.util.ParsingUtil;
 import com.sk89q.craftbook.util.RegexUtil;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
@@ -34,7 +35,9 @@ public class PipeSign {
     }
 
     private static void parseLineItems(Sign sign, String[] lines, int lineId, List<ItemStack> output) {
-        for (String token : RegexUtil.COMMA_PATTERN.split(lines[lineId])) {
+        String preprocessedLine = ParsingUtil.parseLine(lines[lineId], null);
+
+        for (String token : RegexUtil.COMMA_PATTERN.split(preprocessedLine)) {
             token = token.trim();
 
             if (token.isEmpty())
