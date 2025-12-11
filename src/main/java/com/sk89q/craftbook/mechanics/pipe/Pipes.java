@@ -42,19 +42,19 @@ public class Pipes extends AbstractCraftBookMechanic {
     private int currentTubeBlockCounter;
     private int currentPistonBlockCounter;
 
-    private final BlockCache blockCache;
+    private final BlockCacheRegistry cacheRegistry;
+
+    private BlockCache currentBlockCache;
 
     public Pipes() {
-        this.blockCache = new BlockCache();
-
-        Bukkit.getServer().getPluginManager().registerEvents(blockCache, CraftBookPlugin.inst());
+        this.cacheRegistry = new BlockCacheRegistry();
     }
 
     @Override
     public void disable() {
         super.disable();
 
-        blockCache.disable();
+        cacheRegistry.disable();
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -120,7 +120,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             if (!CachedBlock.isMaterial(cachedPipeBlock, Material.PISTON))
                 return EnumerationHandleResult.CONTINUE;
 
-            PipeSign sign = blockCache.getSignOnPiston(pipeBlock, cachedPipeBlock);
+            PipeSign sign = currentBlockCache.getSignOnPiston(pipeBlock, cachedPipeBlock);
 
             List<ItemStack> filteredPipeItems = new ArrayList<>(VerifyUtil.withoutNulls(ItemUtil.filterItems(itemsInPipe, sign.includeFilters, sign.excludeFilters)));
 
@@ -135,7 +135,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             List<ItemStack> leftovers = new ArrayList<>();
 
             Block containerBlock = pipeBlock.getRelative(CachedBlock.getFacing(cachedPipeBlock));
-            int cachedContainerBlock = blockCache.getCachedBlock(containerBlock);
+            int cachedContainerBlock = currentBlockCache.getCachedBlock(containerBlock);
 
             PipePutEvent putEvent = new PipePutEvent(pipeBlock, new ArrayList<>(filteredPipeItems), containerBlock, cachedContainerBlock);
             Bukkit.getPluginManager().callEvent(putEvent);
@@ -185,18 +185,22 @@ public class Pipes extends AbstractCraftBookMechanic {
         if (!Bukkit.isPrimaryThread())
             throw new IllegalStateException("This method must be called on the main server thread");
 
+        // Seeing how this is public API, assign the current block-cache again, because it
+        // will only be correctly set when called through #startPipe.
+        this.currentBlockCache = cacheRegistry.getBlockCache(firstBlock.getWorld());
+
         if (visitedBlocks == null)
             visitedBlocks = new LongOpenHashSet();
 
         currentTubeBlockCounter = currentPistonBlockCounter = 0;
-        blockCache.resetCacheLoadCounter();
+        currentBlockCache.resetCacheLoadCounter();
 
         Deque<Block> searchQueue = new ArrayDeque<>();
         searchQueue.addFirst(firstBlock);
 
         while (!searchQueue.isEmpty()) {
             Block pipeBlock = searchQueue.poll();
-            int cachedPipeBlock = blockCache.getCachedBlock(pipeBlock);
+            int cachedPipeBlock = currentBlockCache.getCachedBlock(pipeBlock);
 
             if (CachedBlock.isTube(cachedPipeBlock)) {
                 ++currentTubeBlockCounter;
@@ -219,7 +223,7 @@ public class Pipes extends AbstractCraftBookMechanic {
 
             // While we could check for exceeding the load-counter at countless call-sites, and while there already have been
             // a few cache-lookups prior to enumerating, a hand-full blocks more don't matter in the grand scheme of things.
-            if (maxCacheLoadCount >= 0 && blockCache.getCacheLoadCounter() >= maxCacheLoadCount)
+            if (maxCacheLoadCount >= 0 && currentBlockCache.getCacheLoadCounter() >= maxCacheLoadCount)
                 return EnumerationResult.STILL_WARMING_UP;
 
             for (int x = -1; x < 2; x++) {
@@ -235,31 +239,31 @@ public class Pipes extends AbstractCraftBookMechanic {
                             boolean xIsY = Math.abs(x) == Math.abs(y);
                             boolean xIsZ = Math.abs(x) == Math.abs(z);
                             if (xIsY && xIsZ) {
-                                if (CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(x, 0, 0)), pipeInsulator)
-                                    && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)
-                                    && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
+                                if (CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(x, 0, 0)), pipeInsulator)
+                                    && CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)
+                                    && CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
                                     continue;
                                 }
                             } else if (xIsY) {
-                                if (CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(x, 0, 0)), pipeInsulator)
-                                    && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)) {
+                                if (CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(x, 0, 0)), pipeInsulator)
+                                    && CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)) {
                                     continue;
                                 }
                             } else if (xIsZ) {
-                                if (CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(x, 0, 0)), pipeInsulator)
-                                    && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
+                                if (CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(x, 0, 0)), pipeInsulator)
+                                    && CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
                                     continue;
                                 }
                             } else {
-                                if (CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)
-                                    && CachedBlock.isMaterial(blockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
+                                if (CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(0, y, 0)), pipeInsulator)
+                                    && CachedBlock.isMaterial(currentBlockCache.getCachedBlock(pipeBlock.getRelative(0, 0, z)), pipeInsulator)) {
                                     continue;
                                 }
                             }
                         }
 
                         Block enumeratedBlock = pipeBlock.getRelative(x, y, z);
-                        int cachedEnumeratedBlock = blockCache.getCachedBlock(enumeratedBlock);
+                        int cachedEnumeratedBlock = currentBlockCache.getCachedBlock(enumeratedBlock);
 
                         if (!CachedBlock.isValidPipeBlock(cachedEnumeratedBlock))
                             continue;
@@ -285,7 +289,7 @@ public class Pipes extends AbstractCraftBookMechanic {
                         }
 
                         Block nextEnumeratedBlock = enumeratedBlock.getRelative(x, y, z);
-                        int cachedNextEnumeratedBlock = blockCache.getCachedBlock(nextEnumeratedBlock);
+                        int cachedNextEnumeratedBlock = currentBlockCache.getCachedBlock(nextEnumeratedBlock);
 
                         if (!CachedBlock.isValidPipeBlock(cachedNextEnumeratedBlock))
                             continue;
@@ -328,23 +332,25 @@ public class Pipes extends AbstractCraftBookMechanic {
     }
 
     private EnumerationResult startPipe(Block inputPistonBlock, List<ItemStack> itemsInPipe, boolean wasRequest) {
+        this.currentBlockCache = cacheRegistry.getBlockCache(inputPistonBlock.getWorld());
+
         PipeSign sign;
         Block containerBlock;
         int cachedContainerBlock;
 
         try {
-            int cachedInputPistonBlock = blockCache.getCachedBlock(inputPistonBlock);
+            int cachedInputPistonBlock = currentBlockCache.getCachedBlock(inputPistonBlock);
 
             if (!CachedBlock.isMaterial(cachedInputPistonBlock, Material.STICKY_PISTON))
                 return EnumerationResult.COMPLETED;
 
-            sign = blockCache.getSignOnPiston(inputPistonBlock, cachedInputPistonBlock);
+            sign = currentBlockCache.getSignOnPiston(inputPistonBlock, cachedInputPistonBlock);
 
             if (pipeRequireSign && sign == PipeSign.NO_SIGN)
                 return EnumerationResult.COMPLETED;
 
             containerBlock = inputPistonBlock.getRelative(CachedBlock.getFacing(cachedInputPistonBlock));
-            cachedContainerBlock = blockCache.getCachedBlock(containerBlock);
+            cachedContainerBlock = currentBlockCache.getCachedBlock(containerBlock);
         }
         // If the very beginning of the pipe already (partially) is within an unloaded chunk,
         // there's no need to start the process at all.
@@ -573,10 +579,10 @@ public class Pipes extends AbstractCraftBookMechanic {
         maxCacheLoadCount = config.getInt(path + "max-cache-load-count", 500);
 
         config.setComment(path + "initial-chunk-retain-duration", "For how long, in seconds, to retain chunks in memory after having loaded them while traversing pipes; -1 for no retainment at all.");
-        blockCache.setInitialChunkTicketDuration(config.getInt(path + "initial-chunk-retain-duration", BlockCache.DEFAULT_INITIAL_CHUNK_TICKET_DURATION) * 1000);
+        cacheRegistry.setInitialChunkTicketDuration(config.getInt(path + "initial-chunk-retain-duration", BlockCacheRegistry.DEFAULT_INITIAL_CHUNK_TICKET_DURATION) * 1000);
 
         config.setComment(path + "continued-chunk-retain-duration", "For how long, in seconds, to retain chunks in memory that contain regularly accessed blocks; -1 for no continued retainment.");
-        blockCache.setContinuedChunkTicketDuration(config.getInt(path + "continued-chunk-retain-duration", BlockCache.DEFAULT_CONTINUED_CHUNK_TICKET_DURATION) * 1000);
+        cacheRegistry.setContinuedChunkTicketDuration(config.getInt(path + "continued-chunk-retain-duration", BlockCacheRegistry.DEFAULT_CONTINUED_CHUNK_TICKET_DURATION) * 1000);
 
         config.setComment(path + "notification-radius", "In what radius around an input-block to send notifications to player's action-bars; -1 to hide them");
         notificationRadiusSquared = config.getInt(path + "notification-radius", 5);
