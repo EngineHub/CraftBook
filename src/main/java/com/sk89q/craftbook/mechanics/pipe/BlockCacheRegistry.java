@@ -133,6 +133,11 @@ public class BlockCacheRegistry implements Listener {
     invalidateCache(event.getBlock());
   }
 
+  @EventHandler
+  public void onCacheInvalidation(InvalidateCachedBlockEvent event) {
+    invalidateCache(event.getBlock());
+  }
+
   @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
   public void onBlockPhysics(BlockPhysicsEvent event) {
     var block = event.getBlock();
