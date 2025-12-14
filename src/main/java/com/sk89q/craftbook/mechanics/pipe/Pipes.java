@@ -191,6 +191,7 @@ public class Pipes extends AbstractCraftBookMechanic implements PipesApi {
 
             Deque<Block> searchQueue = new ArrayDeque<>();
             searchQueue.addFirst(firstBlock);
+            visitedBlocks.add(CompactId.computeWorldlessBlockId(firstBlock));
 
             while (!searchQueue.isEmpty()) {
                 Block pipeBlock = searchQueue.poll();
