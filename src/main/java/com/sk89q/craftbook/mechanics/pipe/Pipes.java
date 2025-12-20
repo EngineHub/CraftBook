@@ -263,11 +263,13 @@ public class Pipes extends AbstractCraftBookMechanic implements PipesApi {
                             if (!CachedBlock.isValidPipeBlock(cachedEnumeratedBlock))
                                 continue;
 
-                            if (!visitedBlocks.add(CompactId.computeWorldlessBlockId(enumeratedBlock)))
+                            // Ensure that the block we came from is of the same color as the one we're enumerating.
+                            // [1]: Do this first, as to not mark blocks as visited that have not been walked into.
+                            //      This could become a problem if that other-colored block is a part of the future path.
+                            if (CachedBlock.doTubeColorsMismatch(cachedPipeBlock, cachedEnumeratedBlock))
                                 continue;
 
-                            // Ensure that the block we came from is of the same color as the one we're enumerating.
-                            if (CachedBlock.doTubeColorsMismatch(cachedPipeBlock, cachedEnumeratedBlock))
+                            if (!visitedBlocks.add(CompactId.computeWorldlessBlockId(enumeratedBlock)))
                                 continue;
 
                             if (!CachedBlock.isTube(cachedEnumeratedBlock)) {
@@ -289,16 +291,14 @@ public class Pipes extends AbstractCraftBookMechanic implements PipesApi {
                             if (!CachedBlock.isValidPipeBlock(cachedNextEnumeratedBlock))
                                 continue;
 
-                            long nextEnumeratedId = CompactId.computeWorldlessBlockId(nextEnumeratedBlock);
-
-                            if (visitedBlocks.contains(nextEnumeratedId))
-                                continue;
-
                             // Ensure that the pane is allowed to link with the block we're jumping across to
+                            // Same reasoning here as with [1]
                             if (CachedBlock.doTubeColorsMismatch(cachedEnumeratedBlock, cachedNextEnumeratedBlock))
                                 continue;
 
-                            visitedBlocks.add(nextEnumeratedId);
+                            if (!visitedBlocks.add(CompactId.computeWorldlessBlockId(nextEnumeratedBlock)))
+                                continue;
+
                             searchQueue.add(nextEnumeratedBlock);
                         }
                     }
