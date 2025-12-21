@@ -132,8 +132,6 @@ public class Pipes extends AbstractCraftBookMechanic implements PipesApi {
             if (filteredPipeItems.isEmpty())
                 return EnumerationDecision.CONTINUE;
 
-            List<ItemStack> leftovers = new ArrayList<>();
-
             Block putBlock = pipeBlock.getRelative(CachedBlock.getFacing(cachedPipeBlock));
             int cachedPutBlock = currentBlockCache.getCachedBlock(putBlock);
 
@@ -144,6 +142,7 @@ public class Pipes extends AbstractCraftBookMechanic implements PipesApi {
                 return EnumerationDecision.CONTINUE;
 
             List<ItemStack> itemsToPut = putEvent.getItems();
+            List<ItemStack> leftovers = new ArrayList<>();
 
             if (
                 CachedBlock.hasHandledOutputInventory(cachedPutBlock)
