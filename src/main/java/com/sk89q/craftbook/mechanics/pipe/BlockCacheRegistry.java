@@ -27,8 +27,8 @@ import java.util.logging.Level;
 
 public class BlockCacheRegistry implements Listener {
 
-  public static final int DEFAULT_INITIAL_CHUNK_TICKET_DURATION = 60;
-  public static final int DEFAULT_CONTINUED_CHUNK_TICKET_DURATION = 60 * 5;
+  public static final int DEFAULT_INITIAL_CHUNK_TICKET_DURATION = 20;
+  public static final int DEFAULT_CONTINUED_CHUNK_TICKET_DURATION = 20;
 
   static {
     CachedBlock.setupPresetTable();
