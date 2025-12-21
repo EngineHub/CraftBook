@@ -134,10 +134,10 @@ public class Pipes extends AbstractCraftBookMechanic implements PipesApi {
 
             List<ItemStack> leftovers = new ArrayList<>();
 
-            Block containerBlock = pipeBlock.getRelative(CachedBlock.getFacing(cachedPipeBlock));
-            int cachedContainerBlock = currentBlockCache.getCachedBlock(containerBlock);
+            Block putBlock = pipeBlock.getRelative(CachedBlock.getFacing(cachedPipeBlock));
+            int cachedPutBlock = currentBlockCache.getCachedBlock(putBlock);
 
-            PipePutEvent putEvent = new PipePutEvent(pipeBlock, new ArrayList<>(filteredPipeItems), containerBlock, cachedContainerBlock);
+            PipePutEvent putEvent = new PipePutEvent(pipeBlock, new ArrayList<>(filteredPipeItems), putBlock, cachedPutBlock);
             Bukkit.getPluginManager().callEvent(putEvent);
 
             if (putEvent.isCancelled())
@@ -146,12 +146,12 @@ public class Pipes extends AbstractCraftBookMechanic implements PipesApi {
             List<ItemStack> itemsToPut = putEvent.getItems();
 
             if (
-                CachedBlock.hasHandledOutputInventory(cachedContainerBlock)
-                    && containerBlock.getState() instanceof InventoryHolder holder
+                CachedBlock.hasHandledOutputInventory(cachedPutBlock)
+                    && putBlock.getState() instanceof InventoryHolder holder
             ) {
                 leftovers.addAll(InventoryUtil.addItemsToInventory(holder, itemsToPut.toArray(new ItemStack[0])));
-            } else if (CachedBlock.isMaterial(cachedContainerBlock, Material.JUKEBOX)) {
-                Jukebox jukebox = (Jukebox) containerBlock.getState();
+            } else if (CachedBlock.isMaterial(cachedPutBlock, Material.JUKEBOX)) {
+                Jukebox jukebox = (Jukebox) putBlock.getState();
 
                 for (ItemStack item : itemsToPut) {
                     if (jukebox.hasRecord() || !item.getType().isRecord()) {
@@ -169,7 +169,10 @@ public class Pipes extends AbstractCraftBookMechanic implements PipesApi {
             itemsInPipe.removeAll(itemsToPut);
             itemsInPipe.addAll(leftovers);
 
-            return itemsInPipe.isEmpty() ? EnumerationDecision.STOP : EnumerationDecision.CONTINUE;
+            if (itemsInPipe.isEmpty())
+                return EnumerationDecision.STOP;
+
+            return EnumerationDecision.CONTINUE;
         });
     }
 
