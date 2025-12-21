@@ -9,6 +9,8 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.WallSign;
 import org.bukkit.event.block.*;
 
 import java.util.function.Consumer;
@@ -67,23 +69,22 @@ public class BlockCache {
     }
 
     public void invalidateCache(Block block) {
-        var cachedBlock = cachedBlockByCompactId.remove(CompactId.computeWorldlessBlockId(block));
-
-        if (cachedBlock == CachedBlock.NULL_SENTINEL)
-            return;
+        cachedBlockByCompactId.remove(CompactId.computeWorldlessBlockId(block));
 
         // Signs are cached by their corresponding piston's position, so the following
         // tries to resolve that mounted-on block to then invalidate the pipe-sign.
 
-        if (CachedBlock.isStandingSign(cachedBlock)) {
+        BlockData data = block.getBlockData();
+
+        if (data instanceof org.bukkit.block.data.type.Sign) {
             // Since, unfortunately, pipe-signs are accepted above and below, we have to invalidate both possibilities
             invalidateSignBlock(block, BlockFace.UP);
             invalidateSignBlock(block, BlockFace.DOWN);
             return;
         }
 
-        if (CachedBlock.isWallSign(cachedBlock))
-            invalidateSignBlock(block, CachedBlock.getFacing(cachedBlock).getOppositeFace());
+        if (data instanceof WallSign wallSign)
+            invalidateSignBlock(block, wallSign.getFacing().getOppositeFace());
     }
 
     private void invalidateSignBlock(Block signBlock, BlockFace mountingFace) {
