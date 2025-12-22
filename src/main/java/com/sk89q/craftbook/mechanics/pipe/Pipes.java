@@ -165,7 +165,7 @@ public class Pipes extends AbstractCraftBookMechanic implements PipesApi {
                 leftovers.addAll(itemsToPut);
             }
 
-            itemsInPipe.removeAll(itemsToPut);
+            itemsInPipe.removeAll(filteredPipeItems);
             itemsInPipe.addAll(leftovers);
 
             if (itemsInPipe.isEmpty())
