@@ -71,16 +71,20 @@ public class SignCopier extends AbstractCraftBookMechanic {
                 Sign s = (Sign) event.getClickedBlock().getState();
                 String[] lines = signs.get(player.getName());
 
-                CompatabilityUtil.disableInterferences(event.getPlayer());
-                SignChangeEvent sev = new SignChangeEvent(event.getClickedBlock(), event.getPlayer(), lines);
-                Bukkit.getPluginManager().callEvent(sev);
+                try {
+                    CompatabilityUtil.disableInterferences(event.getPlayer());
+                    SignChangeEvent sev = new SignChangeEvent(event.getClickedBlock(), event.getPlayer(), lines);
+                    Bukkit.getPluginManager().callEvent(sev);
 
-                if(!sev.isCancelled()) {
-                    for(int i = 0; i < lines.length; i++)
-                        s.setLine(i, lines[i]);
-                    s.update();
+                    if (!sev.isCancelled()) {
+                        lines = sev.getLines();
+                        for (int i = 0; i < lines.length; i++)
+                            s.setLine(i, lines[i]);
+                        s.update();
+                    }
+                } finally {
+                    CompatabilityUtil.enableInterferences(event.getPlayer());
                 }
-                CompatabilityUtil.enableInterferences(event.getPlayer());
 
                 player.print("mech.signcopy.paste");
                 event.setCancelled(true);
