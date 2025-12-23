@@ -127,8 +127,9 @@ public class BukkitSignCopier extends SignCopier implements Listener {
             Bukkit.getPluginManager().callEvent(sev);
 
             if (!sev.isCancelled() || !CraftBook.getInstance().getPlatform().getConfiguration().obeyPluginProtections) {
-                for (int i = 0; i < signData.lines().size(); i++) {
-                    signSide.line(i, signData.lines().get(i));
+                var outputLines = sev.lines();
+                for (int i = 0; i < outputLines.size(); i++) {
+                    signSide.line(i, outputLines.get(i));
                 }
                 if (copyColor && signData.color() != null) {
                     signSide.setColor(signData.color());
