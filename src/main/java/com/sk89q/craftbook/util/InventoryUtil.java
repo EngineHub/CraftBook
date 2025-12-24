@@ -3,14 +3,12 @@ package com.sk89q.craftbook.util;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BrewingStand;
-import org.bukkit.block.Chest;
 import org.bukkit.block.ChiseledBookshelf;
 import org.bukkit.block.Crafter;
 import org.bukkit.block.Furnace;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.BrewerInventory;
-import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -63,12 +61,6 @@ public class InventoryUtil {
                 stacks = Arrays.stream(stacks).filter(item -> !ItemUtil.isShulkerBox(item.getType())).toArray(ItemStack[]::new);
             }
             leftovers.addAll(container.getInventory().addItem(stacks).values());
-            if (container.getInventory() instanceof DoubleChestInventory) {
-                ((Chest) ((DoubleChestInventory) container.getInventory()).getLeftSide().getHolder()).update(true);
-                ((Chest) ((DoubleChestInventory) container.getInventory()).getRightSide().getHolder()).update(true);
-            }
-            //if(container instanceof BlockState && update)
-            //    ((BlockState) container).update();
             return leftovers;
         }
     }
@@ -104,8 +96,6 @@ public class InventoryUtil {
             }
         }
         leftovers.removeAll(Collections.singleton(null));
-
-        //furnace.update();
 
         return leftovers;
     }
@@ -157,8 +147,6 @@ public class InventoryUtil {
                 leftovers.add(stack);
             }
         }
-
-        //brewingStand.update();
 
         return leftovers;
     }
@@ -311,9 +299,6 @@ public class InventoryUtil {
 
             inv.getInventory().addItem(itemsToAdd.toArray(new ItemStack[itemsToAdd.size()]));
         }
-
-        //if(inv instanceof BlockState)
-        //    ((BlockState) inv).update();
 
         return leftovers.isEmpty();
     }
