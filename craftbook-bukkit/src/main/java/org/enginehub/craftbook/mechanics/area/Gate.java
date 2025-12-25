@@ -44,21 +44,12 @@ import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
-import org.enginehub.craftbook.util.BlockParser;
-import org.enginehub.craftbook.util.BlockUtil;
-import org.enginehub.craftbook.util.ConfigUtil;
-import org.enginehub.craftbook.util.EventUtil;
-import org.enginehub.craftbook.util.ProtectionUtil;
-import org.enginehub.craftbook.util.SignUtil;
+import org.enginehub.craftbook.util.*;
 import org.enginehub.craftbook.util.events.SignClickEvent;
 import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Handler for gates. Gates are merely fence blocks. When they are closed or open, a nearby fence
@@ -374,27 +365,46 @@ public class Gate extends StoredBlockMechanic {
         Block gateBlock = null;
 
         if (sign != null) {
-            int x = sign.getX();
-            int y = sign.getY();
-            int z = sign.getZ();
             Material expectedType = getStoredType((Sign) sign.getState(false));
 
-            for (int x1 = x - searchRadius; x1 <= x + searchRadius; x1++) {
-                for (int y1 = y - searchRadius; y1 <= y + searchRadius * 2; y1++) {
-                    for (int z1 = z - searchRadius; z1 <= z + searchRadius; z1++) {
-                        Block offsetBlock = sign.getWorld().getBlockAt(x1, y1, z1);
-                        BlockData offsetBlockData = offsetBlock.getBlockData();
-                        if (expectedType != null) {
-                            // If we have an expected type set, require that one to be used.
-                            if (offsetBlockData.getMaterial() == expectedType) {
-                                gateBlock = offsetBlock;
-                                break;
-                            }
-                        } else if (Blocks.containsFuzzy(blocks, BukkitAdapter.adapt(offsetBlockData))) {
-                            gateBlock = offsetBlock;
-                            break;
+            Deque<Block> enumerationQueue = new ArrayDeque<>();
+            Set<Block> visited = new HashSet<>();
+
+            enumerationQueue.add(sign);
+            visited.add(sign);
+
+            enumerationLoop: while (!enumerationQueue.isEmpty()) {
+                Block currentOrigin = enumerationQueue.poll();
+
+                if (Math.abs(currentOrigin.getX() - sign.getX()) >= searchRadius)
+                    continue;
+
+                if (Math.abs(currentOrigin.getY() - sign.getY()) >= searchRadius * 2)
+                    continue;
+
+                if (Math.abs(currentOrigin.getZ() - sign.getZ()) >= searchRadius)
+                    continue;
+
+                for (var face : LocationUtil.getDirectFaces()) {
+                    Block neighbor = currentOrigin.getRelative(face);
+
+                    if (!visited.add(neighbor))
+                        continue;
+
+                    BlockData neighborData = neighbor.getBlockData();
+
+                    if (expectedType != null) {
+                        // If we have an expected type set, require that one to be used.
+                        if (neighborData.getMaterial() == expectedType) {
+                            gateBlock = neighbor;
+                            break enumerationLoop;
                         }
+                    } else if (Blocks.containsFuzzy(blocks, BukkitAdapter.adapt(neighborData))) {
+                        gateBlock = neighbor;
+                        break enumerationLoop;
                     }
+
+                    enumerationQueue.add(neighbor);
                 }
             }
         }
