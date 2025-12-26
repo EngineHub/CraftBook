@@ -382,14 +382,17 @@ public class Gate extends StoredBlockMechanic {
             enumerationLoop: while (!enumerationQueue.isEmpty()) {
                 Block currentOrigin = enumerationQueue.poll();
 
-                if (Math.abs(currentOrigin.getX() - sign.getX()) >= searchRadius)
+                if (Math.abs(currentOrigin.getX() - sign.getX()) >= searchRadius) {
                     continue;
+                }
 
-                if (Math.abs(currentOrigin.getY() - sign.getY()) >= searchRadius * 2)
+                if (Math.abs(currentOrigin.getY() - sign.getY()) >= searchRadius * 2) {
                     continue;
+                }
 
-                if (Math.abs(currentOrigin.getZ() - sign.getZ()) >= searchRadius)
+                if (Math.abs(currentOrigin.getZ() - sign.getZ()) >= searchRadius) {
                     continue;
+                }
 
                 for (var face : LocationUtil.getDirectFaces()) {
                     Block neighbor = currentOrigin.getRelative(face);
