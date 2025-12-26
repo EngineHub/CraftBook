@@ -204,6 +204,8 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic impl
                     event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), toDrop);
                     amount -= 64;
                 }
+
+                resetStoredData(sign);
             } catch (InvalidMechanismException e) {
                 if (e.getMessage() != null) {
                     player.printError(TextComponent.of(e.getMessage()));
@@ -356,6 +358,11 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic impl
      */
     public void setStoredType(Sign sign, Material material) {
         sign.getPersistentDataContainer().set(storedBlockTypeKey, PersistentDataType.STRING, BukkitAdapter.asBlockType(material).id());
+    }
+
+    public void resetStoredData(Sign sign) {
+        sign.getPersistentDataContainer().remove(storedBlockTypeKey);
+        sign.getPersistentDataContainer().remove(storedBlockQuantityKey);
     }
 
     /**
