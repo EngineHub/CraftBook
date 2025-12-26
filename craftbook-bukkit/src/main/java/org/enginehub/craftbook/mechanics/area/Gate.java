@@ -403,8 +403,9 @@ public class Gate extends StoredBlockMechanic {
                 for (var face : LocationUtil.getDirectFaces()) {
                     Block neighbor = currentOrigin.getRelative(face);
 
-                    if (!visited.add(neighbor))
+                    if (!visited.add(neighbor)) {
                         continue;
+                    }
 
                     BlockData neighborData = neighbor.getBlockData();
 
