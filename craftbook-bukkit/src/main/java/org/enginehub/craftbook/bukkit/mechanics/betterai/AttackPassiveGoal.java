@@ -34,6 +34,19 @@ class AttackPassiveGoal implements Goal<Monster> {
         new NamespacedKey("craftbook", "attack_passive")
     );
 
+    /**
+     * Distance within which the target is considered active and will not be forgotten or overridden.
+     */
+    private final static int ACTIVE_DISTANCE = 15;
+    /**
+     * Distance within which to search for passive mobs to attack.
+     */
+    private final static double SEARCH_DISTANCE = 10d;
+    /**
+     * Distance beyond which the target will always be forgotten.
+     */
+    private final static int FORGET_DISTANCE = 60;
+
     private final Monster monster;
     private final boolean attackPassiveIgnoreHostileMounts;
     private @Nullable LivingEntity target;
@@ -61,21 +74,32 @@ class AttackPassiveGoal implements Goal<Monster> {
 
     @Override
     public void tick() {
-        if (target != null && !target.isDead()) {
-            if (target.getWorld().equals(monster.getWorld())
-                && target.getLocation().distanceSquared(monster.getLocation()) < 15 * 15) {
+        if (target != null) {
+            var targetValid = target.isValid() && !target.isDead() && target.getWorld().equals(monster.getWorld());
+            var distanceSquared = target.getLocation().distanceSquared(monster.getLocation());
+
+            if (targetValid && distanceSquared < ACTIVE_DISTANCE * ACTIVE_DISTANCE) {
+                // Not outside of active distance, keep target & skip the search.
                 return;
             }
+
+            if (!targetValid || distanceSquared > FORGET_DISTANCE * FORGET_DISTANCE) {
+                // Not a valid target, or beyond the forget distance - remove it and allow another search
+                this.target = null;
+                monster.setTarget(null);
+            }
+
+            // If it's valid & inside forget distance, but outside active distance, we continue to search for a closer target.
         }
 
         Animals closest = null;
         double closestDist = Double.MAX_VALUE;
 
-        for (Entity ent : monster.getNearbyEntities(10D, 10D, 10D)) {
-            if (ent instanceof Animals && monster.hasLineOfSight(ent)) {
-                if (attackPassiveIgnoreHostileMounts && !ent.getPassengers().isEmpty()) {
+        for (Entity ent : monster.getNearbyEntities(SEARCH_DISTANCE, SEARCH_DISTANCE, SEARCH_DISTANCE)) {
+            if (ent instanceof Animals animal && monster.hasLineOfSight(animal)) {
+                if (attackPassiveIgnoreHostileMounts && !animal.getPassengers().isEmpty()) {
                     boolean foundAny = false;
-                    for (Entity passenger : ent.getPassengers()) {
+                    for (Entity passenger : animal.getPassengers()) {
                         if (passenger instanceof Monster) {
                             foundAny = true;
                             break;
@@ -85,9 +109,9 @@ class AttackPassiveGoal implements Goal<Monster> {
                         continue;
                     }
                 }
-                double dist = ent.getLocation().distanceSquared(monster.getLocation());
+                double dist = animal.getLocation().distanceSquared(monster.getLocation());
                 if (dist < closestDist) {
-                    closest = (Animals) ent;
+                    closest = animal;
                     closestDist = dist;
                 }
             }
