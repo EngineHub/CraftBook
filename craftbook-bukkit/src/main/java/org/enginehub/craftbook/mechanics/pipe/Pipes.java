@@ -128,14 +128,15 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
     }
 
     private static boolean isPiston(Block block) {
-        return block.getType() == Material.PISTON || block.getType() == Material.STICKY_PISTON;
+        Material type = block.getType();
+        return type == Material.PISTON || type == Material.STICKY_PISTON;
     }
 
     private static ChangedSign getSignOnPiston(Block block) {
         BlockData blockData = block.getBlockData();
         BlockFace facing = BlockFace.SELF;
-        if (blockData instanceof Directional) {
-            facing = ((Directional) blockData).getFacing();
+        if (blockData instanceof Directional directional) {
+            facing = directional.getFacing();
         }
 
         for (BlockFace face : LocationUtil.getDirectFaces()) {
@@ -166,7 +167,8 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
         //Use the queue to search blocks.
         while (!searchQueue.isEmpty()) {
             Block bl = searchQueue.poll();
-            if (bl.getType() == Material.PISTON) {
+            Material blType = bl.getType();
+            if (blType == Material.PISTON) {
                 Piston p = (Piston) bl.getBlockData();
 
                 ChangedSign sign = getSignOnPiston(bl);
@@ -229,7 +231,7 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
                     items.removeAll(filteredItems);
                     items.addAll(newItems);
                 }
-            } else if (bl.getType() == Material.DROPPER) {
+            } else if (blType == Material.DROPPER) {
                 ChangedSign sign = getSignOnPiston(bl);
 
                 HashSet<ItemStack> pFilters = new HashSet<>();
@@ -306,33 +308,35 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
                             }
 
                             Block off = bl.getRelative(x, y, z);
+                            Material offType = off.getType();
 
-                            if (!isValidPipeBlock(off)) continue;
+                            if (!isValidPipeBlock(offType)) continue;
 
                             if (visitedPipes.contains(off.getLocation().toVector())) continue;
                             visitedPipes.add(off.getLocation().toVector());
 
-                            if (ItemUtil.isStainedGlass(bl.getType()) && ItemUtil.isStainedGlass(off.getType()) && bl.getType() != off.getType())
+                            if (ItemUtil.isStainedGlass(blType) && ItemUtil.isStainedGlass(offType) && blType != offType)
                                 continue;
 
-                            if (off.getType() == Material.GLASS || ItemUtil.isStainedGlass(off.getType())) {
+                            if (offType == Material.GLASS || ItemUtil.isStainedGlass(offType)) {
                                 searchQueue.add(off);
-                            } else if (off.getType() == Material.GLASS_PANE || ItemUtil.isStainedGlassPane(off.getType())) {
+                            } else if (offType == Material.GLASS_PANE || ItemUtil.isStainedGlassPane(offType)) {
                                 Block offsetBlock = off.getRelative(x, y, z);
-                                if (!isValidPipeBlock(offsetBlock)) continue;
-                                if (visitedPipes.contains(offsetBlock.getLocation().toVector()))
+                                Material offsetBlockType = offsetBlock.getType();
+                                if (!isValidPipeBlock(offsetBlockType))
                                     continue;
-                                if (ItemUtil.isStainedGlassPane(off.getType())) {
-                                    if ((ItemUtil.isStainedGlass(bl.getType())
-                                        || ItemUtil.isStainedGlassPane(bl.getType())) && ItemUtil.getStainedColor(off.getType()) != ItemUtil
-                                        .getStainedColor(offsetBlock.getType())
-                                        || (ItemUtil.isStainedGlass(offsetBlock.getType())
-                                        || ItemUtil.isStainedGlassPane(offsetBlock.getType())) && ItemUtil.getStainedColor(off.getType()) != ItemUtil
-                                        .getStainedColor(offsetBlock.getType())) continue;
+                                if (visitedPipes.contains(offsetBlock.getLocation().toVector())) continue;
+                                if (ItemUtil.isStainedGlassPane(offType)) {
+                                    if ((ItemUtil.isStainedGlass(blType)
+                                            || ItemUtil.isStainedGlassPane(blType)) && ItemUtil.getStainedColor(offType) != ItemUtil
+                                            .getStainedColor(offsetBlockType)
+                                            || (ItemUtil.isStainedGlass(offsetBlockType)
+                                            || ItemUtil.isStainedGlassPane(offsetBlockType)) && ItemUtil.getStainedColor(offType) != ItemUtil
+                                            .getStainedColor(offsetBlockType)) continue;
                                 }
                                 visitedPipes.add(offsetBlock.getLocation().toVector());
                                 searchQueue.add(off.getRelative(x, y, z));
-                            } else if (off.getType() == Material.PISTON)
+                            } else if (offType == Material.PISTON)
                                 searchQueue.addFirst(off); //Pistons are treated with higher priority.
                         }
                     }
@@ -341,19 +345,13 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
         }
     }
 
-    private static boolean isValidPipeBlock(Block block) {
-        switch (block.getType()) {
-            case GLASS:
-            case PISTON:
-            case STICKY_PISTON:
-            case DROPPER:
-            case GLASS_PANE:
-                return true;
-            default:
-                return ItemUtil.isStainedGlass(block.getType())
-                    || ItemUtil.isStainedGlassPane(block.getType())
-                    || SignUtil.isWallSign(block);
-        }
+    private static boolean isValidPipeBlock(Material type) {
+        return switch (type) {
+            case GLASS, PISTON, STICKY_PISTON, DROPPER, GLASS_PANE -> true;
+            default -> ItemUtil.isStainedGlass(type)
+                    || ItemUtil.isStainedGlassPane(type)
+                    || SignUtil.isWallSign(type);
+        };
     }
 
     private void startPipe(Block block, List<ItemStack> items, boolean request) {
@@ -383,17 +381,18 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
 
             Piston p = (Piston) block.getBlockData();
             Block fac = block.getRelative(p.getFacing());
+            Material facType = fac.getType();
 
-            if (fac.getType() == Material.CHEST
-                || fac.getType() == Material.TRAPPED_CHEST
-                || fac.getType() == Material.DROPPER
-                || fac.getType() == Material.DISPENSER
-                || fac.getType() == Material.HOPPER
-                || fac.getType() == Material.BARREL
-                || fac.getType() == Material.CHISELED_BOOKSHELF
-                || fac.getType() == Material.CRAFTER
-                || fac.getType() == Material.DECORATED_POT
-                || Tag.SHULKER_BOXES.isTagged(fac.getType())) {
+            if (facType == Material.CHEST
+                    || facType == Material.TRAPPED_CHEST
+                    || facType == Material.DROPPER
+                    || facType == Material.DISPENSER
+                    || facType == Material.HOPPER
+                    || facType == Material.BARREL
+                    || facType == Material.CHISELED_BOOKSHELF
+                    || facType == Material.CRAFTER
+                    || facType == Material.DECORATED_POT
+                    || Tag.SHULKER_BOXES.isTagged(facType)) {
                 for (ItemStack stack : ((InventoryHolder) fac.getState()).getInventory().getContents()) {
 
                     if (!ItemUtil.isStackValid(stack))
@@ -418,7 +417,7 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
                 }
 
                 if (!items.isEmpty()) {
-                    if (fac.getType() == Material.CRAFTER) {
+                    if (facType == Material.CRAFTER) {
                         leftovers.addAll(InventoryUtil.addItemsToCrafter((Crafter) fac.getState(), items.toArray(new ItemStack[items.size()])));
                     } else {
                         for (ItemStack item : items) {
@@ -429,7 +428,7 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
                         }
                     }
                 }
-            } else if (fac.getType() == Material.FURNACE || fac.getType() == Material.BLAST_FURNACE || fac.getType() == Material.SMOKER) {
+            } else if (facType == Material.FURNACE || facType == Material.BLAST_FURNACE || facType == Material.SMOKER) {
 
                 Furnace f = (Furnace) fac.getState();
 
@@ -459,7 +458,7 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
                             leftovers.add(ItemUtil.addToStack(f.getInventory().getResult(), item));
                     }
                 } else f.getInventory().setResult(null);
-            } else if (fac.getType() == Material.JUKEBOX) {
+            } else if (facType == Material.JUKEBOX) {
 
                 Jukebox juke = (Jukebox) fac.getState();
 
