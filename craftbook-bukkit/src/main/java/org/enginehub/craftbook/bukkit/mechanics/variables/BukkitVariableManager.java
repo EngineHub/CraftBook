@@ -43,7 +43,8 @@ import org.enginehub.craftbook.mechanics.variables.VariableKey;
 import org.enginehub.craftbook.mechanics.variables.VariableManager;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -62,10 +63,9 @@ public class BukkitVariableManager extends VariableManager implements Listener {
         CraftBookPlugin.logDebugMessage("Initializing Variables!", "startup.variables");
 
         try {
-            File varFile = CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("variables.yml").toFile();
-            if (!varFile.exists()) {
-                //noinspection ResultOfMethodCallIgnored
-                varFile.createNewFile();
+            Path varFile = CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("variables.yml");
+            if (!Files.exists(varFile)) {
+                Files.createFile(varFile);
             }
             variableConfiguration = new VariableConfiguration(new YAMLProcessor(varFile, true, YAMLFormat.EXTENDED));
             variableConfiguration.load();

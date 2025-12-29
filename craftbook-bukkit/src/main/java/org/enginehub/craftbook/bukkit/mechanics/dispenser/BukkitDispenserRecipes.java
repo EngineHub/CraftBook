@@ -47,7 +47,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class BukkitDispenserRecipes extends DispenserRecipes implements Listener {
 
-    public static final Registry<DispenserRecipe> REGISTRY = new NamespacedRegistry<>("dispenser recipe", "craftbook");
+    public static final Registry<DispenserRecipe> REGISTRY = new NamespacedRegistry<>("dispenser recipe", "craftbook:dispenser_recipe", "craftbook");
 
     public BukkitDispenserRecipes(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);

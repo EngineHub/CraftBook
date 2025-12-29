@@ -24,6 +24,7 @@ import org.enginehub.craftbook.mechanics.Chairs;
 import org.enginehub.craftbook.mechanics.ChunkAnchor;
 import org.enginehub.craftbook.mechanics.CookingPot;
 import org.enginehub.craftbook.mechanics.Elevator;
+import org.enginehub.craftbook.mechanics.HiddenSwitch;
 import org.enginehub.craftbook.mechanics.JackOLantern;
 import org.enginehub.craftbook.mechanics.LightStone;
 import org.enginehub.craftbook.mechanics.LightSwitch;
@@ -71,6 +72,7 @@ public class MechanicTypes {
     public static final @Nullable MechanicType<Elevator> ELEVATOR = get("elevator");
     // public static final @Nullable MechanicType<Gate> GATE = get("gate");
     // public static final @Nullable MechanicType<HeadDrops> HEAD_DROPS = get("head_drops");
+    public static final @Nullable MechanicType<HiddenSwitch> HIDDEN_SWITCH = get("hidden_switch");
     public static final @Nullable MechanicType<JackOLantern> JACK_O_LANTERN = get("jack_o_lantern");
     public static final @Nullable MechanicType<LightSwitch> LIGHT_SWITCH = get("light_switch");
     public static final @Nullable MechanicType<LightStone> LIGHTSTONE = get("lightstone");

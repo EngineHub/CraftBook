@@ -549,7 +549,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .name("HiddenSwitch")
             .description(TranslatableComponent.of("craftbook.hiddenswitch.description"))
             .category(MechanicCategory.GENERAL)
-            .className("org.enginehub.craftbook.mechanics.HiddenSwitch")
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitHiddenSwitch")
             .buildAndRegister();
 
         // TODO CommandItems needs to load early (after variables).

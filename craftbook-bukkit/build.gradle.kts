@@ -57,13 +57,14 @@ dependencies {
 }
 
 tasks.named<Copy>("processResources") {
+    // Avoid carrying project reference into task execution
     val internalVersion = project.internalVersion
     inputs.property("internalVersion", internalVersion)
     filesMatching("plugin.yml") {
-        expand("internalVersion" to internalVersion)
+        expand(mapOf("internalVersion" to internalVersion.get()))
     }
     filesMatching("paper-plugin.yml") {
-        expand("internalVersion" to internalVersion)
+        expand(mapOf("internalVersion" to internalVersion.get()))
     }
 }
 
