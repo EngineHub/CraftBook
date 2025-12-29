@@ -161,7 +161,7 @@ public class BukkitTreeLopper extends TreeLopper implements Listener {
 
     private static int getMaximumSaplingCount(Material tree) {
         return switch (tree) {
-            case DARK_OAK_SAPLING, JUNGLE_SAPLING, PALE_OAK_SAPLING -> 4;
+            case DARK_OAK_SAPLING, JUNGLE_SAPLING, PALE_OAK_SAPLING, SPRUCE_SAPLING -> 4;
             default -> 1;
         };
     }
