@@ -1,14 +1,15 @@
+import buildlogic.internalVersion
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    id("java-library")
+    `java-library`
     id("buildlogic.platform")
 }
 
 repositories {
     maven {
         name = "paper"
-        url = uri("https://papermc.io/repo/repository/maven-public/")
+        url = uri("https://repo.papermc.io/repository/maven-public/")
     }
     maven {
         name = "bstats"
@@ -24,13 +25,15 @@ repositories {
     }
 }
 
-val localImplementation = configurations.create("localImplementation") {
+val localImplementation = configurations.dependencyScope("localImplementation") {
     description = "Dependencies used locally, but provided by the runtime Bukkit implementation"
-    isCanBeConsumed = false
-    isCanBeResolved = false
 }
-configurations["compileOnly"].extendsFrom(localImplementation)
-configurations["testImplementation"].extendsFrom(localImplementation)
+configurations.named("compileOnly") {
+    extendsFrom(localImplementation.get())
+}
+configurations.named("testImplementation") {
+    extendsFrom(localImplementation.get())
+}
 
 dependencies {
     "api"(project(":craftbook-core"))
@@ -54,7 +57,7 @@ dependencies {
 }
 
 tasks.named<Copy>("processResources") {
-    val internalVersion = project.ext["internalVersion"]
+    val internalVersion = project.internalVersion
     inputs.property("internalVersion", internalVersion)
     filesMatching("plugin.yml") {
         expand("internalVersion" to internalVersion)

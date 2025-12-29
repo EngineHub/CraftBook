@@ -1,5 +1,5 @@
-import buildlogic.getLibrary
 import buildlogic.stringyLibs
+import buildlogic.getLibrary
 
 plugins {
     id("eclipse")
@@ -7,9 +7,6 @@ plugins {
     id("checkstyle")
     id("buildlogic.common")
 }
-
-val commonJava = extensions.create<buildlogic.CommonJavaExtension>("commonJava")
-commonJava.banSlf4j.convention(true)
 
 tasks
     .withType<JavaCompile>()
@@ -23,7 +20,7 @@ tasks
         options.isDeprecation = true
         options.encoding = "UTF-8"
         options.compilerArgs.add("-parameters")
-        //options.compilerArgs.add("-Werror")
+//        options.compilerArgs.add("-Werror")
     }
 
 configure<CheckstyleExtension> {
@@ -32,7 +29,9 @@ configure<CheckstyleExtension> {
 }
 
 tasks.withType<Test>().configureEach {
-    useJUnitPlatform()
+    useJUnitPlatform {
+        includeEngines("junit-jupiter")
+    }
 }
 
 dependencies {
@@ -44,13 +43,14 @@ dependencies {
     "testImplementation"(stringyLibs.getLibrary("mockito-core"))
     "testImplementation"(stringyLibs.getLibrary("mockito-junit-jupiter"))
     "testRuntimeOnly"(stringyLibs.getLibrary("junit-jupiter-engine"))
+    "testRuntimeOnly"(stringyLibs.getLibrary("junit-platform-launcher"))
 }
 
 // Java 8 turns on doclint which we fail
 tasks.withType<Javadoc>().configureEach {
     options.encoding = "UTF-8"
     (options as StandardJavadocDocletOptions).apply {
-        //addBooleanOption("Werror", true)
+//        addBooleanOption("Werror", true)
         addBooleanOption("Xdoclint:all", true)
         addBooleanOption("Xdoclint:-missing", true)
         tags(
@@ -64,16 +64,6 @@ tasks.withType<Javadoc>().configureEach {
 configure<JavaPluginExtension> {
     withJavadocJar()
     withSourcesJar()
-}
-
-configurations["compileClasspath"].apply {
-    resolutionStrategy.componentSelection {
-        withModule("org.slf4j:slf4j-api") {
-            if (commonJava.banSlf4j.get()) {
-                reject("No SLF4J allowed on compile classpath")
-            }
-        }
-    }
 }
 
 tasks.named("check").configure {

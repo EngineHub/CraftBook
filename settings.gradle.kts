@@ -8,18 +8,29 @@ pluginManagement {
     }
 }
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
-
-rootProject.name = "craftbook"
-
-includeBuild("build-logic")
-
-include("craftbook-libs")
-
-listOf("core", "bukkit").forEach {
-    include("craftbook-libs:$it")
-    include("craftbook-$it")
+dependencyResolutionManagement {
+    repositories {
+        maven {
+            name = "EngineHub"
+            url = uri("https://maven.enginehub.org/repo/")
+        }
+        ivy {
+            url = uri("https://repo.enginehub.org/language-files/")
+            name = "EngineHub Language Files"
+            patternLayout {
+                artifact("[organisation]/[module]/[revision]/[artifact]-[revision](+[classifier])(.[ext])")
+                setM2compatible(true)
+            }
+            metadataSources {
+                artifact()
+            }
+            content {
+                includeModuleByRegex(".*", "craftbook-lang")
+            }
+        }
+    }
 }
 
 logger.lifecycle("""
@@ -33,5 +44,15 @@ logger.lifecycle("""
 *******************************************
 """)
 
+rootProject.name = "craftbook"
+
+includeBuild("build-logic")
+
+include("craftbook-libs")
+
+listOf("core", "bukkit").forEach {
+    include("craftbook-libs:$it")
+    include("craftbook-$it")
+}
 
 include("craftbook-bukkit:doctools")

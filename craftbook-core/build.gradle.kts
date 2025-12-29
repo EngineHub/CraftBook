@@ -1,5 +1,3 @@
-import org.cadixdev.gradle.licenser.LicenseExtension
-
 plugins {
     id("java-library")
     id("buildlogic.core-and-platform")
@@ -57,12 +55,6 @@ dependencies {
 tasks.compileJava {
     dependsOn(":craftbook-libs:build")
     options.compilerArgs.add("-Aarg.name.key.prefix=")
-}
-
-configure<LicenseExtension> {
-    exclude {
-        it.file.startsWith(project.layout.buildDirectory.get().asFile)
-    }
 }
 
 tasks.named<Copy>("processResources") {

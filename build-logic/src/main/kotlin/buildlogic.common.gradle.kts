@@ -3,7 +3,7 @@ import buildlogic.stringyLibs
 import org.gradle.plugins.ide.idea.model.IdeaModel
 
 plugins {
-    id("org.cadixdev.licenser")
+    id("net.octyl.level-headered")
 }
 
 group = rootProject.group
@@ -53,10 +53,14 @@ dependencies {
     }
 }
 
-license {
-    header(rootProject.file("HEADER.txt"))
-    include("**/*.java")
-    include("**/*.kt")
+levelHeadered {
+    headerTemplate(rootProject.file("HEADER.txt"))
+
+    sourceMatchPatterns {
+        // Exclude overrides for shaded libs
+        exclude("org/enginehub/craftbook/util/jinglenote/")
+        exclude("org/enginehub/craftbook/util/profile/")
+    }
 }
 
 plugins.withId("idea") {

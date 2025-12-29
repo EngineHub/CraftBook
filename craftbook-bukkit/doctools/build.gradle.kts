@@ -11,7 +11,7 @@ tasks.named<JavaExec>("run") {
 repositories {
     maven {
         name = "paper"
-        url = uri("https://papermc.io/repo/repository/maven-public/")
+        url = uri("https://repo.papermc.io/repository/maven-public/")
     }
     maven {
         name = "EngineHub"

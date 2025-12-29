@@ -1,7 +1,7 @@
 plugins {
     id("java-base")
     id("maven-publish")
-    id("com.github.johnrengelman.shadow")
+    id("com.gradleup.shadow")
     id("com.jfrog.artifactory")
     id("buildlogic.common")
     id("buildlogic.artifactory-sub")
@@ -114,7 +114,6 @@ project.apply<LibsConfigPluginHack>()
 val libsComponent = project.components["libs"] as AdhocComponentWithVariants
 
 val apiElements = project.configurations.register("apiElements") {
-    isVisible = false
     description = "API elements for libs"
     isCanBeResolved = false
     isCanBeConsumed = true
@@ -129,7 +128,6 @@ val apiElements = project.configurations.register("apiElements") {
 }
 
 val runtimeElements = project.configurations.register("runtimeElements") {
-    isVisible = false
     description = "Runtime elements for libs"
     isCanBeResolved = false
     isCanBeConsumed = true
@@ -144,7 +142,6 @@ val runtimeElements = project.configurations.register("runtimeElements") {
 }
 
 val sourcesElements = project.configurations.register("sourcesElements") {
-    isVisible = false
     description = "Source elements for libs"
     isCanBeResolved = false
     isCanBeConsumed = true
@@ -175,9 +172,4 @@ configure<PublishingExtension> {
             from(libsComponent)
         }
     }
-}
-
-if (project != project(":craftbook-libs:core")) {
-    evaluationDependsOn(":craftbook-libs:core")
-    configurations["shade"].shouldResolveConsistentlyWith(project(":craftbook-libs:core").configurations["shade"])
 }

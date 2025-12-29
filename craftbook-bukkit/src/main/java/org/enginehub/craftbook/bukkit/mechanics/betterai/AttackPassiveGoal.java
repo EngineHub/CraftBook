@@ -37,15 +37,15 @@ class AttackPassiveGoal implements Goal<Monster> {
     /**
      * Distance within which the target is considered active and will not be forgotten or overridden.
      */
-    private final static int ACTIVE_DISTANCE = 15;
+    private static final int ACTIVE_DISTANCE = 15;
     /**
      * Distance within which to search for passive mobs to attack.
      */
-    private final static double SEARCH_DISTANCE = 10d;
+    private static final double SEARCH_DISTANCE = 10d;
     /**
      * Distance beyond which the target will always be forgotten.
      */
-    private final static int FORGET_DISTANCE = 60;
+    private static final int FORGET_DISTANCE = 60;
 
     private final Monster monster;
     private final boolean attackPassiveIgnoreHostileMounts;
