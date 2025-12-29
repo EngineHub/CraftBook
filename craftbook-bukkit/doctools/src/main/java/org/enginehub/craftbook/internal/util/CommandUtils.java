@@ -140,8 +140,7 @@ public class CommandUtils {
                         .stream()
                         .sorted(Comparator.comparing(Command::getName))
                         .toList(),
-                    prefix + c.getName() + " ")
-                );
+                    prefix + c.getName() + " "));
         });
         return permsOutput.toString();
     }
