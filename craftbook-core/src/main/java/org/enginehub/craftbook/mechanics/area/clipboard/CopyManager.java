@@ -21,6 +21,7 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.entity.Entity;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
@@ -34,16 +35,15 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.enginehub.craftbook.CraftBook;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.mechanic.MechanicTypes;
+import org.enginehub.craftbook.mechanic.MechanicTypes;
 import org.enginehub.craftbook.util.HistoryHashMap;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -51,7 +51,6 @@ import java.util.regex.Pattern;
  * Used to load, save, and cache cuboid copies.
  */
 public class CopyManager {
-    private static final CraftBookPlugin plugin = CraftBookPlugin.inst();
     private static final CopyManager INSTANCE = new CopyManager();
     private static final Pattern NAME_PATTERN = Pattern.compile("^[a-z0-9_]+$", Pattern.CASE_INSENSITIVE);
 
@@ -61,7 +60,7 @@ public class CopyManager {
     /**
      * Cache.
      */
-    private final HistoryHashMap<String, BlockArrayClipboard> cache = new HistoryHashMap<>(10);
+    private final HistoryHashMap<String, Clipboard> cache = new HistoryHashMap<>(10);
 
     /**
      * Remembers missing copies so as to not look for them on disk.
@@ -78,7 +77,11 @@ public class CopyManager {
     }
 
     private ToggleArea getToggleAreaInstance() {
-        return CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(MechanicTypes.TOGGLE_AREA).get();
+        return CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(MechanicTypes.TOGGLE_AREA.get()).get();
+    }
+
+    private static Path getAreaPath() {
+        return CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("areas");
     }
 
     /**
@@ -108,13 +111,13 @@ public class CopyManager {
      * @param namespace to check
      * @param area to check
      */
-    public static boolean isExistingArea(File dataFolder, String namespace, String area) {
+    public static boolean isExistingArea(String namespace, String area) {
         area = area.replace("-", "");
-        File file = new File(dataFolder, "areas/" + namespace);
-        if (!new File(file, area + getDefaultFileSuffix()).exists()) {
+        var namespacePath = getAreaPath().resolve(namespace);
+        if (!Files.exists(namespacePath.resolve(area + getDefaultFileSuffix()))) {
             boolean found = false;
             for (String extension : ClipboardFormats.getFileExtensionArray()) {
-                if (new File(file, area + "." + extension).exists()) {
+                if (Files.exists(namespacePath.resolve(area + "." + extension))) {
                     found = true;
                     break;
                 }
@@ -137,7 +140,7 @@ public class CopyManager {
      * @return The loaded clipboard
      * @throws IOException If it fails to load
      */
-    public BlockArrayClipboard load(String namespace, String id) throws IOException {
+    public Clipboard load(String namespace, String id) throws IOException {
         id = id.toLowerCase(Locale.ENGLISH);
         String cacheKey = namespace + '/' + id;
 
@@ -149,26 +152,28 @@ public class CopyManager {
             }
         }
 
-        BlockArrayClipboard copy = cache.get(cacheKey);
+        Clipboard copy = cache.get(cacheKey);
 
         if (copy == null) {
-            File file = new File(new File(new File(plugin.getDataFolder(), "areas"), namespace), id + getDefaultFileSuffix());
-            if (!file.exists()) {
+            var namespacePath = getAreaPath().resolve(namespace);
+
+            Path path = namespacePath.resolve(id + getDefaultFileSuffix());
+            if (!Files.exists(path)) {
                 for (String extension : ClipboardFormats.getFileExtensionArray()) {
-                    file = new File(new File(new File(plugin.getDataFolder(), "areas"), namespace), id + "." + extension);
-                    if (file.exists()) {
+                    path = namespacePath.resolve(id + "." + extension);
+                    if (Files.exists(path)) {
                         break;
                     }
                 }
             }
-            if (file.exists()) {
-                ClipboardFormat format = ClipboardFormats.findByFile(file);
+            if (Files.exists(path)) {
+                ClipboardFormat format = ClipboardFormats.findByPath(path);
                 if (format == null) {
                     missing.put(cacheKey, System.currentTimeMillis());
                     throw new IOException("Unknown clipboard format!");
                 }
-                try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
-                    copy = (BlockArrayClipboard) reader.read();
+                try (ClipboardReader reader = format.getReader(Files.newInputStream(path))) {
+                    copy = reader.read();
                     missing.remove(cacheKey);
                     cache.put(cacheKey, copy);
                     return copy;
@@ -190,19 +195,19 @@ public class CopyManager {
      * @param clipboard The clipboard containing the save
      * @throws IOException If the file failed to save
      */
-    public void save(String namespace, String id, BlockArrayClipboard clipboard) throws IOException {
-        File folder = new File(new File(plugin.getDataFolder(), "areas"), namespace);
+    public void save(String namespace, String id, Clipboard clipboard) throws IOException {
+        var namespacePath = getAreaPath().resolve(namespace);
 
-        if (!folder.exists()) {
-            folder.mkdirs();
+        if (!Files.exists(namespacePath)) {
+            Files.createDirectories(namespacePath);
         }
 
         id = id.toLowerCase(Locale.ENGLISH);
 
         String cacheKey = namespace + '/' + id;
 
-        File file = new File(folder, id + getDefaultFileSuffix());
-        try (ClipboardWriter writer = getDefaultClipboardFormat().getWriter(new FileOutputStream(file))) {
+        Path path = namespacePath.resolve(id + getDefaultFileSuffix());
+        try (ClipboardWriter writer = getDefaultClipboardFormat().getWriter(Files.newOutputStream(path))) {
             writer.write(clipboard);
         }
         missing.remove(cacheKey);
@@ -210,25 +215,25 @@ public class CopyManager {
     }
 
     /**
-     * Copies a region into the BlockArrayClipboard.
+     * Copies a region into the clipboard.
      *
      * @param region The region
-     * @return The BlockArrayClipboard
+     * @return The clipboard
      * @throws WorldEditException If something went wrong.
      */
-    public BlockArrayClipboard copy(Region region, World world) throws WorldEditException {
+    public Clipboard copy(Region region, World world) throws WorldEditException {
         return copy(region, world, false, false);
     }
 
     /**
-     * Copies a region into the BlockArrayClipboard.
+     * Copies a region into the clipboard.
      *
      * @param region The region
-     * @return The BlockArrayClipboard
+     * @return The clipboard
      * @throws WorldEditException If something went wrong.
      */
-    public BlockArrayClipboard copy(Region region, World world, boolean copyEntities, boolean copyBiomes) throws WorldEditException {
-        BlockArrayClipboard copy = new BlockArrayClipboard(region);
+    public Clipboard copy(Region region, World world, boolean copyEntities, boolean copyBiomes) throws WorldEditException {
+        Clipboard copy = new BlockArrayClipboard(region);
 
         EditSession editSession = WorldEdit.getInstance().newEditSession(world);
         editSession.setTrackingHistory(false);
@@ -247,7 +252,7 @@ public class CopyManager {
      * @param clipboard The clipboard
      * @throws WorldEditException If it fails
      */
-    public void paste(BlockArrayClipboard clipboard, World world) throws WorldEditException {
+    public void paste(Clipboard clipboard, World world) throws WorldEditException {
         try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
             editSession.setTrackingHistory(false);
 
@@ -272,7 +277,7 @@ public class CopyManager {
      *
      * @param clipboard The clipboard
      */
-    public void clear(BlockArrayClipboard clipboard, World world) {
+    public void clear(Clipboard clipboard, World world) {
         try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
             editSession.setTrackingHistory(false);
             editSession.setBlocks(clipboard.getRegion(), BlockTypes.AIR.getDefaultState());
@@ -293,7 +298,7 @@ public class CopyManager {
      * @return -1 if the copy can be made, some other number for the count
      */
     public static int meetsQuota(String namespace, @Nullable String ignore, int quota) {
-        String[] files = new File(new File(plugin.getDataFolder(), "areas"), namespace).list();
+        String[] files = new File(getAreaPath().toFile(), namespace).list();
 
         if (files == null) {
             return quota > 0 ? -1 : 0;

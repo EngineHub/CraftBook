@@ -20,7 +20,6 @@ import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanics.area.Bridge;
 import org.enginehub.craftbook.mechanics.area.Door;
 import org.enginehub.craftbook.mechanics.area.Gate;
-import org.enginehub.craftbook.mechanics.area.clipboard.ToggleArea;
 import org.enginehub.craftbook.mechanics.headdrops.HeadDrops;
 import org.enginehub.craftbook.mechanics.minecart.MinecartCollisionEntry;
 import org.enginehub.craftbook.mechanics.minecart.MinecartEmptyDecay;
@@ -73,7 +72,6 @@ public class MechanicTypes {
     public static final @Nullable MechanicType<CartStation> MINECART_STATION = get("minecart_station");
     public static final @Nullable MechanicType<CartStrongBraker> MINECART_STRONG_BRAKER = get("minecart_strong_braker");
     public static final @Nullable MechanicType<CartTeleporter> MINECART_TELEPORTER = get("minecart_teleporter");
-    public static final @Nullable MechanicType<ToggleArea> TOGGLE_AREA = get("toggle_area");
 
     private MechanicTypes() {
     }

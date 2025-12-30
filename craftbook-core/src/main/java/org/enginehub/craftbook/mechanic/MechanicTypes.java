@@ -38,6 +38,7 @@ import org.enginehub.craftbook.mechanics.Snow;
 import org.enginehub.craftbook.mechanics.Teleporter;
 import org.enginehub.craftbook.mechanics.TreeLopper;
 import org.enginehub.craftbook.mechanics.XPStorer;
+import org.enginehub.craftbook.mechanics.area.clipboard.ToggleArea;
 import org.enginehub.craftbook.mechanics.betterai.BetterAI;
 import org.enginehub.craftbook.mechanics.boat.BoatEmptyDecay;
 import org.enginehub.craftbook.mechanics.boat.BoatExitRemover;
@@ -50,71 +51,73 @@ import org.enginehub.craftbook.mechanics.signcopier.SignCopier;
 import org.enginehub.craftbook.mechanics.variables.VariableManager;
 import org.jspecify.annotations.Nullable;
 
+import java.util.function.Supplier;
+
 @SuppressWarnings("unused")
 public class MechanicTypes {
 
-    public static final @Nullable MechanicType<Ammeter> AMMETER = get("ammeter");
-    public static final @Nullable MechanicType<BetterAI> BETTER_AI = get("better_ai");
-    public static final @Nullable MechanicType<BetterLeads> BETTER_LEADS = get("better_leads");
-    public static final @Nullable MechanicType<BetterPhysics> BETTER_PHYSICS = get("better_physics");
-    public static final @Nullable MechanicType<BetterPistons> BETTER_PISTONS = get("better_pistons");
-    public static final @Nullable MechanicType<BetterPlants> BETTER_PLANTS = get("better_plants");
-    public static final @Nullable MechanicType<BetterSponge> BETTER_SPONGE = get("better_sponge");
-    public static final @Nullable MechanicType<BoatEmptyDecay> BOAT_EMPTY_DECAY = get("boat_empty_decay");
-    public static final @Nullable MechanicType<BoatExitRemover> BOAT_EXIT_REMOVER = get("boat_exit_remover");
-    public static final @Nullable MechanicType<BoatImpactDamage> BOAT_IMPACT_DAMAGE = get("boat_impact_damage");
-    // public static final @Nullable MechanicType<Bridge> BRIDGE = get("bridge");
-    public static final @Nullable MechanicType<Chairs> CHAIRS = get("chairs");
-    public static final @Nullable MechanicType<ChunkAnchor> CHUNK_ANCHOR = get("chunk_anchor");
-    public static final @Nullable MechanicType<CookingPot> COOKING_POT = get("cooking_pot");
-    public static final @Nullable MechanicType<DispenserRecipes> DISPENSER_RECIPES = get("dispenser_recipes");
-    // public static final @Nullable MechanicType<Door> DOOR = get("door");
-    public static final @Nullable MechanicType<Elevator> ELEVATOR = get("elevator");
-    // public static final @Nullable MechanicType<Gate> GATE = get("gate");
-    // public static final @Nullable MechanicType<HeadDrops> HEAD_DROPS = get("head_drops");
-    public static final @Nullable MechanicType<HiddenSwitch> HIDDEN_SWITCH = get("hidden_switch");
-    public static final @Nullable MechanicType<JackOLantern> JACK_O_LANTERN = get("jack_o_lantern");
-    public static final @Nullable MechanicType<LightSwitch> LIGHT_SWITCH = get("light_switch");
-    public static final @Nullable MechanicType<LightStone> LIGHTSTONE = get("lightstone");
-    public static final @Nullable MechanicType<Marquee> MARQUEE = get("marquee");
-    // public static final @Nullable MechanicType<CartBooster> MINECART_BOOSTER = get("minecart_booster");
-    // public static final @Nullable MechanicType<MinecartCollisionEntry> MINECART_COLLISION_ENTRY = get("minecart_collision_entry");
-    // public static final @Nullable MechanicType<CartDispenser> MINECART_DISPENSER = get("minecart_dispenser");
-    // public static final @Nullable MechanicType<CartEjector> MINECART_EJECTOR = get("minecart_ejector");
-    // public static final @Nullable MechanicType<CartLift> MINECART_ELEVATOR = get("minecart_elevator");
-    // public static final @Nullable MechanicType<MinecartEmptyDecay> MINECART_EMPTY_DECAY = get("minecart_empty_decay");
-    // public static final @Nullable MechanicType<MinecartExitRemover> MINECART_EXIT_REMOVER = get("minecart_exit_remover");
-    // public static final @Nullable MechanicType<MinecartImpactDamage> MINECART_IMPACT_DAMAGE = get("minecart_impact_damage");
-    // public static final @Nullable MechanicType<MinecartItemPickup> MINECART_ITEM_PICKUP = get("minecart_item_pickup");
-    // public static final @Nullable MechanicType<CartLightBraker> MINECART_LIGHT_BRAKER = get("minecart_light_braker");
-    // public static final @Nullable MechanicType<CartMaxBooster> MINECART_MAX_BOOSTER = get("minecart_max_booster");
-    // public static final @Nullable MechanicType<MinecartNoCollide> MINECART_NO_COLLIDE = get("minecart_no_collide");
-    // public static final @Nullable MechanicType<MinecartPhysicsControl> MINECART_PHYSICS_CONTROL = get("minecart_physics_control");
-    // public static final @Nullable MechanicType<MinecartRailPlacer> MINECART_RAIL_PLACER = get("minecart_rail_placer");
-    // public static final @Nullable MechanicType<CartReverser> MINECART_REVERSER = get("minecart_reverser");
-    // public static final @Nullable MechanicType<CartStation> MINECART_STATION = get("minecart_station");
-    // public static final @Nullable MechanicType<CartStrongBraker> MINECART_STRONG_BRAKER = get("minecart_strong_braker");
-    // public static final @Nullable MechanicType<CartTeleporter> MINECART_TELEPORTER = get("minecart_teleporter");
-    public static final @Nullable MechanicType<MoreRails> MORE_RAILS = get("more_rails");
-    public static final @Nullable MechanicType<PaintingSwitcher> PAINTING_SWITCHER = get("painting_switcher");
-    public static final @Nullable MechanicType<ReadableBookshelf> READABLE_BOOKSHELF = get("readable_bookshelf");
-    public static final @Nullable MechanicType<RedstoneFire> REDSTONE_FIRE = get("redstone_fire");
-    public static final @Nullable MechanicType<RedstoneGlowstone> REDSTONE_GLOWSTONE = get("redstone_glowstone");
-    public static final @Nullable MechanicType<RedstoneJukebox> REDSTONE_JUKEBOX = get("redstone_jukebox");
-    public static final @Nullable MechanicType<SignCopier> SIGN_COPIER = get("sign_copier");
-    public static final @Nullable MechanicType<Snow> SNOW = get("snow");
-    public static final @Nullable MechanicType<Teleporter> TELEPORTER = get("teleporter");
-    public static final @Nullable MechanicType<TemporaryCart> TEMPORARY_CART = get("temporary_cart");
-    // public static final @Nullable MechanicType<ToggleArea> TOGGLE_AREA = get("toggle_area");
-    public static final @Nullable MechanicType<TreeLopper> TREE_LOPPER = get("tree_lopper");
-    public static final @Nullable MechanicType<VariableManager> VARIABLES = get("variables");
-    public static final @Nullable MechanicType<XPStorer> XP_STORER = get("xp_storer");
+    public static final @Nullable Supplier<MechanicType<Ammeter>> AMMETER = get("ammeter");
+    public static final @Nullable Supplier<MechanicType<BetterAI>> BETTER_AI = get("better_ai");
+    public static final @Nullable Supplier<MechanicType<BetterLeads>> BETTER_LEADS = get("better_leads");
+    public static final @Nullable Supplier<MechanicType<BetterPhysics>> BETTER_PHYSICS = get("better_physics");
+    public static final @Nullable Supplier<MechanicType<BetterPistons>> BETTER_PISTONS = get("better_pistons");
+    public static final @Nullable Supplier<MechanicType<BetterPlants>> BETTER_PLANTS = get("better_plants");
+    public static final @Nullable Supplier<MechanicType<BetterSponge>> BETTER_SPONGE = get("better_sponge");
+    public static final @Nullable Supplier<MechanicType<BoatEmptyDecay>> BOAT_EMPTY_DECAY = get("boat_empty_decay");
+    public static final @Nullable Supplier<MechanicType<BoatExitRemover>> BOAT_EXIT_REMOVER = get("boat_exit_remover");
+    public static final @Nullable Supplier<MechanicType<BoatImpactDamage>> BOAT_IMPACT_DAMAGE = get("boat_impact_damage");
+    // public static final @Nullable Supplier<MechanicType<Bridge> BRIDGE = get("bridge");
+    public static final @Nullable Supplier<MechanicType<Chairs>> CHAIRS = get("chairs");
+    public static final @Nullable Supplier<MechanicType<ChunkAnchor>> CHUNK_ANCHOR = get("chunk_anchor");
+    public static final @Nullable Supplier<MechanicType<CookingPot>> COOKING_POT = get("cooking_pot");
+    public static final @Nullable Supplier<MechanicType<DispenserRecipes>> DISPENSER_RECIPES = get("dispenser_recipes");
+    // public static final @Nullable Supplier<MechanicType<Door> DOOR = get("door");
+    public static final @Nullable Supplier<MechanicType<Elevator>> ELEVATOR = get("elevator");
+    // public static final @Nullable Supplier<MechanicType<Gate> GATE = get("gate");
+    // public static final @Nullable Supplier<MechanicType<HeadDrops> HEAD_DROPS = get("head_drops");
+    public static final @Nullable Supplier<MechanicType<HiddenSwitch>> HIDDEN_SWITCH = get("hidden_switch");
+    public static final @Nullable Supplier<MechanicType<JackOLantern>> JACK_O_LANTERN = get("jack_o_lantern");
+    public static final @Nullable Supplier<MechanicType<LightSwitch>> LIGHT_SWITCH = get("light_switch");
+    public static final @Nullable Supplier<MechanicType<LightStone>> LIGHTSTONE = get("lightstone");
+    public static final @Nullable Supplier<MechanicType<Marquee>> MARQUEE = get("marquee");
+    // public static final @Nullable Supplier<MechanicType<CartBooster> MINECART_BOOSTER = get("minecart_booster");
+    // public static final @Nullable Supplier<MechanicType<MinecartCollisionEntry> MINECART_COLLISION_ENTRY = get("minecart_collision_entry");
+    // public static final @Nullable Supplier<MechanicType<CartDispenser> MINECART_DISPENSER = get("minecart_dispenser");
+    // public static final @Nullable Supplier<MechanicType<CartEjector> MINECART_EJECTOR = get("minecart_ejector");
+    // public static final @Nullable Supplier<MechanicType<CartLift> MINECART_ELEVATOR = get("minecart_elevator");
+    // public static final @Nullable Supplier<MechanicType<MinecartEmptyDecay> MINECART_EMPTY_DECAY = get("minecart_empty_decay");
+    // public static final @Nullable Supplier<MechanicType<MinecartExitRemover> MINECART_EXIT_REMOVER = get("minecart_exit_remover");
+    // public static final @Nullable Supplier<MechanicType<MinecartImpactDamage> MINECART_IMPACT_DAMAGE = get("minecart_impact_damage");
+    // public static final @Nullable Supplier<MechanicType<MinecartItemPickup> MINECART_ITEM_PICKUP = get("minecart_item_pickup");
+    // public static final @Nullable Supplier<MechanicType<CartLightBraker> MINECART_LIGHT_BRAKER = get("minecart_light_braker");
+    // public static final @Nullable Supplier<MechanicType<CartMaxBooster> MINECART_MAX_BOOSTER = get("minecart_max_booster");
+    // public static final @Nullable Supplier<MechanicType<MinecartNoCollide> MINECART_NO_COLLIDE = get("minecart_no_collide");
+    // public static final @Nullable Supplier<MechanicType<MinecartPhysicsControl> MINECART_PHYSICS_CONTROL = get("minecart_physics_control");
+    // public static final @Nullable Supplier<MechanicType<MinecartRailPlacer> MINECART_RAIL_PLACER = get("minecart_rail_placer");
+    // public static final @Nullable Supplier<MechanicType<CartReverser> MINECART_REVERSER = get("minecart_reverser");
+    // public static final @Nullable Supplier<MechanicType<CartStation> MINECART_STATION = get("minecart_station");
+    // public static final @Nullable Supplier<MechanicType<CartStrongBraker> MINECART_STRONG_BRAKER = get("minecart_strong_braker");
+    // public static final @Nullable Supplier<MechanicType<CartTeleporter> MINECART_TELEPORTER = get("minecart_teleporter");
+    public static final @Nullable Supplier<MechanicType<MoreRails>> MORE_RAILS = get("more_rails");
+    public static final @Nullable Supplier<MechanicType<PaintingSwitcher>> PAINTING_SWITCHER = get("painting_switcher");
+    public static final @Nullable Supplier<MechanicType<ReadableBookshelf>> READABLE_BOOKSHELF = get("readable_bookshelf");
+    public static final @Nullable Supplier<MechanicType<RedstoneFire>> REDSTONE_FIRE = get("redstone_fire");
+    public static final @Nullable Supplier<MechanicType<RedstoneGlowstone>> REDSTONE_GLOWSTONE = get("redstone_glowstone");
+    public static final @Nullable Supplier<MechanicType<RedstoneJukebox>> REDSTONE_JUKEBOX = get("redstone_jukebox");
+    public static final @Nullable Supplier<MechanicType<SignCopier>> SIGN_COPIER = get("sign_copier");
+    public static final @Nullable Supplier<MechanicType<Snow>> SNOW = get("snow");
+    public static final @Nullable Supplier<MechanicType<Teleporter>> TELEPORTER = get("teleporter");
+    public static final @Nullable Supplier<MechanicType<TemporaryCart>> TEMPORARY_CART = get("temporary_cart");
+    public static final @Nullable Supplier<MechanicType<ToggleArea>> TOGGLE_AREA = get("toggle_area");
+    public static final @Nullable Supplier<MechanicType<TreeLopper>> TREE_LOPPER = get("tree_lopper");
+    public static final @Nullable Supplier<MechanicType<VariableManager>> VARIABLES = get("variables");
+    public static final @Nullable Supplier<MechanicType<XPStorer>> XP_STORER = get("xp_storer");
 
     private MechanicTypes() {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends CraftBookMechanic> @Nullable MechanicType<T> get(final String id) {
-        return (MechanicType<T>) MechanicType.REGISTRY.get(id);
+    public static <T extends CraftBookMechanic> Supplier<@Nullable MechanicType<T>> get(final String id) {
+        return () -> (MechanicType<T>) MechanicType.REGISTRY.get(id);
     }
 }

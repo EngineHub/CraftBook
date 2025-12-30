@@ -35,7 +35,6 @@ public class BukkitMechanicManager extends MechanicManager {
         //        registerMechanic("CustomCrafting", org.enginehub.craftbook.mechanics.crafting.CustomCrafting.class, MechanicCategory.CUSTOMISATION);
         //        registerMechanic("CustomDrops", org.enginehub.craftbook.mechanics.drops.CustomDrops.class, MechanicCategory.CUSTOMISATION);
         //        registerMechanic("CommandSigns", org.enginehub.craftbook.mechanics.CommandSigns.class, MechanicCategory.GENERAL);
-        //        registerMechanic("ToggleArea", org.enginehub.craftbook.mechanics.area.ToggleArea.class, MechanicCategory.GENERAL);
         //        registerMechanic("Cauldron", org.enginehub.craftbook.mechanics.cauldron.ImprovedCauldron.class, MechanicCategory.CUSTOMISATION);
         //        registerMechanic("Pay", org.enginehub.craftbook.mechanics.Payment.class, MechanicCategory.CIRCUIT);
         //        registerMechanic("Pipes", org.enginehub.craftbook.mechanics.pipe.Pipes.class, MechanicCategory.CIRCUIT);
@@ -126,7 +125,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .description(TranslatableComponent.of("craftbook.marquee.description"))
             .className("org.enginehub.craftbook.bukkit.mechanics.BukkitMarquee")
             .category(MechanicCategory.GENERAL)
-            .dependsOn(new MechanicDependency(org.enginehub.craftbook.mechanic.MechanicTypes.VARIABLES))
+            .dependsOn(new MechanicDependency(org.enginehub.craftbook.mechanic.MechanicTypes.VARIABLES.get()))
             .buildAndRegister();
 
         MechanicType.Builder
@@ -540,7 +539,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .name("ToggleArea")
             .description(TranslatableComponent.of("craftbook.togglearea.description"))
             .category(MechanicCategory.GENERAL)
-            .className("org.enginehub.craftbook.mechanics.area.clipboard.ToggleArea")
+            .className("org.enginehub.craftbook.bukkit.mechanics.area.clipboard.BukkitToggleArea")
             .buildAndRegister();
 
         MechanicType.Builder

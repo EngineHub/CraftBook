@@ -70,7 +70,7 @@ public class BukkitVariableManager extends VariableManager implements Listener {
             variableConfiguration = new VariableConfiguration(new YAMLProcessor(varFile, true, YAMLFormat.EXTENDED));
             variableConfiguration.load();
         } catch (Exception e) {
-            throw new MechanicInitializationException(MechanicTypes.VARIABLES, TranslatableComponent.of("craftbook.variables.failed-to-load"), e);
+            throw new MechanicInitializationException(MechanicTypes.VARIABLES.get(), TranslatableComponent.of("craftbook.variables.failed-to-load"), e);
         }
 
         MechanicCommandRegistrar registrar = CraftBookPlugin.inst().getCommandManager().getMechanicRegistrar();

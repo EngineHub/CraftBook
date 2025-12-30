@@ -29,7 +29,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class MechanicType<T extends CraftBookMechanic> implements Keyed {
 
-    public static final Registry<MechanicType<? extends CraftBookMechanic>> REGISTRY = new Registry<>("mechanic type");
+    public static final Registry<MechanicType<? extends CraftBookMechanic>> REGISTRY = new Registry<>("mechanic type", "craftbook:mechanic_type");
 
     private final String id;
     private final String name;
@@ -86,7 +86,7 @@ public class MechanicType<T extends CraftBookMechanic> implements Keyed {
     }
 
     public boolean isInstance(CraftBookMechanic mechanic) {
-        return mechanic.getClass().getName().equals(this.className);
+        return mechanic.getMechanicType().id.equals(this.id);
     }
 
     public static class Builder<T extends CraftBookMechanic> {

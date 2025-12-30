@@ -90,7 +90,7 @@ public final class RailUtil {
     }
 
     public static boolean isTrack(BlockType blockType) {
-        if (CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(MechanicTypes.MORE_RAILS)
+        if (CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(MechanicTypes.MORE_RAILS.get())
             .map(moreRails -> moreRails.isValidRail(blockType))
             .orElse(false)) {
             return true;

@@ -58,7 +58,7 @@ public class MinecartExitRemover extends AbstractCraftBookMechanic implements Li
             }
 
             // Ignore temporary carts here, we don't want to handle them.
-            Optional<TemporaryCart> temporaryCart = CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(MechanicTypes.TEMPORARY_CART);
+            Optional<TemporaryCart> temporaryCart = CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(MechanicTypes.TEMPORARY_CART.get());
             if (temporaryCart.isPresent() && temporaryCart.get() instanceof BukkitTemporaryCart bukkitTemporaryCart) {
                 if (cart.getPersistentDataContainer().has(bukkitTemporaryCart.getTemporaryCartKey(), PersistentDataType.BYTE)) {
                     return;

@@ -13,17 +13,15 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.area.clipboard;
+package org.enginehub.craftbook.bukkit.mechanics.area.clipboard;
 
-import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.World;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
@@ -35,7 +33,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.ChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
@@ -43,6 +40,8 @@ import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanics.area.clipboard.CopyManager;
+import org.enginehub.craftbook.mechanics.area.clipboard.ToggleArea;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
@@ -54,13 +53,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
-public class ToggleArea extends AbstractCraftBookMechanic implements Listener {
+public class BukkitToggleArea extends ToggleArea implements Listener {
 
-    private static final TextReplacementConfig DASH_REMOVER = TextReplacementConfig.builder().matchLiteral("-").replacement("").build();
-
-    public ToggleArea(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public BukkitToggleArea(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 
@@ -200,6 +196,7 @@ public class ToggleArea extends AbstractCraftBookMechanic implements Listener {
         // check if the namespace and area exists
         if (!isValidArea(toggleAreaData)) {
             player.printError(TranslatableComponent.of("craftbook.togglearea.missing-area"));
+            event.setCancelled(true);
             return;
         }
 
@@ -216,11 +213,11 @@ public class ToggleArea extends AbstractCraftBookMechanic implements Listener {
     }
 
     private boolean isValidArea(ToggleAreaData toggleAreaData) {
-        if (CopyManager.isExistingArea(CraftBookPlugin.inst().getDataFolder(), toggleAreaData.namespace, toggleAreaData.areaOn)) {
-            if (toggleAreaData.areaOff == null || toggleAreaData.areaOff.isEmpty() || toggleAreaData.areaOff.equals("--")) {
+        if (CopyManager.isExistingArea(toggleAreaData.namespace(), toggleAreaData.areaOn())) {
+            if (toggleAreaData.areaOff() == null || toggleAreaData.areaOff().isEmpty() || toggleAreaData.areaOff().equals("--")) {
                 return true;
             }
-            return CopyManager.isExistingArea(CraftBookPlugin.inst().getDataFolder(), toggleAreaData.namespace, toggleAreaData.areaOff);
+            return CopyManager.isExistingArea(toggleAreaData.namespace(), toggleAreaData.areaOff());
         }
         return false;
     }
@@ -270,20 +267,20 @@ public class ToggleArea extends AbstractCraftBookMechanic implements Listener {
 
     private boolean toggle(ChangedSign sign, ToggleAreaData toggleAreaData, boolean save) {
         try {
-            BlockArrayClipboard copy;
+            Clipboard copy;
             World weWorld = BukkitAdapter.adapt(sign.getBlock().getWorld());
 
             if (checkToggleState(sign)) {
-                copy = CopyManager.getInstance().load(toggleAreaData.namespace, toggleAreaData.areaOn);
+                copy = CopyManager.getInstance().load(toggleAreaData.namespace(), toggleAreaData.areaOn());
 
                 // if this is a save area save it before toggling off
                 if (save) {
                     copy = CopyManager.getInstance().copy(copy.getRegion(), weWorld);
-                    CopyManager.getInstance().save(toggleAreaData.namespace, toggleAreaData.areaOn, copy);
+                    CopyManager.getInstance().save(toggleAreaData.namespace(), toggleAreaData.areaOn(), copy);
                 }
                 // if we are toggling to the second area we dont clear the old area
-                if (!toggleAreaData.areaOff.isEmpty() && !toggleAreaData.areaOff.equals("--")) {
-                    copy = CopyManager.getInstance().load(toggleAreaData.namespace, toggleAreaData.areaOff);
+                if (!toggleAreaData.areaOff().isEmpty() && !toggleAreaData.areaOff().equals("--")) {
+                    copy = CopyManager.getInstance().load(toggleAreaData.namespace(), toggleAreaData.areaOff());
                     CopyManager.getInstance().paste(copy, weWorld);
                 } else {
                     CopyManager.getInstance().clear(copy, weWorld);
@@ -293,13 +290,13 @@ public class ToggleArea extends AbstractCraftBookMechanic implements Listener {
 
                 // toggle the area on
                 // if this is a save area save it before toggling off
-                if (save && !toggleAreaData.areaOff.isEmpty() && !toggleAreaData.areaOff.equals("--")) {
-                    copy = CopyManager.getInstance().load(toggleAreaData.namespace, toggleAreaData.areaOff);
+                if (save && !toggleAreaData.areaOff().isEmpty() && !toggleAreaData.areaOff().equals("--")) {
+                    copy = CopyManager.getInstance().load(toggleAreaData.namespace(), toggleAreaData.areaOff());
                     copy = CopyManager.getInstance().copy(copy.getRegion(), weWorld);
-                    CopyManager.getInstance().save(toggleAreaData.namespace, toggleAreaData.areaOff, copy);
+                    CopyManager.getInstance().save(toggleAreaData.namespace(), toggleAreaData.areaOff(), copy);
                 }
 
-                copy = CopyManager.getInstance().load(toggleAreaData.namespace, toggleAreaData.areaOn);
+                copy = CopyManager.getInstance().load(toggleAreaData.namespace(), toggleAreaData.areaOn());
                 CopyManager.getInstance().paste(copy, weWorld);
                 setToggledState(sign, true);
             }
@@ -330,9 +327,6 @@ public class ToggleArea extends AbstractCraftBookMechanic implements Listener {
 
         return toggle(sign, toggleAreaData, save);
     }
-
-    // pattern to check where the markers for on and off state are
-    private static final Pattern TOGGLED_ON_PATTERN = Pattern.compile("^-[A-Za-z0-9_]*?-$");
 
     private boolean checkToggleState(ChangedSign sign) {
         String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)).toLowerCase(Locale.ENGLISH);
@@ -365,28 +359,5 @@ public class ToggleArea extends AbstractCraftBookMechanic implements Listener {
         if (name != null && !name.equals(existingName)) {
             sign.setLine(0, Component.text("~" + name, null, TextDecoration.ITALIC));
         }
-    }
-
-    private boolean allowRedstone;
-    boolean removeEntitiesOnToggle;
-    int maxAreaSize;
-    int maxAreasPerUser;
-
-    @Override
-    public void loadFromConfiguration(YAMLProcessor config) {
-        config.setComment("allow-redstone", "Allow ToggleAreas to be toggled via redstone.");
-        allowRedstone = config.getBoolean("allow-redstone", true);
-
-        config.setComment("remove-entities-on-toggle", "Whether the area toggling will remove entities within it.");
-        removeEntitiesOnToggle = config.getBoolean("remove-entities-on-toggle", false);
-
-        config.setComment("max-size", "Sets the max amount of blocks that a ToggleArea can hold.");
-        maxAreaSize = config.getInt("max-size", 5000);
-
-        config.setComment("max-per-user", "Sets the max amount of ToggleAreas that can be within one personal namespace.");
-        maxAreasPerUser = config.getInt("max-per-user", 30);
-    }
-
-    public record ToggleAreaData(String namespace, String areaOn, String areaOff) {
     }
 }
