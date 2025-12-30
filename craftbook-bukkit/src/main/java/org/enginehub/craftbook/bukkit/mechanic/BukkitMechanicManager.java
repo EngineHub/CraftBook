@@ -38,7 +38,6 @@ public class BukkitMechanicManager extends MechanicManager {
         //        registerMechanic("Cauldron", org.enginehub.craftbook.mechanics.cauldron.ImprovedCauldron.class, MechanicCategory.CUSTOMISATION);
         //        registerMechanic("Pay", org.enginehub.craftbook.mechanics.Payment.class, MechanicCategory.CIRCUIT);
         //        registerMechanic("Pipes", org.enginehub.craftbook.mechanics.pipe.Pipes.class, MechanicCategory.CIRCUIT);
-        //        registerMechanic("BounceBlocks", org.enginehub.craftbook.mechanics.BounceBlocks.class, MechanicCategory.GENERAL);
         //        registerMechanic("IntegratedCircuits", org.enginehub.craftbook.mechanics.ic.ICMechanic.class, MechanicCategory.CIRCUIT);
         //        registerMechanic("MinecartSorter", org.enginehub.craftbook.mechanics.minecart.blocks.CartSorter.class, MechanicCategory.MINECART);
         //        registerMechanic("MinecartDeposit", org.enginehub.craftbook.mechanics.minecart.blocks.CartDeposit.class, MechanicCategory.MINECART);
@@ -549,6 +548,15 @@ public class BukkitMechanicManager extends MechanicManager {
             .description(TranslatableComponent.of("craftbook.hiddenswitch.description"))
             .category(MechanicCategory.GENERAL)
             .className("org.enginehub.craftbook.bukkit.mechanics.BukkitHiddenSwitch")
+            .buildAndRegister();
+
+        MechanicType.Builder
+            .create()
+            .id("bounce_blocks")
+            .name("BounceBlocks")
+            .description(TranslatableComponent.of("craftbook.bounceblocks.description"))
+            .category(MechanicCategory.GENERAL)
+            .className("org.enginehub.craftbook.bukkit.mechanics.BukkitBounceBlocks")
             .buildAndRegister();
 
         // TODO CommandItems needs to load early (after variables).

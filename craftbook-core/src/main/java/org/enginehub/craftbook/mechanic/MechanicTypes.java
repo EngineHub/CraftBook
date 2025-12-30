@@ -20,6 +20,7 @@ import org.enginehub.craftbook.mechanics.BetterLeads;
 import org.enginehub.craftbook.mechanics.BetterPhysics;
 import org.enginehub.craftbook.mechanics.BetterPlants;
 import org.enginehub.craftbook.mechanics.BetterSponge;
+import org.enginehub.craftbook.mechanics.BounceBlocks;
 import org.enginehub.craftbook.mechanics.Chairs;
 import org.enginehub.craftbook.mechanics.ChunkAnchor;
 import org.enginehub.craftbook.mechanics.CookingPot;
@@ -66,6 +67,7 @@ public class MechanicTypes {
     public static final @Nullable Supplier<MechanicType<BoatEmptyDecay>> BOAT_EMPTY_DECAY = get("boat_empty_decay");
     public static final @Nullable Supplier<MechanicType<BoatExitRemover>> BOAT_EXIT_REMOVER = get("boat_exit_remover");
     public static final @Nullable Supplier<MechanicType<BoatImpactDamage>> BOAT_IMPACT_DAMAGE = get("boat_impact_damage");
+    public static final @Nullable Supplier<MechanicType<BounceBlocks>> BOUNCE_BLOCKS = get("bounce_blocks");
     // public static final @Nullable Supplier<MechanicType<Bridge> BRIDGE = get("bridge");
     public static final @Nullable Supplier<MechanicType<Chairs>> CHAIRS = get("chairs");
     public static final @Nullable Supplier<MechanicType<ChunkAnchor>> CHUNK_ANCHOR = get("chunk_anchor");

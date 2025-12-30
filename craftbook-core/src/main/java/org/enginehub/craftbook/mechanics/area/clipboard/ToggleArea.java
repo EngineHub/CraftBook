@@ -23,7 +23,7 @@ import org.enginehub.craftbook.mechanic.MechanicType;
 
 import java.util.regex.Pattern;
 
-public class ToggleArea extends AbstractCraftBookMechanic {
+public abstract class ToggleArea extends AbstractCraftBookMechanic {
 
     protected static final TextReplacementConfig DASH_REMOVER = TextReplacementConfig.builder().matchLiteral("-").replacement("").build();
 

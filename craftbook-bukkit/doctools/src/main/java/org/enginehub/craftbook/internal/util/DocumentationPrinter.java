@@ -84,5 +84,6 @@ public class DocumentationPrinter {
         MechanicConfigurationGenerator.generateMechanicConfiguration();
 
         worldEdit.onStopped();
+        System.exit(0);
     }
 }

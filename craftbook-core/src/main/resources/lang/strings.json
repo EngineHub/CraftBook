@@ -24,6 +24,7 @@
     "craftbook.boatimpactdamage.description": "Cause boats to damage and knockback entities on collision",
 
     "craftbook.bounceblocks.create": "BounceBlock created.",
+    "craftbook.bounceblocks.description": "Create blocks that launch players when jumped or stepped on.",
     "craftbook.bounceblocks.invalid-velocity": "You need to enter a valid velocity on the 3rd line!",
 
     "craftbook.bridge.create": "Bridge created.",

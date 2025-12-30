@@ -31,7 +31,7 @@ public class MechanicTypesGenerator {
             MechanicType.REGISTRY.keySet().stream().sorted().forEach(mech -> {
                 MechanicType<?> type = MechanicType.REGISTRY.get(mech);
                 try {
-                    writer.write("public static final @Nullable MechanicType<" + type.getMechanicClass().getSimpleName() + "> " + mech.toUpperCase(Locale.ENGLISH) + " = get(\"" + mech + "\");\n");
+                    writer.write("public static final @Nullable Supplier<MechanicType<" + type.getMechanicClass().getSimpleName() + ">> " + mech.toUpperCase(Locale.ENGLISH) + " = get(\"" + mech + "\");\n");
                 } catch (Throwable e) {
                     System.err.println("Failed to generate mechanic type for " + mech);
                     e.printStackTrace();

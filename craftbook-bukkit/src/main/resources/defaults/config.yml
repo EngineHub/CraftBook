@@ -25,6 +25,7 @@ mechanics:
         better_pistons: false
         better_plants: false
         better_sponge: false
+        bounce_blocks: false
         bridge: false
         chairs: false
         chunk_anchor: false

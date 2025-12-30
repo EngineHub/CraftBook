@@ -16,21 +16,32 @@
 package org.enginehub.craftbook.mechanics;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.world.block.BaseBlock;
+import com.sk89q.worldedit.world.block.BlockCategories;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.util.BlockParser;
+import org.enginehub.craftbook.util.ConfigUtil;
 
-public abstract class HiddenSwitch extends AbstractCraftBookMechanic {
+import java.util.List;
 
-    public HiddenSwitch(MechanicType<? extends CraftBookMechanic> mechanicType) {
+public abstract class BounceBlocks extends AbstractCraftBookMechanic {
+
+    public BounceBlocks(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 
-    protected boolean allowAnyFace;
+    protected List<BaseBlock> allowedBlocks;
+    protected double sensitivity;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-        config.setComment("allow-any-face", "Allows the Hidden Switch to be activated from any face of the block.");
-        allowAnyFace = config.getBoolean("allow-any-face", true);
+
+        config.setComment("blocks", "A list of blocks that can be used as bounce blocks.");
+        allowedBlocks = BlockParser.getBlocks(config.getStringList("blocks", ConfigUtil.getIdsFromCategory(BlockCategories.TERRACOTTA)), true);
+
+        config.setComment("sensitivity", "The sensitivity of movement required to activate the block.");
+        sensitivity = config.getDouble("sensitivity", 0.1);
     }
 }

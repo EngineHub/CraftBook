@@ -6,6 +6,9 @@ plugins {
 application.mainClass.set("org.enginehub.craftbook.internal.util.DocumentationPrinter")
 tasks.named<JavaExec>("run") {
     workingDir = rootProject.projectDir
+
+    // Add this env var to bypass systems that break docgen.
+    environment("CRAFTBOOK_DOCGEN", "true");
 }
 
 repositories {
