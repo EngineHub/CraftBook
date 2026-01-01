@@ -377,12 +377,10 @@ public class BukkitBetterPistons extends BetterPistons implements Listener {
                                 if (ent instanceof Player player) {
                                     player.teleport(dest, PlayerTeleportEvent.TeleportCause.PLUGIN,
                                         TeleportFlag.Relative.VELOCITY_X, TeleportFlag.Relative.VELOCITY_Y, TeleportFlag.Relative.VELOCITY_Z,
-                                        TeleportFlag.Relative.VELOCITY_ROTATION,
-                                        TeleportFlag.EntityState.RETAIN_PASSENGERS, TeleportFlag.EntityState.RETAIN_VEHICLE,
-                                        TeleportFlag.EntityState.RETAIN_OPEN_INVENTORY
+                                        TeleportFlag.Relative.VELOCITY_ROTATION
                                     );
                                 } else {
-                                    ent.teleport(dest, TeleportFlag.EntityState.RETAIN_PASSENGERS, TeleportFlag.EntityState.RETAIN_VEHICLE);
+                                    ent.teleport(dest);
                                 }
                             }
 
@@ -437,12 +435,10 @@ public class BukkitBetterPistons extends BetterPistons implements Listener {
                                 if (ent instanceof Player player) {
                                     player.teleport(dest, PlayerTeleportEvent.TeleportCause.PLUGIN,
                                         TeleportFlag.Relative.VELOCITY_X, TeleportFlag.Relative.VELOCITY_Y, TeleportFlag.Relative.VELOCITY_Z,
-                                        TeleportFlag.Relative.VELOCITY_ROTATION,
-                                        TeleportFlag.EntityState.RETAIN_PASSENGERS, TeleportFlag.EntityState.RETAIN_VEHICLE,
-                                        TeleportFlag.EntityState.RETAIN_OPEN_INVENTORY
+                                        TeleportFlag.Relative.VELOCITY_ROTATION
                                     );
                                 } else {
-                                    ent.teleport(dest, TeleportFlag.EntityState.RETAIN_PASSENGERS, TeleportFlag.EntityState.RETAIN_VEHICLE);
+                                    ent.teleport(dest);
                                 }
                             }
                             if (copyData(from, to)) {

@@ -97,7 +97,7 @@ public class CartSorter extends CartBlockMechanism {
         // perhaps oddly, it's the sign facing that determines the concepts of left and right, and not the track.
         // this is required since there's not a north track and a south track; just a north-south track type.
         Rail trackData = (Rail) Material.RAIL.createBlockData();
-        BlockFace next = SignUtil.getFacing(event.getBlocks().sign());
+        BlockFace next = SignUtil.getBack(event.getBlocks().sign());
         switch (next) {
             case SOUTH:
                 switch (dir) {

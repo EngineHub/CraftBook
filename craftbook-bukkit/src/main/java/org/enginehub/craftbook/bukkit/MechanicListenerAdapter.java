@@ -99,9 +99,12 @@ final class MechanicListenerAdapter implements Listener {
                     signClickTimer.put(event.getPlayer().getUniqueId(), System.currentTimeMillis());
                 }
             }
-            // Ignoring deprecation as we need this value to pass down.
-            @SuppressWarnings("deprecation")
-            Vector clickedPosition = event.getClickedPosition();
+            Location interactionPoint = event.getInteractionPoint();
+            Block clickedBlock = event.getClickedBlock();
+
+            Vector clickedPosition = interactionPoint != null && clickedBlock != null
+                    ? interactionPoint.subtract(clickedBlock.getLocation()).toVector()
+                    : null;
             if (clickedPosition == null) {
                 RayTraceResult rayTraceResult = event.getPlayer().rayTraceBlocks(5.0, FluidCollisionMode.NEVER);
                 if (rayTraceResult != null) {

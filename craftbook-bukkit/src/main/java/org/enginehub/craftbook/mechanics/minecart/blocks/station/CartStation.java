@@ -17,7 +17,6 @@ package org.enginehub.craftbook.mechanics.minecart.blocks.station;
 
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import io.papermc.paper.entity.TeleportFlag;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.block.sign.Side;
@@ -133,15 +132,15 @@ public class CartStation extends CartBlockMechanism {
                 if (autoStart && powerChange) {
                     return;
                 }
-                cart.setVelocity(SignUtil.getFacing(blocks.sign()).getDirection().multiply(0.2));
+                cart.setVelocity(SignUtil.getBack(blocks.sign()).getDirection().multiply(0.2));
             }
             case OFF, NA -> {
                 // park it.
                 cart.setVelocity(new Vector(0, 0, 0));
 
                 // recenter it
-                Location l = blocks.rail().getLocation().add(0.5, 0.5, 0.5);
-                cart.teleport(l, TeleportFlag.EntityState.RETAIN_VEHICLE, TeleportFlag.EntityState.RETAIN_PASSENGERS);
+                Location l = blocks.rail().getLocation().add(0.5, 0, 0.5);
+                cart.teleport(l);
             }
             default -> {
             }

@@ -18,7 +18,6 @@ package org.enginehub.craftbook.mechanics.minecart.blocks;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import io.papermc.paper.entity.TeleportFlag;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -81,7 +80,7 @@ public class CartTeleporter extends CartBlockMechanism {
 
         Location loc = new Location(world, x, y, z, event.getMinecart().getLocation().getYaw(), event.getMinecart().getLocation().getPitch()).toCenterLocation();
         loc.getChunk().load(true);
-        event.getMinecart().teleport(loc, TeleportFlag.EntityState.RETAIN_VEHICLE, TeleportFlag.EntityState.RETAIN_PASSENGERS);
+        event.getMinecart().teleport(loc);
     }
 
     @Override

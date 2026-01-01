@@ -282,10 +282,8 @@ public class BukkitTeleporter extends Teleporter implements Listener {
         boolean teleported = bukkitPlayer.getVehicle() == null
             ? bukkitPlayer.teleport(newLocation, PlayerTeleportEvent.TeleportCause.PLUGIN,
                 TeleportFlag.Relative.VELOCITY_X, TeleportFlag.Relative.VELOCITY_Y, TeleportFlag.Relative.VELOCITY_Z,
-                TeleportFlag.Relative.VELOCITY_ROTATION,
-                TeleportFlag.EntityState.RETAIN_PASSENGERS, TeleportFlag.EntityState.RETAIN_VEHICLE,
-                TeleportFlag.EntityState.RETAIN_OPEN_INVENTORY)
-            : bukkitPlayer.getVehicle().teleport(newLocation, PlayerTeleportEvent.TeleportCause.PLUGIN, TeleportFlag.EntityState.RETAIN_PASSENGERS, TeleportFlag.EntityState.RETAIN_VEHICLE);
+                TeleportFlag.Relative.VELOCITY_ROTATION)
+            : bukkitPlayer.getVehicle().teleport(newLocation, PlayerTeleportEvent.TeleportCause.PLUGIN);
 
         if (teleported) {
             player.printInfo(TranslatableComponent.of("craftbook.teleporter.teleported"));

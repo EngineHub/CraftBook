@@ -18,7 +18,6 @@ package org.enginehub.craftbook.mechanics.minecart.blocks;
 import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import io.papermc.paper.entity.TeleportFlag;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -95,7 +94,7 @@ public class CartLift extends CartBlockMechanism {
         Vector oldVelocity = cart.getVelocity();
         Location newLocation = destination.getLocation();
         newLocation.setDirection(cart.getLocation().getDirection());
-        cart.teleport(newLocation, TeleportFlag.EntityState.RETAIN_VEHICLE, TeleportFlag.EntityState.RETAIN_PASSENGERS);
+        cart.teleport(newLocation);
         cart.setVelocity(oldVelocity);
 
         for (Entity entity : cart.getPassengers()) {

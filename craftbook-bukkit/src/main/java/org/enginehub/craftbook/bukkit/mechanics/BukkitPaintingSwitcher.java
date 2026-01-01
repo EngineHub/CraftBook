@@ -23,7 +23,6 @@ import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -175,14 +174,16 @@ public class BukkitPaintingSwitcher extends PaintingSwitcher implements Listener
             return;
         }
 
-        int newID = artKeys.indexOf(paint.getArt().getKey()) + (isForwards ? 1 : -1);
+        var paintingRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.PAINTING_VARIANT);
+
+        int newID = artKeys.indexOf(paintingRegistry.getKey(paint.getArt())) + (isForwards ? 1 : -1);
         if (newID < 0) {
             newID = artKeys.size() - 1;
         } else if (newID > artKeys.size() - 1) {
             newID = 0;
         }
 
-        while (!paint.setArt(Registry.ART.get(artKeys.get(newID)))) {
+        while (!paint.setArt(paintingRegistry.get(artKeys.get(newID)))) {
             if (newID > 0 && !isForwards) {
                 newID--;
             } else if (newID < artKeys.size() - 1 && isForwards) {
