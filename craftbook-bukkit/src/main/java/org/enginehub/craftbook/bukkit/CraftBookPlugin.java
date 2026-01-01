@@ -16,15 +16,14 @@
 package org.enginehub.craftbook.bukkit;
 
 import com.google.common.base.Joiner;
-import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.wepif.PermissionsResolverManager;
 import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.internal.command.CommandUtil;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -163,7 +162,7 @@ public class CraftBookPlugin extends JavaPlugin {
                 }
 
                 if (!foundAMech) {
-                    event.getPlayer().sendMessage(ChatColor.RED + "[CraftBook] Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!");
+                    event.getPlayer().sendMessage(Component.text("[CraftBook] Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!", NamedTextColor.RED));
                 }
             }
         }, this);
@@ -179,7 +178,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         if (!foundAMech) {
             Bukkit.getScheduler().runTaskTimer(this,
-                () -> getLogger().warning(ChatColor.RED + "Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!"), 20L, 20 * 60 * 5);
+                () -> getComponentLogger().warn(Component.text("Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!", NamedTextColor.RED)), 20L, 20 * 60 * 5);
         }
     }
 
@@ -307,37 +306,6 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     /**
-     * Gets the name of a command sender. This is a unique name and this
-     * method should never return a "display name".
-     *
-     * @param sender The sender to get the name of
-     * @return The unique name of the sender.
-     */
-    public String toUniqueName(CommandSender sender) {
-        if (sender instanceof ConsoleCommandSender) {
-            return "*Console*";
-        } else {
-            return sender.getName();
-        }
-    }
-
-    /**
-     * Gets the name of a command sender. This play be a display name.
-     *
-     * @param sender The CommandSender to get the name of.
-     * @return The name of the given sender
-     */
-    public String toName(CommandSender sender) {
-        if (sender instanceof ConsoleCommandSender) {
-            return "*Console*";
-        } else if (sender instanceof Player) {
-            return ((Player) sender).getDisplayName();
-        } else {
-            return sender.getName();
-        }
-    }
-
-    /**
      * Checks permissions.
      *
      * @param sender The sender to check the permission on.
@@ -361,22 +329,6 @@ public class CraftBookPlugin extends JavaPlugin {
         }
 
         return false;
-    }
-
-    /**
-     * Checks to see if the sender is a player, otherwise throw an exception.
-     *
-     * @param sender The {@link CommandSender} to check
-     * @return {@code sender} casted to a player
-     * @throws CommandException if {@code sender} isn't a {@link Player}
-     */
-    public static Player checkPlayer(CommandSender sender)
-        throws CommandException {
-        if (sender instanceof Player) {
-            return (Player) sender;
-        } else {
-            throw new CommandException("A player is expected.");
-        }
     }
 
     public Actor wrapCommandSender(CommandSender sender) {

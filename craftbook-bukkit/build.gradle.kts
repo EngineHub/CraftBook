@@ -43,7 +43,6 @@ dependencies {
     "api"(libs.worldguard.bukkit) { isTransitive = false }
 
     "localImplementation"(libs.paperApi) {
-        exclude("org.slf4j", "slf4j-api")
         exclude("junit", "junit")
     }
     "implementation"(libs.vaultApi) { isTransitive = false }

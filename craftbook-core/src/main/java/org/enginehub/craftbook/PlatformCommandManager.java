@@ -186,12 +186,6 @@ public class PlatformCommandManager {
                     .build());
             }
         } catch (CommandExecutionException e) {
-            // FIXME: Put this in an exception converter.
-            if (e.getCause() instanceof com.sk89q.minecraft.util.commands.CommandException) {
-                actor.printError(TextComponent.of(e.getCause().getMessage()));
-                return;
-            }
-
             handleUnknownException(actor, e.getCause());
         } catch (CommandException e) {
             actor.printError(TextComponent.builder("")

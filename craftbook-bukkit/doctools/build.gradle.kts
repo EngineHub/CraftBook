@@ -36,8 +36,6 @@ repositories {
 
 dependencies {
     "implementation"(project(":craftbook-bukkit"))
-    "implementation"(libs.paperApi) {
-        exclude(group = "org.slf4j", module = "slf4j-api")
-    }
+    "implementation"(libs.paperApi);
     "implementation"("com.sk89q.worldedit:worldedit-cli:${libs.versions.worldedit.get()}")
 }
