@@ -64,30 +64,13 @@ public final class SignUtil {
     }
 
     /**
-     * Get the back of the sign, the block that it is attached to.
-     *
-     * @param sign treated as sign post if it is such, or else assumed to be a wall sign (i.e.,
-     *     if you ask about a stone block, it's considered a wall
-     *     sign).
-     * @return the direction a player would be facing when reading the sign; i.e. the face that is
-     *     actually the back
-     *     side of the sign.
-     * @deprecated confusing, should use getBack or getFront explicitly
-     */
-    @Deprecated
-    public static BlockFace getFacing(Block sign) {
-        return getBack(sign);
-    }
-
-    /**
      * Get the front face of the sign.
      *
      * @param sign treated as sign post if it is such, or else assumed to be a wall sign (i.e.,
      *     if you ask about a stone block, it's considered a wall
      *     sign).
      * @return the side of the sign containing the text (in other words, when a player places a new
-     *     sign,
-     *     while facing north, this will return south).
+     *     sign, while facing north, this will return south).
      */
     public static BlockFace getFront(Block sign) {
         BlockData blockData = sign.getBlockData();
@@ -112,9 +95,7 @@ public final class SignUtil {
      *     sign).
      * @return the blank side of the sign opposite the text. In the case of a wall sign,
      *     the block in this direction is the block to which the sign is
-     *     attached. This is also the direction a player would be facing when reading the sign; see
-     *     {@link
-     *     #getFacing(Block)}.
+     *     attached. This is also the direction a player would be facing when reading the sign.
      */
     public static BlockFace getBack(Block sign) {
         return getFront(sign).getOppositeFace();

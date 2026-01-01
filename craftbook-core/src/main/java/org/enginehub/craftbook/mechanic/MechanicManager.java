@@ -27,7 +27,6 @@ import org.enginehub.craftbook.mechanic.load.MechanicDependency;
 import org.enginehub.craftbook.mechanic.load.UnsatisfiedLoadDependencyException;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -141,7 +140,7 @@ public abstract class MechanicManager {
                 mech = mechanicType.getMechanicClass().getDeclaredConstructor().newInstance();
             }
 
-            mech.loadConfiguration(new File(CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("mechanics").toFile(), mechanicType.getName() + ".yml"));
+            mech.loadConfiguration(CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("mechanics").resolve(mechanicType.getName() + ".yml"));
             mech.enable();
 
             loadedMechanics.add(mech);
@@ -208,7 +207,7 @@ public abstract class MechanicManager {
     public void reloadMechanic(CraftBookMechanic mechanic) throws MechanicInitializationException {
         MechanicType<?> mechanicType = mechanic.getMechanicType();
         try {
-            mechanic.loadConfiguration(new File(CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("mechanics").toFile(), mechanicType.getName() + ".yml"));
+            mechanic.loadConfiguration(CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("mechanics").resolve(mechanicType.getName() + ".yml"));
             mechanic.reload();
         } catch (MechanicInitializationException e) {
             // Re-throw

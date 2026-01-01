@@ -59,7 +59,7 @@ public class SetDoor extends AbstractIC {
     @Override
     public void load() {
 
-        faceing = SignUtil.getFacing(getSign().getBlock());
+        faceing = SignUtil.getBack(getSign().getBlock());
         String line = getLine(2);
         if (!line.isEmpty()) {
             String[] split = RegexUtil.MINUS_PATTERN.split(line);

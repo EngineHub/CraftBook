@@ -19,7 +19,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 
-import java.io.File;
+import java.nio.file.Path;
 
 /**
  * Represents a CraftBook Mechanic.
@@ -62,7 +62,7 @@ public interface CraftBookMechanic {
      *
      * @param configFile The configuration file
      */
-    void loadConfiguration(File configFile);
+    void loadConfiguration(Path configFile);
 
     /**
      * Load config values from the given YAMLProcessor.

@@ -189,7 +189,7 @@ public class BukkitBetterPistons extends BetterPistons implements Listener {
                 continue;
             }
 
-            BlockFace facing = SignUtil.getFacing(event.getBlock().getRelative(face));
+            BlockFace facing = SignUtil.getBack(event.getBlock().getRelative(face));
 
             // Only care if it faces the piston
             if (face != BlockFace.UP
@@ -216,7 +216,7 @@ public class BukkitBetterPistons extends BetterPistons implements Listener {
                         }
                     }
                 }
-            } while (SignUtil.isSign(sign.getRelative(face)) && SignUtil.getFacing(sign) == facing);
+            } while (SignUtil.isSign(sign.getRelative(face)) && SignUtil.getBack(sign) == facing);
         }
     }
 
@@ -242,7 +242,7 @@ public class BukkitBetterPistons extends BetterPistons implements Listener {
                 continue;
             }
 
-            BlockFace facing = SignUtil.getFacing(event.getBlock().getRelative(face));
+            BlockFace facing = SignUtil.getBack(event.getBlock().getRelative(face));
 
             // Only care if it faces the piston
             if (face != BlockFace.UP
@@ -267,7 +267,7 @@ public class BukkitBetterPistons extends BetterPistons implements Listener {
                 }
 
 
-            } while (SignUtil.isSign(sign.getRelative(face)) && SignUtil.getFacing(sign) == facing);
+            } while (SignUtil.isSign(sign.getRelative(face)) && SignUtil.getBack(sign) == facing);
         }
     }
 

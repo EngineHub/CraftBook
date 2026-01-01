@@ -15,7 +15,6 @@ dependencies {
     implementation(libs.levelHeadered)
     implementation(libs.shadow)
     implementation(libs.jfrog.buildinfo)
-    implementation(libs.paperweight)
     implementation(libs.gson)
 
     constraints {

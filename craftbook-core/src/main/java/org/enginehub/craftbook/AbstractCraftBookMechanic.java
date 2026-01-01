@@ -20,9 +20,9 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
 
 public abstract class AbstractCraftBookMechanic implements CraftBookMechanic {
 
@@ -37,7 +37,7 @@ public abstract class AbstractCraftBookMechanic implements CraftBookMechanic {
     }
 
     @Override
-    public void loadConfiguration(File configFile) {
+    public void loadConfiguration(Path configFile) {
         YAMLProcessor mechanicConfig = new YAMLProcessor(configFile, true, YAMLFormat.EXTENDED);
 
         try {

@@ -20,6 +20,7 @@ import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.JarURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.function.Supplier;
 import java.util.jar.Attributes;
@@ -48,7 +49,7 @@ public class CraftBookManifest {
         }
 
         try {
-            URL url = new URL(classPath);
+            URL url = URI.create(classPath).toURL();
             JarURLConnection jarConnection = (JarURLConnection) url.openConnection();
             Manifest manifest = jarConnection.getManifest();
             return manifest.getMainAttributes();

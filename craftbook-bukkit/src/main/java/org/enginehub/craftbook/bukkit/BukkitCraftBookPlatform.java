@@ -48,6 +48,7 @@ import org.enginehub.craftbook.util.profile.resolver.PaperPlayerService;
 import org.enginehub.craftbook.util.profile.resolver.ProfileService;
 import org.enginehub.craftbook.util.report.ReportFlag;
 import org.enginehub.piston.CommandManager;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
 
     private final MechanicManager mechanicManager = new BukkitMechanicManager();
     private YamlConfiguration config;
-    private String version;
+    private @Nullable String version;
 
     /**
      * The manager for SelfTriggering components.

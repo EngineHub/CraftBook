@@ -13,14 +13,16 @@ tasks
     .matching { it.name == "compileJava" || it.name == "compileTestJava" }
     .configureEach {
         val disabledLint = listOf(
-            "processing", "path", "fallthrough", "serial", "overloads",
+            "processing", "path", "fallthrough", "serial", "overloads", "this-escape"
         )
         options.release.set(21)
         options.compilerArgs.addAll(listOf("-Xlint:all") + disabledLint.map { "-Xlint:-$it" })
         options.isDeprecation = true
         options.encoding = "UTF-8"
         options.compilerArgs.add("-parameters")
-//        options.compilerArgs.add("-Werror")
+        if (project.name.contains("-core")) {
+            options.compilerArgs.add("-Werror")
+        }
     }
 
 configure<CheckstyleExtension> {
@@ -50,7 +52,9 @@ dependencies {
 tasks.withType<Javadoc>().configureEach {
     options.encoding = "UTF-8"
     (options as StandardJavadocDocletOptions).apply {
-//        addBooleanOption("Werror", true)
+        if (project.name.contains("-core")) {
+            addBooleanOption("Werror", true)
+        }
         addBooleanOption("Xdoclint:all", true)
         addBooleanOption("Xdoclint:-missing", true)
         tags(

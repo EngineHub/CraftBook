@@ -86,7 +86,7 @@ public final class LocationUtil {
     public static Block getRelativeOffset(Block sign, int offsetX, int offsetY, int offsetZ) {
 
         return getRelativeOffset(SignUtil.getBackBlock(sign),
-            SignUtil.getFacing(sign),
+            SignUtil.getBack(sign),
             offsetX, offsetY, offsetZ);
     }
 
