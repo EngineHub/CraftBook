@@ -14,7 +14,7 @@ lang-version = "1604"
 
 [libraries]
 
-levelHeadered = "net.octyl.level-headered:plugin:0.1.1"
+levelHeadered = "net.octyl.level-headered:plugin:0.1.2"
 grgit = "org.ajoberstar.grgit:grgit-gradle:5.2.2"
 shadow = "com.gradleup.shadow:com.gradleup.shadow.gradle.plugin:8.3.9"
 jfrog-buildinfo = "org.jfrog.buildinfo:build-info-extractor-gradle:5.2.0"
