@@ -45,6 +45,7 @@ import org.enginehub.craftbook.mechanics.boat.BoatEmptyDecay;
 import org.enginehub.craftbook.mechanics.boat.BoatExitRemover;
 import org.enginehub.craftbook.mechanics.boat.BoatImpactDamage;
 import org.enginehub.craftbook.mechanics.dispenser.DispenserRecipes;
+import org.enginehub.craftbook.mechanics.headdrops.HeadDrops;
 import org.enginehub.craftbook.mechanics.minecart.MoreRails;
 import org.enginehub.craftbook.mechanics.minecart.TemporaryCart;
 import org.enginehub.craftbook.mechanics.piston.BetterPistons;
@@ -76,7 +77,7 @@ public class MechanicTypes {
     // public static final @Nullable Supplier<MechanicType<Door> DOOR = get("door");
     public static final @Nullable Supplier<MechanicType<Elevator>> ELEVATOR = get("elevator");
     // public static final @Nullable Supplier<MechanicType<Gate> GATE = get("gate");
-    // public static final @Nullable Supplier<MechanicType<HeadDrops> HEAD_DROPS = get("head_drops");
+    public static final @Nullable Supplier<MechanicType<HeadDrops>> HEAD_DROPS = get("head_drops");
     public static final @Nullable Supplier<MechanicType<HiddenSwitch>> HIDDEN_SWITCH = get("hidden_switch");
     public static final @Nullable Supplier<MechanicType<JackOLantern>> JACK_O_LANTERN = get("jack_o_lantern");
     public static final @Nullable Supplier<MechanicType<LightSwitch>> LIGHT_SWITCH = get("light_switch");

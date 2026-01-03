@@ -155,23 +155,14 @@ public class BukkitBetterAI extends BetterAI implements Listener {
         }
 
         if (isEntityEnabled(event.getEntity(), criticalBow)) {
-            int amount;
-            switch (event.getEntity().getWorld().getDifficulty()) {
-                case EASY:
-                    amount = 100;
-                    break;
-                case HARD:
-                    amount = 20;
-                    break;
-                case NORMAL:
-                    amount = 50;
-                    break;
-                case PEACEFUL:
-                default:
-                    return;
-            }
+            int amount = switch (event.getEntity().getWorld().getDifficulty()) {
+                case EASY -> 100;
+                case HARD -> 20;
+                case NORMAL -> 50;
+                case PEACEFUL -> 0;
+            };
 
-            if (ThreadLocalRandom.current().nextInt(amount) == 0) {
+            if (amount > 0 && ThreadLocalRandom.current().nextInt(amount) == 0) {
                 CraftBookPlugin.logDebugMessage("Performing critical hit.", "ai-mechanics.shoot-bow.critical");
                 event.getEntity().getWorld().spawnParticle(Particle.CRIT, event.getEntity().getEyeLocation(), 10);
                 event.getProjectile().setFireTicks(5000);

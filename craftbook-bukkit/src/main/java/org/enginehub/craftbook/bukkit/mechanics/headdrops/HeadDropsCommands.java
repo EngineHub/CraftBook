@@ -13,7 +13,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.headdrops;
+package org.enginehub.craftbook.bukkit.mechanics.headdrops;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.command.util.CommandPermissions;
@@ -41,9 +41,9 @@ import org.enginehub.piston.annotation.param.Switch;
 @CommandContainer(superTypes = CommandPermissionsConditionGenerator.Registration.class)
 public class HeadDropsCommands {
 
-    private final HeadDrops headDrops;
+    private final BukkitHeadDrops headDrops;
 
-    public static void register(CommandManager commandManager, CommandRegistrationHandler registration, HeadDrops headDrops) {
+    public static void register(CommandManager commandManager, CommandRegistrationHandler registration, BukkitHeadDrops headDrops) {
         registration.register(
             commandManager,
             HeadDropsCommandsRegistration.builder(),
@@ -51,7 +51,7 @@ public class HeadDropsCommands {
         );
     }
 
-    private HeadDropsCommands(HeadDrops headDrops) {
+    private HeadDropsCommands(BukkitHeadDrops headDrops) {
         this.headDrops = headDrops;
     }
 

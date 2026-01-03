@@ -13,16 +13,19 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.headdrops;
+package org.enginehub.craftbook.bukkit.mechanics.headdrops;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
 import com.google.common.collect.Maps;
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -45,13 +48,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanics.headdrops.HeadDrops;
+import org.enginehub.craftbook.mechanics.headdrops.SkinData;
 import org.enginehub.craftbook.util.EventUtil;
 import org.jspecify.annotations.Nullable;
 
@@ -59,23 +63,39 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
-public class HeadDrops extends AbstractCraftBookMechanic implements Listener {
+public class BukkitHeadDrops extends HeadDrops implements Listener {
 
     private static final Map<EntityType, PlayerProfile> TEXTURE_MAP = Maps.newHashMap();
+    protected static final String HEAD_NAME = "cb-headdrops";
+    private static final UUID DEFAULT_UUID = UUID.fromString("a233eb4b-4cab-42cd-9fd9-7e7b9a3f74be");
+
+    protected static PlayerProfile createProfile(String texture) {
+        PlayerProfile profile = Bukkit.createProfile(DEFAULT_UUID, HEAD_NAME);
+        profile.setProperty(new ProfileProperty("textures", texture));
+
+        return profile;
+    }
 
     static {
         // skip if the CRAFTBOOK_DOCGEN environment variable is set
         // This breaks docgen currently.
         if (System.getenv("CRAFTBOOK_DOCGEN") == null) {
-            SkinData.addDefaultSkinData(TEXTURE_MAP);
+            SkinData.addDefaultSkinData((entityType, textureString) -> {
+                if (entityType != null) {
+                    TEXTURE_MAP.put(BukkitAdapter.adapt(entityType), createProfile(textureString));
+                }
+            });
         }
     }
 
     private final NamespacedKey headDropsEntityKey = new NamespacedKey("craftbook", "head_drops_entity");
 
-    public HeadDrops(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public BukkitHeadDrops(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 
@@ -204,7 +224,7 @@ public class HeadDrops extends AbstractCraftBookMechanic implements Listener {
                 }
             } else {
                 PlayerProfile profile = skull.getPlayerProfile();
-                if (profile == null || profile.getName() == null || profile.getName().equals(SkinData.HEAD_NAME)) {
+                if (profile == null || profile.getName() == null || profile.getName().equals(HEAD_NAME)) {
                     return;
                 }
 
@@ -319,38 +339,12 @@ public class HeadDrops extends AbstractCraftBookMechanic implements Listener {
         }
     }
 
-    private boolean enableMobs;
-    private boolean enablePlayers;
-    private boolean playerKillsOnly;
-    private boolean overrideNatural;
-    private double dropRate;
-    private double lootingModifier;
-    private boolean nameOnClick;
     private HashMap<NamespacedKey, Double> customDropRates;
     private HashMap<NamespacedKey, PlayerProfile> customSkins;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
-        config.setComment("drop-mob-heads", "Whether mobs should drop their heads when killed.");
-        enableMobs = config.getBoolean("drop-mob-heads", true);
-
-        config.setComment("drop-player-heads", "Whether players should drop their heads when killed.");
-        enablePlayers = config.getBoolean("drop-player-heads", true);
-
-        config.setComment("require-player-killer", "Only drop heads when killed by a player. (Allows requiring permission)");
-        playerKillsOnly = config.getBoolean("require-player-killer", true);
-
-        config.setComment("override-natural-head-drops", "Override natural head drops, this will cause natural head drops to use the chances provided by CraftBook. (Eg, Wither Skeleton Heads)");
-        overrideNatural = config.getBoolean("override-natural-head-drops", false);
-
-        config.setComment("drop-rate", "A value between 1 and 0 which dictates the global chance of heads being dropped. This can be overridden per-entity type.");
-        dropRate = config.getDouble("drop-rate", 0.05);
-
-        config.setComment("looting-rate-modifier", "This amount is added to the chance for every looting level on an item. Eg, a chance of 0.05(5%) and a looting mod of 0.05(5%) on a looting 3 sword, would give a 0.20 chance (20%).");
-        lootingModifier = config.getDouble("looting-rate-modifier", 0.05);
-
-        config.setComment("show-name-right-click", "When enabled, right clicking a placed head will say the owner of the head.");
-        nameOnClick = config.getBoolean("show-name-right-click", true);
+        super.loadFromConfiguration(config);
 
         config.setComment("drop-rates", "A list of custom drop rates for different mobs");
         customDropRates = new HashMap<>();
@@ -366,10 +360,31 @@ public class HeadDrops extends AbstractCraftBookMechanic implements Listener {
         customSkins = new HashMap<>();
         if (config.getKeys("custom-skins") != null) {
             for (String key : config.getKeys("custom-skins")) {
-                customSkins.put(parseKey(key), SkinData.createProfile(config.getString("custom-skins." + key)));
+                customSkins.put(parseKey(key), createProfile(config.getString("custom-skins." + key)));
             }
         } else {
             config.addNode("custom-skins");
+        }
+    }
+
+    private static final Set<EntityType> IGNORED_ENTITIES = Set.of(
+            EntityType.PLAYER, EntityType.ZOMBIE, EntityType.CREEPER,
+            EntityType.SKELETON, EntityType.WITHER_SKELETON,
+            EntityType.ARMOR_STAND, EntityType.ENDER_DRAGON, EntityType.PIGLIN,
+            EntityType.UNKNOWN, EntityType.MANNEQUIN
+    );
+
+    @SuppressWarnings("unused")
+    private static void printMissingSkins() {
+        String missingText = Registry.ENTITY_TYPE.stream()
+                .filter(type -> !IGNORED_ENTITIES.contains(type) && type.isAlive())
+                .filter(type -> !TEXTURE_MAP.containsKey(type))
+                .map(EntityType::getKey)
+                .map(NamespacedKey::toString)
+                .collect(Collectors.joining(", "));
+
+        if (!missingText.isEmpty()) {
+            CraftBook.LOGGER.warn(missingText);
         }
     }
 }

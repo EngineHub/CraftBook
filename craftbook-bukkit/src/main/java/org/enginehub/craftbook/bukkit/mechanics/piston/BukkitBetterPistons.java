@@ -93,8 +93,9 @@ public class BukkitBetterPistons extends BetterPistons implements Listener {
 
             PistonType type = null;
 
+            String line1 = PlainTextComponentSerializer.plainText().serialize(event.line(1));
             for (PistonType testType : PistonType.values()) {
-                if (isEnabled(testType) && event.getLine(1).equalsIgnoreCase(testType.getSignText())) {
+                if (isEnabled(testType) && line1.equalsIgnoreCase(testType.getSignText())) {
                     event.line(1, Component.text(testType.getSignText()));
                     type = testType;
                     break;

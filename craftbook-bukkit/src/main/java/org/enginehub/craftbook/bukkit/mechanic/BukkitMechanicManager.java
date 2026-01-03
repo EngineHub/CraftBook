@@ -195,7 +195,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("head_drops")
             .name("HeadDrops")
             .description(TranslatableComponent.of("craftbook.headdrops.description"))
-            .className("org.enginehub.craftbook.mechanics.headdrops.HeadDrops")
+            .className("org.enginehub.craftbook.bukkit.mechanics.headdrops.BukkitHeadDrops")
             .category(MechanicCategory.GENERAL)
             .buildAndRegister();
 

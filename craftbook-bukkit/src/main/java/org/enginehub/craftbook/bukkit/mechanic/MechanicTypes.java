@@ -20,7 +20,6 @@ import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanics.area.Bridge;
 import org.enginehub.craftbook.mechanics.area.Door;
 import org.enginehub.craftbook.mechanics.area.Gate;
-import org.enginehub.craftbook.mechanics.headdrops.HeadDrops;
 import org.enginehub.craftbook.mechanics.minecart.MinecartCollisionEntry;
 import org.enginehub.craftbook.mechanics.minecart.MinecartEmptyDecay;
 import org.enginehub.craftbook.mechanics.minecart.MinecartExitRemover;
@@ -53,7 +52,6 @@ public class MechanicTypes {
     public static final @Nullable MechanicType<Bridge> BRIDGE = get("bridge");
     public static final @Nullable MechanicType<Door> DOOR = get("door");
     public static final @Nullable MechanicType<Gate> GATE = get("gate");
-    public static final @Nullable MechanicType<HeadDrops> HEAD_DROPS = get("head_drops");
     public static final @Nullable MechanicType<CartBooster> MINECART_BOOSTER = get("minecart_booster");
     public static final @Nullable MechanicType<MinecartCollisionEntry> MINECART_COLLISION_ENTRY = get("minecart_collision_entry");
     public static final @Nullable MechanicType<CartDispenser> MINECART_DISPENSER = get("minecart_dispenser");
