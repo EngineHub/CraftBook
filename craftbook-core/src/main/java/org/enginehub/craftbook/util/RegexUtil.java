@@ -23,6 +23,8 @@ public class RegexUtil {
     }
 
     public static final Pattern SPACE_PATTERN = Pattern.compile(" ", Pattern.LITERAL);
+    // Suppress as this is already a literal pattern
+    @SuppressWarnings("BareDotMetacharacter")
     public static final Pattern PERIOD_PATTERN = Pattern.compile(".", Pattern.LITERAL);
     public static final Pattern EQUALS_PATTERN = Pattern.compile("=", Pattern.LITERAL);
     public static final Pattern ASTERISK_PATTERN = Pattern.compile("*", Pattern.LITERAL);

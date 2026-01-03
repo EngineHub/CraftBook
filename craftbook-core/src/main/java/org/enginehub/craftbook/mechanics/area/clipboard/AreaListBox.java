@@ -15,7 +15,6 @@
 
 package org.enginehub.craftbook.mechanics.area.clipboard;
 
-import com.google.common.base.Strings;
 import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.util.formatting.component.PaginationBox;
 import com.sk89q.worldedit.util.formatting.text.Component;
@@ -72,7 +71,7 @@ public class AreaListBox extends PaginationBox {
             int length = FontInfo.getPxLength(filename);
             int leftover = 200 - length - 4;
             if (leftover > 0) {
-                builder.append(TextComponent.of(Strings.repeat(".", leftover / 2), TextColor.DARK_GRAY));
+                builder.append(TextComponent.of(".".repeat(leftover / 2), TextColor.DARK_GRAY));
             }
 
             builder

@@ -34,11 +34,10 @@ import org.enginehub.craftbook.util.SignUtil;
 import org.jspecify.annotations.Nullable;
 
 /**
- * <p>
  * Stores the tuple of three blocks over which any typical CartMechanism is implemented,
  * and also performs detection of two of the blocks if only one
  * is given.
- * </p>
+ *
  * <p>
  * Sign text and base block type are not validated by any constructors; this must be performed
  * explicitly by calling
@@ -47,7 +46,7 @@ import org.jspecify.annotations.Nullable;
  * fine,
  * since if you have two signs in an area where
  * they could concievably contend for control of the mechanism, you would be doing something that
- * ought be physically
+ * ought to be physically
  * impossible anyway (though yes,
  * it is possible if editing the world directly without physics).
  * </p>
@@ -155,13 +154,12 @@ public record CartMechanismBlocks(Block rail, Block base, Block sign) {
     }
 
     /**
-     * <p>
      * Detecting factory, based on the position of the rails. The base must be one block below and
      * the sign if it
      * exists must be two or three blocks
      * below. Signs are guaranteed to be signs (unless they're null) and rails are guaranteed to be
      * rails.
-     * </p>
+     *
      * <p>
      * This is the most important constructor, since it is the one invoked when processing cart move
      * events.

@@ -37,8 +37,8 @@ public abstract class MoreRails extends AbstractCraftBookMechanic {
      * @return if it's valid
      */
     public boolean isValidRail(BlockType blockType) {
-        return ladder && (blockType == BlockTypes.LADDER || blockType == BlockTypes.VINE)
-            || pressurePlate && BlockCategories.PRESSURE_PLATES.contains(blockType);
+        return (ladder && (blockType == BlockTypes.LADDER || blockType == BlockTypes.VINE))
+            || (pressurePlate && BlockCategories.PRESSURE_PLATES.contains(blockType));
     }
 
     public boolean ladder;

@@ -37,6 +37,7 @@ public abstract class CookingPot extends AbstractCraftBookMechanic {
         BLAZE(ItemTypes.BLAZE_ROD, 500),
         LAVA(ItemTypes.LAVA_BUCKET, 6000);
 
+        @SuppressWarnings("ImmutableEnumChecker")
         private final ItemType id;
         private final int fuelCount;
 

@@ -230,10 +230,9 @@ public class VariableKey {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof VariableKey that)) {
             return false;
         }
-        VariableKey that = (VariableKey) o;
         return namespace.equals(that.namespace) && variable.equals(that.variable);
     }
 

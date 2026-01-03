@@ -78,7 +78,7 @@ public class CraftBook {
             try {
                 Files.createDirectories(cacheDir);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.warn("Failed to create cache directory, profile cache may not work correctly.", e);
             }
         }
 

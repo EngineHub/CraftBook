@@ -31,6 +31,7 @@ public enum PistonType {
     SUPER_PUSH("[SuperPush]", Set.of(BlockTypes.PISTON, BlockTypes.STICKY_PISTON));
 
     private final String signText;
+    @SuppressWarnings("ImmutableEnumChecker")
     private final Set<BlockType> allowedBlocks;
 
     PistonType(String signText, Set<BlockType> allowedBlocks) {

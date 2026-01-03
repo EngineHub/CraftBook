@@ -46,6 +46,6 @@ public class LoadComparator implements Comparator<MechanicType<?>> {
         if (o1.getLoadPriority() == o2.getLoadPriority()) {
             return 0;
         }
-        return o1.getLoadPriority().ordinal() < o2.getLoadPriority().ordinal() ? -1 : 1;
+        return o1.getLoadPriority().compareTo(o2.getLoadPriority());
     }
 }

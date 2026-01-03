@@ -18,6 +18,7 @@ package org.enginehub.craftbook.mechanic;
 import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import org.enginehub.craftbook.CraftBook;
 import org.enginehub.piston.Command;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.CommandManagerService;
@@ -99,7 +100,7 @@ public class MechanicCommandRegistrar {
             commandMap.remove(command);
             field.set(topLevelCommandManager, commandMap);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+            CraftBook.LOGGER.warn("Failed to unregister top-level command", e);
         }
     }
 

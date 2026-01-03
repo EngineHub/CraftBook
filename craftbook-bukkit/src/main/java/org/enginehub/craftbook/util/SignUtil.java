@@ -27,9 +27,8 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.jspecify.annotations.Nullable;
 
 /**
- * <p>
  * Convenience methods for dealing with some sign block data.
- * </p>
+ *
  * <p>
  * If you intend to care about the eight further directions (as opposed to the four cardinal
  * directions and the four

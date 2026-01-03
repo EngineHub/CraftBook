@@ -33,17 +33,17 @@ public final class EnumUtil {
             try {
                 return Enum.valueOf(c, string.trim().toUpperCase(Locale.ENGLISH));
             } catch (IllegalArgumentException ignored) {
+                // Ignore invalid enum value
             }
         }
         return null;
     }
 
     public static String[] getStringArrayFromEnum(Class<? extends Enum<?>> c) {
-
         List<String> bits = new ArrayList<>();
         for (Enum<? extends Enum<?>> s : c.getEnumConstants()) {
             bits.add(s.name());
         }
-        return bits.toArray(new String[bits.size()]);
+        return bits.toArray(new String[0]);
     }
 }

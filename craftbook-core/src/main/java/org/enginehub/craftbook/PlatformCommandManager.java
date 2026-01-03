@@ -52,7 +52,6 @@ import org.enginehub.piston.util.ValueProvider;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PlatformCommandManager {
@@ -117,8 +116,8 @@ public class PlatformCommandManager {
         InjectedValueStore store = MapBackedValueStore.create();
 
         store.injectValue(Key.of(Actor.class), ValueProvider.constant(actor));
-        if (actor instanceof CraftBookPlayer) {
-            store.injectValue(Key.of(CraftBookPlayer.class), ValueProvider.constant((CraftBookPlayer) actor));
+        if (actor instanceof CraftBookPlayer player) {
+            store.injectValue(Key.of(CraftBookPlayer.class), ValueProvider.constant(player));
         } else {
             store.injectValue(Key.of(CraftBookPlayer.class), context -> {
                 throw new CommandException(
@@ -202,7 +201,7 @@ public class PlatformCommandManager {
             List<Substring> split = parseArgs(arguments).toList();
             List<String> argStrings = split.stream()
                 .map(Substring::getSubstring)
-                .collect(Collectors.toList());
+                .toList();
             MemoizingValueAccess access = initializeInjectedValues(() -> arguments, actor);
             ImmutableSet<Suggestion> suggestions;
             try {
@@ -227,8 +226,9 @@ public class PlatformCommandManager {
                         original.getStart() + 1,
                         original.getEnd() + 1
                     );
-                }).collect(Collectors.toList());
+                }).toList();
         } catch (ConditionFailedException ignored) {
+            // Ignore condition failures.
         }
 
         return Collections.emptyList();

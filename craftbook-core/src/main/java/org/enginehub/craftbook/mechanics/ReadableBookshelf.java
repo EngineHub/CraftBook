@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * This mechanism allow players to read bookshelves and get a random line from a file as as "book."
+ * This mechanism allow players to read bookshelves and get a random line from a file as a "book".
  */
 public abstract class ReadableBookshelf extends AbstractCraftBookMechanic {
 

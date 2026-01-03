@@ -32,6 +32,7 @@ public abstract class AbstractCraftBookMechanic implements CraftBookMechanic {
         this.mechanicType = mechanicType;
     }
 
+    @Override
     public MechanicType<? extends CraftBookMechanic> getMechanicType() {
         return this.mechanicType;
     }

@@ -28,13 +28,7 @@ public final class Tuple2<A, B> {
 
     @Override
     public boolean equals(Object o) {
-
-        return o instanceof Tuple2<?, ?> && equals((Tuple2<?, ?>) o);
-    }
-
-    public boolean equals(Tuple2<?, ?> o) {
-
-        return o.a.equals(a) && o.b.equals(b);
+        return o instanceof Tuple2<?, ?> tuple && tuple.a.equals(a) && tuple.b.equals(b);
     }
 
     @Override

@@ -15,6 +15,7 @@
 
 package org.enginehub.craftbook.exception;
 
+import com.google.errorprone.annotations.InlineMe;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import org.enginehub.craftbook.util.TextUtil;
@@ -40,6 +41,7 @@ public class CraftBookException extends Exception {
         this.message = message;
     }
 
+    @InlineMe(replacement = "this(TextComponent.of(message))", imports = "com.sk89q.worldedit.util.formatting.text.TextComponent")
     @Deprecated
     public CraftBookException(String message) {
         this(TextComponent.of(message));

@@ -29,13 +29,13 @@ public abstract class BetterSponge extends AbstractCraftBookMechanic {
     }
 
     protected boolean isValidSponge(BlockType type) {
-        return type == BlockTypes.SPONGE || includeWet && type == BlockTypes.WET_SPONGE;
+        return type == BlockTypes.SPONGE || (includeWet && type == BlockTypes.WET_SPONGE);
     }
 
     protected boolean isRemovableWater(BlockType material) {
-        return material == BlockTypes.WATER || destructive && (material == BlockTypes.SEAGRASS
+        return material == BlockTypes.WATER || (destructive && (material == BlockTypes.SEAGRASS
             || material == BlockTypes.TALL_SEAGRASS || material == BlockTypes.KELP_PLANT
-            || material == BlockTypes.KELP);
+            || material == BlockTypes.KELP));
     }
 
     protected int radius;

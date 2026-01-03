@@ -35,7 +35,7 @@ import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 
 /**
- * This mechanism allow players to read bookshelves and get a random line from a file as as "book."
+ * This mechanism allow players to read bookshelves and get a random line from a file as "book".
  */
 public class BukkitReadableBookshelf extends ReadableBookshelf implements Listener {
     public BukkitReadableBookshelf(MechanicType<? extends CraftBookMechanic> mechanicType) {

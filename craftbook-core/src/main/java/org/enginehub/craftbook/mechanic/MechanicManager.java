@@ -179,8 +179,8 @@ public abstract class MechanicManager {
         // Unload any dependent mechanics
         for (CraftBookMechanic enabledMechanic : this.getLoadedMechanics()) {
             for (LoadDependency dependency : getMechanicType(enabledMechanic).getDependencies()) {
-                if (dependency instanceof MechanicDependency) {
-                    if (((MechanicDependency) dependency).getMechanicType() == mechanicType) {
+                if (dependency instanceof MechanicDependency mechanicDependency) {
+                    if (mechanicDependency.getMechanicType() == mechanicType) {
                         disableMechanic(enabledMechanic);
                         break;
                     }

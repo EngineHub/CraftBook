@@ -15,6 +15,7 @@ dependencies {
     implementation(libs.levelHeadered)
     implementation(libs.shadow)
     implementation(libs.jfrog.buildinfo)
+    implementation(libs.errorprone.gradle.plugin)
     implementation(libs.gson)
 
     constraints {

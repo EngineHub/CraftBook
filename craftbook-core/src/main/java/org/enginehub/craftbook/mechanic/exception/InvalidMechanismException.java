@@ -52,7 +52,7 @@ public class InvalidMechanismException extends CraftBookException {
     }
 
     @Override
-    public Throwable fillInStackTrace() {
+    public synchronized Throwable fillInStackTrace() {
         return null;
     }
 }

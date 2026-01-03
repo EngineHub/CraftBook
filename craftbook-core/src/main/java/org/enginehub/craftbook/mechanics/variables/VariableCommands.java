@@ -341,13 +341,13 @@ public class VariableCommands {
                         namespace = profile.getName();
                     }
                 } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
+                    CraftBook.LOGGER.warn("Failed to lookup Minecraft profile", e);
                 }
             }
             return namespace;
         }
 
-        protected VariableListPaginationBox(List<VariableKey> variableKeys, String namespace, String pageCommand) {
+        private VariableListPaginationBox(List<VariableKey> variableKeys, String namespace, String pageCommand) {
             super("Variables (" + getFriendlyNamespaceName(namespace) + ")", pageCommand);
 
             this.variableKeys = variableKeys;
