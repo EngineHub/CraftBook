@@ -80,7 +80,7 @@ public class CopyManager {
         return CraftBook.getInstance().getPlatform().getMechanicManager().getMechanic(MechanicTypes.TOGGLE_AREA.get()).get();
     }
 
-    private static Path getAreaPath() {
+    public static Path getAreaPath() {
         return CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("areas");
     }
 

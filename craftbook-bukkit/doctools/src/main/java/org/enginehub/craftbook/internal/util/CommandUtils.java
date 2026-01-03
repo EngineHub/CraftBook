@@ -20,8 +20,8 @@ import com.sk89q.worldedit.internal.command.CommandUtil;
 import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import org.enginehub.craftbook.PlatformCommandManager;
-import org.enginehub.craftbook.bukkit.mechanics.area.clipboard.AreaCommands;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
+import org.enginehub.craftbook.mechanics.area.clipboard.AreaCommands;
 import org.enginehub.craftbook.mechanics.headdrops.HeadDropsCommands;
 import org.enginehub.craftbook.mechanics.signcopier.SignEditCommands;
 import org.enginehub.piston.Command;
@@ -240,6 +240,6 @@ public class CommandUtils {
     }
 
     private static String repeatString(String str, int length) {
-        return String.valueOf(str).repeat(Math.max(0, length));
+        return str.repeat(Math.max(0, length));
     }
 }

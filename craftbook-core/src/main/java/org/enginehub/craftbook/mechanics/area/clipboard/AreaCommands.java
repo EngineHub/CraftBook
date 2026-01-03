@@ -13,12 +13,11 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.bukkit.mechanics.area.clipboard;
+package org.enginehub.craftbook.mechanics.area.clipboard;
 
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.command.util.CommandPermissions;
 import com.sk89q.worldedit.command.util.CommandPermissionsConditionGenerator;
 import com.sk89q.worldedit.extension.platform.Actor;
@@ -27,6 +26,7 @@ import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import com.sk89q.worldedit.internal.command.CommandRegistrationHandler;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.util.auth.AuthorizationException;
 import com.sk89q.worldedit.util.formatting.component.InvalidComponentException;
 import com.sk89q.worldedit.util.formatting.text.Component;
@@ -36,13 +36,8 @@ import com.sk89q.worldedit.util.formatting.text.event.HoverEvent;
 import com.sk89q.worldedit.util.formatting.text.format.TextColor;
 import com.sk89q.worldedit.util.formatting.text.format.TextDecoration;
 import com.sk89q.worldedit.world.World;
-import org.bukkit.block.Block;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
-import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.mechanics.area.clipboard.AreaListBox;
-import org.enginehub.craftbook.mechanics.area.clipboard.CopyManager;
-import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.piston.CommandManager;
 import org.enginehub.piston.annotation.Command;
 import org.enginehub.piston.annotation.CommandContainer;
@@ -61,7 +56,7 @@ import java.util.Locale;
 @CommandContainer(superTypes = CommandPermissionsConditionGenerator.Registration.class)
 public class AreaCommands {
 
-    public static void register(CommandManager commandManager, CommandRegistrationHandler registration, BukkitToggleArea toggleArea) {
+    public static void register(CommandManager commandManager, CommandRegistrationHandler registration, ToggleArea toggleArea) {
         registration.register(
             commandManager,
             AreaCommandsRegistration.builder(),
@@ -69,13 +64,11 @@ public class AreaCommands {
         );
     }
 
-    private final BukkitToggleArea toggleArea;
+    private final ToggleArea toggleArea;
 
-    private AreaCommands(BukkitToggleArea toggleArea) {
+    private AreaCommands(ToggleArea toggleArea) {
         this.toggleArea = toggleArea;
     }
-
-    private final CraftBookPlugin plugin = CraftBookPlugin.inst();
 
     private Component makeFriendlyNamespace(Actor actor, String namespace) {
         Component namespaceComponent = null;
@@ -194,7 +187,7 @@ public class AreaCommands {
         }
 
         // get the areas for the defined namespace
-        Path areasPath = CraftBookPlugin.inst().getDataFolder().toPath().resolve("areas");
+        Path areasPath = CopyManager.getAreaPath();
 
         if (!Files.exists(areasPath) || !Files.isDirectory(areasPath)) {
             actor.printError(TranslatableComponent.of("craftbook.togglearea.no-areas"));
@@ -239,13 +232,9 @@ public class AreaCommands {
             return;
         }
 
-        Block block = BukkitAdapter.adapt(world).getBlockAt(position.x(), position.y(), position.z());
-        if (!SignUtil.isSign(block)) {
-            actor.printError(TranslatableComponent.of("craftbook.togglearea.toggle.no-sign"));
-            return;
-        }
+        var location = new Location(world, position.toVector3());
 
-        if (!this.toggleArea.toggleCold(block)) {
+        if (!this.toggleArea.toggleCold(actor, location)) {
             actor.printError(TranslatableComponent.of("craftbook.togglearea.toggle-failed"));
             return;
         }
@@ -277,11 +266,11 @@ public class AreaCommands {
             return;
         }
 
-        Path areasPath = plugin.getDataFolder().toPath().resolve("areas").resolve(namespace);
+        Path namespaceFolder = CopyManager.getAreaPath().resolve(namespace);
 
         Component namespaceComponent = makeFriendlyNamespace(actor, namespace);
 
-        if (!Files.exists(areasPath) || !Files.isDirectory(areasPath)) {
+        if (!Files.exists(namespaceFolder) || !Files.isDirectory(namespaceFolder)) {
             actor.printError(TranslatableComponent.of("craftbook.togglearea.unknown-namespace", namespaceComponent));
             return;
         }
@@ -290,7 +279,7 @@ public class AreaCommands {
         List<String> possibleFilenames = Arrays.stream(ClipboardFormats.getFileExtensionArray()).map(ext -> name + "." + ext).toList();
 
         for (String filename : possibleFilenames) {
-            Path areaPath = areasPath.resolve(filename);
+            Path areaPath = namespaceFolder.resolve(filename);
             if (Files.exists(areaPath)) {
                 try {
                     Files.delete(areaPath);
@@ -325,16 +314,16 @@ public class AreaCommands {
             return;
         }
 
-        Path areasPath = plugin.getDataFolder().toPath().resolve("areas").resolve(namespace);
+        Path namespaceFolder = CopyManager.getAreaPath().resolve(namespace);
         Component namespaceComponent = makeFriendlyNamespace(actor, namespace);
 
-        if (!Files.exists(areasPath) || !Files.isDirectory(areasPath)) {
+        if (!Files.exists(namespaceFolder) || !Files.isDirectory(namespaceFolder)) {
             actor.printError(TranslatableComponent.of("craftbook.togglearea.unknown-namespace", namespaceComponent));
             return;
         }
 
         try {
-            deleteDir(areasPath);
+            deleteDir(namespaceFolder);
             actor.printInfo(TranslatableComponent.of("craftbook.togglearea.deleted-all-in-namespace", namespaceComponent));
         } catch (IOException e) {
             actor.printError(TranslatableComponent.of("craftbook.togglearea.failed-delete-all", namespaceComponent));

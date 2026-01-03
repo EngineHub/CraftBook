@@ -51,7 +51,6 @@ import org.enginehub.piston.CommandManager;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -94,8 +93,7 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
             CraftBookPlugin.inst().createDefaultConfiguration("config.yml");
         } catch (Exception ignored) {
         }
-        config = new BukkitConfiguration(
-            new YAMLProcessor(CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("config.yml").toFile(), true, YAMLFormat.EXTENDED));
+        config = new BukkitConfiguration(new YAMLProcessor(CraftBook.getInstance().getPlatform().getWorkingDirectory().resolve("config.yml"), true, YAMLFormat.EXTENDED));
 
         try {
             config.load();
@@ -197,13 +195,7 @@ public class BukkitCraftBookPlatform implements CraftBookPlatform {
 
     @Override
     public ProfileService createProfileService(ProfileCache profileCache) {
-        List<ProfileService> services = new ArrayList<>();
-        try {
-            services.add(PaperPlayerService.getInstance());
-        } catch (Throwable ignored) {
-        }
-        services.add(HttpRepositoryService.forMinecraft());
-        return new CacheForwardingService(new CombinedProfileService(services), profileCache);
+        return new CacheForwardingService(new CombinedProfileService(List.of(PaperPlayerService.getInstance(), HttpRepositoryService.forMinecraft())), profileCache);
     }
 
     @Override

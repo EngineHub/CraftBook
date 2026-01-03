@@ -17,7 +17,9 @@ package org.enginehub.craftbook.bukkit.mechanics.area.clipboard;
 
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.World;
@@ -25,7 +27,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
@@ -40,6 +41,7 @@ import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanics.area.clipboard.AreaCommands;
 import org.enginehub.craftbook.mechanics.area.clipboard.CopyManager;
 import org.enginehub.craftbook.mechanics.area.clipboard.ToggleArea;
 import org.enginehub.craftbook.util.EventUtil;
@@ -307,7 +309,15 @@ public class BukkitToggleArea extends ToggleArea implements Listener {
         return false;
     }
 
-    public boolean toggleCold(Block block) {
+    @Override
+    public boolean toggleCold(Actor actor, Location location) {
+        var block = BukkitAdapter.adapt(location).getBlock();
+
+        if (!SignUtil.isSign(block)) {
+            actor.printError(TranslatableComponent.of("craftbook.togglearea.toggle.no-sign"));
+            return false;
+        }
+
         Sign bukkitSign = (Sign) block.getState(false);
         ChangedSign sign = null;
         for (Side side : Side.values()) {

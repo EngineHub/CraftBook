@@ -16,6 +16,8 @@
 package org.enginehub.craftbook.mechanics.area.clipboard;
 
 import com.sk89q.util.yaml.YAMLProcessor;
+import com.sk89q.worldedit.extension.platform.Actor;
+import com.sk89q.worldedit.util.Location;
 import net.kyori.adventure.text.TextReplacementConfig;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
@@ -33,6 +35,8 @@ public abstract class ToggleArea extends AbstractCraftBookMechanic {
     public ToggleArea(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
+
+    public abstract boolean toggleCold(Actor actor, Location block);
 
     public boolean allowRedstone;
     public boolean removeEntitiesOnToggle;

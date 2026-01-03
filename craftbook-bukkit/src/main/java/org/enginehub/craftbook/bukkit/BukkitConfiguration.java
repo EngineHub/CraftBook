@@ -34,7 +34,6 @@ public class BukkitConfiguration extends YamlConfiguration {
             config.load();
         } catch (IOException e) {
             CraftBook.LOGGER.error("Error loading CraftBook configuration", e);
-            e.printStackTrace();
         }
 
         if (config.getList("enabled-mechanics") != null) {
