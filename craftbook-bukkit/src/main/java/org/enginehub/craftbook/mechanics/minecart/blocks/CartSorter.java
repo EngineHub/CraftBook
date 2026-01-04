@@ -33,14 +33,14 @@ import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.bukkit.mechanic.MechanicTypes;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.mechanics.minecart.blocks.station.CartStation;
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
+import org.enginehub.craftbook.bukkit.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.ItemSyntax;
 import org.enginehub.craftbook.util.RegexUtil;
@@ -79,7 +79,7 @@ public class CartSorter extends CartBlockMechanism {
         if (side == null) {
             return;
         }
-        ChangedSign sign = event.getBlocks().getChangedSign(side);
+        BukkitChangedSign sign = event.getBlocks().getChangedSign(side);
 
         String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
         String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));

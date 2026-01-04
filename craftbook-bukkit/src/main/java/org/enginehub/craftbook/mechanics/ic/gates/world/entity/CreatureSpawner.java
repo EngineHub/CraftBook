@@ -25,7 +25,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -45,7 +45,7 @@ public class CreatureSpawner extends AbstractIC {
     String data;
     int amount;
 
-    public CreatureSpawner(Server server, ChangedSign sign, ICFactory factory) {
+    public CreatureSpawner(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -117,7 +117,7 @@ public class CreatureSpawner extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new CreatureSpawner(getServer(), sign, this);
         }
@@ -135,7 +135,7 @@ public class CreatureSpawner extends AbstractIC {
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
             String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
             EntityType type = EntityType.fromName(line2.trim().toLowerCase(Locale.ENGLISH));
             if (type == null)

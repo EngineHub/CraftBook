@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.IC;
@@ -24,7 +24,7 @@ import org.enginehub.craftbook.mechanics.ic.ICFactory;
 
 public class XnorGate extends SimpleTwoInputLogicGate {
 
-    public XnorGate(Server server, ChangedSign sign, ICFactory factory) {
+    public XnorGate(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -66,7 +66,7 @@ public class XnorGate extends SimpleTwoInputLogicGate {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new XnorGate(getServer(), sign, this);
         }

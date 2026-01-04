@@ -24,7 +24,7 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -42,7 +42,7 @@ import java.util.Set;
 
 public class BlockReplacer extends AbstractIC {
 
-    public BlockReplacer(Server server, ChangedSign sign, ICFactory factory) {
+    public BlockReplacer(Server server, BukkitChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -144,7 +144,7 @@ public class BlockReplacer extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new BlockReplacer(getServer(), sign, this);
         }
@@ -156,7 +156,7 @@ public class BlockReplacer extends AbstractIC {
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
 
             String[] ids = RegexUtil.MINUS_PATTERN.split(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)));
 

@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -28,7 +28,7 @@ import org.enginehub.craftbook.mechanics.ic.ICFactory;
  */
 public class LevelTriggeredDFlipFlop extends AbstractIC {
 
-    public LevelTriggeredDFlipFlop(Server server, ChangedSign sign, ICFactory factory) {
+    public LevelTriggeredDFlipFlop(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -76,7 +76,7 @@ public class LevelTriggeredDFlipFlop extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new LevelTriggeredDFlipFlop(getServer(), sign, this);
         }

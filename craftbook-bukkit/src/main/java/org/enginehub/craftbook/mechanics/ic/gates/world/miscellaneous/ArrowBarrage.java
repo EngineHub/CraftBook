@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.IC;
@@ -25,7 +25,7 @@ import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
 
 public class ArrowBarrage extends ArrowShooter {
 
-    public ArrowBarrage(Server server, ChangedSign sign, ICFactory factory) {
+    public ArrowBarrage(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -58,7 +58,7 @@ public class ArrowBarrage extends ArrowShooter {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new ArrowBarrage(getServer(), sign, this);
         }

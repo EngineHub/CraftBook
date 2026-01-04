@@ -31,7 +31,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.util.Vector;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.IC;
@@ -63,12 +63,12 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     private String codeString;
     private CodeT code;
 
-    private ChangedSign sign;
+    private BukkitChangedSign sign;
 
     private boolean error = false;
     private String errorString = "no error";
 
-    PlcIC(ChangedSign s, Lang l) throws ICVerificationException {
+    PlcIC(BukkitChangedSign s, Lang l) throws ICVerificationException {
 
         sign = s;
         try {
@@ -79,7 +79,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         l.compile(codeString);
     }
 
-    public PlcIC(Server sv, ChangedSign s, Lang l) {
+    public PlcIC(Server sv, BukkitChangedSign s, Lang l) {
 
         lang = l;
         sign = s;
@@ -255,13 +255,13 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
         for (int y = 0; y < w.getMaxHeight(); y++) {
             if (y != l.getBlockY()) if (SignUtil.isSign(w.getBlockAt(x, y, z))) {
-                ChangedSign s = ChangedSign.create(w.getBlockAt(x, y, z), this.sign.getSide());
+                BukkitChangedSign s = BukkitChangedSign.create(w.getBlockAt(x, y, z), this.sign.getSide());
                 if (PlainTextComponentSerializer.plainText().serialize(s.getLine(1)).equalsIgnoreCase("[Code Block]")) {
                     y--;
                     Block b = w.getBlockAt(x, y, z);
                     StringBuilder code = new StringBuilder();
                     while (SignUtil.isSign(b)) {
-                        s = ChangedSign.create(b, this.sign.getSide());
+                        s = BukkitChangedSign.create(b, this.sign.getSide());
                         for (int li = 0; li < 4 && y != l.getBlockY(); li++) {
                             code.append(PlainTextComponentSerializer.plainText().serialize(s.getLine(li))).append('\n');
                         }
@@ -354,7 +354,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     }
 
     @Override
-    public ChangedSign getSign() {
+    public BukkitChangedSign getSign() {
 
         return sign;
     }
@@ -416,7 +416,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         }
 
         @Override
-        public ChangedSign getSign() {
+        public BukkitChangedSign getSign() {
             return self.getSign();
         }
 

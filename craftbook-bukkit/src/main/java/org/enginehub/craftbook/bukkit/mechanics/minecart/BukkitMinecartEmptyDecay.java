@@ -13,9 +13,8 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.minecart;
+package org.enginehub.craftbook.bukkit.mechanics.minecart;
 
-import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.minecart.RideableMinecart;
@@ -24,15 +23,15 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanics.minecart.MinecartEmptyDecay;
 import org.enginehub.craftbook.util.EventUtil;
 
-public class MinecartEmptyDecay extends AbstractCraftBookMechanic implements Listener {
+public class BukkitMinecartEmptyDecay extends MinecartEmptyDecay implements Listener {
 
-    public MinecartEmptyDecay(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public BukkitMinecartEmptyDecay(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 
@@ -81,19 +80,11 @@ public class MinecartEmptyDecay extends AbstractCraftBookMechanic implements Lis
 
         @Override
         public void run() {
-            if (cart == null || !cart.isValid() || !cart.isEmpty()) {
+            if (!cart.isValid() || !cart.isEmpty()) {
                 return;
             }
 
             cart.remove();
         }
-    }
-
-    private int decayDelay;
-
-    @Override
-    public void loadFromConfiguration(YAMLProcessor config) {
-        config.setComment("decay-delay", "The time in ticks that the cart will wait before decaying.");
-        decayDelay = config.getInt("decay-delay", 200);
     }
 }

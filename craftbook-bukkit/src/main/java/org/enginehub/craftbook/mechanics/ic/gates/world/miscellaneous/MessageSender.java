@@ -20,7 +20,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -35,7 +35,7 @@ import org.enginehub.craftbook.util.SearchArea;
 
 public class MessageSender extends AbstractIC {
 
-    public MessageSender(Server server, ChangedSign sign, ICFactory factory) {
+    public MessageSender(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -132,13 +132,13 @@ public class MessageSender extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new MessageSender(getServer(), sign, this);
         }
 
         @Override
-        public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
+        public void checkPlayer(BukkitChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
 
             if (!PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)).equalsIgnoreCase(player.getName()))
                 if (!ICMechanic.hasRestrictedPermissions(player, this, "mc1510"))

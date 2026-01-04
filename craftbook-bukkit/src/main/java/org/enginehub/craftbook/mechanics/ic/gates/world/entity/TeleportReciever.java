@@ -19,7 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -30,7 +30,7 @@ import org.enginehub.craftbook.util.Tuple2;
 
 public class TeleportReciever extends AbstractSelfTriggeredIC {
 
-    public TeleportReciever(Server server, ChangedSign sign, ICFactory factory) {
+    public TeleportReciever(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -102,7 +102,7 @@ public class TeleportReciever extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new TeleportReciever(getServer(), sign, this);
         }

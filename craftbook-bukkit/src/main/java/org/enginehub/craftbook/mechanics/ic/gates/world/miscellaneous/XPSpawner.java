@@ -17,7 +17,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
 import org.bukkit.Server;
 import org.bukkit.entity.ExperienceOrb;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -27,7 +27,7 @@ import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
 
 public class XPSpawner extends AbstractIC {
 
-    public XPSpawner(Server server, ChangedSign sign, ICFactory factory) {
+    public XPSpawner(Server server, BukkitChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -79,7 +79,7 @@ public class XPSpawner extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new XPSpawner(getServer(), sign, this);
         }

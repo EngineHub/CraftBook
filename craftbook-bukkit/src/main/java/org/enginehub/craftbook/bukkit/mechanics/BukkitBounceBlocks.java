@@ -32,7 +32,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
@@ -73,7 +73,7 @@ public class BukkitBounceBlocks extends BounceBlocks implements Listener {
 
         if (SignUtil.isSign(sign)) {
             for (Side side : Side.values()) {
-                final ChangedSign s = ChangedSign.create(sign, side);
+                final BukkitChangedSign s = BukkitChangedSign.create(sign, side);
 
                 String signLine1 = PlainTextComponentSerializer.plainText().serialize(s.getLine(1));
                 if (signLine1.equals("[Jump]") || signLine1.equals("[Launch]")) {

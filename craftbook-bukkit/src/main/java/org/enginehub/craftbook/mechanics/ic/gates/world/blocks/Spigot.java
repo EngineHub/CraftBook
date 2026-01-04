@@ -22,7 +22,7 @@ import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -41,7 +41,7 @@ public class Spigot extends AbstractIC {
     private Vector3 radius;
     private Location offset;
 
-    public Spigot(Server server, ChangedSign block, ICFactory factory) {
+    public Spigot(Server server, BukkitChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -161,7 +161,7 @@ public class Spigot extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new Spigot(getServer(), sign, this);
         }

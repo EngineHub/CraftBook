@@ -20,7 +20,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -37,7 +37,7 @@ public class LightningSummon extends AbstractIC {
     private BlockVector3 radius;
     private int chance;
 
-    public LightningSummon(Server server, ChangedSign sign, ICFactory factory) {
+    public LightningSummon(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -108,7 +108,7 @@ public class LightningSummon extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new LightningSummon(getServer(), sign, this);
         }

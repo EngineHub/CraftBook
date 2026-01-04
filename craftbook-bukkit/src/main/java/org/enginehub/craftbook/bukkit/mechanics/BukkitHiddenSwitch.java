@@ -35,7 +35,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
@@ -112,13 +112,13 @@ public class BukkitHiddenSwitch extends HiddenSwitch implements Listener {
 
     public boolean testBlock(Block switchBlock, BlockFace eventFace, Player player) {
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(player);
-        ChangedSign sign = null;
+        BukkitChangedSign sign = null;
         Block testBlock = null;
         if (allowAnyFace) {
             for (BlockFace face : LocationUtil.getDirectFaces()) {
                 testBlock = switchBlock.getRelative(face);
                 if (SignUtil.isWallSign(testBlock) && ((WallSign) testBlock.getBlockData()).getFacing() == face) {
-                    sign = ChangedSign.create(testBlock, Side.FRONT);
+                    sign = BukkitChangedSign.create(testBlock, Side.FRONT);
                     break;
                 }
             }
@@ -126,7 +126,7 @@ public class BukkitHiddenSwitch extends HiddenSwitch implements Listener {
             BlockFace face = eventFace.getOppositeFace();
             testBlock = switchBlock.getRelative(face);
             if (SignUtil.isWallSign(testBlock) && ((WallSign) testBlock.getBlockData()).getFacing() == face) {
-                sign = ChangedSign.create(testBlock, Side.FRONT);
+                sign = BukkitChangedSign.create(testBlock, Side.FRONT);
             }
         }
 

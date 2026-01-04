@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -31,7 +31,7 @@ import java.io.PrintWriter;
 
 public class MemorySetter extends AbstractIC {
 
-    public MemorySetter(Server server, ChangedSign block, ICFactory factory) {
+    public MemorySetter(Server server, BukkitChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -119,7 +119,7 @@ public class MemorySetter extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new MemorySetter(getServer(), sign, this);
         }

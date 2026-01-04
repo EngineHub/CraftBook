@@ -24,11 +24,11 @@ import org.bukkit.World;
 import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.RegexUtil;
 
@@ -52,7 +52,7 @@ public class CartTeleporter extends CartBlockMechanism {
         if (side == null) {
             return;
         }
-        ChangedSign sign = event.getBlocks().getChangedSign(side);
+        BukkitChangedSign sign = event.getBlocks().getChangedSign(side);
 
         String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)).trim();
         String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3)).trim();
@@ -84,7 +84,7 @@ public class CartTeleporter extends CartBlockMechanism {
     }
 
     @Override
-    public boolean verify(ChangedSign sign, CraftBookPlayer player) {
+    public boolean verify(BukkitChangedSign sign, CraftBookPlayer player) {
         String[] pts = RegexUtil.COMMA_PATTERN.split(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)).trim(), 3);
         try {
             Double.parseDouble(pts[0].trim());

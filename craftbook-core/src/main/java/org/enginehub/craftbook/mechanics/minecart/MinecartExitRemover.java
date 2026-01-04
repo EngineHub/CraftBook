@@ -16,43 +16,21 @@
 package org.enginehub.craftbook.mechanics.minecart;
 
 import com.sk89q.util.yaml.YAMLProcessor;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.minecart.RideableMinecart;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
-import org.enginehub.craftbook.util.EventUtil;
 
-public class MinecartCollisionEntry extends AbstractCraftBookMechanic implements Listener {
+public abstract class MinecartExitRemover extends AbstractCraftBookMechanic {
 
-    public MinecartCollisionEntry(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public MinecartExitRemover(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
-        if (!EventUtil.passesFilter(event)) {
-            return;
-        }
-
-        if (event.getVehicle() instanceof RideableMinecart) {
-            if (!event.getVehicle().isEmpty()) {
-                return;
-            }
-            if (!(event.getEntity() instanceof HumanEntity)) {
-                return;
-            }
-
-            event.getVehicle().addPassenger(event.getEntity());
-            event.setCancelled(true);
-        }
-    }
+    public boolean giveItem;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
+        config.setComment("give-item", "Sets whether to give the player the item back or not.");
+        giveItem = config.getBoolean("give-item", true);
     }
 }

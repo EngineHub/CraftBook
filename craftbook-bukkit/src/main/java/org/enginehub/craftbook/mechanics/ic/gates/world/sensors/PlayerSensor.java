@@ -19,7 +19,7 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
  */
 public class PlayerSensor extends AbstractSelfTriggeredIC {
 
-    public PlayerSensor(Server server, ChangedSign block, ICFactory factory) {
+    public PlayerSensor(Server server, BukkitChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -122,13 +122,13 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new PlayerSensor(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
 
             if (!SearchArea.createArea(sign.getBlock(), PlainTextComponentSerializer.plainText().serialize(sign.getLine(2))).isValid())
                 throw new ICVerificationException("Invalid SearchArea on line 3!");

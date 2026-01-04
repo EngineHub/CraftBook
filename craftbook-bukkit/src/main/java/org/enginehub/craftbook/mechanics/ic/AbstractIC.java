@@ -21,7 +21,7 @@ import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SignUtil;
@@ -36,10 +36,10 @@ import java.util.Objects;
 public abstract class AbstractIC implements IC {
 
     private final Server server;
-    private final ChangedSign sign;
+    private final BukkitChangedSign sign;
     private final ICFactory factory;
 
-    public AbstractIC(Server server, ChangedSign sign, ICFactory factory) {
+    public AbstractIC(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         this.factory = factory;
         this.server = server;
@@ -52,7 +52,7 @@ public abstract class AbstractIC implements IC {
     }
 
     @Override
-    public ChangedSign getSign() {
+    public BukkitChangedSign getSign() {
 
         return sign;
     }

@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -25,7 +25,7 @@ import org.enginehub.craftbook.mechanics.ic.ICFactory;
 
 public class HalfSubtractor extends AbstractIC {
 
-    public HalfSubtractor(Server server, ChangedSign block, ICFactory factory) {
+    public HalfSubtractor(Server server, BukkitChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -77,7 +77,7 @@ public class HalfSubtractor extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new HalfSubtractor(getServer(), sign, this);
         }

@@ -22,7 +22,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -43,7 +43,7 @@ import java.util.List;
  */
 public class ContainerCollector extends AbstractSelfTriggeredIC {
 
-    public ContainerCollector(Server server, ChangedSign sign, ICFactory factory) {
+    public ContainerCollector(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -150,7 +150,7 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new ContainerCollector(getServer(), sign, this);
         }

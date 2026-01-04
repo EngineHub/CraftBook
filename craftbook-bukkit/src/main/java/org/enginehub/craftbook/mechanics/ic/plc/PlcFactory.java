@@ -18,7 +18,7 @@ package org.enginehub.craftbook.mechanics.ic.plc;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.IC;
@@ -44,14 +44,14 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     }
 
     @Override
-    public IC create(ChangedSign sign) {
+    public IC create(BukkitChangedSign sign) {
 
         PlcIC<StateT, CodeT, Lang> i = new PlcIC<>(s, sign, lang);
         return selfTriggered ? i.selfTriggered() : i;
     }
 
     @Override
-    public void verify(ChangedSign sign) throws ICVerificationException {
+    public void verify(BukkitChangedSign sign) throws ICVerificationException {
 
         new PlcIC<>(sign, lang); // Huge ugly hack!!
         sign.setLine(2, Component.text("id:" + ThreadLocalRandom.current().nextInt()));
@@ -64,7 +64,7 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     }
 
     @Override
-    public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
+    public void checkPlayer(BukkitChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
         // Do nothing
     }
 

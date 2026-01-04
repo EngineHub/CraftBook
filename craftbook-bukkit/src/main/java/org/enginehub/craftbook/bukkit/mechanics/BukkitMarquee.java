@@ -25,10 +25,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.events.SignClickEvent;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanics.Marquee;
@@ -38,7 +39,6 @@ import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.SignClickEvent;
 import org.enginehub.craftbook.util.persistence.OwnedSignHelper;
 
 public class BukkitMarquee extends Marquee implements Listener {
@@ -57,7 +57,7 @@ public class BukkitMarquee extends Marquee implements Listener {
             return;
         }
 
-        ChangedSign sign = event.getSign();
+        BukkitChangedSign sign = event.getSign();
         String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
         if (!line1.equals("[Marquee]")) {
             return;

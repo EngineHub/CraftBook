@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.IC;
@@ -28,7 +28,7 @@ import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
  */
 public class FireBarrage extends FireShooter {
 
-    public FireBarrage(Server server, ChangedSign sign, ICFactory factory) {
+    public FireBarrage(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -61,7 +61,7 @@ public class FireBarrage extends FireShooter {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new FireBarrage(getServer(), sign, this);
         }

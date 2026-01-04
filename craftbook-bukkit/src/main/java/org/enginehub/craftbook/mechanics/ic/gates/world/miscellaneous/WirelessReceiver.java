@@ -19,7 +19,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -34,7 +34,7 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
 
     private String band;
 
-    public WirelessReceiver(Server server, ChangedSign sign, ICFactory factory) {
+    public WirelessReceiver(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -96,7 +96,7 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new WirelessReceiver(getServer(), sign, this);
         }
@@ -134,7 +134,7 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
+        public void checkPlayer(BukkitChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
             String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
             if (requirename && (line3.isEmpty() || !ICMechanic.hasRestrictedPermissions(player, this, "MC1111")))
                 sign.setLine(3, Component.text(player.getCraftBookId()));

@@ -16,14 +16,14 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 
 public abstract class SimpleTwoInputLogicGate extends AbstractIC {
 
-    public SimpleTwoInputLogicGate(Server server, ChangedSign sign, ICFactory factory) {
+    public SimpleTwoInputLogicGate(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }

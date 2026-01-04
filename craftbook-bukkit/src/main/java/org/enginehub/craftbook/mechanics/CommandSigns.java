@@ -26,7 +26,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
@@ -37,8 +37,8 @@ import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ParsingUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.SignClickEvent;
-import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
+import org.enginehub.craftbook.bukkit.events.SignClickEvent;
+import org.enginehub.craftbook.bukkit.events.SourcedBlockRedstoneEvent;
 import org.jspecify.annotations.Nullable;
 
 public class CommandSigns extends AbstractCraftBookMechanic implements Listener {
@@ -70,7 +70,7 @@ public class CommandSigns extends AbstractCraftBookMechanic implements Listener 
         if (!EventUtil.passesFilter(event)) return;
 
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        ChangedSign s = event.getSign();
+        BukkitChangedSign s = event.getSign();
 
         String line1 = PlainTextComponentSerializer.plainText().serialize(s.getLine(1));
         if (!line1.equals("[Command]")) return;
@@ -107,7 +107,7 @@ public class CommandSigns extends AbstractCraftBookMechanic implements Listener 
 
         Sign bukkitSign = (Sign) event.getBlock().getState(false);
         Side side = bukkitSign.getInteractableSideFor(event.getSource().getLocation());
-        ChangedSign s = ChangedSign.create(bukkitSign, side);
+        BukkitChangedSign s = BukkitChangedSign.create(bukkitSign, side);
 
         String line1 = PlainTextComponentSerializer.plainText().serialize(s.getLine(1));
         if (!line1.equals("[Command]")) return;
@@ -118,13 +118,13 @@ public class CommandSigns extends AbstractCraftBookMechanic implements Listener 
         runCommandSign(s, null);
     }
 
-    public static void runCommandSign(ChangedSign sign, @Nullable CraftBookPlayer player) {
+    public static void runCommandSign(BukkitChangedSign sign, @Nullable CraftBookPlayer player) {
         String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
         String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
         StringBuilder command = new StringBuilder(line2.replace("/", "") + line3);
 
         while (BlockUtil.areBlocksIdentical(sign.getBlock(), sign.getBlock().getRelative(0, -1, 0))) {
-            sign = ChangedSign.create(sign.getBlock().getRelative(0, -1, 0), sign.getSide());
+            sign = BukkitChangedSign.create(sign.getBlock().getRelative(0, -1, 0), sign.getSide());
             String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
             if (!line1.equals("[Command]")) break;
             String line0 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(0));

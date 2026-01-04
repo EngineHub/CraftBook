@@ -22,7 +22,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Farmland;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -36,7 +36,7 @@ import java.util.HashMap;
 
 public class Irrigator extends AbstractSelfTriggeredIC {
 
-    public Irrigator(Server server, ChangedSign sign, ICFactory factory) {
+    public Irrigator(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -118,7 +118,7 @@ public class Irrigator extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new Irrigator(getServer(), sign, this);
         }
@@ -145,7 +145,7 @@ public class Irrigator extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
             if (!SearchArea.isValidArea(sign.getBlock(), PlainTextComponentSerializer.plainText().serialize(sign.getLine(2))))
                 throw new ICVerificationException("Invalid SearchArea on 3rd line!");
         }

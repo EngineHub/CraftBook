@@ -36,7 +36,7 @@ import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ICUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.SignClickEvent;
+import org.enginehub.craftbook.bukkit.events.SignClickEvent;
 
 /**
  * Payment Mech, takes payment. (Requires Vault.)

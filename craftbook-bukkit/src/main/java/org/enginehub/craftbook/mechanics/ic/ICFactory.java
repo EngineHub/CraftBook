@@ -15,7 +15,7 @@
 
 package org.enginehub.craftbook.mechanics.ic;
 
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 
 /**
@@ -34,7 +34,7 @@ public interface ICFactory {
      * @param sign
      * @return an IC ready to be used
      */
-    IC create(ChangedSign sign);
+    IC create(BukkitChangedSign sign);
 
     /**
      * Verify that the IC can be created in the area of the world defined by the given sign; throw
@@ -49,7 +49,7 @@ public interface ICFactory {
      *     represent a valid setup
      *     for this type of IC.
      */
-    void verify(ChangedSign sign) throws ICVerificationException;
+    void verify(BukkitChangedSign sign) throws ICVerificationException;
 
     /**
      * Check the player who creates the IC, used in the MessageSender IC, to make sure people
@@ -63,7 +63,7 @@ public interface ICFactory {
      *     represent a valid setup
      *     for this type of IC.
      */
-    void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException;
+    void checkPlayer(BukkitChangedSign sign, CraftBookPlayer player) throws ICVerificationException;
 
     /**
      * Get a short description of the IC

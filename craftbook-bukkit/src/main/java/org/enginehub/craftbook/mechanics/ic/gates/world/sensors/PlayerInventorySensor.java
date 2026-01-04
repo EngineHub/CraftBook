@@ -18,7 +18,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.sensors;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -33,7 +33,7 @@ import org.enginehub.craftbook.util.SearchArea;
 
 public class PlayerInventorySensor extends AbstractSelfTriggeredIC {
 
-    public PlayerInventorySensor(Server server, ChangedSign sign, ICFactory factory) {
+    public PlayerInventorySensor(Server server, BukkitChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -135,7 +135,7 @@ public class PlayerInventorySensor extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new PlayerInventorySensor(getServer(), sign, this);
         }

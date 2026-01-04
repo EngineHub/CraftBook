@@ -19,7 +19,7 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.scheduler.BukkitTask;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -35,7 +35,7 @@ public class LowDelayer extends AbstractIC {
 
     private BukkitTask taskId;
 
-    public LowDelayer(Server server, ChangedSign block, ICFactory factory) {
+    public LowDelayer(Server server, BukkitChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -78,7 +78,7 @@ public class LowDelayer extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new LowDelayer(getServer(), sign, this);
         }
@@ -93,7 +93,7 @@ public class LowDelayer extends AbstractIC {
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
 
             try {
                 Integer.parseInt(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)));

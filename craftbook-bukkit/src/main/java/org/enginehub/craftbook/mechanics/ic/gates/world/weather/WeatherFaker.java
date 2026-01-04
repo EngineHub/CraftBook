@@ -19,7 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.WeatherType;
 import org.bukkit.entity.Player;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -36,7 +36,7 @@ import java.util.Set;
  */
 public class WeatherFaker extends AbstractSelfTriggeredIC {
 
-    public WeatherFaker(Server server, ChangedSign sign, ICFactory factory) {
+    public WeatherFaker(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -61,7 +61,7 @@ public class WeatherFaker extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new WeatherFaker(getServer(), sign, this);
         }

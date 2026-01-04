@@ -13,6 +13,15 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-@org.jspecify.annotations.NullMarked
-package org.enginehub.craftbook.util.events;
+package org.enginehub.craftbook.mechanics.minecart;
 
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
+
+public abstract class MinecartCollisionEntry extends AbstractCraftBookMechanic {
+
+    public MinecartCollisionEntry(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
+    }
+}

@@ -34,10 +34,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.events.SignClickEvent;
+import org.enginehub.craftbook.bukkit.events.SourcedBlockRedstoneEvent;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
 import org.enginehub.craftbook.mechanic.MechanicType;
@@ -47,8 +49,6 @@ import org.enginehub.craftbook.mechanics.area.clipboard.ToggleArea;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.SignClickEvent;
-import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 import org.enginehub.craftbook.util.persistence.OwnedSignHelper;
 
 import java.io.IOException;
@@ -172,7 +172,7 @@ public class BukkitToggleArea extends ToggleArea implements Listener {
         }
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        ChangedSign sign = event.getSign();
+        BukkitChangedSign sign = event.getSign();
 
         String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
         if (!line1.equals("[ToggleArea]") && !line1.equals("[ToggleAreaSave]")) {
@@ -224,7 +224,7 @@ public class BukkitToggleArea extends ToggleArea implements Listener {
         return false;
     }
 
-    private ToggleAreaData getToggleAreaData(ChangedSign sign) {
+    private ToggleAreaData getToggleAreaData(BukkitChangedSign sign) {
         String namespace;
         if (OwnedSignHelper.hasOwner(sign.getSign())) {
             namespace = OwnedSignHelper.getOwner(sign.getSign()).toString();
@@ -248,7 +248,7 @@ public class BukkitToggleArea extends ToggleArea implements Listener {
 
         Sign bukkitSign = (Sign) event.getBlock().getState(false);
         Side side = bukkitSign.getInteractableSideFor(event.getSource().getLocation());
-        ChangedSign sign = ChangedSign.create(bukkitSign, side);
+        BukkitChangedSign sign = BukkitChangedSign.create(bukkitSign, side);
 
         String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
         if (!line1.equals("[ToggleArea]") && !line1.equals("[ToggleAreaSave]")) {
@@ -267,7 +267,7 @@ public class BukkitToggleArea extends ToggleArea implements Listener {
         toggle(sign, toggleAreaData, save);
     }
 
-    private boolean toggle(ChangedSign sign, ToggleAreaData toggleAreaData, boolean save) {
+    private boolean toggle(BukkitChangedSign sign, ToggleAreaData toggleAreaData, boolean save) {
         try {
             Clipboard copy;
             World weWorld = BukkitAdapter.adapt(sign.getBlock().getWorld());
@@ -319,9 +319,9 @@ public class BukkitToggleArea extends ToggleArea implements Listener {
         }
 
         Sign bukkitSign = (Sign) block.getState(false);
-        ChangedSign sign = null;
+        BukkitChangedSign sign = null;
         for (Side side : Side.values()) {
-            ChangedSign testSign = ChangedSign.create(bukkitSign, side);
+            BukkitChangedSign testSign = BukkitChangedSign.create(bukkitSign, side);
             String signLine1 = PlainTextComponentSerializer.plainText().serialize(testSign.getLine(1));
             if (signLine1.equals("[ToggleArea]") || signLine1.equals("[ToggleAreaSave]")) {
                 sign = testSign;
@@ -338,13 +338,13 @@ public class BukkitToggleArea extends ToggleArea implements Listener {
         return toggle(sign, toggleAreaData, save);
     }
 
-    private boolean checkToggleState(ChangedSign sign) {
+    private boolean checkToggleState(BukkitChangedSign sign) {
         String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)).toLowerCase(Locale.ENGLISH);
         String line4 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3)).toLowerCase(Locale.ENGLISH);
         return TOGGLED_ON_PATTERN.matcher(line3).matches() || !(line4.equals("--") || TOGGLED_ON_PATTERN.matcher(line4).matches());
     }
 
-    private void setToggledState(ChangedSign sign, boolean state) {
+    private void setToggledState(BukkitChangedSign sign, boolean state) {
         int toToggleOn = state ? 2 : 3;
         int toToggleOff = state ? 3 : 2;
         sign.setLine(toToggleOff, sign.getLine(toToggleOff).replaceText(DASH_REMOVER));
@@ -353,7 +353,7 @@ public class BukkitToggleArea extends ToggleArea implements Listener {
         sign.update(false);
     }
 
-    private void updateOwnerName(ChangedSign sign) {
+    private void updateOwnerName(BukkitChangedSign sign) {
         if (!OwnedSignHelper.hasOwner(sign.getSign())) {
             return;
         }

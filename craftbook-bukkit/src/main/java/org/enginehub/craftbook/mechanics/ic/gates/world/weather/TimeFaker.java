@@ -18,7 +18,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.weather;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -35,7 +35,7 @@ import java.util.Set;
  */
 public class TimeFaker extends AbstractSelfTriggeredIC {
 
-    public TimeFaker(Server server, ChangedSign sign, ICFactory factory) {
+    public TimeFaker(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -60,7 +60,7 @@ public class TimeFaker extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new TimeFaker(getServer(), sign, this);
         }

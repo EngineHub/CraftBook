@@ -26,7 +26,7 @@ import org.bukkit.block.data.type.Cocoa;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -51,7 +51,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Planter extends AbstractSelfTriggeredIC {
 
-    public Planter(Server server, ChangedSign block, ICFactory factory) {
+    public Planter(Server server, BukkitChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -286,7 +286,7 @@ public class Planter extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new Planter(getServer(), sign, this);
         }
@@ -304,7 +304,7 @@ public class Planter extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
             if (!SearchArea.isValidArea(sign.getBlock(), PlainTextComponentSerializer.plainText().serialize(sign.getLine(3))))
                 throw new ICVerificationException("Invalid SearchArea on 4th line!");
         }

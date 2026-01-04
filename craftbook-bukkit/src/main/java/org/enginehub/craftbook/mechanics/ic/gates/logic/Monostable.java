@@ -18,7 +18,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.logic;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -33,7 +33,7 @@ public class Monostable extends AbstractSelfTriggeredIC {
 
     // "Temp docs": nn:[HL] nn - time for pulse (1 = 2t) H: trigger on high L: trigger on low
 
-    public Monostable(Server server, ChangedSign psign, ICFactory factory) {
+    public Monostable(Server server, BukkitChangedSign psign, ICFactory factory) {
 
         super(server, psign, factory);
     }
@@ -101,7 +101,7 @@ public class Monostable extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new Monostable(getServer(), sign, this);
         }
@@ -113,7 +113,7 @@ public class Monostable extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
 
             int ticks;
             boolean hi;

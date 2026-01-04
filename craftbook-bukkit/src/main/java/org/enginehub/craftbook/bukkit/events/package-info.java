@@ -14,4 +14,4 @@
  */
 
 @org.jspecify.annotations.NullMarked
-package org.enginehub.craftbook.mechanics.minecart.events;
+package org.enginehub.craftbook.bukkit.events;

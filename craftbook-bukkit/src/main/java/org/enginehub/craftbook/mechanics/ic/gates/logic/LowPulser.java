@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
@@ -27,7 +27,7 @@ import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
  */
 public class LowPulser extends Pulser {
 
-    public LowPulser(Server server, ChangedSign block, ICFactory factory) {
+    public LowPulser(Server server, BukkitChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -58,7 +58,7 @@ public class LowPulser extends Pulser {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new LowPulser(getServer(), sign, this);
         }

@@ -18,7 +18,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.items;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -28,7 +28,7 @@ import org.enginehub.craftbook.util.ItemUtil;
 
 public class ItemFan extends AbstractSelfTriggeredIC {
 
-    public ItemFan(Server server, ChangedSign sign, ICFactory factory) {
+    public ItemFan(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -91,7 +91,7 @@ public class ItemFan extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new ItemFan(getServer(), sign, this);
         }

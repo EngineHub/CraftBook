@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.world.weather;
 
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -26,7 +26,7 @@ import org.enginehub.craftbook.mechanics.ic.RestrictedIC;
 
 public class TimeControl extends AbstractIC {
 
-    public TimeControl(Server server, ChangedSign sign, ICFactory factory) {
+    public TimeControl(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -65,7 +65,7 @@ public class TimeControl extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new TimeControl(getServer(), sign, this);
         }

@@ -20,7 +20,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -42,7 +42,7 @@ import java.util.Set;
  */
 public class MovementSensor extends AbstractSelfTriggeredIC {
 
-    public MovementSensor(Server server, ChangedSign sign, ICFactory factory) {
+    public MovementSensor(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -131,7 +131,7 @@ public class MovementSensor extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new MovementSensor(getServer(), sign, this);
         }

@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.world.sensors;
 
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
@@ -29,7 +29,7 @@ import org.enginehub.craftbook.util.ICUtil;
  */
 public class ItemNotSensor extends ItemSensor implements SelfTriggeredIC {
 
-    public ItemNotSensor(Server server, ChangedSign block, ICFactory factory) {
+    public ItemNotSensor(Server server, BukkitChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -68,13 +68,13 @@ public class ItemNotSensor extends ItemSensor implements SelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new ItemNotSensor(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
 
             ICUtil.verifySignSyntax(sign);
         }

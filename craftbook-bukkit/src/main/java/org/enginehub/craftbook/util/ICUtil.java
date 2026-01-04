@@ -36,7 +36,7 @@ import org.bukkit.block.data.type.Switch;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
@@ -101,7 +101,7 @@ public final class ICUtil {
     private static final TextReplacementConfig OFF_REMOVER = TextReplacementConfig.builder().matchLiteral("[off]").replacement("").build();
     private static final TextReplacementConfig RAD_REMOVER = TextReplacementConfig.builder().matchLiteral("[rad]").replacement("").build();
 
-    public static void parseSignFlags(CraftBookPlayer player, ChangedSign sign) {
+    public static void parseSignFlags(CraftBookPlayer player, BukkitChangedSign sign) {
 
         for (int i = 2; i < 4; i++) {
             String line = PlainTextComponentSerializer.plainText().serialize(sign.getLine(i));
@@ -268,27 +268,27 @@ public final class ICUtil {
         return target;
     }
 
-    public static Block parseBlockLocation(ChangedSign sign, int lPos, LocationCheckType relative) {
+    public static Block parseBlockLocation(BukkitChangedSign sign, int lPos, LocationCheckType relative) {
 
         return parseBlockLocation(sign.getBlock(), PlainTextComponentSerializer.plainText().serialize(sign.getLine(lPos)), relative);
     }
 
-    public static Block parseBlockLocation(ChangedSign sign, int lPos) {
+    public static Block parseBlockLocation(BukkitChangedSign sign, int lPos) {
 
         return parseBlockLocation(sign, lPos, ICMechanic.instance.defaultCoordinates);
     }
 
-    public static Block parseBlockLocation(ChangedSign sign) {
+    public static Block parseBlockLocation(BukkitChangedSign sign) {
 
         return parseBlockLocation(sign, 2, ICMechanic.instance.defaultCoordinates);
     }
 
-    public static void verifySignSyntax(ChangedSign sign) throws ICVerificationException {
+    public static void verifySignSyntax(BukkitChangedSign sign) throws ICVerificationException {
 
         verifySignLocationSyntax(sign, 2);
     }
 
-    public static void verifySignLocationSyntax(ChangedSign sign, int i) throws ICVerificationException {
+    public static void verifySignLocationSyntax(BukkitChangedSign sign, int i) throws ICVerificationException {
 
         try {
             String line = PlainTextComponentSerializer.plainText().serialize(sign.getLine(i));
@@ -317,11 +317,11 @@ public final class ICUtil {
         }
     }
 
-    public static Vector3 parseRadius(ChangedSign sign) {
+    public static Vector3 parseRadius(BukkitChangedSign sign) {
         return parseRadius(sign, 2);
     }
 
-    public static Vector3 parseRadius(ChangedSign sign, int lPos) {
+    public static Vector3 parseRadius(BukkitChangedSign sign, int lPos) {
         return parseRadius(PlainTextComponentSerializer.plainText().serialize(sign.getLine(lPos)));
     }
 

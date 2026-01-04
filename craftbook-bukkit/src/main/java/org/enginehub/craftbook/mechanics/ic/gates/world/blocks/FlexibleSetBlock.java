@@ -21,7 +21,7 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -38,7 +38,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class FlexibleSetBlock extends AbstractIC {
 
-    public FlexibleSetBlock(Server server, ChangedSign sign, ICFactory factory) {
+    public FlexibleSetBlock(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -152,13 +152,13 @@ public class FlexibleSetBlock extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new FlexibleSetBlock(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
 
             String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)).toUpperCase(Locale.ENGLISH);
 

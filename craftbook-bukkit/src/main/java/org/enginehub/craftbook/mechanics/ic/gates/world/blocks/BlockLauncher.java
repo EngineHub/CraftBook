@@ -23,7 +23,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -40,7 +40,7 @@ public class BlockLauncher extends AbstractIC {
     Vector velocity;
     ItemStack block;
 
-    public BlockLauncher(Server server, ChangedSign block, ICFactory factory) {
+    public BlockLauncher(Server server, BukkitChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -114,13 +114,13 @@ public class BlockLauncher extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new BlockLauncher(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
             String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
             if (!line3.isEmpty()) {
                 try {

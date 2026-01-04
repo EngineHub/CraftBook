@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.IC;
@@ -24,7 +24,7 @@ import org.enginehub.craftbook.mechanics.ic.ICFactory;
 
 public class AndGate extends SimpleAnyInputLogicGate {
 
-    public AndGate(Server server, ChangedSign sign, ICFactory factory) {
+    public AndGate(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -55,7 +55,7 @@ public class AndGate extends SimpleAnyInputLogicGate {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new AndGate(getServer(), sign, this);
         }

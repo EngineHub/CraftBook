@@ -13,7 +13,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.minecart;
+package org.enginehub.craftbook.bukkit.mechanics.minecart;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -26,16 +26,16 @@ import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanics.minecart.MinecartItemPickup;
 import org.enginehub.craftbook.util.EventUtil;
 
 import java.util.Collection;
 
-public class MinecartItemPickup extends AbstractCraftBookMechanic implements Listener {
+public class BukkitMinecartItemPickup extends MinecartItemPickup implements Listener {
 
-    public MinecartItemPickup(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public BukkitMinecartItemPickup(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 

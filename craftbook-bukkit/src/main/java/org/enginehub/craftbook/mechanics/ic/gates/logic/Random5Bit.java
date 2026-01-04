@@ -16,13 +16,13 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.IC;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;
 
 public class Random5Bit extends RandomBit {
 
-    public Random5Bit(Server server, ChangedSign sign, ICFactory factory) {
+    public Random5Bit(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -55,7 +55,7 @@ public class Random5Bit extends RandomBit {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new Random5Bit(getServer(), sign, this);
         }

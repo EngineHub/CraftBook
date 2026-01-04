@@ -107,7 +107,7 @@ public class BukkitVariableManager extends VariableManager implements Listener {
     private boolean signHasVariable(VariableKey variableKey, ChangedSign sign) {
         for (Component comp : sign.getLines()) {
             String line = PlainTextComponentSerializer.plainText().serialize(comp);
-            if (line.contains("%" + variableKey.toString() + "%")) {
+            if (line.contains("%" + variableKey + "%")) {
                 return true;
             } else if (variableKey.getNamespace().equals(GLOBAL_NAMESPACE)
                 || variableKey.getNamespace().contains("-")) {

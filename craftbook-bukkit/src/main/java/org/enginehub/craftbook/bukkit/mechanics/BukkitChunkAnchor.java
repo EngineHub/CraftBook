@@ -31,16 +31,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.events.SourcedBlockRedstoneEvent;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanics.ChunkAnchor;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 public class BukkitChunkAnchor extends ChunkAnchor implements Listener {
 
@@ -105,7 +105,7 @@ public class BukkitChunkAnchor extends ChunkAnchor implements Listener {
         Block block = event.getBlock();
         if (SignUtil.isSign(block)) {
             Sign bukktiSign = (Sign) block.getState(false);
-            ChangedSign sign = ChangedSign.create(block, bukktiSign.getInteractableSideFor(event.getSource().getLocation()));
+            BukkitChangedSign sign = BukkitChangedSign.create(block, bukktiSign.getInteractableSideFor(event.getSource().getLocation()));
 
             String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
             if (!line1.equals("[Chunk]")) {

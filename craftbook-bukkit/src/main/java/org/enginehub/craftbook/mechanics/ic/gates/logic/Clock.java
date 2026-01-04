@@ -19,7 +19,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -30,7 +30,7 @@ import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
 
 public class Clock extends AbstractSelfTriggeredIC {
 
-    public Clock(Server server, ChangedSign psign, ICFactory factory) {
+    public Clock(Server server, BukkitChangedSign psign, ICFactory factory) {
 
         super(server, psign, factory);
     }
@@ -110,13 +110,13 @@ public class Clock extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new Clock(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
 
             int interval;
             try {

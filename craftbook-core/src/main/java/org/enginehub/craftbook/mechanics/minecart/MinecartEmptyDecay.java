@@ -13,24 +13,24 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.util.events;
+package org.enginehub.craftbook.mechanics.minecart;
 
-import org.bukkit.block.Block;
-import org.bukkit.entity.Item;
-import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.mechanics.pipe.PipeRequestEvent;
+import com.sk89q.util.yaml.YAMLProcessor;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 
-import java.util.List;
+public abstract class MinecartEmptyDecay extends AbstractCraftBookMechanic {
 
-public class RangedCollectEvent extends PipeRequestEvent {
-    private final Item item;
-
-    public RangedCollectEvent(Block theBlock, Item item, List<ItemStack> itemstacks, Block sucked) {
-        super(theBlock, itemstacks, sucked);
-        this.item = item;
+    public MinecartEmptyDecay(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
     }
 
-    public Item getItem() {
-        return item;
+    public int decayDelay;
+
+    @Override
+    public void loadFromConfiguration(YAMLProcessor config) {
+        config.setComment("decay-delay", "The time in ticks that the cart will wait before decaying.");
+        decayDelay = config.getInt("decay-delay", 200);
     }
 }

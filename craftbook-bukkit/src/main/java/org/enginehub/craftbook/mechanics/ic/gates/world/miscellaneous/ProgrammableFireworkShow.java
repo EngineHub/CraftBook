@@ -26,7 +26,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitTask;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -52,7 +52,7 @@ import java.util.Map;
 
 public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 
-    public ProgrammableFireworkShow(Server server, ChangedSign sign, ICFactory factory) {
+    public ProgrammableFireworkShow(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -123,13 +123,13 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new ProgrammableFireworkShow(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
             String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
             if (line2.trim().isEmpty() || !new File(ICManager.inst().getFireworkFolder(), line2.trim() + ".txt").exists() && !new File(ICManager.inst().getFireworkFolder(), line2.trim() + ".fwk").exists())
                 throw new ICVerificationException("A valid firework show is required on line 3!");

@@ -13,36 +13,15 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.util.events;
+package org.enginehub.craftbook.mechanics.minecart;
 
-import org.bukkit.block.Block;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.block.BlockEvent;
+import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.enginehub.craftbook.mechanic.CraftBookMechanic;
+import org.enginehub.craftbook.mechanic.MechanicType;
 
-public class SelfTriggerThinkEvent extends BlockEvent {
+public abstract class MinecartRailPlacer extends AbstractCraftBookMechanic {
 
-    public SelfTriggerThinkEvent(Block theBlock) {
-        super(theBlock);
-    }
-
-    private static final HandlerList handlers = new HandlerList();
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
-    private boolean handled;
-
-    public void setHandled(boolean handled) {
-        this.handled = handled;
-    }
-
-    public boolean isHandled() {
-        return handled;
+    public MinecartRailPlacer(MechanicType<? extends CraftBookMechanic> mechanicType) {
+        super(mechanicType);
     }
 }

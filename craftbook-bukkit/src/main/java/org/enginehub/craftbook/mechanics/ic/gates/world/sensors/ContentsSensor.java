@@ -21,7 +21,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -35,7 +35,7 @@ import org.enginehub.craftbook.util.ItemUtil;
 
 public class ContentsSensor extends AbstractSelfTriggeredIC {
 
-    public ContentsSensor(Server server, ChangedSign sign, ICFactory factory) {
+    public ContentsSensor(Server server, BukkitChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -123,13 +123,13 @@ public class ContentsSensor extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new ContentsSensor(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
 
             ItemStack item = ItemSyntax.getItem(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)));
             if (item == null)

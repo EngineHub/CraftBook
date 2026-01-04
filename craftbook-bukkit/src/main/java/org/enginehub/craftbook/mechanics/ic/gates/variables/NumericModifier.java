@@ -18,7 +18,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.variables;
 import com.google.common.base.Preconditions;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -32,7 +32,7 @@ import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 
 public class NumericModifier extends AbstractIC {
 
-    public NumericModifier(Server server, ChangedSign sign, ICFactory factory) {
+    public NumericModifier(Server server, BukkitChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -150,7 +150,7 @@ public class NumericModifier extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new NumericModifier(getServer(), sign, this);
         }
@@ -202,7 +202,7 @@ public class NumericModifier extends AbstractIC {
         }
 
         @Override
-        public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
+        public void checkPlayer(BukkitChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
             VariableKey variableKey;
             try {
                 String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
@@ -216,7 +216,7 @@ public class NumericModifier extends AbstractIC {
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
             try {
                 String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
                 VariableKey variableKey = VariableKey.fromString(line2, null);

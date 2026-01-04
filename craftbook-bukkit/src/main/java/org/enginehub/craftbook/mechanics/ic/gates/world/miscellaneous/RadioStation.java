@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -33,7 +33,7 @@ public class RadioStation extends AbstractSelfTriggeredIC {
 
     public static final Map<String, Playlist> stations = new HashMap<>();
 
-    public RadioStation(Server server, ChangedSign sign, ICFactory factory) {
+    public RadioStation(Server server, BukkitChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -92,7 +92,7 @@ public class RadioStation extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new RadioStation(getServer(), sign, this);
         }

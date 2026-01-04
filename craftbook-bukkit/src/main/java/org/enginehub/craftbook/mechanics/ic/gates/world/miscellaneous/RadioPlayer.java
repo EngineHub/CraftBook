@@ -17,7 +17,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
@@ -38,7 +38,7 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
 
     Map<String, SearchArea> listening;
 
-    public RadioPlayer(Server server, ChangedSign sign, ICFactory factory) {
+    public RadioPlayer(Server server, BukkitChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -130,7 +130,7 @@ public class RadioPlayer extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new RadioPlayer(getServer(), sign, this);
         }

@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -31,7 +31,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class RangedOutput extends AbstractSelfTriggeredIC {
 
-    public RangedOutput(Server server, ChangedSign sign, ICFactory factory) {
+    public RangedOutput(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -119,7 +119,7 @@ public class RangedOutput extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new RangedOutput(getServer(), sign, this);
         }

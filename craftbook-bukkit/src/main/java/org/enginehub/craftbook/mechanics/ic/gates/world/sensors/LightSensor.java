@@ -18,7 +18,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.sensors;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -29,7 +29,7 @@ import org.enginehub.craftbook.util.SignUtil;
 
 public class LightSensor extends AbstractSelfTriggeredIC {
 
-    public LightSensor(Server server, ChangedSign sign, ICFactory factory) {
+    public LightSensor(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -103,7 +103,7 @@ public class LightSensor extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new LightSensor(getServer(), sign, this);
         }

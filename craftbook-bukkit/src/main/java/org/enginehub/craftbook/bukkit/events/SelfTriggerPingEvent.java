@@ -13,7 +13,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.util.events;
+package org.enginehub.craftbook.bukkit.events;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.HandlerList;

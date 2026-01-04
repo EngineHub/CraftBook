@@ -22,7 +22,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.util.Vector;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -43,7 +43,7 @@ public class FireShooter extends AbstractIC {
     private double spread;
     private double vert;
 
-    public FireShooter(Server server, ChangedSign sign, ICFactory factory) {
+    public FireShooter(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -146,7 +146,7 @@ public class FireShooter extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new FireShooter(getServer(), sign, this);
         }

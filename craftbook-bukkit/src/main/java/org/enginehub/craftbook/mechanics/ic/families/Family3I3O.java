@@ -18,7 +18,7 @@ package org.enginehub.craftbook.mechanics.ic.families;
 import com.sk89q.worldedit.util.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractChipState;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFamily;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -33,25 +33,25 @@ import org.enginehub.craftbook.util.SignUtil;
 public class Family3I3O extends AbstractICFamily {
 
     @Override
-    public ChipState detect(Location source, ChangedSign sign) {
+    public ChipState detect(Location source, BukkitChangedSign sign) {
 
         return new ChipState3I3O(source, sign);
     }
 
     @Override
-    public ChipState detectSelfTriggered(Location source, ChangedSign sign) {
+    public ChipState detectSelfTriggered(Location source, BukkitChangedSign sign) {
 
         return new ChipState3I3O(source, sign, true);
     }
 
     public static class ChipState3I3O extends AbstractChipState {
 
-        public ChipState3I3O(Location source, ChangedSign sign) {
+        public ChipState3I3O(Location source, BukkitChangedSign sign) {
 
             super(source, sign, false);
         }
 
-        public ChipState3I3O(Location source, ChangedSign sign, boolean selfTriggered) {
+        public ChipState3I3O(Location source, BukkitChangedSign sign, boolean selfTriggered) {
 
             super(source, sign, selfTriggered);
         }

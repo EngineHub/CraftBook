@@ -22,7 +22,7 @@ import org.bukkit.Server;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -35,7 +35,7 @@ import org.enginehub.craftbook.util.SearchArea;
 
 public class CombineHarvester extends AbstractSelfTriggeredIC {
 
-    public CombineHarvester(Server server, ChangedSign sign, ICFactory factory) {
+    public CombineHarvester(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -127,7 +127,7 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new CombineHarvester(getServer(), sign, this);
         }
@@ -145,7 +145,7 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
             if (!SearchArea.isValidArea(sign.getBlock(), PlainTextComponentSerializer.plainText().serialize(sign.getLine(2))))
                 throw new ICVerificationException("Invalid SearchArea on 3rd line!");
         }

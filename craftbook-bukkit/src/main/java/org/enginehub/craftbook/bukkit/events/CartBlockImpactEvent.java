@@ -13,7 +13,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.minecart.events;
+package org.enginehub.craftbook.bukkit.events;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Minecart;

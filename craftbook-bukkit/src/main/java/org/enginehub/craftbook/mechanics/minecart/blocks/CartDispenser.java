@@ -31,12 +31,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
+import org.enginehub.craftbook.bukkit.events.CartBlockImpactEvent;
+import org.enginehub.craftbook.bukkit.events.CartBlockRedstoneEvent;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.EntityUtil;
 import org.enginehub.craftbook.util.RailUtil;
@@ -86,7 +86,7 @@ public class CartDispenser extends CartBlockMechanism {
     }
 
     @Override
-    public boolean verify(ChangedSign sign, CraftBookPlayer player) {
+    public boolean verify(BukkitChangedSign sign, CraftBookPlayer player) {
         String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
         boolean inf = "inf".equalsIgnoreCase(line2);
 
@@ -117,7 +117,7 @@ public class CartDispenser extends CartBlockMechanism {
             return;
         }
 
-        ChangedSign sign = blocks.getChangedSign(side);
+        BukkitChangedSign sign = blocks.getChangedSign(side);
 
         Power pow = isActive(blocks);
         String line0 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(0));

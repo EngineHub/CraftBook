@@ -29,7 +29,7 @@ import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Wolf;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -44,7 +44,7 @@ import java.util.Map;
 
 public class AnimalBreeder extends AbstractSelfTriggeredIC {
 
-    public AnimalBreeder(Server server, ChangedSign sign, ICFactory factory) {
+    public AnimalBreeder(Server server, BukkitChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -194,7 +194,7 @@ public class AnimalBreeder extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new AnimalBreeder(getServer(), sign, this);
         }

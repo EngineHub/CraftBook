@@ -23,7 +23,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -43,7 +43,7 @@ import java.util.List;
 
 public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC {
 
-    public Distributer(Server server, ChangedSign sign, ICFactory factory) {
+    public Distributer(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -145,7 +145,7 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new Distributer(getServer(), sign, this);
         }
@@ -163,7 +163,7 @@ public class Distributer extends AbstractSelfTriggeredIC implements PipeInputIC 
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
             try {
                 String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
                 Integer.parseInt(RegexUtil.COLON_PATTERN.split(line2)[0]);

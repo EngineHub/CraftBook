@@ -13,9 +13,8 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.minecart;
+package org.enginehub.craftbook.bukkit.mechanics.minecart;
 
-import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
@@ -25,16 +24,16 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.util.Vector;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanics.minecart.MinecartImpactDamage;
 import org.enginehub.craftbook.util.EventUtil;
 
-public class MinecartImpactDamage extends AbstractCraftBookMechanic implements Listener {
+public class BukkitMinecartImpactDamage extends MinecartImpactDamage implements Listener {
 
     private static final Vector HALF_BLOCK_UP = new Vector(0, 0.5, 0);
 
-    public MinecartImpactDamage(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public BukkitMinecartImpactDamage(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 
@@ -79,21 +78,5 @@ public class MinecartImpactDamage extends AbstractCraftBookMechanic implements L
         }
 
         event.setCancelled(true);
-    }
-
-    private boolean removeOtherCarts;
-    private boolean emptyCartsImpact;
-    private boolean damagePlayers;
-
-    @Override
-    public void loadFromConfiguration(YAMLProcessor config) {
-        config.setComment("remove-other-minecarts", "Allow minecarts to remove other minecarts on impact.");
-        removeOtherCarts = config.getBoolean("remove-other-minecarts", false);
-
-        config.setComment("allow-empty-carts", "Allows the cart to be empty.");
-        emptyCartsImpact = config.getBoolean("allow-empty-carts", false);
-
-        config.setComment("damage-players", "Allows the cart to damage and kill players.");
-        damagePlayers = config.getBoolean("damage-players", true);
     }
 }

@@ -13,9 +13,8 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.minecart;
+package org.enginehub.craftbook.bukkit.mechanics.minecart;
 
-import com.sk89q.util.yaml.YAMLProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -27,20 +26,20 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
-import org.enginehub.craftbook.bukkit.mechanics.minecart.BukkitTemporaryCart;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.MechanicTypes;
+import org.enginehub.craftbook.mechanics.minecart.MinecartExitRemover;
+import org.enginehub.craftbook.mechanics.minecart.TemporaryCart;
 import org.enginehub.craftbook.util.EventUtil;
 
 import java.util.Optional;
 
-public class MinecartExitRemover extends AbstractCraftBookMechanic implements Listener {
+public class BukkitMinecartExitRemover extends MinecartExitRemover implements Listener {
 
-    public MinecartExitRemover(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public BukkitMinecartExitRemover(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 
@@ -103,13 +102,5 @@ public class MinecartExitRemover extends AbstractCraftBookMechanic implements Li
 
             minecart.remove();
         }
-    }
-
-    private boolean giveItem;
-
-    @Override
-    public void loadFromConfiguration(YAMLProcessor config) {
-        config.setComment("give-item", "Sets whether to give the player the item back or not.");
-        giveItem = config.getBoolean("give-item", true);
     }
 }

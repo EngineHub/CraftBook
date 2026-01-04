@@ -37,10 +37,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.events.SignClickEvent;
+import org.enginehub.craftbook.bukkit.events.SourcedBlockRedstoneEvent;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.exception.InvalidMechanismException;
@@ -51,8 +53,6 @@ import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.SignClickEvent;
-import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayDeque;
@@ -86,7 +86,7 @@ public class Gate extends StoredBlockMechanic {
      * @return true if a gate was found and blocks were changed; false otherwise.
      * @throws InvalidMechanismException if something went wrong with the gate
      */
-    public boolean toggleGates(Block block, ChangedSign sign, @Nullable Boolean close) throws InvalidMechanismException {
+    public boolean toggleGates(Block block, BukkitChangedSign sign, @Nullable Boolean close) throws InvalidMechanismException {
         int x = block.getX();
         int y = block.getY();
         int z = block.getZ();
@@ -121,7 +121,7 @@ public class Gate extends StoredBlockMechanic {
      * @param close Should close or open.
      * @return true if a gate column was found and blocks were changed; false otherwise.
      */
-    private boolean recurseColumn(ChangedSign sign, Block block, Material expectedType, Set<GateColumn> visitedColumns, @Nullable Boolean close) throws InvalidMechanismException {
+    private boolean recurseColumn(BukkitChangedSign sign, Block block, Material expectedType, Set<GateColumn> visitedColumns, @Nullable Boolean close) throws InvalidMechanismException {
         if (columnLimit >= 0 && visitedColumns.size() > columnLimit || block.getType() != expectedType) {
             return false;
         }
@@ -165,7 +165,7 @@ public class Gate extends StoredBlockMechanic {
      * @param close To open or close.
      * @param visitedColumns Previously searched columns.
      */
-    private boolean toggleColumn(@Nullable ChangedSign sign, GateColumn column, boolean close, Set<GateColumn> visitedColumns) throws InvalidMechanismException {
+    private boolean toggleColumn(@Nullable BukkitChangedSign sign, GateColumn column, boolean close, Set<GateColumn> visitedColumns) throws InvalidMechanismException {
         Block block = column.getBlock();
         Material expectedType = column.getExpectedType();
 
@@ -332,7 +332,7 @@ public class Gate extends StoredBlockMechanic {
         }
 
         Side side = bukkitSign.getInteractableSideFor(event.getSource().getLocation());
-        ChangedSign sign = ChangedSign.create(bukkitSign, side);
+        BukkitChangedSign sign = BukkitChangedSign.create(bukkitSign, side);
 
         CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(),
             () -> {

@@ -20,7 +20,7 @@ import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -51,7 +51,7 @@ public class SetDoor extends AbstractIC {
     private Block center;
     private BlockFace faceing;
 
-    public SetDoor(Server server, ChangedSign block, ICFactory factory) {
+    public SetDoor(Server server, BukkitChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -159,7 +159,7 @@ public class SetDoor extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new SetDoor(getServer(), sign, this);
         }

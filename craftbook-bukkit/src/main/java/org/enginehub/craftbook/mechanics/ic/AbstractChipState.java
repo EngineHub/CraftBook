@@ -23,7 +23,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.AnaloguePowerable;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Powerable;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.util.ICUtil;
 import org.enginehub.craftbook.util.SignUtil;
 
@@ -32,12 +32,12 @@ import org.enginehub.craftbook.util.SignUtil;
  */
 public abstract class AbstractChipState implements ChipState {
 
-    protected final ChangedSign sign;
+    protected final BukkitChangedSign sign;
     protected final Location source;
     protected final boolean selfTriggered;
     protected final Block icBlock;
 
-    protected AbstractChipState(Location source, ChangedSign sign, boolean selfTriggered) {
+    protected AbstractChipState(Location source, BukkitChangedSign sign, boolean selfTriggered) {
 
         // Check this here to prevent and handle future NPEs
         Preconditions.checkNotNull(sign, "Null ChangedSign found: " + source.toString());

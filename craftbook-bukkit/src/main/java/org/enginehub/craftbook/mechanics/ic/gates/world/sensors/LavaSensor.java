@@ -18,7 +18,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.sensors;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -31,7 +31,7 @@ public class LavaSensor extends AbstractSelfTriggeredIC {
 
     private Block center;
 
-    public LavaSensor(Server server, ChangedSign sign, ICFactory factory) {
+    public LavaSensor(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -88,13 +88,13 @@ public class LavaSensor extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new LavaSensor(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
 
             ICUtil.verifySignSyntax(sign);
         }

@@ -19,7 +19,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -31,7 +31,7 @@ import org.enginehub.craftbook.util.ItemUtil;
 
 public class ItemDispenser extends AbstractIC {
 
-    public ItemDispenser(Server server, ChangedSign sign, ICFactory factory) {
+    public ItemDispenser(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -100,7 +100,7 @@ public class ItemDispenser extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new ItemDispenser(getServer(), sign, this);
         }

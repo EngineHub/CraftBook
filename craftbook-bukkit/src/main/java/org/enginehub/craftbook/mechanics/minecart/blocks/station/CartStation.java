@@ -23,17 +23,17 @@ import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.events.CartBlockEnterEvent;
+import org.enginehub.craftbook.bukkit.events.CartBlockImpactEvent;
+import org.enginehub.craftbook.bukkit.events.CartBlockRedstoneEvent;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanic.exception.MechanicInitializationException;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartBlockMechanism;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockEnterEvent;
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockRedstoneEvent;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.RedstoneUtil;
 import org.enginehub.craftbook.util.SignUtil;
@@ -118,7 +118,7 @@ public class CartStation extends CartBlockMechanism {
             return;
         }
 
-        ChangedSign sign = blocks.getChangedSign(side);
+        BukkitChangedSign sign = blocks.getChangedSign(side);
         boolean autoStart = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)).equalsIgnoreCase("AUTOSTART");
 
         if (!powerChange && !autoStart) {

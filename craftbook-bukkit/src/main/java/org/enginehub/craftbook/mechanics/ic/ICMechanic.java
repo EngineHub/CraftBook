@@ -31,7 +31,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
@@ -45,12 +45,12 @@ import org.enginehub.craftbook.util.ICUtil;
 import org.enginehub.craftbook.util.ICUtil.LocationCheckType;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.SelfTriggerPingEvent;
-import org.enginehub.craftbook.util.events.SelfTriggerThinkEvent;
-import org.enginehub.craftbook.util.events.SelfTriggerUnregisterEvent;
-import org.enginehub.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
-import org.enginehub.craftbook.util.events.SignClickEvent;
-import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
+import org.enginehub.craftbook.bukkit.events.SelfTriggerPingEvent;
+import org.enginehub.craftbook.bukkit.events.SelfTriggerThinkEvent;
+import org.enginehub.craftbook.bukkit.events.SelfTriggerUnregisterEvent;
+import org.enginehub.craftbook.bukkit.events.SelfTriggerUnregisterEvent.UnregisterReason;
+import org.enginehub.craftbook.bukkit.events.SignClickEvent;
+import org.enginehub.craftbook.bukkit.events.SourcedBlockRedstoneEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +111,7 @@ public class ICMechanic extends AbstractCraftBookMechanic implements Listener {
 
         // if we're not looking at a wall sign, it can't be an IC.
         if (!SignUtil.isWallSign(block)) return null;
-        ChangedSign sign = ChangedSign.create(block, Side.FRONT);
+        BukkitChangedSign sign = BukkitChangedSign.create(block, Side.FRONT);
         String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
 
         // detect the text on the sign to see if it's any kind of IC at all.
@@ -248,7 +248,7 @@ public class ICMechanic extends AbstractCraftBookMechanic implements Listener {
                 try {
                     Sign bukkitSign = (Sign) event.getBlock().getState(false);
                     Side side = bukkitSign.getInteractableSideFor(event.getSource().getLocation());
-                    ChangedSign sign = ChangedSign.create(block, side, bukkitSign.getSide(side).lines().toArray(new Component[0]), null);
+                    BukkitChangedSign sign = BukkitChangedSign.create(block, side, bukkitSign.getSide(side).lines().toArray(new Component[0]), null);
                     ChipState chipState = ((ICFamily) icData[1]).detect(BukkitAdapter.adapt(source.getLocation()), sign);
                     int cnt = 0;
                     for (int i = 0; i < chipState.getInputCount(); i++) {
@@ -261,7 +261,7 @@ public class ICMechanic extends AbstractCraftBookMechanic implements Listener {
                     }
                 } catch (IllegalArgumentException ex) {
                     // Exclude these exceptions so that we don't spam consoles because of Bukkit
-                    if (!ex.getMessage().contains("Null ChangedSign found")) throw ex;
+                    if (!ex.getMessage().contains("Null BukkitChangedSign found")) throw ex;
                 }
             };
             // FIXME: these should be registered with a global scheduler so we can end up with one runnable actually
@@ -462,7 +462,7 @@ public class ICMechanic extends AbstractCraftBookMechanic implements Listener {
             }
 
             Bukkit.getServer().getScheduler().runTask(CraftBookPlugin.inst(), () -> {
-                ChangedSign sign = ChangedSign.create(event.getBlock(), event.getSide(), event.lines().toArray(new Component[0]), null);
+                BukkitChangedSign sign = BukkitChangedSign.create(event.getBlock(), event.getSide(), event.lines().toArray(new Component[0]), null);
 
                 //WorldEdit offset/radius tools.
                 ICUtil.parseSignFlags(player, sign);

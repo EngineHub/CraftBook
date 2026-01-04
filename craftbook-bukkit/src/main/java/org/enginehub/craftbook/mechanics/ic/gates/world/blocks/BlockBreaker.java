@@ -27,7 +27,7 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -43,7 +43,7 @@ import java.util.List;
 
 public class BlockBreaker extends AbstractSelfTriggeredIC {
 
-    public BlockBreaker(Server server, ChangedSign block, ICFactory factory) {
+    public BlockBreaker(Server server, BukkitChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -123,13 +123,13 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new BlockBreaker(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
 
             if (!PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)).trim().isEmpty()) {
                 BaseBlock item = BlockParser.getBlock(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)), true);

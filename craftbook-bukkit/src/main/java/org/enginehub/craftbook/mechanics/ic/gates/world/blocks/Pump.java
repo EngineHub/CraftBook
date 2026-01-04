@@ -20,7 +20,7 @@ import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -33,7 +33,7 @@ import org.enginehub.craftbook.util.InventoryUtil;
  */
 public class Pump extends AbstractSelfTriggeredIC {
 
-    public Pump(Server server, ChangedSign block, ICFactory factory) {
+    public Pump(Server server, BukkitChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -124,7 +124,7 @@ public class Pump extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new Pump(getServer(), sign, this);
         }

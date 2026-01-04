@@ -27,7 +27,7 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ConfigurableIC;
 import org.enginehub.craftbook.mechanics.ic.IC;
@@ -40,7 +40,7 @@ import java.util.List;
 
 public class SetBlockAdmin extends SetBlock {
 
-    public SetBlockAdmin(Server server, ChangedSign sign, ICFactory factory) {
+    public SetBlockAdmin(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -83,13 +83,13 @@ public class SetBlockAdmin extends SetBlock {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new SetBlockAdmin(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
 
             String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
             if (line2.isEmpty())

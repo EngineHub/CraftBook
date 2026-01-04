@@ -28,7 +28,7 @@ import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.util.BoundingBox;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.util.RailUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.jspecify.annotations.Nullable;
@@ -104,8 +104,8 @@ public record CartMechanismBlocks(Block rail, Block base, Block sign) {
         return base != null;
     }
 
-    public ChangedSign getChangedSign(Side side) {
-        return hasSign() ? ChangedSign.create(sign, side) : null;
+    public BukkitChangedSign getChangedSign(Side side) {
+        return hasSign() ? BukkitChangedSign.create(sign, side) : null;
     }
 
     /**

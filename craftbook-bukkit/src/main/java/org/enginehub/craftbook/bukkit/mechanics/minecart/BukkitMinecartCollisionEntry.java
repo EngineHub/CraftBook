@@ -13,53 +13,41 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.minecart;
+package org.enginehub.craftbook.bukkit.mechanics.minecart;
 
-import com.sk89q.util.yaml.YAMLProcessor;
-import org.bukkit.entity.Minecart;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanics.minecart.MinecartCollisionEntry;
 import org.enginehub.craftbook.util.EventUtil;
 
-public class MinecartNoCollide extends AbstractCraftBookMechanic implements Listener {
+public class BukkitMinecartCollisionEntry extends MinecartCollisionEntry implements Listener {
 
-    public MinecartNoCollide(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public BukkitMinecartCollisionEntry(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void onCartCollision(VehicleEntityCollisionEvent event) {
+    public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
         if (!EventUtil.passesFilter(event)) {
             return;
         }
 
-        if (event.getVehicle() instanceof Minecart) {
-            boolean isEmpty = event.getVehicle().isEmpty();
-            if (isEmpty && !emptyCarts) {
+        if (event.getVehicle() instanceof RideableMinecart) {
+            if (!event.getVehicle().isEmpty()) {
                 return;
             }
-            if (!isEmpty && !fullCarts) {
+            if (!(event.getEntity() instanceof HumanEntity)) {
                 return;
             }
 
+            event.getVehicle().addPassenger(event.getEntity());
             event.setCancelled(true);
         }
-    }
-
-    private boolean emptyCarts;
-    private boolean fullCarts;
-
-    @Override
-    public void loadFromConfiguration(YAMLProcessor config) {
-        config.setComment("empty-carts", "Enable No Collide for empty carts.");
-        emptyCarts = config.getBoolean("empty-carts", true);
-
-        config.setComment("full-carts", "Enable No Collide for occupied carts.");
-        fullCarts = config.getBoolean("full-carts", false);
     }
 }

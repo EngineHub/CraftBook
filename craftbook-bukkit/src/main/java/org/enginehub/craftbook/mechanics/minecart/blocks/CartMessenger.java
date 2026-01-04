@@ -22,10 +22,10 @@ import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
+import org.enginehub.craftbook.bukkit.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
 
@@ -63,7 +63,7 @@ public class CartMessenger extends CartBlockMechanism {
                 return;
             }
 
-            ChangedSign s = event.getBlocks().getChangedSign(side);
+            BukkitChangedSign s = event.getBlocks().getChangedSign(side);
 
             ArrayList<String> messages = new ArrayList<>();
 

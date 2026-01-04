@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic;
 
 import com.sk89q.worldedit.util.Location;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 
 /**
  * IC families handle the logic required in figuring out where pins are located and reading them.
@@ -35,7 +35,7 @@ public interface ICFamily {
      * @param sign
      * @return
      */
-    ChipState detect(Location source, ChangedSign sign);
+    ChipState detect(Location source, BukkitChangedSign sign);
 
     /**
      * Return a {@link ChipState} that provides an interface to access the I/O pins.
@@ -44,7 +44,7 @@ public interface ICFamily {
      * @param sign
      * @return
      */
-    ChipState detectSelfTriggered(Location source, ChangedSign sign);
+    ChipState detectSelfTriggered(Location source, BukkitChangedSign sign);
 
     /**
      * Gets the sign modifier of the family. In case of the base ic thats MC.

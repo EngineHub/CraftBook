@@ -26,7 +26,7 @@ import org.bukkit.block.Dispenser;
 import org.bukkit.block.Furnace;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -46,7 +46,7 @@ import java.util.HashMap;
  */
 public class ContainerDispenser extends AbstractSelfTriggeredIC {
 
-    public ContainerDispenser(Server server, ChangedSign sign, ICFactory factory) {
+    public ContainerDispenser(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -211,7 +211,7 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new ContainerDispenser(getServer(), sign, this);
         }

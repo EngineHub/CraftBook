@@ -13,26 +13,25 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.minecart.events;
+package org.enginehub.craftbook.bukkit.events;
 
-import org.bukkit.entity.Entity;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
+import org.jspecify.annotations.Nullable;
 
-/**
- * Called when a user enters a Minecart.
- */
-public class CartBlockEnterEvent extends VehicleEnterEvent {
+public class CartBlockRedstoneEvent extends SourcedBlockRedstoneEvent {
     private static final HandlerList handlers = new HandlerList();
 
     private final CartMechanismBlocks blocks;
+    private final Minecart minecart;
 
-    public CartBlockEnterEvent(Minecart minecart, Entity entered, CartMechanismBlocks blocks) {
-        super(minecart, entered);
+    public CartBlockRedstoneEvent(Block source, Block block, int old, int n, CartMechanismBlocks blocks, Minecart minecart) {
+        super(source, block, old, n);
 
         this.blocks = blocks;
+        this.minecart = minecart;
     }
 
     @Override
@@ -48,7 +47,12 @@ public class CartBlockEnterEvent extends VehicleEnterEvent {
         return this.blocks;
     }
 
-    public Minecart getMinecart() {
-        return (Minecart) getVehicle();
+    /**
+     * The minecart at this mechanic, if present.
+     *
+     * @return the minecart, if present
+     */
+    public @Nullable Minecart getMinecart() {
+        return this.minecart;
     }
 }

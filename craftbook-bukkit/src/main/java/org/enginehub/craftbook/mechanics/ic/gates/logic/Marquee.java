@@ -17,7 +17,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -27,7 +27,7 @@ import org.enginehub.craftbook.util.RegexUtil;
 
 public class Marquee extends AbstractIC {
 
-    public Marquee(Server server, ChangedSign sign, ICFactory factory) {
+    public Marquee(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -105,7 +105,7 @@ public class Marquee extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new Marquee(getServer(), sign, this);
         }

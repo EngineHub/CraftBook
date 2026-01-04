@@ -16,61 +16,21 @@
 package org.enginehub.craftbook.mechanics.minecart;
 
 import com.sk89q.util.yaml.YAMLProcessor;
-import org.bukkit.entity.Minecart;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.vehicle.VehicleCreateEvent;
-import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
-import org.enginehub.craftbook.util.EventUtil;
 
-public class MinecartPhysicsControl extends AbstractCraftBookMechanic implements Listener {
-    private Vector fallSpeed;
-    private Vector derailedVelocityMod;
+public abstract class MinecartPhysicsControl extends AbstractCraftBookMechanic {
 
     public MinecartPhysicsControl(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 
-    @Override
-    public void enable() {
-        this.fallSpeed = new Vector(horizontalFallSpeed, verticalFallSpeed, horizontalFallSpeed);
-        this.derailedVelocityMod = new Vector(offRailSpeed, offRailSpeed, offRailSpeed);
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onVehicleCreate(VehicleCreateEvent event) {
-        if (!EventUtil.passesFilter(event)) {
-            return;
-        }
-
-        if (!(event.getVehicle() instanceof Minecart cart)) {
-            return;
-        }
-
-        cart.setSlowWhenEmpty(slowWhenEmpty);
-
-        if (verticalFallSpeed != -1 && horizontalFallSpeed != -1) {
-            cart.setFlyingVelocityMod(fallSpeed);
-        }
-
-        if (offRailSpeed != -1) {
-            cart.setDerailedVelocityMod(derailedVelocityMod);
-        }
-
-        if (maxSpeed != -1) {
-            cart.setMaxSpeed(maxSpeed);
-        }
-    }
-
-    private boolean slowWhenEmpty;
-    private double verticalFallSpeed;
-    private double horizontalFallSpeed;
-    private double maxSpeed;
-    private double offRailSpeed;
+    public boolean slowWhenEmpty;
+    public double verticalFallSpeed;
+    public double horizontalFallSpeed;
+    public double maxSpeed;
+    public double offRailSpeed;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {

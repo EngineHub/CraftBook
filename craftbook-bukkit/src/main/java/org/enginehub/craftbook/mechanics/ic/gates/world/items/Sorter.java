@@ -22,7 +22,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -42,7 +42,7 @@ import java.util.List;
 
 public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
 
-    public Sorter(Server server, ChangedSign sign, ICFactory factory) {
+    public Sorter(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -139,7 +139,7 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new Sorter(getServer(), sign, this);
         }

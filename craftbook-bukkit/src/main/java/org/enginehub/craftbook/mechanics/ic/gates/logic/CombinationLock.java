@@ -17,7 +17,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -30,7 +30,7 @@ import org.enginehub.craftbook.mechanics.ic.ICVerificationException;
  */
 public class CombinationLock extends AbstractIC {
 
-    public CombinationLock(Server server, ChangedSign block, ICFactory factory) {
+    public CombinationLock(Server server, BukkitChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -78,13 +78,13 @@ public class CombinationLock extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new CombinationLock(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
 
             if (sign.getLine(2) == null && PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)).isEmpty())
                 throw new ICVerificationException("Line three needs to be a combination");

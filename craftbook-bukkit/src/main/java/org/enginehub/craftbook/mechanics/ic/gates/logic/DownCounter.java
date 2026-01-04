@@ -17,7 +17,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -43,7 +43,7 @@ public class DownCounter extends AbstractIC {
     private int resetVal;
     private boolean inf;
 
-    public DownCounter(Server server, ChangedSign sign, ICFactory factory) {
+    public DownCounter(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -132,7 +132,7 @@ public class DownCounter extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new DownCounter(getServer(), sign, this);
         }

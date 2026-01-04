@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic;
 
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 
@@ -45,14 +45,14 @@ public abstract class AbstractICFactory implements ICFactory {
     }
 
     @Override
-    public void verify(ChangedSign sign) throws ICVerificationException {
+    public void verify(BukkitChangedSign sign) throws ICVerificationException {
         // No default check needed; if the sign just has the right ID string,
         // that's good enough in most cases.
         // TODO make some IC's use this to check if its valid.
     }
 
     @Override
-    public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
+    public void checkPlayer(BukkitChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
         // No default check needed; if the sign just has the right ID string,
         // that's good enough in most cases.
         // TODO Use this to make some restricted IC's allowed to normal users, but limited.

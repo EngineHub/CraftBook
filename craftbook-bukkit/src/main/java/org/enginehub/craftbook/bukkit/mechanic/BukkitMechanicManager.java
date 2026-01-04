@@ -240,7 +240,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("minecart_collision_entry")
             .name("MinecartCollisionEntry")
             .description(TranslatableComponent.of("craftbook.minecartcollisionentry.description"))
-            .className("org.enginehub.craftbook.mechanics.minecart.MinecartCollisionEntry")
+            .className("org.enginehub.craftbook.bukkit.mechanics.minecart.BukkitMinecartCollisionEntry")
             .category(MechanicCategory.MINECART)
             .buildAndRegister();
 
@@ -249,7 +249,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("minecart_empty_decay")
             .name("MinecartEmptyDecay")
             .description(TranslatableComponent.of("craftbook.minecartemptydecay.description"))
-            .className("org.enginehub.craftbook.mechanics.minecart.MinecartEmptyDecay")
+            .className("org.enginehub.craftbook.bukkit.mechanics.minecart.BukkitMinecartEmptyDecay")
             .category(MechanicCategory.MINECART)
             .buildAndRegister();
 
@@ -258,7 +258,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("minecart_rail_placer")
             .name("MinecartRailPlacer")
             .description(TranslatableComponent.of("craftbook.minecartrailplacer.description"))
-            .className("org.enginehub.craftbook.mechanics.minecart.MinecartRailPlacer")
+            .className("org.enginehub.craftbook.bukkit.mechanics.minecart.BukkitMinecartRailPlacer")
             .category(MechanicCategory.MINECART)
             .buildAndRegister();
 
@@ -267,7 +267,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("minecart_item_pickup")
             .name("MinecartItemPickup")
             .description(TranslatableComponent.of("craftbook.minecartitempickup.description"))
-            .className("org.enginehub.craftbook.mechanics.minecart.MinecartItemPickup")
+            .className("org.enginehub.craftbook.bukkit.mechanics.minecart.BukkitMinecartItemPickup")
             .category(MechanicCategory.MINECART)
             .buildAndRegister();
 
@@ -285,7 +285,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("minecart_exit_remover")
             .name("MinecartExitRemover")
             .description(TranslatableComponent.of("craftbook.minecartexitremover.description"))
-            .className("org.enginehub.craftbook.mechanics.minecart.MinecartExitRemover")
+            .className("org.enginehub.craftbook.bukkit.mechanics.minecart.BukkitMinecartExitRemover")
             .category(MechanicCategory.MINECART)
             .buildAndRegister();
 
@@ -294,7 +294,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("minecart_physics_control")
             .name("MinecartPhysicsControl")
             .description(TranslatableComponent.of("craftbook.minecartphysicscontrol.description"))
-            .className("org.enginehub.craftbook.mechanics.minecart.MinecartPhysicsControl")
+            .className("org.enginehub.craftbook.bukkit.mechanics.minecart.BukkitMinecartPhysicsControl")
             .category(MechanicCategory.MINECART)
             .buildAndRegister();
 
@@ -303,7 +303,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("minecart_no_collide")
             .name("MinecartNoCollide")
             .description(TranslatableComponent.of("craftbook.minecartnocollide.description"))
-            .className("org.enginehub.craftbook.mechanics.minecart.MinecartNoCollide")
+            .className("org.enginehub.craftbook.bukkit.mechanics.minecart.BukkitMinecartNoCollide")
             .category(MechanicCategory.MINECART)
             .buildAndRegister();
 
@@ -312,7 +312,7 @@ public class BukkitMechanicManager extends MechanicManager {
             .id("minecart_impact_damage")
             .name("MinecartImpactDamage")
             .description(TranslatableComponent.of("craftbook.minecartimpactdamage.description"))
-            .className("org.enginehub.craftbook.mechanics.minecart.MinecartImpactDamage")
+            .className("org.enginehub.craftbook.bukkit.mechanics.minecart.BukkitMinecartImpactDamage")
             .category(MechanicCategory.MINECART)
             .buildAndRegister();
 

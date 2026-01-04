@@ -19,7 +19,7 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
@@ -37,7 +37,7 @@ import org.enginehub.craftbook.util.ItemUtil;
 
 public class ItemCounter extends AbstractIC {
 
-    public ItemCounter(Server server, ChangedSign sign, ICFactory factory) {
+    public ItemCounter(Server server, BukkitChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -104,7 +104,7 @@ public class ItemCounter extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new ItemCounter(getServer(), sign, this);
         }
@@ -140,7 +140,7 @@ public class ItemCounter extends AbstractIC {
         }
 
         @Override
-        public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
+        public void checkPlayer(BukkitChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
             try {
                 VariableKey variableKey = VariableKey.fromString(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)), player);
                 if (variableKey != null && !variableKey.hasPermission(player, "use")) {
@@ -152,7 +152,7 @@ public class ItemCounter extends AbstractIC {
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
             try {
                 VariableKey variableKey = VariableKey.fromString(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)), null);
                 if (variableKey == null || !VariableManager.instance.hasVariable(variableKey)) {

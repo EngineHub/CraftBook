@@ -25,7 +25,7 @@ import org.bukkit.entity.Cow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Sheep;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -40,7 +40,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class AnimalHarvester extends AbstractSelfTriggeredIC {
 
-    public AnimalHarvester(Server server, ChangedSign sign, ICFactory factory) {
+    public AnimalHarvester(Server server, BukkitChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -194,7 +194,7 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new AnimalHarvester(getServer(), sign, this);
         }

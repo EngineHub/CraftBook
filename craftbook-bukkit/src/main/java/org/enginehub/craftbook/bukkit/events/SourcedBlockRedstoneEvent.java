@@ -13,26 +13,44 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.minecart.events;
+package org.enginehub.craftbook.bukkit.events;
 
 import org.bukkit.block.Block;
-import org.bukkit.entity.Minecart;
 import org.bukkit.event.HandlerList;
-import org.enginehub.craftbook.mechanics.minecart.blocks.CartMechanismBlocks;
-import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
-import org.jspecify.annotations.Nullable;
+import org.bukkit.event.block.BlockRedstoneEvent;
 
-public class CartBlockRedstoneEvent extends SourcedBlockRedstoneEvent {
+/**
+ * A variation of the redstone event with a source block.
+ */
+public class SourcedBlockRedstoneEvent extends BlockRedstoneEvent {
+
+    protected final Block source;
     private static final HandlerList handlers = new HandlerList();
 
-    private final CartMechanismBlocks blocks;
-    private final Minecart minecart;
+    public SourcedBlockRedstoneEvent(Block source, Block block, int oldCurrent, int newCurrent) {
+        super(block, oldCurrent, newCurrent);
 
-    public CartBlockRedstoneEvent(Block source, Block block, int old, int n, CartMechanismBlocks blocks, Minecart minecart) {
-        super(source, block, old, n);
+        this.source = source;
+    }
 
-        this.blocks = blocks;
-        this.minecart = minecart;
+    public Block getSource() {
+        return this.source;
+    }
+
+    public boolean hasChanged() {
+        return getOldCurrent() != getNewCurrent();
+    }
+
+    public boolean isMinor() {
+        return !hasChanged() || wasOn() == isOn();
+    }
+
+    public boolean isOn() {
+        return getNewCurrent() > 0;
+    }
+
+    public boolean wasOn() {
+        return getOldCurrent() > 0;
     }
 
     @Override
@@ -42,18 +60,5 @@ public class CartBlockRedstoneEvent extends SourcedBlockRedstoneEvent {
 
     public static HandlerList getHandlerList() {
         return handlers;
-    }
-
-    public CartMechanismBlocks getBlocks() {
-        return this.blocks;
-    }
-
-    /**
-     * The minecart at this mechanic, if present.
-     *
-     * @return the minecart, if present
-     */
-    public @Nullable Minecart getMinecart() {
-        return this.minecart;
     }
 }

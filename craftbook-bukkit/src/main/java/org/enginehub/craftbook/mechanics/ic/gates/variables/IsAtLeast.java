@@ -17,7 +17,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.variables;
 
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
@@ -32,7 +32,7 @@ import org.enginehub.craftbook.mechanics.variables.exception.VariableException;
 
 public class IsAtLeast extends AbstractSelfTriggeredIC {
 
-    public IsAtLeast(Server server, ChangedSign sign, ICFactory factory) {
+    public IsAtLeast(Server server, BukkitChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -93,7 +93,7 @@ public class IsAtLeast extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new IsAtLeast(getServer(), sign, this);
         }
@@ -130,7 +130,7 @@ public class IsAtLeast extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
+        public void checkPlayer(BukkitChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
             try {
                 VariableKey variableKey = VariableKey.fromString(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)), player);
                 if (variableKey != null && !variableKey.hasPermission(player, "use")) {
@@ -142,7 +142,7 @@ public class IsAtLeast extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
             try {
                 VariableKey variableKey = VariableKey.fromString(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)), null);
                 if (variableKey == null || !VariableManager.instance.hasVariable(variableKey)) {

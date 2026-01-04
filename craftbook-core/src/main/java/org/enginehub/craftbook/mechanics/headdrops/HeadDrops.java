@@ -20,7 +20,7 @@ import org.enginehub.craftbook.AbstractCraftBookMechanic;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 
-public class HeadDrops extends AbstractCraftBookMechanic {
+public abstract class HeadDrops extends AbstractCraftBookMechanic {
     public HeadDrops(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }

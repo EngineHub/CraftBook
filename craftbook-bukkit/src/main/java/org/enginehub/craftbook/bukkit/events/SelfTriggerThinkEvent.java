@@ -13,45 +13,19 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.util.events;
+package org.enginehub.craftbook.bukkit.events;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.block.BlockEvent;
 
-/**
- * A variation of the redstone event with a source block.
- */
-public class SourcedBlockRedstoneEvent extends BlockRedstoneEvent {
+public class SelfTriggerThinkEvent extends BlockEvent {
 
-    protected final Block source;
+    public SelfTriggerThinkEvent(Block theBlock) {
+        super(theBlock);
+    }
+
     private static final HandlerList handlers = new HandlerList();
-
-    public SourcedBlockRedstoneEvent(Block source, Block block, int oldCurrent, int newCurrent) {
-        super(block, oldCurrent, newCurrent);
-
-        this.source = source;
-    }
-
-    public Block getSource() {
-        return this.source;
-    }
-
-    public boolean hasChanged() {
-        return getOldCurrent() != getNewCurrent();
-    }
-
-    public boolean isMinor() {
-        return !hasChanged() || wasOn() == isOn();
-    }
-
-    public boolean isOn() {
-        return getNewCurrent() > 0;
-    }
-
-    public boolean wasOn() {
-        return getOldCurrent() > 0;
-    }
 
     @Override
     public HandlerList getHandlers() {
@@ -60,5 +34,15 @@ public class SourcedBlockRedstoneEvent extends BlockRedstoneEvent {
 
     public static HandlerList getHandlerList() {
         return handlers;
+    }
+
+    private boolean handled;
+
+    public void setHandled(boolean handled) {
+        this.handled = handled;
+    }
+
+    public boolean isHandled() {
+        return handled;
     }
 }

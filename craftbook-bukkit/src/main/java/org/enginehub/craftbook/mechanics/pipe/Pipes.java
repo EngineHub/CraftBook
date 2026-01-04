@@ -43,7 +43,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.enginehub.craftbook.AbstractCraftBookMechanic;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
@@ -60,7 +60,7 @@ import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.enginehub.craftbook.util.VerifyUtil;
-import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
+import org.enginehub.craftbook.bukkit.events.SourcedBlockRedstoneEvent;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -132,7 +132,7 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
         return type == Material.PISTON || type == Material.STICKY_PISTON;
     }
 
-    private static ChangedSign getSignOnPiston(Block block) {
+    private static BukkitChangedSign getSignOnPiston(Block block) {
         BlockData blockData = block.getBlockData();
         BlockFace facing = BlockFace.SELF;
         if (blockData instanceof Directional directional) {
@@ -152,7 +152,7 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
             Sign sign = (Sign) relativeBlock.getState(false);
             for (Side side : Side.values()) {
                 if (sign.getSide(side).getLine(1).equalsIgnoreCase("[Pipe]")) {
-                    return ChangedSign.create(relativeBlock, side, sign.lines().toArray(new Component[0]), null);
+                    return BukkitChangedSign.create(relativeBlock, side, sign.lines().toArray(new Component[0]), null);
                 }
             }
         }
@@ -171,7 +171,7 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
             if (blType == Material.PISTON) {
                 Piston p = (Piston) bl.getBlockData();
 
-                ChangedSign sign = getSignOnPiston(bl);
+                BukkitChangedSign sign = getSignOnPiston(bl);
 
                 HashSet<ItemStack> pFilters = new HashSet<>();
                 HashSet<ItemStack> pExceptions = new HashSet<>();
@@ -232,7 +232,7 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
                     items.addAll(newItems);
                 }
             } else if (blType == Material.DROPPER) {
-                ChangedSign sign = getSignOnPiston(bl);
+                BukkitChangedSign sign = getSignOnPiston(bl);
 
                 HashSet<ItemStack> pFilters = new HashSet<>();
                 HashSet<ItemStack> pExceptions = new HashSet<>();
@@ -359,7 +359,7 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
         Set<ItemStack> filters = new HashSet<>();
         Set<ItemStack> exceptions = new HashSet<>();
 
-        ChangedSign sign = getSignOnPiston(block);
+        BukkitChangedSign sign = getSignOnPiston(block);
 
         if (sign != null) {
             for (String line3 : RegexUtil.COMMA_PATTERN.split(PlainTextComponentSerializer.plainText().serialize(sign.getLine(2)))) {
@@ -517,7 +517,7 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
 
         if (event.getBlock().getType() == Material.STICKY_PISTON) {
 
-            ChangedSign sign = getSignOnPiston(event.getBlock());
+            BukkitChangedSign sign = getSignOnPiston(event.getBlock());
 
             if (pipeRequireSign && sign == null)
                 return;
@@ -533,7 +533,7 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
 
         if (event.getBlock().getType() == Material.STICKY_PISTON) {
 
-            ChangedSign sign = getSignOnPiston(event.getBlock());
+            BukkitChangedSign sign = getSignOnPiston(event.getBlock());
 
             if (pipeRequireSign && sign == null)
                 return;

@@ -35,10 +35,15 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.events.SelfTriggerPingEvent;
+import org.enginehub.craftbook.bukkit.events.SelfTriggerThinkEvent;
+import org.enginehub.craftbook.bukkit.events.SelfTriggerUnregisterEvent;
+import org.enginehub.craftbook.bukkit.events.SignClickEvent;
+import org.enginehub.craftbook.bukkit.events.SourcedBlockRedstoneEvent;
 import org.enginehub.craftbook.bukkit.st.BukkitSelfTriggerManager;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
@@ -47,11 +52,6 @@ import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ItemUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.SelfTriggerPingEvent;
-import org.enginehub.craftbook.util.events.SelfTriggerThinkEvent;
-import org.enginehub.craftbook.util.events.SelfTriggerUnregisterEvent.UnregisterReason;
-import org.enginehub.craftbook.util.events.SignClickEvent;
-import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -118,12 +118,12 @@ public class BukkitCookingPot extends CookingPot implements Listener {
             return;
         }
 
-        ChangedSign sign = null;
+        BukkitChangedSign sign = null;
         Sign bukkitSign = (Sign) event.getBlock().getState(false);
 
         for (Side side : Side.values()) {
             if (bukkitSign.getSide(side).getLine(1).equals("[Cook]")) {
-                sign = ChangedSign.create(bukkitSign, side, null);
+                sign = BukkitChangedSign.create(bukkitSign, side, null);
                 break;
             }
         }
@@ -231,7 +231,7 @@ public class BukkitCookingPot extends CookingPot implements Listener {
             return;
         }
 
-        ChangedSign sign = event.getSign();
+        BukkitChangedSign sign = event.getSign();
 
         String line1 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(1));
         if (!line1.equals("[Cook]")) {
@@ -293,7 +293,7 @@ public class BukkitCookingPot extends CookingPot implements Listener {
                 continue;
             }
 
-            ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).unregisterSelfTrigger(event.getBlock().getLocation(), UnregisterReason.BREAK);
+            ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).unregisterSelfTrigger(event.getBlock().getLocation(), SelfTriggerUnregisterEvent.UnregisterReason.BREAK);
             return;
         }
     }
@@ -314,13 +314,13 @@ public class BukkitCookingPot extends CookingPot implements Listener {
         ((BukkitSelfTriggerManager) CraftBook.getInstance().getPlatform().getSelfTriggerManager()).registerSelfTrigger(event.getBlock().getLocation());
 
         if (event.isOn() && !event.isMinor()) {
-            ChangedSign sign = ChangedSign.create(bukkitSign, side);
+            BukkitChangedSign sign = BukkitChangedSign.create(bukkitSign, side);
             increaseFuelLevel(sign, event.getNewCurrent());
             sign.update(false);
         }
     }
 
-    public void setFuelLevel(ChangedSign sign, int amount) {
+    public void setFuelLevel(BukkitChangedSign sign, int amount) {
         if (!requireFuel) {
             amount = Math.max(amount, 1);
         }
@@ -328,11 +328,11 @@ public class BukkitCookingPot extends CookingPot implements Listener {
         sign.setLine(3, Component.text(amount));
     }
 
-    public void increaseFuelLevel(ChangedSign sign, int amount) {
+    public void increaseFuelLevel(BukkitChangedSign sign, int amount) {
         setFuelLevel(sign, getFuelLevel(sign) + amount);
     }
 
-    public int getFuelLevel(ChangedSign sign) {
+    public int getFuelLevel(BukkitChangedSign sign) {
         int multiplier;
 
         try {

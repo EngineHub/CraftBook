@@ -13,49 +13,55 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook.mechanics.minecart;
+package org.enginehub.craftbook.bukkit.mechanics.minecart;
 
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Minecart;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.vehicle.VehicleMoveEvent;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.AbstractCraftBookMechanic;
+import org.bukkit.event.vehicle.VehicleCreateEvent;
+import org.bukkit.util.Vector;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
+import org.enginehub.craftbook.mechanics.minecart.MinecartPhysicsControl;
 import org.enginehub.craftbook.util.EventUtil;
 
-public class MinecartRailPlacer extends AbstractCraftBookMechanic implements Listener {
+public class BukkitMinecartPhysicsControl extends MinecartPhysicsControl implements Listener {
+    private Vector fallSpeed;
+    private Vector derailedVelocityMod;
 
-    public MinecartRailPlacer(MechanicType<? extends CraftBookMechanic> mechanicType) {
+    public BukkitMinecartPhysicsControl(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
     }
 
+    @Override
+    public void enable() {
+        this.fallSpeed = new Vector(horizontalFallSpeed, verticalFallSpeed, horizontalFallSpeed);
+        this.derailedVelocityMod = new Vector(offRailSpeed, offRailSpeed, offRailSpeed);
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
-    public void onVehicleMove(VehicleMoveEvent event) {
+    public void onVehicleCreate(VehicleCreateEvent event) {
         if (!EventUtil.passesFilter(event)) {
             return;
         }
 
-        Vehicle vehicle = event.getVehicle();
-
-        if (!(vehicle instanceof InventoryHolder holder) || !(vehicle instanceof Minecart)) {
+        if (!(event.getVehicle() instanceof Minecart cart)) {
             return;
         }
 
-        Block toBlock = event.getTo().getBlock();
-        Block belowBlock = toBlock.getRelative(BlockFace.DOWN);
+        cart.setSlowWhenEmpty(slowWhenEmpty);
 
-        if (toBlock.getType().isAir() && belowBlock.getType().isSolid()) {
-            if (holder.getInventory().removeItem(new ItemStack(Material.RAIL, 1)).isEmpty()) {
-                toBlock.setType(Material.RAIL);
-            }
+        if (verticalFallSpeed != -1 && horizontalFallSpeed != -1) {
+            cart.setFlyingVelocityMod(fallSpeed);
+        }
+
+        if (offRailSpeed != -1) {
+            cart.setDerailedVelocityMod(derailedVelocityMod);
+        }
+
+        if (maxSpeed != -1) {
+            cart.setMaxSpeed(maxSpeed);
         }
     }
 }

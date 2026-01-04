@@ -24,7 +24,7 @@ import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -41,7 +41,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Driller extends AbstractSelfTriggeredIC {
 
-    public Driller(Server server, ChangedSign sign, ICFactory factory) {
+    public Driller(Server server, BukkitChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -143,7 +143,7 @@ public class Driller extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new Driller(getServer(), sign, this);
         }
@@ -168,7 +168,7 @@ public class Driller extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
 
             try {
                 String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));

@@ -17,7 +17,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.entity;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -38,7 +38,7 @@ import java.util.List;
  */
 public class EntityTrap extends AbstractSelfTriggeredIC {
 
-    public EntityTrap(Server server, ChangedSign sign, ICFactory factory) {
+    public EntityTrap(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -125,7 +125,7 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new EntityTrap(getServer(), sign, this);
         }

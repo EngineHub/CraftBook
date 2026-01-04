@@ -29,12 +29,12 @@ import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.util.Vector;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.RedstoneUtil;
 import org.enginehub.craftbook.util.SignUtil;
@@ -81,7 +81,7 @@ public class CartLift extends CartBlockMechanism {
             destination = destination.getRelative(face);
 
             if (SignUtil.isSign(destination) && baseType == destination.getRelative(BlockFace.UP, 1).getType()) {
-                ChangedSign state = ChangedSign.create(destination, side);
+                BukkitChangedSign state = BukkitChangedSign.create(destination, side);
                 String testLine = PlainTextComponentSerializer.plainText().serialize(state.getLine(1));
 
                 if (testLine.equalsIgnoreCase("[CartLift Up]") || testLine.equalsIgnoreCase("[CartLift Down]") || testLine.equalsIgnoreCase("[CartLift]")) {

@@ -52,7 +52,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
@@ -207,7 +207,7 @@ public class BukkitBetterPistons extends BetterPistons implements Listener {
                 for (Side side : Side.values()) {
                     PistonType type = PistonType.getFromSign(bukkitSign.getSide(side).getLine(1));
                     if (type != null) {
-                        ChangedSign signState = ChangedSign.create(bukkitSign, side);
+                        BukkitChangedSign signState = BukkitChangedSign.create(bukkitSign, side);
                         switch (type) {
                             case CRUSH -> crush(event.getBlock(), piston);
                             case BOUNCE -> bounce(event.getBlock(), piston, signState);
@@ -260,7 +260,7 @@ public class BukkitBetterPistons extends BetterPistons implements Listener {
                 for (Side side : Side.values()) {
                     PistonType type = PistonType.getFromSign(bukkitSign.getSide(side).getLine(1));
                     if (type == PistonType.SUPER_STICKY) {
-                        superSticky(event.getBlock(), event.getDirection(), ChangedSign.create(bukkitSign, side));
+                        superSticky(event.getBlock(), event.getDirection(), BukkitChangedSign.create(bukkitSign, side));
 
                         // Only one type - eject once we've ran it.
                         break;
@@ -290,7 +290,7 @@ public class BukkitBetterPistons extends BetterPistons implements Listener {
         pistonHead.setType(Material.AIR, false);
     }
 
-    public void bounce(Block trigger, Piston piston, ChangedSign signState) {
+    public void bounce(Block trigger, Piston piston, BukkitChangedSign signState) {
         if (piston.getMaterial() == Material.STICKY_PISTON) {
             return;
         }
@@ -329,7 +329,7 @@ public class BukkitBetterPistons extends BetterPistons implements Listener {
         }
     }
 
-    public void superSticky(final Block trigger, final BlockFace facing, final ChangedSign signState) {
+    public void superSticky(final Block trigger, final BlockFace facing, final BukkitChangedSign signState) {
         Block pistonHead = trigger.getRelative(facing);
         Material pistonHeadType = pistonHead.getType();
 
@@ -395,7 +395,7 @@ public class BukkitBetterPistons extends BetterPistons implements Listener {
         }
     }
 
-    public void superPush(final Block trigger, final Piston piston, ChangedSign signState) {
+    public void superPush(final Block trigger, final Piston piston, BukkitChangedSign signState) {
         Block pistonHead = trigger.getRelative(piston.getFacing());
         Material pistonHeadType = pistonHead.getType();
 

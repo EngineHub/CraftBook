@@ -17,7 +17,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.sensors;
 
 import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -33,7 +33,7 @@ public class PowerSensor extends AbstractSelfTriggeredIC {
 
     private Block center;
 
-    public PowerSensor(Server server, ChangedSign block, ICFactory factory) {
+    public PowerSensor(Server server, BukkitChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -83,13 +83,13 @@ public class PowerSensor extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new PowerSensor(getServer(), sign, this);
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
 
             ICUtil.verifySignSyntax(sign);
         }

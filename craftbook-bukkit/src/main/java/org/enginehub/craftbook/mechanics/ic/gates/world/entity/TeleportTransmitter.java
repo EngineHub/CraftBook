@@ -20,7 +20,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -35,7 +35,7 @@ import org.enginehub.craftbook.util.Tuple2;
 
 public class TeleportTransmitter extends AbstractSelfTriggeredIC {
 
-    public TeleportTransmitter(Server server, ChangedSign sign, ICFactory factory) {
+    public TeleportTransmitter(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -147,7 +147,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new TeleportTransmitter(getServer(), sign, this);
         }
@@ -177,7 +177,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
 
             if (!SearchArea.isValidArea(sign.getBlock(), PlainTextComponentSerializer.plainText().serialize(sign.getLine(3))))
                 throw new ICVerificationException("Invalid SearchArea on 4th line!");

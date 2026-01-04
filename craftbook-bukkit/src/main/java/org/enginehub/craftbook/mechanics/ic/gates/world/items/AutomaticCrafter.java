@@ -29,7 +29,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.crafting.CustomCrafting;
@@ -54,7 +54,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
     private static boolean hasWarned = false;
     private static boolean hasWarnedNoResult = false;
 
-    public AutomaticCrafter(Server server, ChangedSign block, ICFactory factory) {
+    public AutomaticCrafter(Server server, BukkitChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -334,7 +334,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new AutomaticCrafter(getServer(), sign, this);
         }

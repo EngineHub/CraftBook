@@ -21,7 +21,7 @@ import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.util.Vector;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -33,7 +33,7 @@ import org.enginehub.craftbook.util.SignUtil;
 
 public class ArrowShooter extends AbstractIC {
 
-    public ArrowShooter(Server server, ChangedSign sign, ICFactory factory) {
+    public ArrowShooter(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -124,7 +124,7 @@ public class ArrowShooter extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new ArrowShooter(getServer(), sign, this);
         }

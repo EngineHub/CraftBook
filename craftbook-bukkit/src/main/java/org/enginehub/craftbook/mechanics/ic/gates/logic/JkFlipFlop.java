@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -32,7 +32,7 @@ import org.enginehub.craftbook.mechanics.ic.ICFactory;
  */
 public class JkFlipFlop extends AbstractIC {
 
-    public JkFlipFlop(Server server, ChangedSign sign, ICFactory factory) {
+    public JkFlipFlop(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -84,7 +84,7 @@ public class JkFlipFlop extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new JkFlipFlop(getServer(), sign, this);
         }

@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 /**
  * A ChangedSign represents a single side of a sign block.
  */
-public class ChangedSign {
+public class BukkitChangedSign extends ChangedSign {
     private final Block block;
     private final Side side;
 
@@ -45,7 +45,7 @@ public class ChangedSign {
     private Component @Nullable [] lines;
     private Component @Nullable [] oldLines;
 
-    private ChangedSign(Block block, Side side, Component @Nullable [] lines, @Nullable CraftBookPlayer player) {
+    private BukkitChangedSign(Block block, Side side, Component @Nullable [] lines, @Nullable CraftBookPlayer player) {
         this.block = block;
         this.side = side;
 
@@ -62,6 +62,7 @@ public class ChangedSign {
         }
     }
 
+    @Override
     public void checkPlayerVariablePermissions(CraftBookPlayer player) {
         if (this.lines != null && VariableManager.instance != null) {
             for (int i = 0; i < 4; i++) {
@@ -101,34 +102,42 @@ public class ChangedSign {
         return block.getType();
     }
 
+    @Override
     public int getX() {
         return this.block.getX();
     }
 
+    @Override
     public int getY() {
         return this.block.getY();
     }
 
+    @Override
     public int getZ() {
         return this.block.getZ();
     }
 
+    @Override
     public Component @Nullable [] getLines() {
         return this.lines;
     }
 
+    @Override
     public Component getLine(int index) throws IndexOutOfBoundsException {
         return this.getLine(index, null);
     }
 
+    @Override
     public Component getLine(int index, @Nullable Player player) throws IndexOutOfBoundsException {
         return ParsingUtil.parseLine(this.lines[index], player);
     }
 
+    @Override
     public Component getRawLine(int index) throws IndexOutOfBoundsException {
         return this.lines[index];
     }
 
+    @Override
     public void setLine(int index, Component line) throws IndexOutOfBoundsException {
         this.lines[index] = line;
     }
@@ -137,6 +146,7 @@ public class ChangedSign {
         block.setType(type);
     }
 
+    @Override
     public boolean update(boolean force) {
         if (!hasChanged() && !force) {
             return false;
@@ -150,14 +160,17 @@ public class ChangedSign {
         return getSign().update(force, false);
     }
 
+    @Override
     public void setLines(Component[] lines) {
         this.lines = lines;
     }
 
+    @Override
     public void setOldLines(Component[] oldLines) {
         this.oldLines = oldLines;
     }
 
+    @Override
     public boolean hasChanged() {
         for (int i = 0; i < 4; i++) {
             if (!Objects.equals(this.oldLines[i], this.lines[i])) {
@@ -168,6 +181,7 @@ public class ChangedSign {
         return false;
     }
 
+    @Override
     public void flushLines() {
         this.sign = null;
         this.lines = this.getSignSide().lines().toArray(new Component[0]);
@@ -179,18 +193,9 @@ public class ChangedSign {
         System.arraycopy(this.lines, 0, this.oldLines, 0, this.lines.length);
     }
 
-    public boolean updateSign(ChangedSign sign) {
-        if (!equals(sign)) {
-            flushLines();
-            return true;
-        }
-
-        return false;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (o instanceof ChangedSign other) {
+        if (o instanceof BukkitChangedSign other) {
             return Objects.equals(other.getType(), getType())
                 && other.getSide() == getSide()
                 && other.getX() == getX()
@@ -213,22 +218,22 @@ public class ChangedSign {
         return Arrays.stream(this.lines).map(PlainTextComponentSerializer.plainText()::serialize).collect(Collectors.joining("|"));
     }
 
-    public static ChangedSign create(Sign sign, Side side) {
+    public static BukkitChangedSign create(Sign sign, Side side) {
         return create(sign.getBlock(), side, sign.getSide(side).lines().toArray(new Component[0]), null);
     }
 
-    public static ChangedSign create(Sign sign, Side side, @Nullable CraftBookPlayer player) {
+    public static BukkitChangedSign create(Sign sign, Side side, @Nullable CraftBookPlayer player) {
         return create(sign.getBlock(), side, sign.getSide(side).lines().toArray(new Component[0]), player);
     }
 
-    public static ChangedSign create(Block block, Side side) {
+    public static BukkitChangedSign create(Block block, Side side) {
         return create(block, side, null, null);
     }
 
-    public static ChangedSign create(Block block, Side side, Component @Nullable [] lines, @Nullable CraftBookPlayer player) {
+    public static BukkitChangedSign create(Block block, Side side, Component @Nullable [] lines, @Nullable CraftBookPlayer player) {
         Preconditions.checkNotNull(block, "block");
         Preconditions.checkNotNull(side, "side");
 
-        return new ChangedSign(block, side, lines, player);
+        return new BukkitChangedSign(block, side, lines, player);
     }
 }

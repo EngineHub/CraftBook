@@ -39,10 +39,12 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.events.SignClickEvent;
+import org.enginehub.craftbook.bukkit.events.SourcedBlockRedstoneEvent;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanics.Elevator;
@@ -50,8 +52,6 @@ import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.SignClickEvent;
-import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
@@ -328,14 +328,14 @@ public class BukkitElevator extends Elevator implements Listener {
     }
 
     public static void teleportFinish(CraftBookPlayer player, Block destination, BlockFace shift) {
-        ChangedSign destinationSign = null;
+        BukkitChangedSign destinationSign = null;
         if (!SignUtil.isSign(destination)) {
             if (Tag.BUTTONS.isTagged(destination.getType()) && destination.getBlockData() instanceof Switch attachable) {
                 if (SignUtil.isSign(destination.getRelative(attachable.getFacing().getOppositeFace(), 2))) {
                     Sign sign = (Sign) destination.getRelative(attachable.getFacing().getOppositeFace(), 2).getState(false);
                     for (Side side : Side.values()) {
                         if (LiftType.fromLabel(sign.getSide(side).getLine(1)) != null) {
-                            destinationSign = ChangedSign.create(sign, side);
+                            destinationSign = BukkitChangedSign.create(sign, side);
                             break;
                         }
                     }
@@ -345,7 +345,7 @@ public class BukkitElevator extends Elevator implements Listener {
             Sign sign = (Sign) destination.getState(false);
             for (Side side : Side.values()) {
                 if (LiftType.fromLabel(sign.getSide(side).getLine(1)) != null) {
-                    destinationSign = ChangedSign.create(sign, side);
+                    destinationSign = BukkitChangedSign.create(sign, side);
                     break;
                 }
             }

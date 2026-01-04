@@ -54,7 +54,7 @@ import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.LocationUtil;
 import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.SourcedBlockRedstoneEvent;
+import org.enginehub.craftbook.bukkit.events.SourcedBlockRedstoneEvent;
 
 import java.io.File;
 import java.util.ArrayList;

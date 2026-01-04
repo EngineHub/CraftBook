@@ -22,7 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
@@ -53,7 +53,7 @@ import java.util.Set;
  */
 public class Melody extends AbstractSelfTriggeredIC {
 
-    public Melody(Server server, ChangedSign block, ICFactory factory) {
+    public Melody(Server server, BukkitChangedSign block, ICFactory factory) {
 
         super(server, block, factory);
     }
@@ -272,13 +272,13 @@ public class Melody extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new Melody(getServer(), sign, this);
         }
 
         @Override
-        public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
+        public void checkPlayer(BukkitChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
 
             if (PlainTextComponentSerializer.plainText().serialize(sign.getLine(3)).trim().isEmpty())
                 if (!ICMechanic.hasRestrictedPermissions(player, this, "mc1270"))

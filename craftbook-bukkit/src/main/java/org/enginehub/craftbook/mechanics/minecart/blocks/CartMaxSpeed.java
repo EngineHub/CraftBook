@@ -20,11 +20,11 @@ import com.sk89q.worldedit.world.block.BlockTypes;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
-import org.enginehub.craftbook.mechanics.minecart.events.CartBlockImpactEvent;
 import org.enginehub.craftbook.util.BlockParser;
 import org.enginehub.craftbook.util.RedstoneUtil.Power;
 
@@ -60,7 +60,7 @@ public class CartMaxSpeed extends CartBlockMechanism {
     }
 
     @Override
-    public boolean verify(ChangedSign sign, CraftBookPlayer player) {
+    public boolean verify(BukkitChangedSign sign, CraftBookPlayer player) {
         try {
             String line2 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(2));
             if (!line2.isEmpty()) {

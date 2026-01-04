@@ -26,7 +26,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -45,7 +45,7 @@ import java.util.Locale;
 
 public class AdvancedEntitySpawner extends AbstractIC {
 
-    public AdvancedEntitySpawner(Server server, ChangedSign sign, ICFactory factory) {
+    public AdvancedEntitySpawner(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -97,14 +97,14 @@ public class AdvancedEntitySpawner extends AbstractIC {
 
         if (!chip.getInput(0)) return;
         Block left = SignUtil.getLeftBlock(getSign().getBlock());
-        ChangedSign effectSign = null;
+        BukkitChangedSign effectSign = null;
         if (SignUtil.isWallSign(left))
-            effectSign = ChangedSign.create(left, Side.FRONT);
+            effectSign = BukkitChangedSign.create(left, Side.FRONT);
 
         Block right = SignUtil.getRightBlock(getSign().getBlock());
-        ChangedSign armourSign = null;
+        BukkitChangedSign armourSign = null;
         if (SignUtil.isWallSign(right))
-            armourSign = ChangedSign.create(right, Side.FRONT);
+            armourSign = BukkitChangedSign.create(right, Side.FRONT);
 
         for (int i = 0; i < amount; i++) {
             Entity ent = getSign().getBlock().getWorld().spawn(location, type.getEntityClass());
@@ -178,15 +178,15 @@ public class AdvancedEntitySpawner extends AbstractIC {
                 }
                 if (upwards == null) {
                     if (SignUtil.isWallSign(effectSign.getBlock().getRelative(0, 1, 0))) {
-                        effectSign = ChangedSign.create(effectSign.getBlock().getRelative(0, 1, 0), effectSign.getSide());
+                        effectSign = BukkitChangedSign.create(effectSign.getBlock().getRelative(0, 1, 0), effectSign.getSide());
                         upwards = true;
                     } else if (SignUtil.isWallSign(effectSign.getBlock().getRelative(0, -1, 0))) {
-                        effectSign = ChangedSign.create(effectSign.getBlock().getRelative(0, -1, 0), effectSign.getSide());
+                        effectSign = BukkitChangedSign.create(effectSign.getBlock().getRelative(0, -1, 0), effectSign.getSide());
                         upwards = false;
                     } else break;
                 } else {
                     if (SignUtil.isWallSign(effectSign.getBlock().getRelative(0, upwards ? 1 : -1, 0)))
-                        effectSign = ChangedSign.create(effectSign.getBlock().getRelative(0, upwards ? 1 : -1, 0), effectSign.getSide());
+                        effectSign = BukkitChangedSign.create(effectSign.getBlock().getRelative(0, upwards ? 1 : -1, 0), effectSign.getSide());
                     else break;
                 }
             }
@@ -201,7 +201,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new AdvancedEntitySpawner(getServer(), sign, this);
         }
@@ -219,7 +219,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
             String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
             String[] splitLine3 = RegexUtil.ASTERISK_PATTERN.split(line3.trim());
             EntityType type = EntityType.fromName(splitLine3[0].trim().toLowerCase(Locale.ENGLISH));

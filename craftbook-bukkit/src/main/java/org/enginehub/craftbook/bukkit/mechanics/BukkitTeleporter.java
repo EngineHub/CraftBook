@@ -38,10 +38,11 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.events.SignClickEvent;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.mechanics.Teleporter;
@@ -51,7 +52,6 @@ import org.enginehub.craftbook.util.ParsingUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
 import org.enginehub.craftbook.util.RegexUtil;
 import org.enginehub.craftbook.util.SignUtil;
-import org.enginehub.craftbook.util.events.SignClickEvent;
 
 /**
  * Teleporter mechanic; teleports players to another location based on position.
@@ -131,11 +131,11 @@ public class BukkitTeleporter extends Teleporter implements Listener {
         CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         Block block = null;
-        ChangedSign sign = null;
+        BukkitChangedSign sign = null;
 
         if (SignUtil.isSign(event.getClickedBlock())) {
             Sign bukkitSign = (Sign) event.getClickedBlock().getState(false);
-            sign = ChangedSign.create(
+            sign = BukkitChangedSign.create(
                 event.getClickedBlock(),
                 bukkitSign.getInteractableSideFor(event.getInteractionPoint()),
                 bukkitSign.lines().toArray(new Component[0]),
@@ -151,7 +151,7 @@ public class BukkitTeleporter extends Teleporter implements Listener {
                     String line1 = PlainTextComponentSerializer.plainText().serialize(bukkitSign.getSide(side).line(1));
                     if (line1.equals("[Teleporter]")) {
                         block = oppositeBlock;
-                        sign = ChangedSign.create(block, side, bukkitSign.lines().toArray(new Component[0]), localPlayer);
+                        sign = BukkitChangedSign.create(block, side, bukkitSign.lines().toArray(new Component[0]), localPlayer);
                         break;
                     }
                 }

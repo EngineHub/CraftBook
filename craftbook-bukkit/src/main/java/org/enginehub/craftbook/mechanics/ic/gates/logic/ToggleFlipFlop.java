@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -27,7 +27,7 @@ public class ToggleFlipFlop extends AbstractIC {
 
     protected final boolean risingEdge;
 
-    public ToggleFlipFlop(Server server, ChangedSign sign, boolean risingEdge, ICFactory factory) {
+    public ToggleFlipFlop(Server server, BukkitChangedSign sign, boolean risingEdge, ICFactory factory) {
 
         super(server, sign, factory);
         this.risingEdge = risingEdge;
@@ -64,7 +64,7 @@ public class ToggleFlipFlop extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new ToggleFlipFlop(getServer(), sign, risingEdge, this);
         }

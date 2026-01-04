@@ -19,7 +19,7 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Server;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -31,7 +31,7 @@ import org.enginehub.craftbook.util.RegexUtil;
 
 public class SoundEffect extends AbstractIC {
 
-    public SoundEffect(Server server, ChangedSign sign, ICFactory factory) {
+    public SoundEffect(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -106,7 +106,7 @@ public class SoundEffect extends AbstractIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new SoundEffect(getServer(), sign, this);
         }
@@ -124,7 +124,7 @@ public class SoundEffect extends AbstractIC {
         }
 
         @Override
-        public void verify(ChangedSign sign) throws ICVerificationException {
+        public void verify(BukkitChangedSign sign) throws ICVerificationException {
 
             String line3 = PlainTextComponentSerializer.plainText().serialize(sign.getLine(3));
             Sound sound = null;

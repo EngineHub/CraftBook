@@ -19,7 +19,7 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
-import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
@@ -31,7 +31,7 @@ import org.enginehub.craftbook.util.RegexUtil;
 
 public class EntityCannon extends AbstractSelfTriggeredIC {
 
-    public EntityCannon(Server server, ChangedSign sign, ICFactory factory) {
+    public EntityCannon(Server server, BukkitChangedSign sign, ICFactory factory) {
 
         super(server, sign, factory);
     }
@@ -122,7 +122,7 @@ public class EntityCannon extends AbstractSelfTriggeredIC {
         }
 
         @Override
-        public IC create(ChangedSign sign) {
+        public IC create(BukkitChangedSign sign) {
 
             return new EntityCannon(getServer(), sign, this);
         }

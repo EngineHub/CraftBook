@@ -34,6 +34,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
+import org.enginehub.craftbook.bukkit.events.SignClickEvent;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicCommandRegistrar;
 import org.enginehub.craftbook.mechanic.MechanicType;
@@ -41,7 +42,6 @@ import org.enginehub.craftbook.mechanics.signcopier.SignCopier;
 import org.enginehub.craftbook.mechanics.signcopier.SignEditCommands;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.ProtectionUtil;
-import org.enginehub.craftbook.util.events.SignClickEvent;
 
 import java.util.List;
 
