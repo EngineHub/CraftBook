@@ -15,25 +15,4 @@
 
 package org.enginehub.craftbook.util;
 
-public final class Tuple2<A, B> {
-
-    public final A a;
-    public final B b;
-
-    public Tuple2(A a, B b) {
-
-        this.a = a;
-        this.b = b;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return o instanceof Tuple2<?, ?> tuple && tuple.a.equals(a) && tuple.b.equals(b);
-    }
-
-    @Override
-    public int hashCode() {
-        // Constants correspond to glibc's lcg algorithm parameters
-        return (a.hashCode() * 1103515245 + 12345 ^ b.hashCode() * 1103515245 + 12345) * 1103515245 + 12345;
-    }
-}
+public record Tuple2<Left, Right>(Left left, Right right) { }

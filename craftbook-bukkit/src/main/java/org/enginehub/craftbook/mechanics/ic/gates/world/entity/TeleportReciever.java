@@ -78,7 +78,7 @@ public class TeleportReciever extends AbstractSelfTriggeredIC {
         Tuple2<Long, String> val = TeleportTransmitter.getValue(band);
         if (val == null) return false;
 
-        Player p = Bukkit.getServer().getPlayerExact(val.b);
+        Player p = Bukkit.getServer().getPlayerExact(val.right());
 
         if (p == null || !p.isOnline()) {
             return false;

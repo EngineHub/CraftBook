@@ -114,7 +114,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
     public static Tuple2<Long, String> getValue(String band) {
 
         if (memory.containsKey(band)) {
-            long time = System.currentTimeMillis() - memory.get(band).a;
+            long time = System.currentTimeMillis() - memory.get(band).left();
             int seconds = (int) (time / 1000) % 60;
             if (seconds > 5) { // Expired.
                 memory.remove(band);
@@ -129,7 +129,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
     public static boolean setValue(String band, Tuple2<Long, String> val) {
 
         if (memory.containsKey(band)) {
-            long time = System.currentTimeMillis() - memory.get(band).a;
+            long time = System.currentTimeMillis() - memory.get(band).left();
             int seconds = (int) (time / 1000) % 60;
             if (seconds > 3) { // Expired.
                 memory.remove(band);

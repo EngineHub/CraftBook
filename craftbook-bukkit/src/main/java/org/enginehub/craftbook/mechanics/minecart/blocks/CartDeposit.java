@@ -106,20 +106,20 @@ public class CartDeposit extends CartBlockMechanism {
                     Iterator<Tuple2<ItemInfo, Integer>> iter = items.iterator();
                     while (iter.hasNext()) {
                         Tuple2<ItemInfo, Integer> inf = iter.next();
-                        if (!inf.a.isTypeValid() || inf.a.getType() == item.getType()) {
-                            if (inf.a.getData() < 0 || inf.a.getData() == item.getDurability()) {
-                                if (inf.b < 0) {
+                        if (!inf.left().isTypeValid() || inf.left().getType() == item.getType()) {
+                            if (inf.left().getData() < 0 || inf.left().getData() == item.getDurability()) {
+                                if (inf.right() < 0) {
                                     transferItems.add(item.clone());
                                     cartinventory.remove(item);
                                 } else {
                                     ItemStack stack = item.clone();
-                                    if (item.getAmount() > inf.b) {
-                                        stack.setAmount(inf.b);
+                                    if (item.getAmount() > inf.right()) {
+                                        stack.setAmount(inf.right());
                                         iter.remove();
-                                        items.add(new Tuple2<>(inf.a, 0));
+                                        items.add(new Tuple2<>(inf.left(), 0));
                                     } else {
                                         iter.remove();
-                                        items.add(new Tuple2<>(inf.a, inf.b - stack.getAmount()));
+                                        items.add(new Tuple2<>(inf.left(), inf.right() - stack.getAmount()));
                                     }
                                     transferItems.add(stack.clone());
                                     cartinventory.removeItem(stack);
@@ -178,20 +178,20 @@ public class CartDeposit extends CartBlockMechanism {
                         Iterator<Tuple2<ItemInfo, Integer>> iter = items.iterator();
                         while (iter.hasNext()) {
                             Tuple2<ItemInfo, Integer> inf = iter.next();
-                            if (!inf.a.isTypeValid() || inf.a.getType() == item.getType())
-                                if (inf.a.getData() < 0 || inf.a.getData() == item.getDurability()) {
-                                    if (inf.b < 0) {
+                            if (!inf.left().isTypeValid() || inf.left().getType() == item.getType())
+                                if (inf.left().getData() < 0 || inf.left().getData() == item.getDurability()) {
+                                    if (inf.right() < 0) {
                                         transferitems.add(item.clone());
                                         containerinventory.remove(item);
                                     } else {
                                         ItemStack stack = item.clone();
-                                        if (item.getAmount() > inf.b) {
-                                            stack.setAmount(inf.b);
+                                        if (item.getAmount() > inf.right()) {
+                                            stack.setAmount(inf.right());
                                             iter.remove();
-                                            items.add(new Tuple2<>(inf.a, 0));
+                                            items.add(new Tuple2<>(inf.left(), 0));
                                         } else {
                                             iter.remove();
-                                            items.add(new Tuple2<>(inf.a, inf.b - stack.getAmount()));
+                                            items.add(new Tuple2<>(inf.left(), inf.right() - stack.getAmount()));
                                         }
                                         transferitems.add(stack.clone());
                                         containerinventory.removeItem(stack);
