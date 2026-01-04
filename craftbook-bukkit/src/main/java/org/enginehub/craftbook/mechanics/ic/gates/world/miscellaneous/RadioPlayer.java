@@ -17,7 +17,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.miscellaneous;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.enginehub.craftbook.BukkitChangedSign;
+import org.enginehub.craftbook.bukkit.BukkitChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;

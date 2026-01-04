@@ -13,7 +13,7 @@
  * see <http://www.gnu.org/licenses/>.
  */
 
-package org.enginehub.craftbook;
+package org.enginehub.craftbook.bukkit;
 
 import com.google.common.base.Preconditions;
 import com.sk89q.worldedit.entity.Player;
@@ -25,6 +25,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
 import org.bukkit.block.sign.SignSide;
+import org.enginehub.craftbook.ChangedSign;
+import org.enginehub.craftbook.CraftBookPlayer;
 import org.enginehub.craftbook.mechanics.variables.VariableKey;
 import org.enginehub.craftbook.mechanics.variables.VariableManager;
 import org.enginehub.craftbook.util.ParsingUtil;

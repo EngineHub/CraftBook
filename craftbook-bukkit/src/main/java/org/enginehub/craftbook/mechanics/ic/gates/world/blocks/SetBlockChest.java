@@ -27,7 +27,7 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.enginehub.craftbook.BukkitChangedSign;
+import org.enginehub.craftbook.bukkit.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ConfigurableIC;
 import org.enginehub.craftbook.mechanics.ic.IC;

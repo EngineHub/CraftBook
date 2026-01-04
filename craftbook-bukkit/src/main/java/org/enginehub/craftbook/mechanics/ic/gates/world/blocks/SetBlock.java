@@ -24,7 +24,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.BukkitChangedSign;
+import org.enginehub.craftbook.bukkit.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;

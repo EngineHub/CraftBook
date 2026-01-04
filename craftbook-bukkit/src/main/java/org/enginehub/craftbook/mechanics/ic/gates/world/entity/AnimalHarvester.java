@@ -25,7 +25,7 @@ import org.bukkit.entity.Cow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Sheep;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.BukkitChangedSign;
+import org.enginehub.craftbook.bukkit.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;

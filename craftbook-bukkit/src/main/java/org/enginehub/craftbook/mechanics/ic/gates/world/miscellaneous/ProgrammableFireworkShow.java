@@ -26,7 +26,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitTask;
-import org.enginehub.craftbook.BukkitChangedSign;
+import org.enginehub.craftbook.bukkit.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;

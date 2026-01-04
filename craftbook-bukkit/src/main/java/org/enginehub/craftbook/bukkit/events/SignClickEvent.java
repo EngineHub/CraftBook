@@ -26,8 +26,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-import org.enginehub.craftbook.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBookPlayer;
+import org.enginehub.craftbook.bukkit.BukkitChangedSign;
 import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 
 public class SignClickEvent extends PlayerInteractEvent {

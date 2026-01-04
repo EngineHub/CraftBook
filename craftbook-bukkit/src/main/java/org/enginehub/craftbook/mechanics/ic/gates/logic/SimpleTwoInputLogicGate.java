@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic.gates.logic;
 
 import org.bukkit.Server;
-import org.enginehub.craftbook.BukkitChangedSign;
+import org.enginehub.craftbook.bukkit.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;
 import org.enginehub.craftbook.mechanics.ic.ICFactory;

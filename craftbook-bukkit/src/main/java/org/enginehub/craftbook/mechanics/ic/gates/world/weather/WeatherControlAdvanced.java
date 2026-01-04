@@ -17,7 +17,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.weather;
 
 import org.bukkit.Server;
 import org.bukkit.World;
-import org.enginehub.craftbook.BukkitChangedSign;
+import org.enginehub.craftbook.bukkit.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractIC;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.ChipState;

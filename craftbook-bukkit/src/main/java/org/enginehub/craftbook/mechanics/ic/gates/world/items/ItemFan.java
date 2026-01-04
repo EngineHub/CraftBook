@@ -18,7 +18,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.items;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
-import org.enginehub.craftbook.BukkitChangedSign;
+import org.enginehub.craftbook.bukkit.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFactory;
 import org.enginehub.craftbook.mechanics.ic.AbstractSelfTriggeredIC;
 import org.enginehub.craftbook.mechanics.ic.ChipState;

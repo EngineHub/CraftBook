@@ -18,7 +18,7 @@ package org.enginehub.craftbook.mechanics.ic.families;
 import com.sk89q.worldedit.util.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.enginehub.craftbook.BukkitChangedSign;
+import org.enginehub.craftbook.bukkit.BukkitChangedSign;
 import org.enginehub.craftbook.mechanics.ic.AbstractChipState;
 import org.enginehub.craftbook.mechanics.ic.AbstractICFamily;
 import org.enginehub.craftbook.mechanics.ic.ChipState;

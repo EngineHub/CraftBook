@@ -33,7 +33,7 @@ import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.enginehub.craftbook.BukkitChangedSign;
+import org.enginehub.craftbook.bukkit.BukkitChangedSign;
 import org.enginehub.craftbook.CraftBook;
 import org.enginehub.craftbook.bukkit.mechanic.MechanicTypes;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;

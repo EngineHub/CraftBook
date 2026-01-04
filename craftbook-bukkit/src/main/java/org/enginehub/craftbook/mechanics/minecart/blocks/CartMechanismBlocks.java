@@ -28,7 +28,7 @@ import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.util.BoundingBox;
-import org.enginehub.craftbook.BukkitChangedSign;
+import org.enginehub.craftbook.bukkit.BukkitChangedSign;
 import org.enginehub.craftbook.util.RailUtil;
 import org.enginehub.craftbook.util.SignUtil;
 import org.jspecify.annotations.Nullable;

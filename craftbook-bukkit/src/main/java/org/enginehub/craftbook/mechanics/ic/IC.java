@@ -17,7 +17,7 @@ package org.enginehub.craftbook.mechanics.ic;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.enginehub.craftbook.BukkitChangedSign;
+import org.enginehub.craftbook.bukkit.BukkitChangedSign;
 
 /**
  * Integrated circuits are represented by this interface. For self-triggered ICs, see {@link

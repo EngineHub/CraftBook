@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic;
 
 import com.sk89q.worldedit.util.Location;
-import org.enginehub.craftbook.BukkitChangedSign;
+import org.enginehub.craftbook.bukkit.BukkitChangedSign;
 
 /**
  * IC families handle the logic required in figuring out where pins are located and reading them.

@@ -16,7 +16,7 @@
 package org.enginehub.craftbook.mechanics.ic;
 
 import org.bukkit.Server;
-import org.enginehub.craftbook.BukkitChangedSign;
+import org.enginehub.craftbook.bukkit.BukkitChangedSign;
 
 public abstract class AbstractSelfTriggeredIC extends AbstractIC implements SelfTriggeredIC {
 
