@@ -37,7 +37,6 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -232,7 +231,11 @@ public class ICMechanic extends AbstractCraftBookMechanic {
                         }
                     }
                     if (cnt > 0) {
-                        ((IC) icData[2]).trigger(chipState);
+                        IC ic = (IC) icData[2];
+                        ic.trigger(chipState);
+                        try {
+                            ic.getSign().update(false);
+                        } catch (Throwable ignored) {}
                     }
                 } catch (IllegalArgumentException ex) {
                     // Exclude these exceptions so that we don't spam consoles because of Bukkit
@@ -302,10 +305,13 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
         final Object[] icData = setupIC(event.getBlock(), true);
 
-        if(icData != null && icData[2] instanceof SelfTriggeredIC) {
+        if(icData != null && icData[2] instanceof SelfTriggeredIC ic) {
             event.setHandled(true);
             ChipState chipState = ((ICFamily) icData[1]).detectSelfTriggered(BukkitAdapter.adapt(event.getBlock().getLocation()), ((IC) icData[2]).getSign());
-            ((SelfTriggeredIC) icData[2]).think(chipState);
+            ic.think(chipState);
+            try {
+                ic.getSign().update(false);
+            } catch (Throwable ignored) {}
         }
     }
 
