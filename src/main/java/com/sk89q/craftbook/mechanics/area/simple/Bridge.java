@@ -116,9 +116,9 @@ public class Bridge extends CuboidToggleMechanic {
             ChangedSign sign = event.getSign();
 
             if (CraftBookPlugin.inst().getConfiguration().safeDestruction && sign != null && !sign.getLine(0).equalsIgnoreCase("infinite"))
-                if (event.getPlayer().getItemInHand().getType() != Material.AIR) {
+                if (event.getPlayer().getInventory().getItemInMainHand().getType() != Material.AIR) {
                     BlockData bridgeType = getBlockType(event.getClickedBlock());
-                    if (bridgeType.getMaterial() == event.getPlayer().getItemInHand().getType()) {
+                    if (bridgeType.getMaterial() == event.getPlayer().getInventory().getItemInMainHand().getType()) {
 
                         if (!player.hasPermission("craftbook.mech.bridge.restock")) {
                             if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
@@ -127,7 +127,7 @@ public class Bridge extends CuboidToggleMechanic {
                         }
 
                         int amount = 1;
-                        if (event.getPlayer().isSneaking() && event.getPlayer().getItemInHand().getAmount() >= 5) {
+                        if (event.getPlayer().isSneaking() && event.getPlayer().getInventory().getItemInMainHand().getAmount() >= 5) {
                             amount = 5;
                         }
                         addBlocks(sign, CraftBookBukkitUtil.toChangedSign(getFarSign(event.getClickedBlock())), amount);
@@ -139,10 +139,10 @@ public class Bridge extends CuboidToggleMechanic {
                         }
 
                         if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE))
-                            if (event.getPlayer().getItemInHand().getAmount() <= amount)
-                                event.getPlayer().setItemInHand(new ItemStack(Material.AIR, 0));
+                            if (event.getPlayer().getInventory().getItemInMainHand().getAmount() <= amount)
+                                event.getPlayer().getInventory().setItemInMainHand(new ItemStack(Material.AIR, 0));
                             else
-                                event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - amount);
+                                event.getPlayer().getInventory().getItemInMainHand().setAmount(event.getPlayer().getInventory().getItemInMainHand().getAmount() - amount);
 
                         player.print("mech.restock");
                         event.setCancelled(true);

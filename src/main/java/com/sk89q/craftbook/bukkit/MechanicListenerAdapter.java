@@ -64,7 +64,7 @@ import java.util.Set;
  */
 final class MechanicListenerAdapter implements Listener {
 
-    private Set<String> signClickTimer = new HashSet<>();
+    private final Set<String> signClickTimer = new HashSet<>();
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(final PlayerInteractEvent event) {
@@ -92,6 +92,7 @@ final class MechanicListenerAdapter implements Listener {
         if(block != null && SignUtil.isSign(block) && event.getHand() == EquipmentSlot.HAND) {
             if(CraftBookPlugin.inst().getConfiguration().signClickTimeout > 0) {
                 if(signClickTimer.contains(event.getPlayer().getName())) {
+                    event.setCancelled(true);
                     return;
                 } else {
                     signClickTimer.add(event.getPlayer().getName());
@@ -100,8 +101,9 @@ final class MechanicListenerAdapter implements Listener {
             }
             SignClickEvent ev = new SignClickEvent(event.getPlayer(), action, event.getItem(), block, event.getBlockFace());
             CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
-            if(ev.isCancelled())
+            if(ev.isCancelled()) {
                 event.setCancelled(true);
+            }
         }
     }
 

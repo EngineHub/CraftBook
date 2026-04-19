@@ -246,19 +246,19 @@ public class CommandItems extends AbstractCraftBookMechanic {
             p = (Player) event.getDamager();
         }
 
-        if(p.getItemInHand() == null)
+        if(p.getInventory().getItemInMainHand() == null)
             return;
 
-        performCommandItems(p.getItemInHand(), p, event);
+        performCommandItems(p.getInventory().getItemInMainHand(), p, event);
     }
 
     @EventHandler(priority=EventPriority.HIGH)
     public void onBlockBreak(final BlockBreakEvent event) {
 
-        if(event.getPlayer().getItemInHand() == null)
+        if(event.getPlayer().getInventory().getItemInMainHand() == null)
             return;
 
-        performCommandItems(event.getPlayer().getItemInHand(), event.getPlayer(), event);
+        performCommandItems(event.getPlayer().getInventory().getItemInMainHand(), event.getPlayer(), event);
     }
 
     @EventHandler(priority=EventPriority.HIGH)
@@ -266,10 +266,10 @@ public class CommandItems extends AbstractCraftBookMechanic {
         if(!(event.getEntity().getShooter() instanceof Player))
             return;
 
-        if(((Player) event.getEntity().getShooter()).getItemInHand() == null)
+        if(((Player) event.getEntity().getShooter()).getInventory().getItemInMainHand() == null)
             return;
 
-        final ItemStack item = ((Player) event.getEntity().getShooter()).getItemInHand();
+        final ItemStack item = ((Player) event.getEntity().getShooter()).getInventory().getItemInMainHand();
         final Player shooter = (Player) event.getEntity().getShooter();
 
         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> performCommandItems(item, shooter, event), 5L);
@@ -281,10 +281,10 @@ public class CommandItems extends AbstractCraftBookMechanic {
         if(!(event.getEntity().getShooter() instanceof Player))
             return;
 
-        if(((Player) event.getEntity().getShooter()).getItemInHand() == null)
+        if(((Player) event.getEntity().getShooter()).getInventory().getItemInMainHand() == null)
             return;
 
-        final ItemStack item = ((Player) event.getEntity().getShooter()).getItemInHand();
+        final ItemStack item = ((Player) event.getEntity().getShooter()).getInventory().getItemInMainHand();
         final Player shooter = (Player) event.getEntity().getShooter();
 
         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> performCommandItems(item, shooter, event), 5L);
@@ -372,11 +372,11 @@ public class CommandItems extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
 
-        if(!doChat || event.getPlayer().getItemInHand() == null)
+        if(!doChat || event.getPlayer().getInventory().getItemInMainHand() == null)
             return;
 
         Bukkit.getScheduler().runTask(CraftBookPlugin.inst(),
-                () -> performCommandItems(event.getPlayer().getItemInHand(), event.getPlayer(), event));
+                () -> performCommandItems(event.getPlayer().getInventory().getItemInMainHand(), event.getPlayer(), event));
     }
 
     @EventHandler(priority = EventPriority.HIGH)

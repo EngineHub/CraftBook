@@ -96,7 +96,7 @@ public class CartStation extends CartBlockMechanism {
         if(!event.getBlocks().getSign().getLine(3).isEmpty() && event.getEntered() instanceof Player) {
 
             ItemStack testItem = ItemSyntax.getItem(event.getBlocks().getSign().getLine(3));
-            if(!ItemUtil.areItemsIdentical(testItem, ((Player) event.getEntered()).getItemInHand()))
+            if(!ItemUtil.areItemsIdentical(testItem, ((Player) event.getEntered()).getInventory().getItemInMainHand()))
                 return;
         }
 

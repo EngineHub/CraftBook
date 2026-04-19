@@ -64,8 +64,8 @@ public class Payment extends AbstractCraftBookMechanic {
         double money = Double.parseDouble(sign.getLine(2));
         String reciever = sign.getLine(3);
 
-        if (CraftBookPlugin.plugins.getEconomy().withdrawPlayer(event.getPlayer().getName(), money).transactionSuccess()) {
-            if (CraftBookPlugin.plugins.getEconomy().depositPlayer(reciever, money).transactionSuccess()) {
+        if (CraftBookPlugin.plugins.getEconomy().withdrawPlayer(event.getPlayer(), money).transactionSuccess()) {
+            if (CraftBookPlugin.plugins.getEconomy().depositPlayer(org.bukkit.Bukkit.getOfflinePlayer(reciever), money).transactionSuccess()) {
                 Block back = SignUtil.getBackBlock(event.getClickedBlock());
                 BlockFace bface = SignUtil.getBack(event.getClickedBlock());
                 Block redstoneItem = back.getRelative(bface);
@@ -73,7 +73,7 @@ public class Payment extends AbstractCraftBookMechanic {
                 if (ICUtil.setState(redstoneItem, true, back))
                     CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new TurnOff(redstoneItem, back), 20L);
             } else {
-                CraftBookPlugin.plugins.getEconomy().depositPlayer(event.getPlayer().getName(), money);
+                CraftBookPlugin.plugins.getEconomy().depositPlayer(event.getPlayer(), money);
                 player.printError("mech.pay.failed-to-pay");
             }
         } else {

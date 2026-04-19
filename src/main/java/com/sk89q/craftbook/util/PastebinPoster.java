@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -59,7 +60,7 @@ public final class PastebinPoster {
             InputStream in = null;
 
             try {
-                URL url = new URL("http://pastebin.com/api/api_post.php");
+                URL url = URI.create("http://pastebin.com/api/api_post.php").toURL();
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setConnectTimeout(CONNECT_TIMEOUT);
                 conn.setReadTimeout(READ_TIMEOUT);

@@ -159,7 +159,7 @@ public class CartSorter extends CartBlockMechanism {
                 if (player != null && parts[0].equalsIgnoreCase("Held")) {
                     try {
                         ItemStack item = ItemSyntax.getItem(parts[1]);
-                        if (ItemUtil.areItemsSimilar(player.getItemInHand(), item))
+                        if (ItemUtil.areItemsSimilar(player.getInventory().getItemInMainHand(), item))
                             return true;
                     } catch (NumberFormatException ignored) {
                     }

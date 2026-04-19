@@ -11,7 +11,6 @@ import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Ageable;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.ChestedHorse;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Damageable;
@@ -30,7 +29,6 @@ import org.bukkit.entity.Sheep;
 import org.bukkit.entity.Slime;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.Tameable;
-import org.bukkit.entity.ThrownExpBottle;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
 
@@ -249,9 +247,6 @@ public final class EntityUtil {
                 if (data[0].equalsIgnoreCase("fire")) {
                     ent.setFireTicks(5000);
                 }
-                if (data[0].equalsIgnoreCase("bounce")) {
-                    ((Arrow) ent).setBounce(true);
-                }
                 break;
             case OCELOT:
                 if (StringUtils.replace(StringUtils.replace(data[0], "_CAT", ""), "_OCELOT", "").equalsIgnoreCase("WILD")) {
@@ -265,11 +260,6 @@ public final class EntityUtil {
                 }
                 if (StringUtils.replace(StringUtils.replace(data[0], "_CAT", ""), "_OCELOT", "").equalsIgnoreCase("SIAMESE")) {
                     ((Ocelot) ent).setCatType(Ocelot.Type.SIAMESE_CAT);
-                }
-                break;
-            case EXPERIENCE_BOTTLE:
-                if (data[0].equalsIgnoreCase("bounce")) {
-                    ((ThrownExpBottle) ent).setBounce(true);
                 }
                 break;
             case ZOMBIFIED_PIGLIN:

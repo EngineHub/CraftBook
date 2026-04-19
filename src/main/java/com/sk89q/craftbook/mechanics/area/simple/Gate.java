@@ -279,7 +279,7 @@ public class Gate extends AbstractCraftBookMechanic {
 
                     int amount = 1;
                     if (event.getPlayer().isSneaking())
-                        amount = Math.min(5, event.getPlayer().getItemInHand().getAmount());
+                        amount = Math.min(5, event.getPlayer().getInventory().getItemInMainHand().getAmount());
                     addBlocks(sign, amount);
 
                     if (enforceType) {
@@ -289,10 +289,10 @@ public class Gate extends AbstractCraftBookMechanic {
                     }
 
                     if (!(event.getPlayer().getGameMode() == GameMode.CREATIVE))
-                        if (event.getPlayer().getItemInHand().getAmount() <= amount)
-                            event.getPlayer().setItemInHand(null);
+                        if (event.getPlayer().getInventory().getItemInMainHand().getAmount() <= amount)
+                            event.getPlayer().getInventory().setItemInMainHand(null);
                         else
-                            event.getPlayer().getItemInHand().setAmount(event.getPlayer().getItemInHand().getAmount() - amount);
+                            event.getPlayer().getInventory().getItemInMainHand().setAmount(event.getPlayer().getInventory().getItemInMainHand().getAmount() - amount);
 
                     player.print("mech.restock");
                     event.setCancelled(true);

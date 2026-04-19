@@ -278,7 +278,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                 boolean found = false;
 
                 for (ItemStack item : def.getItems()) {
-                    if (ItemUtil.areItemsIdentical(event.getPlayer().getItemInHand(), item)) {
+                    if (ItemUtil.areItemsIdentical(event.getPlayer().getInventory().getItemInMainHand(), item)) {
                         found = true;
                         break;
                     }

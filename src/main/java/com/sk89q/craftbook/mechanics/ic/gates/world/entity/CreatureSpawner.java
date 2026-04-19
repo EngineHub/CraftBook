@@ -103,7 +103,7 @@ public class CreatureSpawner extends AbstractIC {
             for (int i = 0; i < amount; i++) {
                 Entity entity = loc.getWorld().spawn(loc, type.getEntityClass());
                 if(entity instanceof Skeleton)
-                    ((Skeleton) entity).getEquipment().setItemInHand(new ItemStack(Material.BOW, 1));
+                    ((Skeleton) entity).getEquipment().setItemInMainHand(new ItemStack(Material.BOW, 1));
                 EntityUtil.setEntityData(entity, data);
             }
         }

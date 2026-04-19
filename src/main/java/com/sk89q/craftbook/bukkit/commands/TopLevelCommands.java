@@ -20,7 +20,6 @@ import com.sk89q.craftbook.mechanics.signcopier.SignEditCommands;
 import com.sk89q.craftbook.mechanics.variables.VariableCommands;
 import com.sk89q.craftbook.util.PastebinPoster;
 import com.sk89q.craftbook.util.PastebinPoster.PasteCallback;
-import com.sk89q.craftbook.util.developer.ExternalUtilityManager;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
@@ -174,21 +173,6 @@ public class TopLevelCommands {
                         sender.sendMessage(ChatColor.YELLOW + "CraftBook report pastebin error: " + err);
                     }
                 });
-            }
-        }
-
-        @Command(aliases = {"dev"}, desc = "Advanced developer commands")
-        @CommandPermissions({"craftbook.developer"})
-        public void dev(CommandContext args, final CommandSender sender) throws CommandPermissionsException {
-
-            if(args.argsLength() > 1 && args.getString(0).equalsIgnoreCase("util")) {
-                try {
-                    ExternalUtilityManager.performExternalUtility(args.getString(1), args.getSlice(1));
-                    sender.sendMessage(ChatColor.YELLOW + "Performed utility successfully!");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    sender.sendMessage(ChatColor.RED + "Failed to perform utility: See console for details!");
-                }
             }
         }
 

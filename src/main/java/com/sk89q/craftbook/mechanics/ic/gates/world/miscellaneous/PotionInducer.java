@@ -107,7 +107,7 @@ public class PotionInducer extends AbstractSelfTriggeredIC {
         for (Entity entity : area.getEntitiesInArea(types)) {
             if (entity.isValid() && entity instanceof LivingEntity) {
                 LivingEntity liv = (LivingEntity) entity;
-                liv.addPotionEffect(effect, true);
+                liv.addPotionEffect(effect);
                 value = true;
             }
         }

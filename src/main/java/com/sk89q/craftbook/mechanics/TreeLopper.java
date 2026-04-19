@@ -143,7 +143,7 @@ public class TreeLopper extends AbstractCraftBookMechanic {
             else if (data instanceof Tree)
                 species = ((Tree) data).getSpecies();
         }
-        block.breakNaturally(event.getPlayer().getItemInHand());
+        block.breakNaturally(event.getPlayer().getInventory().getItemInMainHand());
         if(species != null && planted < maxSaplings(species)) {
             Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SaplingPlanter(block, species), 2);
             planted ++;

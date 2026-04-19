@@ -22,7 +22,7 @@ public class MonetaryDropReward extends DropReward {
     @Override
     public void giveReward (Player player) {
 
-        CraftBookPlugin.plugins.getEconomy().depositPlayer(player.getName(), amount);
+        CraftBookPlugin.plugins.getEconomy().depositPlayer(player, amount);
     }
 
     @Override

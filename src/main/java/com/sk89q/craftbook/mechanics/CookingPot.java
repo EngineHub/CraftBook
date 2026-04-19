@@ -205,13 +205,13 @@ public class CookingPot extends AbstractCraftBookMechanic {
                         p.printError("area.use-permissions");
                     return;
                 }
-                if (ItemUtil.isStackValid(player.getItemInHand()) && Ingredients.isIngredient(player.getItemInHand().getType())) {
-                    Material itemID = player.getItemInHand().getType();
+                if (ItemUtil.isStackValid(player.getInventory().getItemInMainHand()) && Ingredients.isIngredient(player.getInventory().getItemInMainHand().getType())) {
+                    Material itemID = player.getInventory().getItemInMainHand().getType();
                     increaseMultiplier(sign, Ingredients.getTime(itemID));
-                    if (player.getItemInHand().getAmount() <= 1) {
-                        player.setItemInHand(null);
+                    if (player.getInventory().getItemInMainHand().getAmount() <= 1) {
+                        player.getInventory().setItemInMainHand(null);
                     } else {
-                        player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
+                        player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
                     }
                     if(itemID == Material.LAVA_BUCKET && !cookingPotDestroyBuckets)
                         player.getInventory().addItem(new ItemStack(Material.BUCKET, 1));
