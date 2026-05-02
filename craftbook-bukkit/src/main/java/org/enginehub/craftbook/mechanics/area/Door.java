@@ -92,6 +92,17 @@ public class Door extends CuboidToggleMechanic {
             return;
         }
 
+        String signLine0 = PlainTextComponentSerializer.plainText().serialize(event.line(0));
+        if (signLine0.equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.door.create.infinite")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
+                player.printError(TranslatableComponent.of(
+                        "craftbook.door.infinite-permissions"
+                ));
+            }
+            SignUtil.cancelSignChange(event);
+            return;
+        }
+
         if (signLine1.equalsIgnoreCase("[door]")) {
             event.line(1, Component.text("[Door]"));
             player.printInfo(TranslatableComponent.of("craftbook.door.end-create"));

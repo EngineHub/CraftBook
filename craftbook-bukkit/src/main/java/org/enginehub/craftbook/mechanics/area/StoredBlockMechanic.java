@@ -18,6 +18,7 @@ package org.enginehub.craftbook.mechanics.area;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.world.block.BlockType;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -55,6 +56,7 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic impl
 
     private final NamespacedKey storedBlockTypeKey = new NamespacedKey("craftbook", "toggle_block_type");
     private final NamespacedKey storedBlockQuantityKey = new NamespacedKey("craftbook", "toggle_block_quantity");
+    protected final static int INFINITE_SENTINEL = Integer.MIN_VALUE;
 
     public StoredBlockMechanic(MechanicType<? extends CraftBookMechanic> mechanicType) {
         super(mechanicType);
@@ -165,10 +167,10 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic impl
         List<ItemStack> items = event.getItems();
         try {
             Material base = getOrSetStoredType(event.getSuckedBlock());
-            int blocks = getStoredBlockCount(sign);
+            int blocks = getStoredBlockCounts(sign);
             if (blocks > 0) {
                 items.add(new ItemStack(base, blocks));
-                setStoredBlockCount(sign, 0);
+                takeFromStoredBlockCounts(blocks, sign);
             }
             event.setItems(items);
         } catch (InvalidMechanismException e) {
@@ -194,9 +196,10 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic impl
         }
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        int amount = getStoredBlockCounts(sign);
+        int amount = getStoredBlockCount(sign);
 
-        if (amount > 0) {
+        //noinspection ConstantValue
+        if (amount > 0 && amount != INFINITE_SENTINEL) {
             try {
                 Material base = getOrSetStoredType(event.getBlock());
                 while (amount > 0) {
@@ -248,6 +251,9 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic impl
                 continue;
             }
             int stored = getStoredBlockCount(sign);
+            if (stored == INFINITE_SENTINEL) {
+                return true;
+            }
             if (stored >= amount) {
                 return setStoredBlockCount(sign, stored - amount);
             } else {
@@ -278,6 +284,11 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic impl
      * If `enforce-type` is set, it will only return the amount of blocks of the type stored in the first sign.
      * </p>
      *
+     * <p>
+     * Only use this when getting actual physical blocks, it will not count infinite signs.
+     * Use {@link #hasRequiredBlockCounts(int, Sign...)} for quantity checks.
+     * </p>
+     *
      * @param signs The list of signs
      * @return The stored block count
      */
@@ -292,7 +303,12 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic impl
         int sum = 0;
         for (Sign sign : signs) {
             if (sign != null && getStoredType(sign) == type) {
-                sum += getStoredBlockCount(sign);
+                int stored = getStoredBlockCount(sign);
+                if (stored == INFINITE_SENTINEL) {
+                    // Skip infinite signs in this data.
+                    continue;
+                }
+                sum += stored;
             }
         }
 
@@ -300,30 +316,98 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic impl
     }
 
     /**
+     * Checks whether the given signs contain enough blocks to meet the given count.
+     *
+     * @param count The count to check for
+     * @param signs The list of signs
+     * @return Whether the signs contain more or equal to count
+     */
+    public boolean hasRequiredBlockCounts(int count, @Nullable Sign... signs) {
+        if (count <= 0) {
+            // Short-circuit if something asks for no blocks for whatever reason.
+            return true;
+        }
+        if (signs.length == 0 || signs[0] == null) {
+            return false;
+        }
+
+        Material type = getStoredType(signs[0]);
+
+        int sum = 0;
+        for (Sign sign : signs) {
+            if (sign != null && getStoredType(sign) == type) {
+                int stored = getStoredBlockCount(sign);
+                if (stored == INFINITE_SENTINEL) {
+                    // Infinite means this is always true.
+                    return true;
+                }
+                sum += stored;
+            }
+        }
+
+        return count >= sum;
+    }
+
+    /**
      * Gets the number of stored blocks within this sign.
+     *
+     * <p>
+     * This gets the raw data, use {@link #getStoredBlockCounts(Sign...)} instead.
+     * </p>
      *
      * @param sign The sign
      * @return The stored block count
      */
-    public int getStoredBlockCount(Sign sign) {
+    private int getStoredBlockCount(Sign sign) {
         if (sign.getPersistentDataContainer().has(storedBlockQuantityKey, PersistentDataType.INTEGER)) {
             //noinspection DataFlowIssue
             return sign.getPersistentDataContainer().get(storedBlockQuantityKey, PersistentDataType.INTEGER);
+        }
+        for (Side side : Side.values()) {
+            String signLine0 = PlainTextComponentSerializer.plainText().serialize(sign.getSide(side).line(0));
+            if (signLine0.equals("infinite")) {
+                // Persist infinite data to internal data.
+                sign.getSide(side).line(0, Component.text(""));
+                sign.getPersistentDataContainer().set(storedBlockQuantityKey, PersistentDataType.INTEGER, INFINITE_SENTINEL);
+                sign.update(false, false);
+                return INFINITE_SENTINEL;
+            }
         }
         return 0;
     }
 
     /**
+     * Gets whether this sign contains infinite blocks.
+     *
+     * @param sign The sign to check
+     * @return Whether it contains infinite blocks
+     */
+    private boolean hasInfiniteBlockCount(Sign sign) {
+        int count = getStoredBlockCount(sign);
+        return count == INFINITE_SENTINEL;
+    }
+
+    /**
      * Sets the stored block count within this sign.
+     *
+     * <p>
+     * This sets the raw data, use {@link #takeFromStoredBlockCounts(int, Sign...)} instead.
+     * </p>
      *
      * @param sign The sign
      * @param count The count
      * @return If the count was set
      */
-    public boolean setStoredBlockCount(Sign sign, int count) {
+    private boolean setStoredBlockCount(Sign sign, int count) {
         if (count < 0) {
             return false;
         }
+
+        if (hasInfiniteBlockCount(sign)) {
+            // Don't modify the count if it's infinite, to avoid accidentally making it finite.
+            return true;
+        }
+
         sign.getPersistentDataContainer().set(storedBlockQuantityKey, PersistentDataType.INTEGER, count);
         return true;
     }

@@ -67,7 +67,7 @@ public abstract class CuboidToggleMechanic extends StoredBlockMechanic {
             Block b = sign.getWorld().getBlockAt(bv.x(), bv.y(), bv.z());
             if (BlockUtil.isBlockReplacable(b.getType())) {
                 if (CraftBook.getInstance().getPlatform().getConfiguration().safeDestruction) {
-                    if (getStoredBlockCounts(sign, farSide) > 0) {
+                    if (hasRequiredBlockCounts(1, sign, farSide)) {
                         b.setBlockData(blockData);
                         takeFromStoredBlockCounts(getCostOfBlock(blockData), sign, farSide);
                     } else {

@@ -205,8 +205,7 @@ public class Gate extends StoredBlockMechanic {
             }
 
             if (CraftBook.getInstance().getPlatform().getConfiguration().safeDestruction) {
-                int blockCount = getStoredBlockCounts(sign.getSign(), otherSign);
-                if (!close || blockCount > 0) {
+                if (!close || hasRequiredBlockCounts(1, sign.getSign(), otherSign)) {
                     boolean transactionSuccess = false;
                     if (!close && bloType == expectedType) {
                         transactionSuccess = addToStoredBlockCount(sign.getSign(), 1);
@@ -362,6 +361,17 @@ public class Gate extends StoredBlockMechanic {
                 player.printError(TranslatableComponent.of(
                     "craftbook.mechanisms.create-permission",
                     TextComponent.of(getMechanicType().getName())
+                ));
+            }
+            SignUtil.cancelSignChange(event);
+            return;
+        }
+
+        String signLine0 = PlainTextComponentSerializer.plainText().serialize(event.line(0));
+        if (signLine0.equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.gate.create.infinite")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
+                player.printError(TranslatableComponent.of(
+                    "craftbook.gate.infinite-permissions"
                 ));
             }
             SignUtil.cancelSignChange(event);

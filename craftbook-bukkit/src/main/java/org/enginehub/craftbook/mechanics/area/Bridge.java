@@ -91,6 +91,17 @@ public class Bridge extends CuboidToggleMechanic {
             return;
         }
 
+        String signLine0 = PlainTextComponentSerializer.plainText().serialize(event.line(0));
+        if (signLine0.equalsIgnoreCase("infinite") && !player.hasPermission("craftbook.bridge.create.infinite")) {
+            if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
+                player.printError(TranslatableComponent.of(
+                        "craftbook.bridge.infinite-permissions"
+                ));
+            }
+            SignUtil.cancelSignChange(event);
+            return;
+        }
+
         if (signLine1.equalsIgnoreCase("[bridge]")) {
             event.line(1, Component.text("[Bridge]"));
             player.printInfo(TranslatableComponent.of("craftbook.bridge.create"));
