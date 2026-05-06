@@ -167,10 +167,11 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic impl
         List<ItemStack> items = event.getItems();
         try {
             Material base = getOrSetStoredType(event.getSuckedBlock());
-            int blocks = getStoredBlockCounts(sign);
-            if (blocks > 0) {
+            int blocks = getStoredBlockCount(sign);
+            //noinspection ConstantValue
+            if (blocks > 0 && blocks != INFINITE_SENTINEL) {
                 items.add(new ItemStack(base, blocks));
-                takeFromStoredBlockCounts(blocks, sign);
+                setStoredBlockCount(sign, 0);
             }
             event.setItems(items);
         } catch (InvalidMechanismException e) {
@@ -345,7 +346,7 @@ public abstract class StoredBlockMechanic extends AbstractCraftBookMechanic impl
             }
         }
 
-        return count >= sum;
+        return sum >= count;
     }
 
     /**
