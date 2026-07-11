@@ -3,6 +3,10 @@ plugins {
     id("buildlogic.core-and-platform")
 }
 
+shadow {
+    addShadowVariantIntoJavaComponent = false
+}
+
 tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
     archiveClassifier.set("dist")
     dependencies {
@@ -16,11 +20,6 @@ tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJ
     exclude("LICENSE*")
     exclude("META-INF/maven/**")
     minimize()
-}
-val javaComponent = components["java"] as AdhocComponentWithVariants
-// I don't think we want this published (it's the shadow jar)
-javaComponent.withVariantsFromConfiguration(configurations["shadowRuntimeElements"]) {
-    skip()
 }
 
 afterEvaluate {

@@ -3,19 +3,24 @@ plugins {
 }
 
 repositories {
-    gradlePluginPortal()
     maven {
-        name = "EngineHub Repository"
-        url = uri("https://maven.enginehub.org/repo/")
+        name = "EngineHub"
+        url = uri("https://repo.enginehub.org/libs-release/")
     }
+    mavenCentral()
+    gradlePluginPortal()
 }
 
 dependencies {
     implementation(gradleApi())
+    implementation(libs.crankcase.java)
+    implementation(libs.crankcase.javaLibrary)
+    implementation(libs.crankcase.common)
+    implementation(libs.crankcase.licensing)
+    implementation(libs.crankcase.git)
+    implementation(libs.crankcase.publishing)
     implementation(libs.levelHeadered)
     implementation(libs.shadow)
-    implementation(libs.jfrog.buildinfo)
-    implementation(libs.errorprone.gradle.plugin)
     implementation(libs.gson)
 
     constraints {

@@ -18,19 +18,7 @@ repositories {
     }
     maven {
         name = "EngineHub"
-        url = uri("https://maven.enginehub.org/repo/")
-    }
-    maven {
-        name = "bstats"
-        url = uri("https://repo.codemc.org/repository/maven-public")
-    }
-    maven {
-        name = "Vault"
-        url = uri("https://jitpack.io")
-    }
-    maven {
-        name = "sonatype-oss-snapshots"
-        url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+        url = uri("https://repo.enginehub.org/repo/")
     }
 }
 

@@ -1,9 +1,10 @@
 import buildlogic.getLibrary
 import buildlogic.stringyLibs
-import org.gradle.plugins.ide.idea.model.IdeaModel
 
 plugins {
-    id("net.octyl.level-headered")
+    id("org.enginehub.crankcase.common")
+    id("org.enginehub.crankcase.licensing")
+    id("org.enginehub.crankcase.git")
 }
 
 group = rootProject.group
@@ -13,19 +14,7 @@ repositories {
     mavenCentral()
     maven {
         name = "EngineHub"
-        url = uri("https://maven.enginehub.org/repo/")
-    }
-}
-
-configurations.all {
-    resolutionStrategy {
-        cacheChangingModulesFor(1, TimeUnit.DAYS)
-    }
-}
-
-plugins.withId("java") {
-    the<JavaPluginExtension>().toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        url = uri("https://repo.enginehub.org/repo/")
     }
 }
 
@@ -54,20 +43,9 @@ dependencies {
 }
 
 levelHeadered {
-    headerTemplate(rootProject.file("HEADER.txt"))
-
     sourceMatchPatterns {
         // Exclude overrides for shaded libs
         exclude("org/enginehub/craftbook/util/jinglenote/")
         exclude("org/enginehub/craftbook/util/profile/")
-    }
-}
-
-plugins.withId("idea") {
-    configure<IdeaModel> {
-        module {
-            isDownloadSources = true
-            isDownloadJavadoc = true
-        }
     }
 }

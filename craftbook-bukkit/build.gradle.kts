@@ -11,18 +11,6 @@ repositories {
         name = "paper"
         url = uri("https://repo.papermc.io/repository/maven-public/")
     }
-    maven {
-        name = "bstats"
-        url = uri("https://repo.codemc.org/repository/maven-public")
-    }
-    maven {
-        name = "Vault"
-        url = uri("https://jitpack.io")
-    }
-    maven {
-        name = "sonatype-oss-snapshots"
-        url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-    }
 }
 
 val localImplementation = configurations.dependencyScope("localImplementation") {
@@ -70,7 +58,7 @@ tasks.named<Copy>("processResources") {
 tasks.named<ShadowJar>("shadowJar") {
     dependencies {
         include(dependency(":craftbook-core"))
-        include(dependency("org.bstats:"))
+        include(dependency("org.bstats:.*"))
 
         relocate("org.bstats", "org.enginehub.craftbook.bukkit.bstats")
     }

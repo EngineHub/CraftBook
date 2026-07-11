@@ -5,7 +5,8 @@ codecov = "org.enginehub.codecov:0.2.0"
 worldedit = "7.4.0-SNAPSHOT"
 worldguard = "7.0.10"
 
-errorprone = "2.45.0"
+errorprone = "2.48.0"
+crankcase = "0.1.2"
 
 # Minimum versions we apply to make dependencies support newer Java
 minimumAsm = "9.7"
@@ -17,12 +18,16 @@ lang-version = "1604"
 [libraries]
 
 levelHeadered = "net.octyl.level-headered:plugin:0.1.2"
-shadow = "com.gradleup.shadow:com.gradleup.shadow.gradle.plugin:8.3.9"
-jfrog-buildinfo = "org.jfrog.buildinfo:build-info-extractor-gradle:5.2.0"
+shadow = "com.gradleup.shadow:com.gradleup.shadow.gradle.plugin:9.3.2"
 
-errorprone-gradle-plugin = "net.ltgt.errorprone:net.ltgt.errorprone.gradle.plugin:4.3.0"
-errorprone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "errorprone" }
 errorprone-annotations = { module = "com.google.errorprone:error_prone_annotations", version.ref = "errorprone" }
+
+crankcase-java = { module = "org.enginehub.crankcase:java", version.ref = "crankcase" }
+crankcase-javaLibrary = { module = "org.enginehub.crankcase:java-library", version.ref = "crankcase" }
+crankcase-common = { module = "org.enginehub.crankcase:common", version.ref = "crankcase" }
+crankcase-licensing = { module = "org.enginehub.crankcase:licensing", version.ref = "crankcase" }
+crankcase-git = { module = "org.enginehub.crankcase:git", version.ref = "crankcase" }
+crankcase-publishing = { module = "org.enginehub.crankcase:publishing", version.ref = "crankcase" }
 
 squirrelid = "org.enginehub:squirrelid:0.3.2"
 
@@ -30,13 +35,7 @@ autoService = "com.google.auto.service:auto-service:1.1.1"
 
 jspecify = "org.jspecify:jspecify:1.0.0"
 
-junit-bom = "org.junit:junit-bom:6.0.1"
-junit-jupiter-api.module = "org.junit.jupiter:junit-jupiter-api"
-junit-jupiter-params.module = "org.junit.jupiter:junit-jupiter-params"
-junit-jupiter-engine.module = "org.junit.jupiter:junit-jupiter-engine"
-junit-platform-launcher.module = "org.junit.platform:junit-platform-launcher"
-
-mockito-bom = "org.mockito:mockito-bom:5.11.0"
+mockito-bom = "org.mockito:mockito-bom:5.22.0"
 mockito-core.module = "org.mockito:mockito-core"
 mockito-junit-jupiter.module = "org.mockito:mockito-junit-jupiter"
 
