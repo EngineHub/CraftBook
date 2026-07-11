@@ -39,7 +39,7 @@ mockito-bom = "org.mockito:mockito-bom:5.22.0"
 mockito-core.module = "org.mockito:mockito-core"
 mockito-junit-jupiter.module = "org.mockito:mockito-junit-jupiter"
 
-paperApi = "io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT"
+paperApi = "io.papermc.paper:paper-api:26.1.2.build.+"
 vaultApi = "com.github.MilkBowl:VaultAPI:1.7.1"
 
 dummypermscompat = "com.sk89q:dummypermscompat:1.10"

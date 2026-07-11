@@ -155,7 +155,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
                             try {
                                 String[] potionBits = RegexUtil.SEMICOLON_PATTERN.split(data[a]);
                                 PotionEffect effect = new PotionEffect(PotionEffectType.getById(Integer.parseInt(potionBits[0])), Integer.parseInt(potionBits[1]), Integer.parseInt(potionBits[2]));
-                                ((LivingEntity) ent).addPotionEffect(effect, true);
+                                ((LivingEntity) ent).addPotionEffect(effect);
                             } catch (Exception ignored) {
                             }
                         }
@@ -173,7 +173,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
                         if (!(ent instanceof LivingEntity)) continue;
 
                         ItemStack slot = ItemUtil.makeItemValid(ItemSyntax.getItem(bit.replace("s:", "")));
-                        ((LivingEntity) ent).getEquipment().setItemInHand(slot);
+                        ((LivingEntity) ent).getEquipment().setItemInMainHand(slot);
                     }
                 }
                 if (upwards == null) {

@@ -274,9 +274,9 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic implements Liste
                 return true;
             } else if (player != null) { // Spoons
                 if (isItemSpoon(BukkitAdapter.adapt(player.getItemInHand(HandSide.MAIN_HAND).getType()))) {
-                    double chance = getSpoonChance(((BukkitCraftBookPlayer) player).getPlayer().getItemInHand(), recipe.getChance());
+                    double chance = getSpoonChance(((BukkitCraftBookPlayer) player).getPlayer().getInventory().getItemInMainHand(), recipe.getChance());
                     double ran = ThreadLocalRandom.current().nextDouble();
-                    ((BukkitCraftBookPlayer) player).getPlayer().getItemInHand().setDurability((short) (((BukkitCraftBookPlayer) player).getPlayer().getItemInHand().getDurability() - (short) 1));
+                    ((BukkitCraftBookPlayer) player).getPlayer().getInventory().getItemInMainHand().setDurability((short) (((BukkitCraftBookPlayer) player).getPlayer().getInventory().getItemInMainHand().getDurability() - (short) 1));
                     if (chance <= ran) {
                         cook(block, recipe, items);
                         player.print(player.translate("mech.cauldron.cook") + " " + ChatColor.AQUA + recipe.getName());

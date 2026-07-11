@@ -18,6 +18,7 @@ package org.enginehub.craftbook.mechanics.ic.gates.world.blocks;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.Levelled;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.enginehub.craftbook.bukkit.BukkitChangedSign;
@@ -87,14 +88,15 @@ public class Pump extends AbstractSelfTriggeredIC {
     }
 
     public boolean check(InventoryHolder c, Block liquid, int depth) {
-
-        if (!liquid.isLiquid()) return false;
-        if (liquid.getData() == 0x0) {
+        if (!liquid.isLiquid() || !(liquid.getBlockData() instanceof Levelled levelled)) {
+            return false;
+        }
+        if (levelled.getLevel() == 0x0) {
             if (addToChest(c, liquid)) {
                 liquid.setType(Material.AIR);
                 return true;
             }
-        } else if (searchNear(c, liquid, depth + 1)) return true;
+        } else return searchNear(c, liquid, depth + 1);
         return false;
     }
 

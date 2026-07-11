@@ -10,7 +10,7 @@ plugins {
 }
 
 crankcaseJava {
-    javaRelease = 21
+    javaRelease = 25
     disabledLints = listOf("processing", "path", "fallthrough", "serial", "overloads", "this-escape")
     disabledErrorprone = listOf(
         // We use reference equality intentionally in several places
