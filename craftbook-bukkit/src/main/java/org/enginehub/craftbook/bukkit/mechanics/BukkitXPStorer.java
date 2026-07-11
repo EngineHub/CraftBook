@@ -219,8 +219,12 @@ public class BukkitXPStorer extends XPStorer implements Listener {
 
         if (!player.hasPermission("craftbook.xpstorer.create")) {
             if (CraftBook.getInstance().getPlatform().getConfiguration().showPermissionMessages) {
-                player.printError("mech.create-permission");
+                player.printError(TranslatableComponent.of(
+                        "craftbook.mechanisms.create-permission",
+                        TextComponent.of(getMechanicType().getName())
+                ));
             }
+
             SignUtil.cancelSignChange(event);
             return;
         }
