@@ -73,6 +73,7 @@ public abstract class Elevator extends AbstractCraftBookMechanic {
     protected int elevatorRedstoneRadius;
     protected boolean elevatorButtonEnabled;
     protected boolean elevatorLoop;
+    protected boolean actionBar;
 
     @Override
     public void loadFromConfiguration(YAMLProcessor config) {
@@ -87,5 +88,8 @@ public abstract class Elevator extends AbstractCraftBookMechanic {
 
         config.setComment("allow-looping", "Allows elevators to loop the world height. The heighest lift up will go to the next lift on the bottom of the world and vice versa.");
         elevatorLoop = config.getBoolean("allow-looping", false);
+
+        config.setComment("use-action-bar", "Whether to use the action bar or the player's chat for floor messages.");
+        actionBar = config.getBoolean("use-action-bar", true);
     }
 }

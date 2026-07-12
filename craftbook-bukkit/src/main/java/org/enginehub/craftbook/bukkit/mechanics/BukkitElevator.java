@@ -327,7 +327,7 @@ public class BukkitElevator extends Elevator implements Listener {
         }
     }
 
-    public static void teleportFinish(CraftBookPlayer player, Block destination, BlockFace shift) {
+    private void teleportFinish(CraftBookPlayer player, Block destination, BlockFace shift) {
         BukkitChangedSign destinationSign = null;
         if (!SignUtil.isSign(destination)) {
             if (Tag.BUTTONS.isTagged(destination.getType()) && destination.getBlockData() instanceof Switch attachable) {
@@ -356,13 +356,20 @@ public class BukkitElevator extends Elevator implements Listener {
         }
 
         String title = PlainTextComponentSerializer.plainText().serialize(destinationSign.getLine(0));
+        com.sk89q.worldedit.util.formatting.text.Component floorNotice;
         if (!title.isEmpty()) {
-            player.printInfo(TranslatableComponent.of("craftbook.elevator.floor-notice", TextComponent.of(title, TextColor.WHITE)));
+            floorNotice = TranslatableComponent.of("craftbook.elevator.floor-notice", TextComponent.of(title, TextColor.WHITE));
         } else {
-            player.printInfo(TranslatableComponent.of(shift.getModY() > 0
+            floorNotice = TranslatableComponent.of(shift.getModY() > 0
                 ? "craftbook.elevator.moved-up"
                 : "craftbook.elevator.moved-down"
-            ));
+            );
+        }
+
+        if (actionBar) {
+            player.printActionBar(floorNotice.color(TextColor.YELLOW));
+        } else {
+            player.printInfo(floorNotice);
         }
     }
 
