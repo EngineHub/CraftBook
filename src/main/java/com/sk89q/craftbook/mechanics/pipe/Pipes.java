@@ -182,14 +182,21 @@ public class Pipes extends AbstractCraftBookMechanic {
                     } else if (fac.getType() == Material.JUKEBOX) {
                         Jukebox juke = (Jukebox) fac.getState();
                         List<ItemStack> its = new ArrayList<>(event.getItems());
-                        if (juke.getPlaying() != Material.AIR) {
+                        // Only an empty jukebox accepts a disc. The test was inverted, so
+                        // an empty jukebox never took one, and a playing one had its disc
+                        // overwritten by setPlaying and destroyed. Discs that do not fit
+                        // stay in the list and flow on through the pipe.
+                        if (juke.getPlaying() == Material.AIR) {
                             Iterator<ItemStack> iter = its.iterator();
                             while (iter.hasNext()) {
                                 ItemStack st = iter.next();
                                 if (!st.getType().isRecord()) continue;
                                 juke.setPlaying(st.getType());
                                 juke.update();
-                                iter.remove();
+                                if (st.getAmount() > 1)
+                                    st.setAmount(st.getAmount() - 1);
+                                else
+                                    iter.remove();
                                 break;
                             }
                         }
