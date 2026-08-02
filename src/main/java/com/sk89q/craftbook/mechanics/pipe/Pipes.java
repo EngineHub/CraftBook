@@ -429,28 +429,30 @@ public class Pipes extends AbstractCraftBookMechanic {
                 Jukebox juke = (Jukebox) fac.getState();
 
                 if (juke.getPlaying() != Material.AIR) {
+                    // Remove the disc before firing the event. Inferring "the disc left
+                    // the jukebox" from the item list afterwards duplicated the disc
+                    // whenever delivery was refused: a copy dropped at the piston while
+                    // the original kept playing.
                     items.add(new ItemStack(juke.getPlaying()));
+                    juke.setPlaying(Material.AIR);
+                    juke.update();
+                }
 
+                if (!items.isEmpty()) {
                     PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
                     Bukkit.getPluginManager().callEvent(event);
                     items.clear();
                     items.addAll(event.getItems());
 
-                    if (!event.isCancelled()) {
+                    if (!event.isCancelled() && !items.isEmpty()) {
                         visitedPipes.add(fac.getLocation().toVector());
                         searchNearbyPipes(block, visitedPipes, items);
                     }
-
-                    if (!items.isEmpty()) {
-                        for (ItemStack item : items) {
-                            if (!ItemUtil.isStackValid(item)) continue;
-                            block.getWorld().dropItem(BlockUtil.getBlockCentre(block), item);
-                        }
-                    } else {
-                        juke.setPlaying(Material.AIR);
-                        juke.update();
-                    }
                 }
+                // Route undelivered items through leftovers like the other branches;
+                // this was the only branch that never fed it, so an empty jukebox
+                // destroyed any items a request delivered into it.
+                leftovers.addAll(items);
             } else {
                 PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
                 Bukkit.getPluginManager().callEvent(event);
