@@ -68,6 +68,13 @@ public class InventoryUtil {
                 ((Chest) ((DoubleChestInventory) container.getInventory()).getLeftSide().getHolder()).update(true);
                 ((Chest) ((DoubleChestInventory) container.getInventory()).getRightSide().getHolder()).update(true);
             }
+            // Shelves render their contents and vanilla only resyncs the
+            // display on player interaction; a fresh post-insert state is
+            // written back so clients see the new contents.
+            if (container instanceof org.bukkit.block.BlockState
+                    && Tag.WOODEN_SHELVES.isTagged(((org.bukkit.block.BlockState) container).getType())) {
+                ((org.bukkit.block.BlockState) container).getBlock().getState().update(true, false);
+            }
             //if(container instanceof BlockState && update)
             //    ((BlockState) container).update();
             return leftovers;

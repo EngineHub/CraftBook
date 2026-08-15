@@ -23,6 +23,7 @@ import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dropper;
@@ -359,11 +360,19 @@ public class Pipes extends AbstractCraftBookMechanic {
                     if(!ItemUtil.doesItemPassFilters(stack, filters, exceptions))
                         continue;
 
-                    items.add(stack);
+                    items.add(stack.clone());
                     ((InventoryHolder) fac.getState()).getInventory().removeItem(stack);
                     if (pipeStackPerPull)
                         break;
                 }
+
+                // Shelves render their contents and vanilla only resyncs the
+                // display on player interaction, so clients keep showing the
+                // pulled items until the chunk reloads. The state must be
+                // captured AFTER the removals; updating a state from before
+                // them writes the old contents back into the world.
+                if (!items.isEmpty() && Tag.WOODEN_SHELVES.isTagged(facType))
+                    fac.getState().update(true, false);
 
                 PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
                 Bukkit.getPluginManager().callEvent(event);
