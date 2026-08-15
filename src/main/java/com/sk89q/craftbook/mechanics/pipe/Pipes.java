@@ -366,13 +366,11 @@ public class Pipes extends AbstractCraftBookMechanic {
                         break;
                 }
 
-                // Shelves render their contents and vanilla only resyncs the
-                // display on player interaction, so clients keep showing the
-                // pulled items until the chunk reloads. The state must be
-                // captured AFTER the removals; updating a state from before
-                // them writes the old contents back into the world.
-                if (!items.isEmpty() && Tag.WOODEN_SHELVES.isTagged(facType))
-                    fac.getState().update(true, false);
+                // syncDisplayedContainer captures its state AFTER the removals;
+                // updating a state from before them writes the old contents
+                // back into the world.
+                if (!items.isEmpty())
+                    InventoryUtil.syncDisplayedContainer(fac);
 
                 PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
                 Bukkit.getPluginManager().callEvent(event);
