@@ -23,7 +23,6 @@ import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dropper;
@@ -351,17 +350,7 @@ public class Pipes extends AbstractCraftBookMechanic {
             Block fac = block.getRelative(p.getFacing());
             Material facType = fac.getType();
 
-            if (facType == Material.CHEST
-                    || facType == Material.TRAPPED_CHEST
-                    || facType == Material.DROPPER
-                    || facType == Material.DISPENSER
-                    || facType == Material.HOPPER
-                    || facType == Material.BARREL
-                    || facType == Material.CHISELED_BOOKSHELF
-                    || facType == Material.CRAFTER
-                    || facType == Material.DECORATED_POT
-                    || Tag.SHULKER_BOXES.isTagged(facType)
-                    || Tag.WOODEN_SHELVES.isTagged(facType)) {
+            if (InventoryUtil.hasGenericInventory(facType)) {
                 for (ItemStack stack : ((InventoryHolder) fac.getState()).getInventory().getContents()) {
 
                     if (!ItemUtil.isStackValid(stack))
