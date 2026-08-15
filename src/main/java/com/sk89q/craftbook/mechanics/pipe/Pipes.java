@@ -182,10 +182,6 @@ public class Pipes extends AbstractCraftBookMechanic {
                     } else if (fac.getType() == Material.JUKEBOX) {
                         Jukebox juke = (Jukebox) fac.getState();
                         List<ItemStack> its = new ArrayList<>(event.getItems());
-                        // Only an empty jukebox accepts a disc. The test was inverted, so
-                        // an empty jukebox never took one, and a playing one had its disc
-                        // overwritten by setPlaying and destroyed. Discs that do not fit
-                        // stay in the list and flow on through the pipe.
                         if (juke.getPlaying() == Material.AIR) {
                             Iterator<ItemStack> iter = its.iterator();
                             while (iter.hasNext()) {
@@ -436,29 +432,21 @@ public class Pipes extends AbstractCraftBookMechanic {
                 Jukebox juke = (Jukebox) fac.getState();
 
                 if (juke.getPlaying() != Material.AIR) {
-                    // Remove the disc before firing the event. Inferring "the disc left
-                    // the jukebox" from the item list afterwards duplicated the disc
-                    // whenever delivery was refused: a copy dropped at the piston while
-                    // the original kept playing.
                     items.add(new ItemStack(juke.getPlaying()));
                     juke.setPlaying(Material.AIR);
                     juke.update();
                 }
 
-                if (!items.isEmpty()) {
-                    PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
-                    Bukkit.getPluginManager().callEvent(event);
-                    items.clear();
-                    items.addAll(event.getItems());
+                PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
+                Bukkit.getPluginManager().callEvent(event);
+                items.clear();
+                items.addAll(event.getItems());
 
-                    if (!event.isCancelled() && !items.isEmpty()) {
-                        visitedPipes.add(fac.getLocation().toVector());
-                        searchNearbyPipes(block, visitedPipes, items);
-                    }
+                if (!event.isCancelled() && !items.isEmpty()) {
+                    visitedPipes.add(fac.getLocation().toVector());
+                    searchNearbyPipes(block, visitedPipes, items);
                 }
-                // Route undelivered items through leftovers like the other branches;
-                // this was the only branch that never fed it, so an empty jukebox
-                // destroyed any items a request delivered into it.
+
                 leftovers.addAll(items);
             } else {
                 PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
