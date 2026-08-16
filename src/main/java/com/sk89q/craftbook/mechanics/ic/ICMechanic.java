@@ -37,6 +37,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -45,8 +46,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 
 /**
@@ -303,10 +306,35 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
+        // Fast path: a cached self-triggered IC thinks without re-snapshotting and
+        // re-parsing its sign (getState + component serialization + regex, per IC
+        // per tick - the dominant framework cost with many STs). The full setupIC
+        // verification still reruns once a second per IC, and the entry is only
+        // honoured while the IC remains in ICManager's cache, so break/unload
+        // invalidation is unchanged.
+        Location loc = event.getBlock().getLocation();
+        long now = System.currentTimeMillis();
+        Object[] fast = thinkFastCache.get(loc);
+        if (fast != null && now < (Long) fast[1] && ICManager.isCachedIC(loc)) {
+            IC cachedIC = ICManager.getCachedIC(loc);
+            if (cachedIC instanceof SelfTriggeredIC selfTriggeredIC) {
+                event.setHandled(true);
+                ChipState chipState = ((ICFamily) fast[0]).detectSelfTriggered(BukkitAdapter.adapt(loc), cachedIC.getSign());
+                selfTriggeredIC.think(chipState);
+                try {
+                    cachedIC.getSign().update(false);
+                } catch (Throwable ignored) {}
+                return;
+            }
+        }
+
         final Object[] icData = setupIC(event.getBlock(), true);
 
         if(icData != null && icData[2] instanceof SelfTriggeredIC ic) {
             event.setHandled(true);
+            if (thinkFastCache.size() > MAX_THINK_FAST_ENTRIES)
+                thinkFastCache.clear();
+            thinkFastCache.put(loc, new Object[] { icData[1], now + THINK_REVERIFY_MILLIS });
             ChipState chipState = ((ICFamily) icData[1]).detectSelfTriggered(BukkitAdapter.adapt(event.getBlock().getLocation()), ((IC) icData[2]).getSign());
             ic.think(chipState);
             try {
@@ -314,6 +342,11 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             } catch (Throwable ignored) {}
         }
     }
+
+    /** Location -> {ICFamily, reverify-deadline millis} for the think fast path. */
+    private final Map<Location, Object[]> thinkFastCache = new HashMap<>();
+    private static final long THINK_REVERIFY_MILLIS = 1000L;
+    private static final int MAX_THINK_FAST_ENTRIES = 4096;
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
