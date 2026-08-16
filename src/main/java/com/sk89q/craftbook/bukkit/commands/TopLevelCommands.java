@@ -16,6 +16,7 @@ import com.sk89q.craftbook.mechanics.cauldron.CauldronCommands;
 import com.sk89q.craftbook.mechanics.crafting.RecipeCommands;
 import com.sk89q.craftbook.mechanics.ic.ICCommands;
 import com.sk89q.craftbook.mechanics.items.CommandItemCommands;
+import com.sk89q.craftbook.mechanics.pipe.PipeCommands;
 import com.sk89q.craftbook.mechanics.signcopier.SignEditCommands;
 import com.sk89q.craftbook.mechanics.variables.VariableCommands;
 import com.sk89q.craftbook.util.PastebinPoster;
@@ -74,6 +75,11 @@ public class TopLevelCommands {
     @Command(aliases = {"ic", "circuit"}, desc = "Commands to manage Craftbook IC's")
     @NestedCommand(ICCommands.class)
     public void icCmd(CommandContext context, CommandSender sender) {
+    }
+
+    @Command(aliases = {"pipes"}, desc = "Commands to manage Craftbook Pipes")
+    @NestedCommand(PipeCommands.class)
+    public void pipes(CommandContext context, CommandSender sender) {
     }
 
     public static class Commands {
