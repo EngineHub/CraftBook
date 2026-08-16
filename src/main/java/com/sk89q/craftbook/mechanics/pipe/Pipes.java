@@ -182,14 +182,17 @@ public class Pipes extends AbstractCraftBookMechanic {
                     } else if (fac.getType() == Material.JUKEBOX) {
                         Jukebox juke = (Jukebox) fac.getState();
                         List<ItemStack> its = new ArrayList<>(event.getItems());
-                        if (juke.getPlaying() != Material.AIR) {
+                        if (juke.getPlaying() == Material.AIR) {
                             Iterator<ItemStack> iter = its.iterator();
                             while (iter.hasNext()) {
                                 ItemStack st = iter.next();
                                 if (!st.getType().isRecord()) continue;
                                 juke.setPlaying(st.getType());
                                 juke.update();
-                                iter.remove();
+                                if (st.getAmount() > 1)
+                                    st.setAmount(st.getAmount() - 1);
+                                else
+                                    iter.remove();
                                 break;
                             }
                         }
@@ -430,27 +433,21 @@ public class Pipes extends AbstractCraftBookMechanic {
 
                 if (juke.getPlaying() != Material.AIR) {
                     items.add(new ItemStack(juke.getPlaying()));
-
-                    PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
-                    Bukkit.getPluginManager().callEvent(event);
-                    items.clear();
-                    items.addAll(event.getItems());
-
-                    if (!event.isCancelled()) {
-                        visitedPipes.add(fac.getLocation().toVector());
-                        searchNearbyPipes(block, visitedPipes, items);
-                    }
-
-                    if (!items.isEmpty()) {
-                        for (ItemStack item : items) {
-                            if (!ItemUtil.isStackValid(item)) continue;
-                            block.getWorld().dropItem(BlockUtil.getBlockCentre(block), item);
-                        }
-                    } else {
-                        juke.setPlaying(Material.AIR);
-                        juke.update();
-                    }
+                    juke.setPlaying(Material.AIR);
+                    juke.update();
                 }
+
+                PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
+                Bukkit.getPluginManager().callEvent(event);
+                items.clear();
+                items.addAll(event.getItems());
+
+                if (!event.isCancelled() && !items.isEmpty()) {
+                    visitedPipes.add(fac.getLocation().toVector());
+                    searchNearbyPipes(block, visitedPipes, items);
+                }
+
+                leftovers.addAll(items);
             } else {
                 PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
                 Bukkit.getPluginManager().callEvent(event);
