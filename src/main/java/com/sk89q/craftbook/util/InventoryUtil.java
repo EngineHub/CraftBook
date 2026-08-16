@@ -68,8 +68,6 @@ public class InventoryUtil {
                 ((Chest) ((DoubleChestInventory) container.getInventory()).getLeftSide().getHolder()).update(true);
                 ((Chest) ((DoubleChestInventory) container.getInventory()).getRightSide().getHolder()).update(true);
             }
-            if (container instanceof org.bukkit.block.BlockState)
-                syncDisplayedContainer((org.bukkit.block.BlockState) container);
             //if(container instanceof BlockState && update)
             //    ((BlockState) container).update();
             return leftovers;
@@ -214,7 +212,6 @@ public class InventoryUtil {
         stacks = Arrays.stream(stacks).filter(item -> ItemUtil.isAStorableBook(item)).toArray(ItemStack[]::new);
 
         leftovers.addAll(chiseledBookshelf.getInventory().addItem(stacks).values());
-        syncDisplayedContainer(chiseledBookshelf);
 
         return leftovers;
     }
@@ -350,39 +347,6 @@ public class InventoryUtil {
                 return true;
             default:
                 return hasGenericInventory(block.getType());
-        }
-    }
-
-    /**
-     * Publishes a display container's contents after a plugin-side mutation.
-     * Player interaction is the only thing vanilla syncs on, so a pipe edit
-     * otherwise leaves clients rendering stale contents. The two mechanisms
-     * differ: chiseled bookshelves render and emit comparator signal from
-     * their slot_X_occupied blockstate properties, while shelves render
-     * straight from block-entity data, which a fresh post-mutation state
-     * update rebroadcasts. Every other container is a no-op here.
-     *
-     * @param state The container's state, from the caller that mutated it.
-     */
-    public static void syncDisplayedContainer(org.bukkit.block.BlockState state) {
-        Material type = state.getType();
-        if (type == Material.CHISELED_BOOKSHELF) {
-            if (!(state instanceof ChiseledBookshelf))
-                return;
-            Inventory inv = ((ChiseledBookshelf) state).getInventory();
-            Block block = state.getBlock();
-            org.bukkit.block.data.BlockData data = block.getBlockData();
-            if (!(data instanceof org.bukkit.block.data.type.ChiseledBookshelf))
-                return;
-            org.bukkit.block.data.type.ChiseledBookshelf occupancy = (org.bukkit.block.data.type.ChiseledBookshelf) data;
-            for (int i = 0; i < inv.getSize(); i++)
-                occupancy.setSlotOccupied(i, ItemUtil.isStackValid(inv.getItem(i)));
-            block.setBlockData(occupancy, false);
-        } else if (Tag.WOODEN_SHELVES.isTagged(type)) {
-            // update() writes the state's captured contents back into the
-            // world, so this one must be captured after the mutation; the
-            // caller's state predates it and would restore the old contents.
-            state.getBlock().getState().update(true, false);
         }
     }
 

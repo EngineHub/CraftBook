@@ -367,9 +367,6 @@ public class Pipes extends AbstractCraftBookMechanic {
                         break;
                 }
 
-                if (!items.isEmpty())
-                    InventoryUtil.syncDisplayedContainer(facState);
-
                 PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
                 Bukkit.getPluginManager().callEvent(event);
                 items.clear();
