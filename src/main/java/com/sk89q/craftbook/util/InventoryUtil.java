@@ -354,16 +354,6 @@ public class InventoryUtil {
     }
 
     /**
-     * Checks whether a material is a container whose whole inventory is plain
-     * item slots, safe to insert into or pull from generically. Furnaces,
-     * smokers, blast furnaces and brewing stands are containers too but have
-     * role-specific slots (fuel, ingredient, result), so their callers route
-     * them through dedicated branches instead of this family.
-     *
-     * @param type The material to check.
-     * @return If the material is a generic container.
-     */
-    /**
      * Publishes a display container's contents after a plugin-side mutation.
      * Player interaction is the only thing vanilla syncs on, so a pipe edit
      * otherwise leaves clients rendering stale contents. The two mechanisms
@@ -393,10 +383,17 @@ public class InventoryUtil {
         }
     }
 
+    /**
+     * Checks whether a material is a container whose whole inventory is plain
+     * item slots, safe to insert into or pull from generically. Furnaces,
+     * smokers, blast furnaces and brewing stands are containers too but have
+     * role-specific slots (fuel, ingredient, result), so their callers route
+     * them through dedicated branches instead of this family.
+     *
+     * @param type The material to check.
+     * @return If the material is a generic container.
+     */
     public static boolean hasGenericInventory(Material type) {
-        if (Tag.SHULKER_BOXES.isTagged(type) || Tag.WOODEN_SHELVES.isTagged(type)) {
-            return true;
-        }
         switch(type) {
             case CHEST:
             case TRAPPED_CHEST:
@@ -409,7 +406,7 @@ public class InventoryUtil {
             case CRAFTER:
                 return true;
             default:
-                return false;
+                return Tag.SHULKER_BOXES.isTagged(type) || Tag.WOODEN_SHELVES.isTagged(type);
         }
     }
 
