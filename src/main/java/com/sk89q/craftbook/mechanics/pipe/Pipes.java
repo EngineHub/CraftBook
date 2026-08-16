@@ -22,6 +22,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -36,6 +37,7 @@ import org.bukkit.block.data.type.Piston;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -44,9 +46,11 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class Pipes extends AbstractCraftBookMechanic {
@@ -364,7 +368,25 @@ public class Pipes extends AbstractCraftBookMechanic {
                     || facType == Material.CRAFTER
                     || facType == Material.DECORATED_POT
                     || Tag.SHULKER_BOXES.isTagged(facType)) {
-                for (ItemStack stack : ((InventoryHolder) fac.getState()).getInventory().getContents()) {
+                Inventory sourceInventory = ((InventoryHolder) fac.getState()).getInventory();
+                ItemStack[] contents = sourceInventory.getContents();
+                int slots = contents.length;
+
+                // Scan starting after the slot pulled last pulse, so a stack no
+                // output accepts (returned as leftovers) cannot block everything
+                // behind it.
+                int startSlot = 0;
+                Location pullKey = null;
+                if (pipeRoundRobinPull && pipeStackPerPull && slots > 0) {
+                    pullKey = block.getLocation();
+                    Integer cursor = pullCursor.get(pullKey);
+                    if (cursor != null)
+                        startSlot = cursor % slots;
+                }
+
+                for (int offset = 0; offset < slots; offset++) {
+                    int slot = (startSlot + offset) % slots;
+                    ItemStack stack = contents[slot];
 
                     if (!ItemUtil.isStackValid(stack))
                         continue;
@@ -373,9 +395,18 @@ public class Pipes extends AbstractCraftBookMechanic {
                         continue;
 
                     items.add(stack);
-                    ((InventoryHolder) fac.getState()).getInventory().removeItem(stack);
-                    if (pipeStackPerPull)
+                    // Clear by slot rather than removeItem: with a mid-inventory
+                    // start, removeItem would take the first equal stack, which
+                    // can be a different slot than the one just read.
+                    sourceInventory.setItem(slot, null);
+                    if (pipeStackPerPull) {
+                        if (pullKey != null) {
+                            if (pullCursor.size() > MAX_PULL_CURSORS)
+                                pullCursor.clear();
+                            pullCursor.put(pullKey, slot + 1);
+                        }
                         break;
+                    }
                 }
 
                 PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
@@ -507,10 +538,15 @@ public class Pipes extends AbstractCraftBookMechanic {
         }
     }
 
+    /** Last pulled slot per source piston, so pulls resume after it. */
+    private final Map<Location, Integer> pullCursor = new HashMap<>();
+    private static final int MAX_PULL_CURSORS = 4096;
+
     private boolean pipesDiagonal;
     private BlockStateHolder<?> pipeInsulator;
     private boolean pipeStackPerPull;
     private boolean pipeRequireSign;
+    private boolean pipeRoundRobinPull;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
@@ -526,5 +562,8 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         config.setComment(path + "require-sign", "Requires pipes to have a [Pipe] sign connected to them. This is the only way to require permissions to make pipes.");
         pipeRequireSign = config.getBoolean(path + "require-sign", false);
+
+        config.setComment(path + "round-robin-pull", "With stack-per-move, pull container slots in rotation instead of always taking the first stack, so one stack no output accepts cannot block everything behind it.");
+        pipeRoundRobinPull = config.getBoolean(path + "round-robin-pull", true);
     }
 }
