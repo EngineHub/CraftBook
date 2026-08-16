@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.util;
 
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Chest;
@@ -371,7 +372,7 @@ public class InventoryUtil {
             case CRAFTER:
                 return true;
             default:
-                return false;
+                return Tag.COPPER_CHESTS.isTagged(block.getType());
         }
     }
 

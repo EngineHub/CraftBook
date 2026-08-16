@@ -360,7 +360,8 @@ public class Pipes extends AbstractCraftBookMechanic {
                     || facType == Material.CHISELED_BOOKSHELF
                     || facType == Material.CRAFTER
                     || facType == Material.DECORATED_POT
-                    || Tag.SHULKER_BOXES.isTagged(facType)) {
+                    || Tag.SHULKER_BOXES.isTagged(facType)
+                    || Tag.COPPER_CHESTS.isTagged(facType)) {
                 for (ItemStack stack : ((InventoryHolder) fac.getState()).getInventory().getContents()) {
 
                     if (!ItemUtil.isStackValid(stack))
