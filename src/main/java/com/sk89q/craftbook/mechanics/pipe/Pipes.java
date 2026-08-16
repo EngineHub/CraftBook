@@ -22,6 +22,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -44,9 +45,11 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class Pipes extends AbstractCraftBookMechanic {
@@ -348,6 +351,29 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         if (block.getType() == Material.STICKY_PISTON) {
 
+            // A piston whose whole network refused the last pull waits briefly, so a
+            // blocked pipe stops re-traversing the network and churning the same
+            // leftovers on every pulse.
+            if (pipeBackoffMillis > 0) {
+                Long pausedUntil = pullBackoff.get(block.getLocation());
+                if (pausedUntil != null) {
+                    if (System.currentTimeMillis() < pausedUntil) {
+                        // Requests carrying items (e.g. another mechanic feeding this
+                        // piston) still buffer into the source container while paused.
+                        if (!items.isEmpty()) {
+                            Block sourceBlock = block.getRelative(((Piston) block.getBlockData()).getFacing());
+                            if (InventoryUtil.doesBlockHaveInventory(sourceBlock)) {
+                                List<ItemStack> rest = InventoryUtil.addItemsToInventory((InventoryHolder) sourceBlock.getState(), items.toArray(new ItemStack[items.size()]));
+                                items.clear();
+                                items.addAll(rest);
+                            }
+                        }
+                        return;
+                    }
+                    pullBackoff.remove(block.getLocation());
+                }
+            }
+
             List<ItemStack> leftovers = new ArrayList<>();
 
             Piston p = (Piston) block.getBlockData();
@@ -378,6 +404,11 @@ public class Pipes extends AbstractCraftBookMechanic {
                         break;
                 }
 
+                int pulledAmount = 0;
+                for (ItemStack pulled : items)
+                    if (pulled != null)
+                        pulledAmount += pulled.getAmount();
+
                 PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
                 Bukkit.getPluginManager().callEvent(event);
                 items.clear();
@@ -385,6 +416,20 @@ public class Pipes extends AbstractCraftBookMechanic {
                 if(!event.isCancelled()) {
                     visitedPipes.add(fac.getLocation().toVector());
                     searchNearbyPipes(block, visitedPipes, items);
+                }
+
+                // Nothing the pull carried was accepted anywhere: pause this piston
+                // instead of repeating the full traversal on the next pulse.
+                if (pipeBackoffMillis > 0 && pulledAmount > 0) {
+                    int undelivered = 0;
+                    for (ItemStack left : items)
+                        if (left != null)
+                            undelivered += left.getAmount();
+                    if (undelivered >= pulledAmount) {
+                        if (pullBackoff.size() > MAX_PULL_BACKOFFS)
+                            pullBackoff.clear();
+                        pullBackoff.put(block.getLocation(), System.currentTimeMillis() + pipeBackoffMillis);
+                    }
                 }
 
                 if (!items.isEmpty()) {
@@ -507,10 +552,15 @@ public class Pipes extends AbstractCraftBookMechanic {
         }
     }
 
+    /** Piston -> time a fully refused pull is paused until. */
+    private final Map<Location, Long> pullBackoff = new HashMap<>();
+    private static final int MAX_PULL_BACKOFFS = 4096;
+
     private boolean pipesDiagonal;
     private BlockStateHolder<?> pipeInsulator;
     private boolean pipeStackPerPull;
     private boolean pipeRequireSign;
+    private int pipeBackoffMillis;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
@@ -526,5 +576,8 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         config.setComment(path + "require-sign", "Requires pipes to have a [Pipe] sign connected to them. This is the only way to require permissions to make pipes.");
         pipeRequireSign = config.getBoolean(path + "require-sign", false);
+
+        config.setComment(path + "full-pipe-cooldown", "Seconds a sticky piston waits before pulling again after a pulse where nothing could be delivered anywhere (full network). Stops blocked pipes re-walking the whole network every pulse. 0 disables.");
+        pipeBackoffMillis = config.getInt(path + "full-pipe-cooldown", 2) * 1000;
     }
 }
