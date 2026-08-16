@@ -69,7 +69,7 @@ public class InventoryUtil {
                 ((Chest) ((DoubleChestInventory) container.getInventory()).getRightSide().getHolder()).update(true);
             }
             if (container instanceof org.bukkit.block.BlockState)
-                syncDisplayedContainer(((org.bukkit.block.BlockState) container).getBlock());
+                syncDisplayedContainer((org.bukkit.block.BlockState) container);
             //if(container instanceof BlockState && update)
             //    ((BlockState) container).update();
             return leftovers;
@@ -214,7 +214,7 @@ public class InventoryUtil {
         stacks = Arrays.stream(stacks).filter(item -> ItemUtil.isAStorableBook(item)).toArray(ItemStack[]::new);
 
         leftovers.addAll(chiseledBookshelf.getInventory().addItem(stacks).values());
-        syncDisplayedContainer(chiseledBookshelf.getBlock());
+        syncDisplayedContainer(chiseledBookshelf);
 
         return leftovers;
     }
@@ -362,15 +362,15 @@ public class InventoryUtil {
      * straight from block-entity data, which a fresh post-mutation state
      * update rebroadcasts. Every other container is a no-op here.
      *
-     * @param block The container block that was mutated.
+     * @param state The container's state, from the caller that mutated it.
      */
-    public static void syncDisplayedContainer(Block block) {
-        Material type = block.getType();
+    public static void syncDisplayedContainer(org.bukkit.block.BlockState state) {
+        Material type = state.getType();
         if (type == Material.CHISELED_BOOKSHELF) {
-            org.bukkit.block.BlockState state = block.getState();
             if (!(state instanceof ChiseledBookshelf))
                 return;
             Inventory inv = ((ChiseledBookshelf) state).getInventory();
+            Block block = state.getBlock();
             org.bukkit.block.data.BlockData data = block.getBlockData();
             if (!(data instanceof org.bukkit.block.data.type.ChiseledBookshelf))
                 return;
@@ -379,7 +379,10 @@ public class InventoryUtil {
                 occupancy.setSlotOccupied(i, ItemUtil.isStackValid(inv.getItem(i)));
             block.setBlockData(occupancy, false);
         } else if (Tag.WOODEN_SHELVES.isTagged(type)) {
-            block.getState().update(true, false);
+            // update() writes the state's captured contents back into the
+            // world, so this one must be captured after the mutation; the
+            // caller's state predates it and would restore the old contents.
+            state.getBlock().getState().update(true, false);
         }
     }
 
@@ -423,9 +426,7 @@ public class InventoryUtil {
             case SHULKER_BOX:
                 return true;
             default:
-                // Only the open-ended family stays a tag lookup: shelf materials
-                // grow with each new wood type, while the shulker colour set has
-                // been fixed since 1.11.
+                // Shelves are matched by tag because new wood types keep adding materials.
                 return Tag.WOODEN_SHELVES.isTagged(type);
         }
     }

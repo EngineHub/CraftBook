@@ -352,7 +352,8 @@ public class Pipes extends AbstractCraftBookMechanic {
             Material facType = fac.getType();
 
             if (InventoryUtil.hasGenericInventory(facType)) {
-                for (ItemStack stack : ((InventoryHolder) fac.getState()).getInventory().getContents()) {
+                org.bukkit.block.BlockState facState = fac.getState();
+                for (ItemStack stack : ((InventoryHolder) facState).getInventory().getContents()) {
 
                     if (!ItemUtil.isStackValid(stack))
                         continue;
@@ -361,16 +362,13 @@ public class Pipes extends AbstractCraftBookMechanic {
                         continue;
 
                     items.add(stack.clone());
-                    ((InventoryHolder) fac.getState()).getInventory().removeItem(stack);
+                    ((InventoryHolder) facState).getInventory().removeItem(stack);
                     if (pipeStackPerPull)
                         break;
                 }
 
-                // syncDisplayedContainer captures its state AFTER the removals;
-                // updating a state from before them writes the old contents
-                // back into the world.
                 if (!items.isEmpty())
-                    InventoryUtil.syncDisplayedContainer(fac);
+                    InventoryUtil.syncDisplayedContainer(facState);
 
                 PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
                 Bukkit.getPluginManager().callEvent(event);
