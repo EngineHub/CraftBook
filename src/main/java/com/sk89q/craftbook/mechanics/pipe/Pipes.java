@@ -22,7 +22,10 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.World;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -38,15 +41,18 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class Pipes extends AbstractCraftBookMechanic {
@@ -378,6 +384,11 @@ public class Pipes extends AbstractCraftBookMechanic {
                         break;
                 }
 
+                int pulledAmount = 0;
+                for (ItemStack pulled : items)
+                    if (pulled != null)
+                        pulledAmount += pulled.getAmount();
+
                 PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
                 Bukkit.getPluginManager().callEvent(event);
                 items.clear();
@@ -385,6 +396,23 @@ public class Pipes extends AbstractCraftBookMechanic {
                 if(!event.isCancelled()) {
                     visitedPipes.add(fac.getLocation().toVector());
                     searchNearbyPipes(block, visitedPipes, items);
+                }
+
+                // A pull refused everywhere marks the piston blocked; any pull that
+                // delivers something clears it again.
+                if (pipeBlockedSmoke && pulledAmount > 0) {
+                    int undelivered = 0;
+                    for (ItemStack left : items)
+                        if (left != null)
+                            undelivered += left.getAmount();
+                    if (undelivered >= pulledAmount) {
+                        if (blockedPistons.size() > MAX_BLOCKED_PISTONS)
+                            blockedPistons.clear();
+                        blockedPistons.add(block.getLocation());
+                        spawnBlockedSmoke(block);
+                    } else {
+                        blockedPistons.remove(block.getLocation());
+                    }
                 }
 
                 if (!items.isEmpty()) {
@@ -507,10 +535,85 @@ public class Pipes extends AbstractCraftBookMechanic {
         }
     }
 
+    /** Pistons whose last pull was refused everywhere; kept smoking by the task. */
+    private final Set<Location> blockedPistons = new HashSet<>();
+    private final Map<Location, Long> lastSmoke = new HashMap<>();
+    private BukkitTask smokeTask;
+    private static final int MAX_BLOCKED_PISTONS = 4096;
+
+    @Override
+    public boolean enable() {
+        smokeTask = Bukkit.getScheduler().runTaskTimer(CraftBookPlugin.inst(), this::smokeBlockedPistons, 12L, 12L);
+        return true;
+    }
+
+    @Override
+    public void disable() {
+        if (smokeTask != null) {
+            smokeTask.cancel();
+            smokeTask = null;
+        }
+        blockedPistons.clear();
+        lastSmoke.clear();
+    }
+
+    /**
+     * Keeps every blocked piston visibly smoking between pulses. Blocked is state,
+     * set by a pull that was refused everywhere and cleared by the next pull that
+     * delivers, so a player can find a stuck system by looking at it instead of
+     * having to catch the moment a pulse happens.
+     */
+    private void smokeBlockedPistons() {
+        if (!pipeBlockedSmoke || blockedPistons.isEmpty())
+            return;
+        Iterator<Location> iterator = blockedPistons.iterator();
+        while (iterator.hasNext()) {
+            Location loc = iterator.next();
+            World world = loc.getWorld();
+            if (world == null || !world.isChunkLoaded(loc.getBlockX() >> 4, loc.getBlockZ() >> 4))
+                continue;
+            Block piston = world.getBlockAt(loc);
+            if (piston.getType() != Material.STICKY_PISTON) {
+                iterator.remove();
+                continue;
+            }
+            // No container in front means there is no system left to be blocked:
+            // only a pull attempt clears the flag, and none can happen again, so
+            // the flag would smoke forever after the source is removed.
+            Block sourceBlock = piston.getRelative(((Piston) piston.getBlockData()).getFacing());
+            if (!InventoryUtil.doesBlockHaveInventory(sourceBlock)) {
+                iterator.remove();
+                continue;
+            }
+            world.spawnParticle(Particle.LARGE_SMOKE,
+                    loc.getBlockX() + 0.5, loc.getBlockY() + 1.2, loc.getBlockZ() + 0.5,
+                    4, 0.15, 0.1, 0.15, 0.01);
+        }
+    }
+
+    /**
+     * A puff at pulse time, throttled per piston so a fast clock reads as a steady
+     * chimney rather than a particle storm.
+     */
+    private void spawnBlockedSmoke(Block piston) {
+        Location loc = piston.getLocation();
+        long now = System.currentTimeMillis();
+        Long last = lastSmoke.get(loc);
+        if (last != null && now - last < 600L)
+            return;
+        if (lastSmoke.size() > MAX_BLOCKED_PISTONS)
+            lastSmoke.clear();
+        lastSmoke.put(loc, now);
+        piston.getWorld().spawnParticle(Particle.LARGE_SMOKE,
+                piston.getX() + 0.5, piston.getY() + 1.2, piston.getZ() + 0.5,
+                5, 0.15, 0.1, 0.15, 0.01);
+    }
+
     private boolean pipesDiagonal;
     private BlockStateHolder<?> pipeInsulator;
     private boolean pipeStackPerPull;
     private boolean pipeRequireSign;
+    private boolean pipeBlockedSmoke;
 
     @Override
     public void loadConfiguration (YAMLProcessor config, String path) {
@@ -526,5 +629,8 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         config.setComment(path + "require-sign", "Requires pipes to have a [Pipe] sign connected to them. This is the only way to require permissions to make pipes.");
         pipeRequireSign = config.getBoolean(path + "require-sign", false);
+
+        config.setComment(path + "full-pipe-smoke", "Show smoke particles on a sticky piston whose last pull could not be delivered anywhere, so players can see where a pipe system is stuck.");
+        pipeBlockedSmoke = config.getBoolean(path + "full-pipe-smoke", true);
     }
 }
