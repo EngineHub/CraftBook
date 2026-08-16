@@ -407,6 +407,14 @@ public class InventoryUtil {
             case CHISELED_BOOKSHELF:
             case DECORATED_POT:
             case CRAFTER:
+            case COPPER_CHEST:
+            case EXPOSED_COPPER_CHEST:
+            case WEATHERED_COPPER_CHEST:
+            case OXIDIZED_COPPER_CHEST:
+            case WAXED_COPPER_CHEST:
+            case WAXED_EXPOSED_COPPER_CHEST:
+            case WAXED_WEATHERED_COPPER_CHEST:
+            case WAXED_OXIDIZED_COPPER_CHEST:
             case WHITE_SHULKER_BOX:
             case ORANGE_SHULKER_BOX:
             case MAGENTA_SHULKER_BOX:
