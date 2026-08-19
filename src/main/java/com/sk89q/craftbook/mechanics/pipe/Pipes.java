@@ -241,6 +241,17 @@ public class Pipes extends AbstractCraftBookMechanic {
             }
 
             if (!items.isEmpty()) {
+                if (!pipesDiagonal) {
+                    // Only the six direct faces can connect; probe them directly
+                    // instead of walking all 27 offsets and skipping 21 of them.
+                    for (int[] direction : DIRECT_NEIGHBOURS) {
+                        if (items.isEmpty())
+                            return;
+                        expandNeighbour(bl, blType, direction[0], direction[1], direction[2], visitedPipes, searchQueue);
+                    }
+                    continue;
+                }
+
                 //Enumerate the search queue.
                 for (int x = -1; x < 2; x++) {
                     for (int y = -1; y < 2; y++) {
@@ -249,71 +260,74 @@ public class Pipes extends AbstractCraftBookMechanic {
                             if(items.isEmpty())
                                 return;
 
-                            if (!pipesDiagonal) {
-                                if (x != 0 && y != 0) continue;
-                                if (x != 0 && z != 0) continue;
-                                if (y != 0 && z != 0) continue;
+                            boolean xIsY = Math.abs(x) == Math.abs(y);
+                            boolean xIsZ = Math.abs(x) == Math.abs(z);
+                            if (xIsY && xIsZ) {
+                                if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(x, 0, 0).getBlockData()))
+                                        && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(0, y, 0).getBlockData()))
+                                        && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(0, 0, z).getBlockData()))) {
+                                    continue;
+                                }
+                            } else if (xIsY) {
+                                if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(x, 0, 0).getBlockData()))
+                                        && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(0, y, 0).getBlockData()))) {
+                                    continue;
+                                }
+                            } else if (xIsZ) {
+                                if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(x, 0, 0).getBlockData()))
+                                        && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(0, 0, z).getBlockData()))) {
+                                    continue;
+                                }
                             } else {
-                                boolean xIsY = Math.abs(x) == Math.abs(y);
-                                boolean xIsZ = Math.abs(x) == Math.abs(z);
-                                if (xIsY && xIsZ) {
-                                    if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(x, 0, 0).getBlockData()))
-                                            && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(0, y, 0).getBlockData()))
-                                            && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(0, 0, z).getBlockData()))) {
-                                        continue;
-                                    }
-                                } else if (xIsY) {
-                                    if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(x, 0, 0).getBlockData()))
-                                            && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(0, y, 0).getBlockData()))) {
-                                        continue;
-                                    }
-                                } else if (xIsZ) {
-                                    if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(x, 0, 0).getBlockData()))
-                                            && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(0, 0, z).getBlockData()))) {
-                                        continue;
-                                    }
-                                } else {
-                                    if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(0, y, 0).getBlockData()))
-                                            && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(0, 0, z).getBlockData()))) {
-                                        continue;
-                                    }
+                                if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(0, y, 0).getBlockData()))
+                                        && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(0, 0, z).getBlockData()))) {
+                                    continue;
                                 }
                             }
 
-                            Block off = bl.getRelative(x, y, z);
-                            Material offType = off.getType();
-
-                            if (!isValidPipeBlock(offType)) continue;
-
-                            if (visitedPipes.contains(off.getLocation().toVector())) continue;
-                            visitedPipes.add(off.getLocation().toVector());
-
-                            if(ItemUtil.isStainedGlass(blType) && ItemUtil.isStainedGlass(offType) && blType != offType) continue;
-
-                            if(offType == Material.GLASS || ItemUtil.isStainedGlass(offType)) {
-                                searchQueue.add(off);
-                            } else if (offType == Material.GLASS_PANE || ItemUtil.isStainedGlassPane(offType)) {
-                                Block offsetBlock = off.getRelative(x, y, z);
-                                Material offsetBlockType = offsetBlock.getType();
-                                if (!isValidPipeBlock(offsetBlockType)) continue;
-                                if (visitedPipes.contains(offsetBlock.getLocation().toVector())) continue;
-                                if(ItemUtil.isStainedGlassPane(offType)) {
-                                    if((ItemUtil.isStainedGlass(blType)
-                                            || ItemUtil.isStainedGlassPane(blType)) && ItemUtil.getStainedColor(offType) != ItemUtil
-                                            .getStainedColor(offsetBlockType)
-                                            || (ItemUtil.isStainedGlass(offsetBlockType)
-                                            || ItemUtil.isStainedGlassPane(offsetBlockType)) && ItemUtil.getStainedColor(offType) != ItemUtil
-                                            .getStainedColor(offsetBlockType)) continue;
-                                }
-                                visitedPipes.add(offsetBlock.getLocation().toVector());
-                                searchQueue.add(off.getRelative(x, y, z));
-                            } else if(offType == Material.PISTON)
-                                searchQueue.addFirst(off); //Pistons are treated with higher priority.
+                            expandNeighbour(bl, blType, x, y, z, visitedPipes, searchQueue);
                         }
                     }
                 }
             }
         }
+    }
+
+    /** The six cardinal offsets, in the order the full scan visited them. */
+    private static final int[][] DIRECT_NEIGHBOURS = {
+        {-1, 0, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}, {0, 1, 0}, {1, 0, 0}
+    };
+
+    private void expandNeighbour(Block bl, Material blType, int x, int y, int z, Set<Vector> visitedPipes, Deque<Block> searchQueue) {
+        Block off = bl.getRelative(x, y, z);
+        Material offType = off.getType();
+
+        if (!isValidPipeBlock(offType)) return;
+
+        if (visitedPipes.contains(off.getLocation().toVector())) return;
+        visitedPipes.add(off.getLocation().toVector());
+
+        if(ItemUtil.isStainedGlass(blType) && ItemUtil.isStainedGlass(offType) && blType != offType) return;
+
+        if(offType == Material.GLASS || ItemUtil.isStainedGlass(offType)) {
+            searchQueue.add(off);
+        } else if (offType == Material.GLASS_PANE || ItemUtil.isStainedGlassPane(offType)) {
+            Block offsetBlock = off.getRelative(x, y, z);
+            Material offsetBlockType = offsetBlock.getType();
+            if (!isValidPipeBlock(offsetBlockType)) return;
+            if (visitedPipes.contains(offsetBlock.getLocation().toVector())) return;
+            if(ItemUtil.isStainedGlassPane(offType)) {
+                if((ItemUtil.isStainedGlass(blType)
+                        || ItemUtil.isStainedGlassPane(blType)) && ItemUtil.getStainedColor(offType) != ItemUtil
+                        .getStainedColor(offsetBlockType)
+                        || (ItemUtil.isStainedGlass(offsetBlockType)
+                        || ItemUtil.isStainedGlassPane(offsetBlockType)) && ItemUtil.getStainedColor(offType) != ItemUtil
+                        .getStainedColor(offsetBlockType)) return;
+            }
+            visitedPipes.add(offsetBlock.getLocation().toVector());
+            searchQueue.add(off.getRelative(x, y, z));
+        } else if(offType == Material.PISTON)
+            searchQueue.addFirst(off); //Pistons are treated with higher priority.
     }
 
     private static boolean isValidPipeBlock(Material type) {
