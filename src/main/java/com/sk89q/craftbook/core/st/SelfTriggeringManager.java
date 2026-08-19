@@ -21,9 +21,7 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.logging.Level;
 
 public class SelfTriggeringManager implements Listener {
@@ -93,30 +91,16 @@ public class SelfTriggeringManager implements Listener {
     private Location[] registeredLocations;
     private boolean hasChanged = false;
 
-    private static boolean areAdjacentChunksLoaded(Location loc, Map<World, Map<Long, Boolean>> cache) {
+    private static boolean areAdjacentChunksLoaded(Location loc) {
         World world = loc.getWorld();
 
         final int CX = loc.getBlockX() >> 4;
         final int CZ = loc.getBlockZ() >> 4;
 
-        return isLoadedCached(world, CX - 1, CZ, cache)
-                && isLoadedCached(world, CX + 1, CZ, cache)
-                && isLoadedCached(world, CX, CZ - 1, cache)
-                && isLoadedCached(world, CX, CZ + 1, cache);
-    }
-
-    // Chunk-loaded lookups are memoised per think pass: clustered STs ask about the
-    // same few chunks thousands of times in one sweep, and a chunk cannot load or
-    // unload in the middle of the (single-threaded) sweep.
-    private static boolean isLoadedCached(World world, int cx, int cz, Map<World, Map<Long, Boolean>> cache) {
-        Map<Long, Boolean> perWorld = cache.computeIfAbsent(world, w -> new HashMap<>());
-        long key = ((long) cx << 32) | (cz & 0xFFFFFFFFL);
-        Boolean loaded = perWorld.get(key);
-        if (loaded == null) {
-            loaded = world.isChunkLoaded(cx, cz);
-            perWorld.put(key, loaded);
-        }
-        return loaded;
+        return world.isChunkLoaded(CX - 1, CZ)
+                && world.isChunkLoaded(CX + 1, CZ)
+                && world.isChunkLoaded(CX, CZ - 1)
+                && world.isChunkLoaded(CX, CZ + 1);
     }
 
     /**
@@ -130,16 +114,15 @@ public class SelfTriggeringManager implements Listener {
             registeredLocations = thinkingMechanics.toArray(new Location[thinkingMechanics.size()]);
         }
 
-        Map<World, Map<Long, Boolean>> loadedCache = new HashMap<>();
         for (Location location : registeredLocations) {
-            if(!isLoadedCached(location.getWorld(), location.getBlockX() >> 4, location.getBlockZ() >> 4, loadedCache)) {
+            if(!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)) {
                 unregisterSelfTrigger(location, UnregisterReason.UNLOAD);
                 continue;
             }
 
             // If some of the adjacent chunks aren't loaded, don't self trigger the IC yet; effectively "pause" it.
             // This prevents some occasionally serious chunk thrashing.
-            if (!areAdjacentChunksLoaded(location, loadedCache)) {
+            if (!areAdjacentChunksLoaded(location)) {
                 continue;
             }
 
