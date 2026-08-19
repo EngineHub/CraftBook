@@ -354,17 +354,9 @@ public class Pipes extends AbstractCraftBookMechanic {
             Block fac = block.getRelative(p.getFacing());
             Material facType = fac.getType();
 
-            if (facType == Material.CHEST
-                    || facType == Material.TRAPPED_CHEST
-                    || facType == Material.DROPPER
-                    || facType == Material.DISPENSER
-                    || facType == Material.HOPPER
-                    || facType == Material.BARREL
-                    || facType == Material.CHISELED_BOOKSHELF
-                    || facType == Material.CRAFTER
-                    || facType == Material.DECORATED_POT
-                    || Tag.SHULKER_BOXES.isTagged(facType)) {
-                for (ItemStack stack : ((InventoryHolder) fac.getState()).getInventory().getContents()) {
+            if (InventoryUtil.hasGenericInventory(facType)) {
+                org.bukkit.block.BlockState facState = fac.getState();
+                for (ItemStack stack : ((InventoryHolder) facState).getInventory().getContents()) {
 
                     if (!ItemUtil.isStackValid(stack))
                         continue;
@@ -372,8 +364,8 @@ public class Pipes extends AbstractCraftBookMechanic {
                     if(!ItemUtil.doesItemPassFilters(stack, filters, exceptions))
                         continue;
 
-                    items.add(stack);
-                    ((InventoryHolder) fac.getState()).getInventory().removeItem(stack);
+                    items.add(stack.clone());
+                    ((InventoryHolder) facState).getInventory().removeItem(stack);
                     if (pipeStackPerPull)
                         break;
                 }

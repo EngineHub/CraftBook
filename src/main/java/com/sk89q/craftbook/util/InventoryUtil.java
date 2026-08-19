@@ -1,6 +1,7 @@
 package com.sk89q.craftbook.util;
 
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Chest;
@@ -339,13 +340,45 @@ public class InventoryUtil {
     public static boolean doesBlockHaveInventory(Block block) {
 
         switch(block.getType()) {
+            case FURNACE:
+            case BLAST_FURNACE:
+            case SMOKER:
+            case BREWING_STAND:
+                return true;
+            default:
+                return hasGenericInventory(block.getType());
+        }
+    }
+
+    /**
+     * Checks whether a material is a container whose whole inventory is plain
+     * item slots, safe to insert into or pull from generically. Furnaces,
+     * smokers, blast furnaces and brewing stands are containers too but have
+     * role-specific slots (fuel, ingredient, result), so their callers route
+     * them through dedicated branches instead of this family.
+     *
+     * @param type The material to check.
+     * @return If the material is a generic container.
+     */
+    public static boolean hasGenericInventory(Material type) {
+        switch(type) {
             case CHEST:
             case TRAPPED_CHEST:
             case DROPPER:
             case DISPENSER:
-            case FURNACE:
-            case BREWING_STAND:
             case HOPPER:
+            case BARREL:
+            case CHISELED_BOOKSHELF:
+            case DECORATED_POT:
+            case CRAFTER:
+            case COPPER_CHEST:
+            case EXPOSED_COPPER_CHEST:
+            case WEATHERED_COPPER_CHEST:
+            case OXIDIZED_COPPER_CHEST:
+            case WAXED_COPPER_CHEST:
+            case WAXED_EXPOSED_COPPER_CHEST:
+            case WAXED_WEATHERED_COPPER_CHEST:
+            case WAXED_OXIDIZED_COPPER_CHEST:
             case WHITE_SHULKER_BOX:
             case ORANGE_SHULKER_BOX:
             case MAGENTA_SHULKER_BOX:
@@ -363,15 +396,10 @@ public class InventoryUtil {
             case BLACK_SHULKER_BOX:
             case RED_SHULKER_BOX:
             case SHULKER_BOX:
-            case BLAST_FURNACE:
-            case SMOKER:
-            case BARREL:
-            case CHISELED_BOOKSHELF:
-            case DECORATED_POT:
-            case CRAFTER:
                 return true;
             default:
-                return false;
+                // Shelves are matched by tag because new wood types keep adding materials.
+                return Tag.WOODEN_SHELVES.isTagged(type);
         }
     }
 
