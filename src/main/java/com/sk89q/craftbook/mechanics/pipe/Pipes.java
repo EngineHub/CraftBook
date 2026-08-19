@@ -399,17 +399,22 @@ public class Pipes extends AbstractCraftBookMechanic {
                 }
 
                 // A pull refused everywhere marks the piston blocked; any pull that
-                // delivers something clears it again.
-                if (pipeBlockedSmoke && pulledAmount > 0) {
-                    int undelivered = 0;
-                    for (ItemStack left : items)
-                        if (left != null)
-                            undelivered += left.getAmount();
-                    if (undelivered >= pulledAmount) {
-                        if (blockedPistons.size() > MAX_BLOCKED_PISTONS)
-                            blockedPistons.clear();
-                        blockedPistons.add(block.getLocation());
-                        spawnBlockedSmoke(block);
+                // delivers something clears it again, and so does an empty source,
+                // since a pipe with nothing to move is not stuck.
+                if (pipeBlockedSmoke) {
+                    if (pulledAmount > 0) {
+                        int undelivered = 0;
+                        for (ItemStack left : items)
+                            if (left != null)
+                                undelivered += left.getAmount();
+                        if (undelivered >= pulledAmount) {
+                            if (blockedPistons.size() > MAX_BLOCKED_PISTONS)
+                                blockedPistons.clear();
+                            blockedPistons.add(block.getLocation());
+                            spawnBlockedSmoke(block);
+                        } else {
+                            blockedPistons.remove(block.getLocation());
+                        }
                     } else {
                         blockedPistons.remove(block.getLocation());
                     }
