@@ -91,7 +91,7 @@ public final class ItemUtil {
                 if(!ItemUtil.isStackValid(fil))
                     continue;
 
-                if(ItemUtil.areItemsIdentical(fil, stack)) {
+                if(ItemUtil.matchesFilter(fil, stack)) {
                     passesFilters = true;
                     break;
                 } else
@@ -105,7 +105,7 @@ public final class ItemUtil {
 
                 if(!ItemUtil.isStackValid(fil))
                     continue;
-                if(ItemUtil.areItemsIdentical(fil, stack)) {
+                if(ItemUtil.matchesFilter(fil, stack)) {
                     passesFilters = false;
                     break;
                 }
@@ -369,6 +369,25 @@ public final class ItemUtil {
             return false;
 
         return true;
+    }
+
+    /**
+     * When enabled, filter entries that carry no item meta match on type alone, so a
+     * plain 'potion' filter also catches brewed potions, enchanted books and renamed
+     * items instead of letting them pass through. Filter entries that do specify meta
+     * always compare it exactly. Configured by the Pipes mechanic; off by default,
+     * which keeps the strict comparison below.
+     */
+    private static boolean looseFilterMatching = false;
+
+    public static void setLooseFilterMatching(boolean loose) {
+        looseFilterMatching = loose;
+    }
+
+    public static boolean matchesFilter(ItemStack filter, ItemStack stack) {
+        if (looseFilterMatching && !filter.hasItemMeta())
+            return areBaseItemsIdentical(filter, stack);
+        return areItemsIdentical(filter, stack);
     }
 
     public static boolean areItemsIdentical(ItemStack item, ItemStack item2) {

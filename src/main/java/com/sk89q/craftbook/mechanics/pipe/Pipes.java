@@ -532,5 +532,8 @@ public class Pipes extends AbstractCraftBookMechanic {
 
         config.setComment(path + "require-sign", "Requires pipes to have a [Pipe] sign connected to them. This is the only way to require permissions to make pipes.");
         pipeRequireSign = config.getBoolean(path + "require-sign", false);
+
+        config.setComment(path + "filters-match-type", "When a filter entry has no item meta, match by item type alone so potions, enchanted books and renamed items are caught by plain filters instead of passing through. Filters that specify meta still compare it exactly.");
+        ItemUtil.setLooseFilterMatching(config.getBoolean(path + "filters-match-type", false));
     }
 }
