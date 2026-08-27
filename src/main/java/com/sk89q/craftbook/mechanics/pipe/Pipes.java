@@ -384,6 +384,11 @@ public class Pipes extends AbstractCraftBookMechanic {
                         break;
                 }
 
+                int pulledAmount = 0;
+                for (ItemStack pulled : items)
+                    if (pulled != null)
+                        pulledAmount += pulled.getAmount();
+
                 PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
                 Bukkit.getPluginManager().callEvent(event);
                 items.clear();
@@ -391,6 +396,15 @@ public class Pipes extends AbstractCraftBookMechanic {
                 if(!event.isCancelled()) {
                     visitedPipes.add(fac.getLocation().toVector());
                     searchNearbyPipes(block, visitedPipes, items);
+                }
+
+                if (pulledAmount > 0) {
+                    int undelivered = 0;
+                    for (ItemStack left : items)
+                        if (left != null)
+                            undelivered += left.getAmount();
+                    PipeNetworks.record(block.getWorld(), visitedPipes, block.getLocation().toVector(),
+                            pulledAmount - undelivered, undelivered >= pulledAmount);
                 }
 
                 if (!items.isEmpty()) {
@@ -511,6 +525,18 @@ public class Pipes extends AbstractCraftBookMechanic {
 
             startPipe(event.getBlock(), event.getItems(), true);
         }
+    }
+
+    @Override
+    public boolean enable() {
+        Bukkit.getPluginManager().registerEvents(PipeNetworks.get(), CraftBookPlugin.inst());
+        return true;
+    }
+
+    @Override
+    public void disable() {
+        org.bukkit.event.HandlerList.unregisterAll(PipeNetworks.get());
+        PipeNetworks.clear();
     }
 
     private boolean pipesDiagonal;
