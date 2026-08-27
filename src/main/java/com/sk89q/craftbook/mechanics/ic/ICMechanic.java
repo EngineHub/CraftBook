@@ -16,6 +16,8 @@
 
 package com.sk89q.craftbook.mechanics.ic;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.ChangedSign;
 import com.sk89q.craftbook.CraftBookPlayer;
@@ -37,6 +39,7 @@ import com.sk89q.util.yaml.YAMLProcessor;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -47,6 +50,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 
 /**
@@ -303,10 +307,27 @@ public class ICMechanic extends AbstractCraftBookMechanic {
 
         if(!EventUtil.passesFilter(event)) return;
 
+        // Cached fast path: think without re-snapshotting and re-parsing the sign.
+        Location loc = event.getBlock().getLocation();
+        ICFamily cachedFamily = thinkFastCache.getIfPresent(loc);
+        if (cachedFamily != null && ICManager.isCachedIC(loc)) {
+            IC cachedIC = ICManager.getCachedIC(loc);
+            if (cachedIC instanceof SelfTriggeredIC selfTriggeredIC) {
+                event.setHandled(true);
+                ChipState chipState = cachedFamily.detectSelfTriggered(BukkitAdapter.adapt(loc), cachedIC.getSign());
+                selfTriggeredIC.think(chipState);
+                try {
+                    cachedIC.getSign().update(false);
+                } catch (Throwable ignored) {}
+                return;
+            }
+        }
+
         final Object[] icData = setupIC(event.getBlock(), true);
 
         if(icData != null && icData[2] instanceof SelfTriggeredIC ic) {
             event.setHandled(true);
+            thinkFastCache.put(loc, (ICFamily) icData[1]);
             ChipState chipState = ((ICFamily) icData[1]).detectSelfTriggered(BukkitAdapter.adapt(event.getBlock().getLocation()), ((IC) icData[2]).getSign());
             ic.think(chipState);
             try {
@@ -314,6 +335,17 @@ public class ICMechanic extends AbstractCraftBookMechanic {
             } catch (Throwable ignored) {}
         }
     }
+
+    /**
+     * Location -> ICFamily for the think fast path. The expiry is what reruns
+     * the full setupIC verification, so a sign edited in place is picked up
+     * within a second; eviction bounds the map on a server with more ICs than
+     * this.
+     */
+    private final Cache<Location, ICFamily> thinkFastCache = CacheBuilder.newBuilder()
+            .maximumSize(4096)
+            .expireAfterWrite(1, TimeUnit.SECONDS)
+            .build();
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {

@@ -91,31 +91,16 @@ public class SelfTriggeringManager implements Listener {
     private Location[] registeredLocations;
     private boolean hasChanged = false;
 
-    private boolean areAdjacentChunksLoaded(Location loc) {
+    private static boolean areAdjacentChunksLoaded(Location loc) {
         World world = loc.getWorld();
 
         final int CX = loc.getBlockX() >> 4;
         final int CZ = loc.getBlockZ() >> 4;
 
-        for (int x = -1; x <= 1; ++x) {
-            for (int z = -1; z <= 1; ++z) {
-                // Check only cardinal directions
-                if (x != 0 && z != 0) {
-                    continue;
-                }
-
-                // Don't test the current chunk
-                if (x == 0 && z == 0) {
-                    continue;
-                }
-
-                if (!world.isChunkLoaded(CX + x, CZ + z)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        return world.isChunkLoaded(CX - 1, CZ)
+                && world.isChunkLoaded(CX + 1, CZ)
+                && world.isChunkLoaded(CX, CZ - 1)
+                && world.isChunkLoaded(CX, CZ + 1);
     }
 
     /**
