@@ -556,14 +556,17 @@ public class CommandItems extends AbstractCraftBookMechanic {
             boolean wasOp = player.isOp();
             if(!wasOp)
                 player.setOp(true);
-            if (comdef.fakeCommand) {
-                ProtectionUtil.canSendCommand(player, command);
-            } else {
-                Bukkit.dispatchCommand(player, command);
+            try {
+                if (comdef.fakeCommand) {
+                    ProtectionUtil.canSendCommand(player, command);
+                } else {
+                    Bukkit.dispatchCommand(player, command);
+                }
+            } finally {
+                att.remove();
+                if(!wasOp)
+                    player.setOp(false);
             }
-            att.remove();
-            if(!wasOp)
-                player.setOp(wasOp);
         }
     }
 
