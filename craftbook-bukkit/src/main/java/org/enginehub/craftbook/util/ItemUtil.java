@@ -576,6 +576,12 @@ public final class ItemUtil {
                 return new ItemStack(Material.LIME_DYE);
             case RESIN_CLUMP:
                 return new ItemStack(Material.RESIN_BRICK);
+            case GOLDEN_SPEAR:
+                return new ItemStack(Material.GOLD_NUGGET);
+            case IRON_SPEAR:
+                return new ItemStack(Material.IRON_NUGGET);
+            case COPPER_SPEAR:
+                return new ItemStack(Material.COPPER_NUGGET);
             default:
                 if (Tag.LOGS_THAT_BURN.isTagged(item.getType())) {
                     return new ItemStack(Material.CHARCOAL);
@@ -721,6 +727,10 @@ public final class ItemUtil {
             case PHANTOM_MEMBRANE:
             case DRAGON_BREATH:
             case TURTLE_HELMET:
+            case BREEZE_ROD:
+            case SLIME_BLOCK:
+            case COBWEB:
+            case STONE:
                 return true;
             default:
                 return false;

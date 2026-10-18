@@ -23,7 +23,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Crafter;
@@ -50,7 +49,6 @@ import org.enginehub.craftbook.bukkit.CraftBookPlugin;
 import org.enginehub.craftbook.mechanic.CraftBookMechanic;
 import org.enginehub.craftbook.mechanic.MechanicType;
 import org.enginehub.craftbook.util.BlockParser;
-import org.enginehub.craftbook.util.BlockUtil;
 import org.enginehub.craftbook.util.EventUtil;
 import org.enginehub.craftbook.util.InventoryUtil;
 import org.enginehub.craftbook.util.ItemSyntax;
@@ -212,14 +210,17 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
                     } else if (fac.getType() == Material.JUKEBOX) {
                         Jukebox juke = (Jukebox) fac.getState();
                         List<ItemStack> its = new ArrayList<>(event.getItems());
-                        if (juke.getPlaying() != Material.AIR) {
+                        if (juke.getPlaying() == Material.AIR) {
                             Iterator<ItemStack> iter = its.iterator();
                             while (iter.hasNext()) {
                                 ItemStack st = iter.next();
                                 if (!st.getType().isRecord()) continue;
                                 juke.setPlaying(st.getType());
                                 juke.update();
-                                iter.remove();
+                                if (st.getAmount() > 1)
+                                    st.setAmount(st.getAmount() - 1);
+                                else
+                                    iter.remove();
                                 break;
                             }
                         }
@@ -268,6 +269,17 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
             }
 
             if (!items.isEmpty()) {
+                if (!pipesDiagonal) {
+                    // Only the six direct faces can connect; probe them directly
+                    // instead of walking all 27 offsets and skipping 21 of them.
+                    for (int[] direction : DIRECT_NEIGHBOURS) {
+                        if (items.isEmpty())
+                            return;
+                        expandNeighbour(bl, blType, direction[0], direction[1], direction[2], visitedPipes, searchQueue);
+                    }
+                    continue;
+                }
+
                 //Enumerate the search queue.
                 for (int x = -1; x < 2; x++) {
                     for (int y = -1; y < 2; y++) {
@@ -276,73 +288,74 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
                             if (items.isEmpty())
                                 return;
 
-                            if (!pipesDiagonal) {
-                                if (x != 0 && y != 0) continue;
-                                if (x != 0 && z != 0) continue;
-                                if (y != 0 && z != 0) continue;
-                            } else {
-                                boolean xIsY = Math.abs(x) == Math.abs(y);
-                                boolean xIsZ = Math.abs(x) == Math.abs(z);
-                                if (xIsY && xIsZ) {
-                                    if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(x, 0, 0).getBlockData()))
+                            boolean xIsY = Math.abs(x) == Math.abs(y);
+                            boolean xIsZ = Math.abs(x) == Math.abs(z);
+                            if (xIsY && xIsZ) {
+                                if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(x, 0, 0).getBlockData()))
                                         && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(0, y, 0).getBlockData()))
                                         && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(0, 0, z).getBlockData()))) {
-                                        continue;
-                                    }
-                                } else if (xIsY) {
-                                    if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(x, 0, 0).getBlockData()))
+                                    continue;
+                                }
+                            } else if (xIsY) {
+                                if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(x, 0, 0).getBlockData()))
                                         && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(0, y, 0).getBlockData()))) {
-                                        continue;
-                                    }
-                                } else if (xIsZ) {
-                                    if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(x, 0, 0).getBlockData()))
+                                    continue;
+                                }
+                            } else if (xIsZ) {
+                                if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(x, 0, 0).getBlockData()))
                                         && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(0, 0, z).getBlockData()))) {
-                                        continue;
-                                    }
-                                } else {
-                                    if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(0, y, 0).getBlockData()))
+                                    continue;
+                                }
+                            } else {
+                                if (pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(0, y, 0).getBlockData()))
                                         && pipeInsulator.equalsFuzzy(BukkitAdapter.adapt(bl.getRelative(0, 0, z).getBlockData()))) {
-                                        continue;
-                                    }
+                                    continue;
                                 }
                             }
 
-                            Block off = bl.getRelative(x, y, z);
-                            Material offType = off.getType();
-
-                            if (!isValidPipeBlock(offType)) continue;
-
-                            if (visitedPipes.contains(off.getLocation().toVector())) continue;
-                            visitedPipes.add(off.getLocation().toVector());
-
-                            if (ItemUtil.isStainedGlass(blType) && ItemUtil.isStainedGlass(offType) && blType != offType)
-                                continue;
-
-                            if (offType == Material.GLASS || ItemUtil.isStainedGlass(offType)) {
-                                searchQueue.add(off);
-                            } else if (offType == Material.GLASS_PANE || ItemUtil.isStainedGlassPane(offType)) {
-                                Block offsetBlock = off.getRelative(x, y, z);
-                                Material offsetBlockType = offsetBlock.getType();
-                                if (!isValidPipeBlock(offsetBlockType))
-                                    continue;
-                                if (visitedPipes.contains(offsetBlock.getLocation().toVector())) continue;
-                                if (ItemUtil.isStainedGlassPane(offType)) {
-                                    if ((ItemUtil.isStainedGlass(blType)
-                                            || ItemUtil.isStainedGlassPane(blType)) && ItemUtil.getStainedColor(offType) != ItemUtil
-                                            .getStainedColor(offsetBlockType)
-                                            || (ItemUtil.isStainedGlass(offsetBlockType)
-                                            || ItemUtil.isStainedGlassPane(offsetBlockType)) && ItemUtil.getStainedColor(offType) != ItemUtil
-                                            .getStainedColor(offsetBlockType)) continue;
-                                }
-                                visitedPipes.add(offsetBlock.getLocation().toVector());
-                                searchQueue.add(off.getRelative(x, y, z));
-                            } else if (offType == Material.PISTON)
-                                searchQueue.addFirst(off); //Pistons are treated with higher priority.
+                            expandNeighbour(bl, blType, x, y, z, visitedPipes, searchQueue);
                         }
                     }
                 }
             }
         }
+    }
+
+    /** The six cardinal offsets, in the order the full scan visited them. */
+    private static final int[][] DIRECT_NEIGHBOURS = {
+        {-1, 0, 0}, {0, -1, 0}, {0, 0, -1}, {0, 0, 1}, {0, 1, 0}, {1, 0, 0}
+    };
+
+    private void expandNeighbour(Block bl, Material blType, int x, int y, int z, Set<Vector> visitedPipes, Deque<Block> searchQueue) {
+        Block off = bl.getRelative(x, y, z);
+        Material offType = off.getType();
+
+        if (!isValidPipeBlock(offType)) return;
+
+        if (visitedPipes.contains(off.getLocation().toVector())) return;
+        visitedPipes.add(off.getLocation().toVector());
+
+        if(ItemUtil.isStainedGlass(blType) && ItemUtil.isStainedGlass(offType) && blType != offType) return;
+
+        if(offType == Material.GLASS || ItemUtil.isStainedGlass(offType)) {
+            searchQueue.add(off);
+        } else if (offType == Material.GLASS_PANE || ItemUtil.isStainedGlassPane(offType)) {
+            Block offsetBlock = off.getRelative(x, y, z);
+            Material offsetBlockType = offsetBlock.getType();
+            if (!isValidPipeBlock(offsetBlockType)) return;
+            if (visitedPipes.contains(offsetBlock.getLocation().toVector())) return;
+            if(ItemUtil.isStainedGlassPane(offType)) {
+                if((ItemUtil.isStainedGlass(blType)
+                        || ItemUtil.isStainedGlassPane(blType)) && ItemUtil.getStainedColor(offType) != ItemUtil
+                        .getStainedColor(offsetBlockType)
+                        || (ItemUtil.isStainedGlass(offsetBlockType)
+                        || ItemUtil.isStainedGlassPane(offsetBlockType)) && ItemUtil.getStainedColor(offType) != ItemUtil
+                        .getStainedColor(offsetBlockType)) return;
+            }
+            visitedPipes.add(offsetBlock.getLocation().toVector());
+            searchQueue.add(off.getRelative(x, y, z));
+        } else if(offType == Material.PISTON)
+            searchQueue.addFirst(off); //Pistons are treated with higher priority.
     }
 
     private static boolean isValidPipeBlock(Material type) {
@@ -383,17 +396,9 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
             Block fac = block.getRelative(p.getFacing());
             Material facType = fac.getType();
 
-            if (facType == Material.CHEST
-                    || facType == Material.TRAPPED_CHEST
-                    || facType == Material.DROPPER
-                    || facType == Material.DISPENSER
-                    || facType == Material.HOPPER
-                    || facType == Material.BARREL
-                    || facType == Material.CHISELED_BOOKSHELF
-                    || facType == Material.CRAFTER
-                    || facType == Material.DECORATED_POT
-                    || Tag.SHULKER_BOXES.isTagged(facType)) {
-                for (ItemStack stack : ((InventoryHolder) fac.getState()).getInventory().getContents()) {
+            if (InventoryUtil.hasGenericInventory(facType)) {
+                org.bukkit.block.BlockState facState = fac.getState();
+                for (ItemStack stack : ((InventoryHolder) facState).getInventory().getContents()) {
 
                     if (!ItemUtil.isStackValid(stack))
                         continue;
@@ -401,8 +406,8 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
                     if (!ItemUtil.doesItemPassFilters(stack, filters, exceptions))
                         continue;
 
-                    items.add(stack);
-                    ((InventoryHolder) fac.getState()).getInventory().removeItem(stack);
+                    items.add(stack.clone());
+                    ((InventoryHolder) facState).getInventory().removeItem(stack);
                     if (pipeStackPerPull)
                         break;
                 }
@@ -464,27 +469,21 @@ public class Pipes extends AbstractCraftBookMechanic implements Listener {
 
                 if (juke.getPlaying() != Material.AIR) {
                     items.add(new ItemStack(juke.getPlaying()));
-
-                    PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
-                    Bukkit.getPluginManager().callEvent(event);
-                    items.clear();
-                    items.addAll(event.getItems());
-
-                    if (!event.isCancelled()) {
-                        visitedPipes.add(fac.getLocation().toVector());
-                        searchNearbyPipes(block, visitedPipes, items);
-                    }
-
-                    if (!items.isEmpty()) {
-                        for (ItemStack item : items) {
-                            if (!ItemUtil.isStackValid(item)) continue;
-                            block.getWorld().dropItem(BlockUtil.getBlockCentre(block), item);
-                        }
-                    } else {
-                        juke.setPlaying(Material.AIR);
-                        juke.update();
-                    }
+                    juke.setPlaying(Material.AIR);
+                    juke.update();
                 }
+
+                PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
+                Bukkit.getPluginManager().callEvent(event);
+                items.clear();
+                items.addAll(event.getItems());
+
+                if (!event.isCancelled() && !items.isEmpty()) {
+                    visitedPipes.add(fac.getLocation().toVector());
+                    searchNearbyPipes(block, visitedPipes, items);
+                }
+
+                leftovers.addAll(items);
             } else {
                 PipeSuckEvent event = new PipeSuckEvent(block, new ArrayList<>(items), fac);
                 Bukkit.getPluginManager().callEvent(event);
