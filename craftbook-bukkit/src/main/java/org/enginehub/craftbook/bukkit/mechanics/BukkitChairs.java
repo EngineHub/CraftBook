@@ -63,6 +63,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -365,7 +366,7 @@ public class BukkitChairs extends Chairs implements Listener {
                 return;
             }
 
-            for (Map.Entry<UUID, ChairData> pl : chairs.entrySet()) {
+            for (Map.Entry<UUID, ChairData> pl : List.copyOf(chairs.entrySet())) {
                 Player p = Bukkit.getPlayer(pl.getKey());
 
                 if (p == null || p.isDead() || !p.isValid()) {
