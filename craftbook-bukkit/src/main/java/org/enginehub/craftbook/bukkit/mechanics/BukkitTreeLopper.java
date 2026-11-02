@@ -168,8 +168,9 @@ public class BukkitTreeLopper extends TreeLopper implements Listener {
 
     private static boolean canPlaceOn(Material saplingType, Material blockType) {
         return switch (saplingType) {
-            case WARPED_FUNGUS, CRIMSON_FUNGUS -> blockType == Material.CRIMSON_NYLIUM || blockType == Material.WARPED_NYLIUM || Tag.DIRT.isTagged(blockType);
-            default -> Tag.DIRT.isTagged(blockType);
+            case WARPED_FUNGUS -> Tag.SUPPORTS_WARPED_FUNGUS.isTagged(blockType);
+            case CRIMSON_FUNGUS -> Tag.SUPPORTS_CRIMSON_FUNGUS.isTagged(blockType);
+            default -> Tag.SUPPORTS_VEGETATION.isTagged(blockType);
         };
     }
 
