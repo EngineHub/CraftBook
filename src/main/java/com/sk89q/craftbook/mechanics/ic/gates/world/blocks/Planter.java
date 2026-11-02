@@ -181,7 +181,7 @@ public class Planter extends AbstractSelfTriggeredIC {
             case NETHER_WART:
                 return belowType == Material.SOUL_SAND;
             case CACTUS:
-                return belowType == Material.SAND;
+                return Tag.SUPPORTS_CACTUS.isTagged(belowType);
             case RED_MUSHROOM:
             case BROWN_MUSHROOM:
                 return belowType.isSolid();
@@ -195,11 +195,12 @@ public class Planter extends AbstractSelfTriggeredIC {
                 }
                 return false;
             case CRIMSON_FUNGUS:
+                return Tag.SUPPORTS_CRIMSON_FUNGUS.isTagged(belowType);
             case WARPED_FUNGUS:
-                return belowType == Material.CRIMSON_NYLIUM || belowType == Material.WARPED_NYLIUM || Tag.DIRT.isTagged(belowType);
+                return Tag.SUPPORTS_WARPED_FUNGUS.isTagged(belowType);
             default:
                 if (Tag.SAPLINGS.isTagged(item.getType()) || Tag.SMALL_FLOWERS.isTagged(item.getType())) {
-                    return Tag.DIRT.isTagged(belowType) || Tag.GRASS_BLOCKS.isTagged(belowType) || Tag.MOSS_BLOCKS.isTagged(belowType);
+                    return Tag.SUPPORTS_VEGETATION.isTagged(belowType);
                 }
                 return false;
         }
