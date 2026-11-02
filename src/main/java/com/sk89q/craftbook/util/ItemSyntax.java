@@ -184,7 +184,7 @@ public final class ItemSyntax {
             if (item == null || item.getType() == null) {
                 rVal = new ItemStack(Material.STONE);
             } else {
-                rVal = BukkitAdapter.adapt(new BaseItemStack(item.getType(), item.getNbtData(), amount));
+                rVal = BukkitAdapter.adapt(new BaseItemStack(item.getType(), item.getNbtReference(), amount));
             }
 
             if(nameLoreSplit.length > 1) {

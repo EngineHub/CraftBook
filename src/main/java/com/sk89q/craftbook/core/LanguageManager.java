@@ -39,7 +39,7 @@ public class LanguageManager {
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
-            YAMLProcessor lang = new YAMLProcessor(f, true, YAMLFormat.EXTENDED);
+            YAMLProcessor lang = new YAMLProcessor(f.toPath(), true, YAMLFormat.EXTENDED);
 
             try {
                 lang.load();

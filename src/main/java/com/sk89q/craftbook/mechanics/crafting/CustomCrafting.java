@@ -43,7 +43,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
     public boolean enable() {
         INSTANCE = this;
         CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "crafting-recipes.yml"), "crafting-recipes.yml");
-        manager = new RecipeManager(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "crafting-recipes.yml"), true, YAMLFormat.EXTENDED));
+        manager = new RecipeManager(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "crafting-recipes.yml").toPath(), true, YAMLFormat.EXTENDED));
         Collection<RecipeManager.Recipe> recipeCollection = manager.getRecipes();
         int recipes = 0;
         for (RecipeManager.Recipe r : recipeCollection) {

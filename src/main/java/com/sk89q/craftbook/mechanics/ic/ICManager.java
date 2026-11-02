@@ -78,7 +78,7 @@ public class ICManager {
 
     public void enable() {
         CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "ic-config.yml"), "ic-config.yml");
-        icConfiguration = new ICConfiguration(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "ic-config.yml"), true, YAMLFormat.EXTENDED), CraftBookPlugin.logger());
+        icConfiguration = new ICConfiguration(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "ic-config.yml").toPath(), true, YAMLFormat.EXTENDED), CraftBookPlugin.logger());
 
         midiFolder = new File(CraftBookPlugin.inst().getDataFolder(), "midi/");
         new File(midiFolder, "playlists").mkdirs();

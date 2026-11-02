@@ -45,7 +45,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
             File varFile = new File(CraftBookPlugin.inst().getDataFolder(), "variables.yml");
             if(!varFile.exists())
                 varFile.createNewFile();
-            variableConfiguration = new VariableConfiguration(new YAMLProcessor(varFile, true, YAMLFormat.EXTENDED), CraftBookPlugin.logger());
+            variableConfiguration = new VariableConfiguration(new YAMLProcessor(varFile.toPath(), true, YAMLFormat.EXTENDED), CraftBookPlugin.logger());
             variableConfiguration.load();
         } catch(Exception ignored){
             CraftBookBukkitUtil.printStacktrace(ignored);

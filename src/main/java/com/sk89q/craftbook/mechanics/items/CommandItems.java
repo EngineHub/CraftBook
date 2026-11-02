@@ -111,7 +111,7 @@ public class CommandItems extends AbstractCraftBookMechanic {
         cooldownPeriods = new HashMap<>();
 
         CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "command-items.yml"), "command-items.yml");
-        config = new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "command-items.yml"), false, YAMLFormat.EXTENDED);
+        config = new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "command-items.yml").toPath(), false, YAMLFormat.EXTENDED);
 
         try {
             config.load();

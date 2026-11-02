@@ -36,4 +36,10 @@ public interface CraftBookPlayer extends Player {
     boolean isHoldingBlock(); // TODO Add to WorldEdit
 
     String translate(String message);
+
+    void print(String message);
+
+    void printError(String message);
+
+    void printRaw(String message);
 }

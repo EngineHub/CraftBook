@@ -32,7 +32,7 @@ public class YAMLPersistentStorage extends PersistentStorage {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        processor = new YAMLProcessor(file, true, YAMLFormat.COMPACT);
+        processor = new YAMLProcessor(file.toPath(), true, YAMLFormat.COMPACT);
 
         try {
             processor.load();

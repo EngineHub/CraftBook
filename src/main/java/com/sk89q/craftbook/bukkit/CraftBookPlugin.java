@@ -394,7 +394,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         // Setup Config and the Commands Manager
         createDefaultConfiguration(new File(getDataFolder(), "config.yml"), "config.yml");
-        config = new BukkitConfiguration(new YAMLProcessor(new File(getDataFolder(), "config.yml"), true, YAMLFormat.EXTENDED), logger());
+        config = new BukkitConfiguration(new YAMLProcessor(new File(getDataFolder(), "config.yml").toPath(), true, YAMLFormat.EXTENDED), logger());
         // Load the configuration
         try {
             config.load();
@@ -530,7 +530,7 @@ public class CraftBookPlugin extends JavaPlugin {
         logDebugMessage("Initializing Mechanisms!", "startup");
 
         createDefaultConfiguration(new File(getDataFolder(), "mechanisms.yml"), "mechanisms.yml");
-        mechanismsConfig = new YAMLProcessor(new File(getDataFolder(), "mechanisms.yml"), true, YAMLFormat.EXTENDED);
+        mechanismsConfig = new YAMLProcessor(new File(getDataFolder(), "mechanisms.yml").toPath(), true, YAMLFormat.EXTENDED);
 
         try {
             mechanismsConfig.load();
