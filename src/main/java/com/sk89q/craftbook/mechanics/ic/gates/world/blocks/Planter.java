@@ -199,7 +199,7 @@ public class Planter extends AbstractSelfTriggeredIC {
                 return belowType == Material.CRIMSON_NYLIUM || belowType == Material.WARPED_NYLIUM || Tag.DIRT.isTagged(belowType);
             default:
                 if (Tag.SAPLINGS.isTagged(item.getType()) || Tag.SMALL_FLOWERS.isTagged(item.getType())) {
-                    return Tag.DIRT.isTagged(belowType);
+                    return Tag.DIRT.isTagged(belowType) || Tag.GRASS_BLOCKS.isTagged(belowType) || Tag.MOSS_BLOCKS.isTagged(belowType);
                 }
                 return false;
         }
