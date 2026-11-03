@@ -78,7 +78,7 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic implements Liste
     public void enable() {
         instance = this;
         CraftBookPlugin.inst().createDefaultConfiguration("cauldron-recipes.yml");
-        recipes = new ImprovedCauldronCookbook(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "cauldron-recipes.yml"), true, YAMLFormat.EXTENDED));
+        recipes = new ImprovedCauldronCookbook(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "cauldron-recipes.yml").toPath(), true, YAMLFormat.EXTENDED));
     }
 
     @Override

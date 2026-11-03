@@ -144,7 +144,7 @@ public class CommandItems extends AbstractCraftBookMechanic implements Listener 
         cooldownPeriods = new HashMap<>();
 
         CraftBookPlugin.inst().createDefaultConfiguration("command-items.yml");
-        config = new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "command-items.yml"), false, YAMLFormat.EXTENDED);
+        config = new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "command-items.yml").toPath(), false, YAMLFormat.EXTENDED);
 
         try {
             config.load();

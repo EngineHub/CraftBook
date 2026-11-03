@@ -94,7 +94,7 @@ public class CustomCrafting extends AbstractCraftBookMechanic implements Listene
         );
 
         CraftBookPlugin.inst().createDefaultConfiguration("crafting-recipes.yml");
-        manager = new RecipeManager(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "crafting-recipes.yml"), true, YAMLFormat.EXTENDED));
+        manager = new RecipeManager(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "crafting-recipes.yml").toPath(), true, YAMLFormat.EXTENDED));
         Collection<RecipeManager.Recipe> recipeCollection = manager.getRecipes();
         int recipes = 0;
         for (RecipeManager.Recipe r : recipeCollection) {
