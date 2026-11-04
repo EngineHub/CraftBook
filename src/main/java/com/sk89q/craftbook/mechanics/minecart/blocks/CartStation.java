@@ -64,7 +64,7 @@ public class CartStation extends CartBlockMechanism {
                 stop(cart);
                 // recenter it
                 Location l = blocks.rail.getLocation().add(0.5, 0.5, 0.5);
-                if (!cart.getLocation().equals(l)) {
+                if (!cart.getLocation().equals(l) && (!PaperLib.isPaper() || cart.getPassengers().isEmpty())) {
                     cart.teleport(l);
                 }
                 // recentering and parking almost completely prevents more than one cart from getting onto the same
