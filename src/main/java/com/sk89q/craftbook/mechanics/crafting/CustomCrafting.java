@@ -364,10 +364,15 @@ public class CustomCrafting extends AbstractCraftBookMechanic {
                     PermissionAttachment att = p.addAttachment(CraftBookPlugin.inst());
                     att.setPermission("*", true);
                     boolean wasOp = p.isOp();
-                    p.setOp(true);
-                    Bukkit.dispatchCommand(p, s);
-                    att.remove();
-                    p.setOp(wasOp);
+                    if (!wasOp)
+                        p.setOp(true);
+                    try {
+                        Bukkit.dispatchCommand(p, s);
+                    } finally {
+                        att.remove();
+                        if (!wasOp)
+                            p.setOp(false);
+                    }
                 }
             }
         }
